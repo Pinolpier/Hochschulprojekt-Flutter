@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/start.dart';
+import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/homeFeedScreenUI.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(HomeFeedScreenUI());
 
 
