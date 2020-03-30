@@ -4,9 +4,6 @@ import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feed.dart';
 
 //@author mdarscht
 class NavigationBarUI extends StatelessWidget {
-  const NavigationBarUI({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,7 @@ class NavigationBarUI extends StatelessWidget {
           ),
         ),
         body: ListView(
-          children: Feed.feed,
+          children: Feed.test(),
         ),
       ),
     );

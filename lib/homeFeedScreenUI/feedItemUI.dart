@@ -47,5 +47,7 @@ class FeedItemUI extends StatelessWidget {
       ),
     );
   }
+
+  FeedItemImpl get data => data;
 }
 
