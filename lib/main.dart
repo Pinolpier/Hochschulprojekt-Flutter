@@ -1,6 +1,8 @@
+import 'package:aiblabswp2020ssunivents/EventInfo.dart';
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/start.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MaterialApp(
+  home:EventInfo(),
+));
 
 
