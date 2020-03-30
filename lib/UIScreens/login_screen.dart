@@ -155,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               'Remember me',
               style: labelStyleConstant,
             ),
-            SizedBox(width: 10.0,),
+            SizedBox(width: MediaQuery.of(context).size.width/5.5),
             FlatButton(
               onPressed: () => print('Forgot Password Button Pressed'),
               padding: EdgeInsets.only(right: 0.0),
