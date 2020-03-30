@@ -2,6 +2,10 @@ import 'package:aiblabswp2020ssunivents/UIScreens/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/**
+ * this class creates a loginscreen with different textfields to put in email and username and a few
+ * buttons that add functionality like logging in through social media or remember me / forgot password
+ */
 class LoginScreen extends StatefulWidget {
   @override
   State createState() => _LoginScreenState();
@@ -13,6 +17,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
 
+  /**
+   * this method is responsible for the short logo animation at the start of the app
+   */
   @override
   void initState(){
     super.initState();
@@ -33,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Image(
-          image: new AssetImage("assets/eventlogo.png"),
+          image: new AssetImage("assets/eventlogo.png"),  //should be changed to the actual univents logo in assets later
           width: _logoAnimation.value * 100,
           height: _logoAnimation.value * 100,
         )
@@ -47,12 +54,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       children: <Widget>[
         Text(
           'Email',
-          style: kLabelStyle,
+          style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: boxStyleConstant,
           height: 60.0,
           child: TextField(
             keyboardType: TextInputType.emailAddress,
@@ -68,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 color: Colors.white,
               ),
               hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
+              hintStyle: textStyleConstant,
             ),
           ),
         ),
@@ -82,12 +89,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       children: <Widget>[
         Text(
           'Password',
-          style: kLabelStyle,
+          style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: boxStyleConstant,
           height: 60.0,
           child: TextField(
             obscureText: true,
@@ -103,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 color: Colors.white,
               ),
               hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
+              hintStyle: textStyleConstant,
             ),
           ),
         ),
@@ -119,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           "Forgot Password?",
-          style: kLabelStyle,
+          style: labelStyleConstant,
         )
       ),
     );
@@ -146,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             ),
             Text(
               'Remember me',
-              style: kLabelStyle,
+              style: labelStyleConstant,
             ),
             SizedBox(width: 10.0,),
             FlatButton(
@@ -154,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               padding: EdgeInsets.only(right: 0.0),
               child: Text(
                 'Forgot Password?',
-                style: kLabelStyle,
+                style: labelStyleConstant,
               ),
             )
           ],
@@ -270,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       backgroundColor: Colors.blueAccent,
       body: new Container(
         height: double.infinity,
-        child: SingleChildScrollView(
+        child: SingleChildScrollView(     //fixes pixel overflow error when keyboard is used
           physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(
             horizontal: 40.0,
