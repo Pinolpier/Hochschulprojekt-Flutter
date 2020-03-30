@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemUI.dart';
+import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feed.dart';
 
 //@author mdarscht
 class NavigationBarUI extends StatelessWidget {
@@ -26,9 +26,8 @@ class NavigationBarUI extends StatelessWidget {
               ]
           ),
         ),
-        body: ListView.builder(
-          itemCount: 15,
-          itemBuilder: (context, index)=>FeedItemUI(), //TODO: generic
+        body: ListView(
+          children: Feed.feed,
         ),
       ),
     );

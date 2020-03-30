@@ -1,18 +1,14 @@
 import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedActionBar.dart';
+import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemImpl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 //@author mdarscht
 class FeedItemUI extends StatelessWidget {
-/*
-  final DateTime _eventStartDate;
-  final DateTime _eventEndDate;
-  final _duration;
-  final String _details;
-  final String _city;
-  final bool _privateEvent;
-*/
-  FeedItemUI({Key key,}): super(key: key);
+
+  final FeedItemImpl _data;
+
+  FeedItemUI(this._data);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +24,8 @@ class FeedItemUI extends StatelessWidget {
                   'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
                 ),
               ),
-              title: Text('Some Event Title'), //TODO: provide generic variable from "createEvent"
-              subtitle: Text(' 12.12.2019'), //TODO: provide generic variable from "createEvent" & put in more information
+              title: Text(this._data.title), //TODO: provide generic variable from "createEvent"
+              subtitle: Text(this._data.eventStartDate.toString()), //TODO: provide generic variable from "createEvent" & put in more information
             ),
             Expanded(
               child: Container(
