@@ -28,12 +28,4 @@ class Feed {
       }
     }
   }
-
-  static List<Widget> test() {
-    addItem('title', DateTime.now(), DateTime.now(), 'blabla', 'blabla', true);
-    addItem('title', DateTime.now(), DateTime.now(), 'blabla', 'blabla', true);
-    addItem('title', DateTime.now(), DateTime.now(), 'blabla', 'blabla', true);
-    print(_feed.length);
-    return _feed;
-  }
 }

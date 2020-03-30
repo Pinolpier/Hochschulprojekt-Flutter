@@ -11,7 +11,7 @@ class NavigationBarUI extends StatelessWidget {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xff),
+          backgroundColor: Color(0xff), //TODO: color definition
           title: Center(child: Text('Univents', ),),
           bottom: TabBar(
               tabs: <Widget>[
@@ -24,7 +24,7 @@ class NavigationBarUI extends StatelessWidget {
           ),
         ),
         body: ListView(
-          children: Feed.test(),
+          children: Feed.feed,
         ),
       ),
     );

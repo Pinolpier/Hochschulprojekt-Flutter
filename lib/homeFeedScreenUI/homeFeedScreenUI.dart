@@ -24,4 +24,7 @@ Route _toFiends() {
 
 Route _toProfile() {
 }
+
+Route _toSettings() {
+}
  */
