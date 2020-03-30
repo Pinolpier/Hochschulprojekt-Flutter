@@ -9,6 +9,10 @@ class FriendlistScreen extends StatefulWidget{
   _FriendlistScreenState createState() => _FriendlistScreenState();
 }
 
+/**
+ * this debouncer class makes sure that the user has enough time to put in his full search query into the searchbar before
+ * the system starts reading it out
+ */
 class Debouncer{
   final int milliseconds;
   VoidCallback action;
@@ -24,10 +28,15 @@ class Debouncer{
   }
 }
 
+/**
+ * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
+ * button at the bottom to create a new message
+ */
 class _FriendlistScreenState extends State<FriendlistScreen>{
 
   final _debouncer = Debouncer(milliseconds: 500);
 
+  //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
     FriendslistDummies(name: "Markus Link", profilepic: "mango.png"),
     FriendslistDummies(name: "Markus Häring", profilepic: "mango.png"),
@@ -38,7 +47,6 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(

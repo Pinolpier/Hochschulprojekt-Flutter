@@ -1,6 +1,6 @@
-
-
-
+/**
+ * dummie class to test the listview
+ */
 class FriendslistDummies{
   String name;
   String profilepic;
