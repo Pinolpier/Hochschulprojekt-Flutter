@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/**
+ * This class represents a Screen for Event informations
+ * The Event text is scrollable and the date and location stay always on button on screen
+ * @author mhaering
+ */
 class EventInfo extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,10 @@ class EventInfo extends StatelessWidget{
     );
   }
 
-
+  /**
+   * This widget builder creates a stack widget to put the return button
+   * on top of the Event-Image
+   */
   Widget buildBody(){
     return Stack(
       children: <Widget>[
