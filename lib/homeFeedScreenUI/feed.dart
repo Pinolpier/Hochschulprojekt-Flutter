@@ -2,25 +2,29 @@ import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemImpl.dart';
 import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemUI.dart';
 import 'package:flutter/cupertino.dart';
 
+//@author
+//for managing feed
 class Feed {
+  //widget list
   static List<Widget> _feed = List<Widget>();
+  //
   static List<FeedItemUI> _feedOrientation = List<FeedItemUI>();
 
   static List<Widget> get feed => _feed;
 
-  static addItem(String title, DateTime eventStartDate, DateTime eventEndDate, String details, String city, bool privateEvent) {
+  static addNewFeed(String title, DateTime eventStartDate, DateTime eventEndDate, String details, String city, bool privateEvent) {
     FeedItemImpl newFeed = FeedItemImpl(title, eventStartDate, eventEndDate, details, city, privateEvent);
     FeedItemUI newFeedUI = FeedItemUI(newFeed);
     _feed.add(newFeedUI);
     _feedOrientation.add(newFeedUI);
   }
 
-  static removeItemByIndex(int index) {
+  static removeFeedByIndex(int index) {
     _feed.removeAt(index);
     _feedOrientation.removeAt(index);
   }
 
-  static removeItemByTitle(String title) {
+  static removeFeedByTitle(String title) {
     for (int index = 0; index < _feedOrientation.length; index++) {
       if (_feedOrientation[index].data.title == title) {
         _feedOrientation.removeAt(index);
