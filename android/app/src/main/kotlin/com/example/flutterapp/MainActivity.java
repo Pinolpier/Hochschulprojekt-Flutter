@@ -13,16 +13,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Mapbox.getInstance(this, getString(R.string.MapboxAPIkey));
+        Mapbox.getInstance(this, getString(R.string.MapboxAPIkey));     //getting the API-key from the corresponding strings.xml and registering it
         setContentView(R.layout.activity_main);
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(mapboxMap -> mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
-
-// Map is set up and the style has loaded. Now you can add data or make other map adjustments.
-
-
+            // Map is set up and the style has loaded. Now you can add data or make other map adjustments.
         }));
     }
 
