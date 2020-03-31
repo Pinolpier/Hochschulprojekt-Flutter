@@ -38,4 +38,14 @@ class Feed {
     addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
     return _feed;
   }
+
+  /*
+  void _sort() {}
+  */
+
+  /*
+   void update() {}
+   */
+
+  
 }
