@@ -17,7 +17,7 @@ class FeedActionBar extends StatelessWidget { //TODO: transform to stateful widg
             Text(' Like'),
           ],
         ),
-        Row(
+        Row( //TODO: checking if comments really are needed
           children: <Widget>[
             Icon(Icons.comment),
             SizedBox(height: 8,),

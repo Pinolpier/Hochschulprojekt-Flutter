@@ -24,8 +24,8 @@ class FeedItemUI extends StatelessWidget {
                   'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
                 ),
               ),
-              title: Text(this._data.title), //TODO: provide generic variable from "createEvent"
-              subtitle: Text(this._data.eventStartDate.toString()), //TODO: provide generic variable from "createEvent" & put in more information
+              title: Text(this._data.title),
+              subtitle: Text(this._data.eventStartDate.toString()),
             ),
             Expanded(
               child: Container(

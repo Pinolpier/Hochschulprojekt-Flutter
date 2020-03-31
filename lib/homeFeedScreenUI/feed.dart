@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 class Feed {
   //widget list
   static List<Widget> _feed = List<Widget>();
-  //
+  //data list
   static List<FeedItemUI> _feedOrientation = List<FeedItemUI>();
 
   static List<Widget> get feed => _feed;
@@ -31,5 +31,11 @@ class Feed {
         _feed.removeAt(index);
       }
     }
+  }
+
+  static List<Widget> test(){
+    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
+    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
+    return _feed;
   }
 }

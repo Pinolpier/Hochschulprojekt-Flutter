@@ -13,9 +13,7 @@ class FeedItemImpl{
     this._duration = _eventEndDate.difference(_eventStartDate);
   }
 
-  String get title {
-    return this._title;
-  }
+  String get title => _title;
 
   DateTime get eventStartDate => _eventStartDate;
 

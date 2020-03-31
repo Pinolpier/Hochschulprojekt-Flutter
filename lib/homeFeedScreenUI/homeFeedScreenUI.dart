@@ -13,18 +13,3 @@ class HomeFeedScreenUI extends StatelessWidget{
     );
   }
 }
-
-
-/*
-Route _toMap() {
-}
-
-Route _toFiends() {
-}
-
-Route _toProfile() {
-}
-
-Route _toSettings() {
-}
- */
