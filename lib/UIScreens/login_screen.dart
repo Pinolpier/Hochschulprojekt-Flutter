@@ -132,45 +132,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
-  Widget _rememberMeAndForgotPasswordWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        new Row(
-          children: <Widget>[
-            Theme(
-              data:ThemeData(unselectedWidgetColor: Colors.white),
-              child: Checkbox(
-                value: _rememberMe,
-                checkColor: Colors.green,
-                activeColor: Colors.white,
-                onChanged: (value) {
-                  setState(() {
-                    _rememberMe = value;
-                  });
-                }
-              )
-            ),
-            Text(
-              'Remember me',
-              style: labelStyleConstant,
-            ),
-            SizedBox(width: MediaQuery.of(context).size.width/5.5),
-            FlatButton(
-              onPressed: () => print('Forgot Password Button Pressed'),
-              padding: EdgeInsets.only(right: 0.0),
-              child: Text(
-                'Forgot Password?',
-                style: labelStyleConstant,
-              ),
-            )
-          ],
-        )
-      ],
-    );
-
-  }
-
   Widget _loginButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -292,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   _emailTextfieldWidget(),
                   SizedBox(height: 20.0),
                   _passwordTextfieldWidget(),
-                  _rememberMeAndForgotPasswordWidget(),
+                  _forgotPasswordWidget(),
                   _loginButtonWidget(),
                   _socialMediaButtonsWidget(),
                   SizedBox(height: 20.0),
