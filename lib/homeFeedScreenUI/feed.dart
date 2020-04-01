@@ -47,5 +47,5 @@ class Feed {
    void update() {}
    */
 
-  
+
 }
