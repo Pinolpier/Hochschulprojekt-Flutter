@@ -44,6 +44,151 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  Widget _eventStartDate() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Event Start Date',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: boxStyleConstant,
+          width: 150,
+          height: 60.0,
+          child: TextField(
+            keyboardType: TextInputType.datetime,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.calendar_today,
+                color: Colors.white,
+              ),
+              hintText: 'Start Date',
+              hintStyle: textStyleConstant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _eventStartTime() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Event Start Time',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: boxStyleConstant,
+          width: 150,
+          height: 60.0,
+          child: TextField(
+            keyboardType: TextInputType.datetime,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.alarm_on,
+                color: Colors.white,
+              ),
+              hintText: 'Start Time',
+              hintStyle: textStyleConstant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _eventEndDate() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Event End Date',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: boxStyleConstant,
+          width: 150,
+          height: 60.0,
+          child: TextField(
+            keyboardType: TextInputType.datetime,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.calendar_today,
+                color: Colors.white,
+              ),
+              hintText: 'End Date',
+              hintStyle: textStyleConstant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _eventEndTime() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Event End Time',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: boxStyleConstant,
+          width: 150,
+          height: 60.0,
+          child: TextField(
+            keyboardType: TextInputType.datetime,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.alarm_off,
+                color: Colors.white,
+              ),
+              hintText: 'End Time',
+              hintStyle: textStyleConstant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
   Widget _locationTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,10 +302,31 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Text(
+                'Event Picture Placeholder',
+                style: labelStyleConstant,
+              ),
+              SizedBox(height: 20),
               Placeholder(
                 fallbackHeight: 150,
               ),
               SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  _eventStartDate(),
+                  _eventStartTime(),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  _eventEndDate(),
+                  _eventEndTime(),
+                ],
+              ),
+              SizedBox(height: 20),
               _eventNameTextfieldWidget(),
               SizedBox(height: 20.0),
               _locationTextfieldWidget(),
