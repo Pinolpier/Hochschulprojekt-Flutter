@@ -2,6 +2,16 @@ import 'package:aiblabswp2020ssunivents/UIScreens/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
+/// -Event Picture (at this point only a placeholder)
+/// -Event Start Date (input-type: datetime)
+/// -Event Start Time (input-type: datetime)
+/// -Event End Date (input-type: datetime)
+/// -Event End Time (input-type: datetime)
+/// -Event Name (input-type: text)
+/// -Event Location (input-type: text, maybe convert it to an button which opens the map and where you then can choose the location)
+/// -Event Description (input-type: multiline text)
+
 class CreateEventScreen extends StatefulWidget {
   @override
   State createState() => _CreateEventScreenState();
