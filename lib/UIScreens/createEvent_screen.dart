@@ -1,4 +1,4 @@
-import 'package:aiblabswp2020ssunivents/lib/UIScreens/constants.dart';
+import 'package:aiblabswp2020ssunivents/UIScreens/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
