@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 /**
  * This class represents a Screen for Event informations
  * The Event text is scrollable and the date and location stay always on button on screen
- * @author mhaering
  */
 class EventInfo extends StatelessWidget{
   @override
