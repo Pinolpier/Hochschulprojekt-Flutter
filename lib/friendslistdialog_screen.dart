@@ -86,7 +86,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         child: ListTile(
                           onTap: () {
                             print(friends[index].name + " was pressed");
-                            onTap: () => _onSelected(index),
+                            onTap: _onSelected(index);
                           },
                           title: Text(friends[index].name),
                           leading: CircleAvatar(
