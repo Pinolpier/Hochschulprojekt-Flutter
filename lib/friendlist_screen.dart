@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aiblabswp2020ssunivents/DialogHelper.dart';
 import 'package:aiblabswp2020ssunivents/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-
+                DialogHelper.showfriendsdialog(context);
               },
               child: Text("+"),
               backgroundColor: Colors.blueAccent,
