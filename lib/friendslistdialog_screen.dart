@@ -4,6 +4,10 @@ import 'package:aiblabswp2020ssunivents/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/**
+ * this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
+ * an option to directly invite friends to events
+ */
 class FriendslistdialogScreen extends StatefulWidget{
   @override
   _FriendlistdialogScreenState createState() => _FriendlistdialogScreenState();
@@ -86,7 +90,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         child: ListTile(
                           onTap: () {
                             print(friends[index].name + " was pressed");
-                            onTap: _onSelected(index);
+                            _onSelected(index);
                           },
                           title: Text(friends[index].name),
                           leading: CircleAvatar(

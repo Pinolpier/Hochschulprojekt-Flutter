@@ -94,7 +94,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showfriendsdialog(context);
+                DialogHelper.showaddfriendsdialog(context);
               },
               child: Text("+"),
               backgroundColor: Colors.blueAccent,
