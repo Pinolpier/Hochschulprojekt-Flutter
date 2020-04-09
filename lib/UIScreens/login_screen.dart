@@ -1,6 +1,6 @@
-import 'package:aiblabswp2020ssunivents/UIScreens/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/UIScreens/constants.dart';
 
 /**
  * this class creates a loginscreen with different textfields to put in email and username and a few

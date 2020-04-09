@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:aiblabswp2020ssunivents/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/FriendslistDummies.dart';
 
 class FriendslistdialogScreen extends StatefulWidget{
   @override

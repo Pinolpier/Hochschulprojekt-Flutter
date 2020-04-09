@@ -1,5 +1,5 @@
-name: aiblabswp2020ssunivents
-description: A new Flutter application.
+name: univents
+description: An event overview application made to ease your spare time planning.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -23,6 +23,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+
+  # The following 2 dependencies enable us to support Firebase auth and Google auth
+  firebase_auth: ^0.15.5+3
+  google_sign_in: ^4.4.1
 
 dev_dependencies:
   flutter_test:

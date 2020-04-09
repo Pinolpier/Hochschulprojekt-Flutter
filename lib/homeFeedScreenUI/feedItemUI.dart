@@ -1,7 +1,7 @@
-import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedActionBar.dart';
-import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemImpl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/homeFeedScreenUI/feedActionBar.dart';
+import 'package:univents/homeFeedScreenUI/feedItemImpl.dart';
 
 //@author mdarscht
 class FeedItemUI extends StatelessWidget {
