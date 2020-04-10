@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aiblabswp2020ssunivents/FriendslistDummies.dart';
+import 'package:aiblabswp2020ssunivents/Model/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
-import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemImpl.dart';
-import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/feedItemUI.dart';
+import 'package:aiblabswp2020ssunivents/View/homeFeed_screen/feedItemImpl.dart';
+import 'package:aiblabswp2020ssunivents/View/homeFeed_screen/feedItemUI.dart';
 import 'package:flutter/cupertino.dart';
 
 //@author
