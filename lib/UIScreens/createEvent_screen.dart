@@ -19,6 +19,35 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
 
+  DateTime _date = new DateTime.now();
+  TimeOfDay _time = new TimeOfDay.now();
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: new DateTime(2016),
+        lastDate: new DateTime(3000),
+    );
+    if (picked != null && picked != _date) {
+      setState(() {
+        _date = picked;
+      });
+    }
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+        context: context,
+        initialTime: _time
+    );
+    if (picked != null && picked != _time) {
+      setState(() {
+        _time = picked;
+      });
+    }
+  }
+
   Widget _eventNameTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,151 +82,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       ],
     );
   }
-
-  Widget _eventStartDate() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Event Start Date',
-          style: labelStyleConstant,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
-          width: 150,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.datetime,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.calendar_today,
-                color: Colors.white,
-              ),
-              hintText: 'Start Date',
-              hintStyle: textStyleConstant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _eventStartTime() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Event Start Time',
-          style: labelStyleConstant,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
-          width: 150,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.datetime,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.alarm_on,
-                color: Colors.white,
-              ),
-              hintText: 'Start Time',
-              hintStyle: textStyleConstant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _eventEndDate() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Event End Date',
-          style: labelStyleConstant,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
-          width: 150,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.datetime,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.calendar_today,
-                color: Colors.white,
-              ),
-              hintText: 'End Date',
-              hintStyle: textStyleConstant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _eventEndTime() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Event End Time',
-          style: labelStyleConstant,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
-          width: 150,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.datetime,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.alarm_off,
-                color: Colors.white,
-              ),
-              hintText: 'End Time',
-              hintStyle: textStyleConstant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
 
   Widget _locationTextfieldWidget() {
     return Column(
@@ -321,20 +205,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 fallbackHeight: 150,
               ),
               SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _eventStartDate(),
-                  _eventStartTime(),
-                ],
+              new RaisedButton(
+                  child: new Text("Select Date"),
+                  onPressed: (){_selectDate(context);
+                  }
               ),
               SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _eventEndDate(),
-                  _eventEndTime(),
-                ],
+              new RaisedButton(
+                  child: new Text("Select Time"),
+                  onPressed: (){_selectTime(context);
+                  }
               ),
               SizedBox(height: 20),
               _eventNameTextfieldWidget(),
