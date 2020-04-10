@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:aiblabswp2020ssunivents/View/dialogs/DialogHelper.dart';
 import 'package:aiblabswp2020ssunivents/Model/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:aiblabswp2020ssunivents/View/dialogs/Debouncer.dart';
 
 class FriendlistScreen extends StatefulWidget{
   @override
@@ -11,31 +10,12 @@ class FriendlistScreen extends StatefulWidget{
 }
 
 /**
- * this debouncer class makes sure that the user has enough time to put in his full search query into the searchbar before
- * the system starts reading it out
- */
-class Debouncer{
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
-
-  Debouncer({this.milliseconds});
-
-  run(VoidCallback action){
-    if(_timer != null){
-      _timer.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-}
-
-/**
  * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
- * button at the bottom to create a new message
+ * button at the bottom to add new friends
  */
 class _FriendlistScreenState extends State<FriendlistScreen>{
 
-  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncer = new Debouncer(500);
 
   //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
@@ -96,7 +76,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
               onPressed: () {
                 DialogHelper.showaddfriendsdialog(context);
               },
-              child: Text("+"),
+              child: Icon(Icons.group_add),
               backgroundColor: Colors.blueAccent,
             ),
           )
