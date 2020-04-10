@@ -19,33 +19,109 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
 
-  DateTime _date = new DateTime.now();
-  TimeOfDay _time = new TimeOfDay.now();
+  DateTime selectedStartDateTime;
+  DateTime selectedEndDateTime;
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: _date,
-        firstDate: new DateTime(2016),
-        lastDate: new DateTime(3000),
+  Future<TimeOfDay> _selectTime(BuildContext context) {
+    final now = DateTime.now();
+
+    return showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
     );
-    if (picked != null && picked != _date) {
-      setState(() {
-        _date = picked;
-      });
-    }
   }
 
-  Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay picked = await showTimePicker(
-        context: context,
-        initialTime: _time
+  Future<DateTime> _selectDate(BuildContext context) => showDatePicker(
+    context: context,
+    initialDate: DateTime.now().add(Duration(seconds: 1)),
+    firstDate: DateTime.now(),
+    lastDate: DateTime(2100),
+  );
+
+  Widget _selectStartDateTimeButtonWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () async {
+          final selectedDate = await _selectDate(context);
+          if (selectedDate == null) return;
+
+          final selectedTime = await _selectTime(context);
+          if (selectedTime == null) return;
+
+          setState(() {
+            selectedStartDateTime = DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            );
+            print(selectedStartDateTime);
+          });
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'select startDateTime',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
     );
-    if (picked != null && picked != _time) {
-      setState(() {
-        _time = picked;
-      });
-    }
+  }
+
+  Widget _selectEndDateTimeButtonWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () async {
+          final selectedDate = await _selectDate(context);
+          if (selectedDate == null) return;
+
+          final selectedTime = await _selectTime(context);
+          if (selectedTime == null) return;
+
+          setState(() {
+            selectedEndDateTime = DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            );
+            print(selectedEndDateTime);
+          });
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'select endDateTime',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _eventNameTextfieldWidget() {
@@ -205,18 +281,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 fallbackHeight: 150,
               ),
               SizedBox(height: 20.0),
-              new RaisedButton(
-                  child: new Text("Select Date"),
-                  onPressed: (){_selectDate(context);
-                  }
-              ),
+              _selectStartDateTimeButtonWidget(),
               SizedBox(height: 20.0),
-              new RaisedButton(
-                  child: new Text("Select Time"),
-                  onPressed: (){_selectTime(context);
-                  }
-              ),
-              SizedBox(height: 20),
+              _selectEndDateTimeButtonWidget(),
+              SizedBox(height: 20.0),
               _eventNameTextfieldWidget(),
               SizedBox(height: 20.0),
               _locationTextfieldWidget(),
