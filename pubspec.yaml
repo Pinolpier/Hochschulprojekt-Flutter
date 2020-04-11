@@ -17,6 +17,9 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  contacts_service: ^0.3.10
+  contact_picker: ^0.0.2
+  flutter_contact: ^0.5.3
   flutter:
     sdk: flutter
 

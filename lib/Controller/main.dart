@@ -1,5 +1,6 @@
+import 'package:aiblabswp2020ssunivents/View/friendList_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/UIScreens/createEvent_screen.dart';
+import 'package:aiblabswp2020ssunivents/View/createEvent_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter create event UI',
-      home: CreateEventScreen(),
+      home: FriendlistScreen(),
     );
   }
 }

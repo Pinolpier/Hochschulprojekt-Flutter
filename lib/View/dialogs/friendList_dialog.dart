@@ -1,31 +1,15 @@
-import 'dart:async';
-
-import 'package:aiblabswp2020ssunivents/FriendslistDummies.dart';
+import 'package:aiblabswp2020ssunivents/Model/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:aiblabswp2020ssunivents/View/dialogs/Debouncer.dart';
 
+/**
+ * this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
+ * an option to directly invite friends to events
+ */
 class FriendslistdialogScreen extends StatefulWidget{
   @override
   _FriendlistdialogScreenState createState() => _FriendlistdialogScreenState();
-}
-
-/**
- * this debouncer class makes sure that the user has enough time to put in his full search query into the searchbar before
- * the system starts reading it out
- */
-class Debouncer{
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
-
-  Debouncer({this.milliseconds});
-
-  run(VoidCallback action){
-    if(_timer != null){
-      _timer.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
 }
 
 /**
@@ -34,7 +18,7 @@ class Debouncer{
  */
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
 
-  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncer = new Debouncer(500);
 
   //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
@@ -86,7 +70,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         child: ListTile(
                           onTap: () {
                             print(friends[index].name + " was pressed");
-                            onTap: _onSelected(index);
+                            _onSelected(index);
                           },
                           title: Text(friends[index].name),
                           leading: CircleAvatar(
