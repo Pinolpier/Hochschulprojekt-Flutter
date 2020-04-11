@@ -15,7 +15,7 @@ class Feed {
   static List<Widget> get feed => _feed;
 
   static addNewFeed(String title, Timestamp eventStartDate, Timestamp eventEndDate, String details, String city, bool privateEvent,String lat,String lng) {
-    Event newFeed = Event(title, eventStartDate, eventEndDate, details, city, privateEvent,lat,lng);
+    Event newFeed = Event(title, eventStartDate, eventEndDate, details, city, privateEvent,lat,lng, new List<String>());
     FeedItemUI newFeedUI = FeedItemUI(newFeed);
     _feed.add(newFeedUI);
     _feedOrientation.add(newFeedUI);

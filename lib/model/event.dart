@@ -12,14 +12,21 @@ class Event{
   String _lat;
   String _lng;
   bool _privateEvent;
-  //an image
+  List<String> _teilnehmerIDs;
 
-  Event(this._title, this._eventStartDate, this._eventEndDate, this._details, this._city, this._privateEvent,this._lat,this._lng) {
-
-  }
+  Event(this._title, this._eventStartDate, this._eventEndDate, this._details,
+      this._city, this._privateEvent,this._lat,this._lng,this._teilnehmerIDs) {}
 
   bool get privateEvent => _privateEvent;
 
+  void addTeilnehmer(String teilnehmerID){
+    teilnehmerIDs.add(teilnehmerID);
+  }
+  List<String> get teilnehmerIDs => _teilnehmerIDs;
+
+  set teilnehmerIDs(List<String> value) {
+    _teilnehmerIDs = value;
+  }
 
   String get lat => _lat;
 
