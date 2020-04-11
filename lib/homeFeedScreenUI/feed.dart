@@ -36,8 +36,6 @@ class Feed {
   }
 
   static List<Widget> test(){
-    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false,null,null);
-    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false,null,null);
     return _feed;
   }
 

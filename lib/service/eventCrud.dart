@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:univents/model/event.dart';
 
- class Crud {
 
+ class Crud {
   final db = Firestore.instance;
-  Map map;
-  String id;
   final String collection = 'events';
+  Timestamp start;
+  Timestamp stop;
+
 
   bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser() != null) {
@@ -37,14 +36,21 @@ import 'package:univents/model/event.dart';
     addData(toMap());
   }
 
-   Future<void> addData(event) async {
+   Future <void> addData(event) async {
     //TODO überprüfung mit isLoggedIn sobald möglich
-    Firestore.instance.collection(collection).add(event).catchError((e){print(e);});
+    db.collection(collection).add(event).catchError((e){print(e);});
   }
+
+  Future<List<Event>> getEventswithFilter() async{
+    QuerySnapshot qShot =
+    await db.collectionGroup(collection).where('startdate',isGreaterThanOrEqualTo: start).where('enddate', isLessThanOrEqualTo: stop).getDocuments();
+
+  }
+
 
   Future<List<Event>> getEvents() async {
     QuerySnapshot qShot =
-    await Firestore.instance.collection(collection).getDocuments();
+    await db.collection(collection).getDocuments();
     return qShot.documents.map(
             (doc) => Event(
               doc.data['name'],
@@ -62,7 +68,7 @@ import 'package:univents/model/event.dart';
 
   void testMethod() async{
     List<Event> eventList = await getEvents();
-  print(eventList[0].title);
+    print(eventList[0].title);
   }
 
 }
