@@ -1,4 +1,5 @@
 
+
 class Event{
   String _title;
   DateTime _eventStartDate;
@@ -6,7 +7,8 @@ class Event{
   var _duration;
   String _details;
   String _city;
-  String _lat,_lng;
+  String _lat;
+  String _lng;
   bool _privateEvent;
   //an image
 
@@ -15,6 +17,13 @@ class Event{
   }
 
   bool get privateEvent => _privateEvent;
+
+
+  String get lat => _lat;
+
+  set lat(String value) {
+    _lat = value;
+  }
 
   set privateEvent(bool value) {
     _privateEvent = value;
@@ -54,6 +63,12 @@ class Event{
 
   set title(String value) {
     _title = value;
+  }
+
+  String get lng => _lng;
+
+  set lng(String value) {
+    _lng = value;
   }
 
 
