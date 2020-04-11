@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event{
+  String _eventID;
   String _title;
   Timestamp _eventStartDate;
   Timestamp _eventEndDate;
@@ -78,6 +79,12 @@ class Event{
 
   set eventStartDate(Timestamp value) {
     _eventStartDate = value;
+  }
+
+  String get eventID => _eventID;
+
+  set eventID(String value) {
+    _eventID = value;
   }
 
 

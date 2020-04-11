@@ -1,5 +1,5 @@
 
-import 'package:univents/service/eventCrud.dart';
+import 'package:univents/service/eventService.dart';
 import 'package:univents/model/event.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => new Crud().testMethod(),
+        onPressed: () => new eventService().testMethod(),
 
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
