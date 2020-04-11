@@ -1,3 +1,7 @@
+
+import 'package:univents/service/crud.dart';
+import 'package:univents/model/event.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/UIScreens/constants.dart';
@@ -12,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-
   bool _rememberMe = false;
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
@@ -138,7 +141,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () => new Crud().addData({
+          'name': 'test',
+          'description' : 'test',
+        }),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),

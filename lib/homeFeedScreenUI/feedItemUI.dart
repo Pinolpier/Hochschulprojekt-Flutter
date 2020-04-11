@@ -6,7 +6,7 @@ import 'package:univents/model/event.dart';
 //@author mdarscht
 class FeedItemUI extends StatelessWidget {
 
-  final event _data;
+  final Event _data;
 
   FeedItemUI(this._data);
 
@@ -48,6 +48,6 @@ class FeedItemUI extends StatelessWidget {
     );
   }
 
-  event get data => data;
+  Event get data => data;
 }
 

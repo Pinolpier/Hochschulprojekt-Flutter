@@ -1,54 +1,60 @@
 
-class event{
+class Event{
   String _title;
   DateTime _eventStartDate;
   DateTime _eventEndDate;
   var _duration;
   String _details;
   String _city;
-  String lat,lng;
+  String _lat,_lng;
   bool _privateEvent;
   //an image
 
-  event(this._title, this._eventStartDate, this._eventEndDate, this._details, this._city, this._privateEvent,this.lat,this.lng) {
+  Event(this._title, this._eventStartDate, this._eventEndDate, this._details, this._city, this._privateEvent,this._lat,this._lng) {
     this._duration = _eventEndDate.difference(_eventStartDate);
   }
 
-  String get title => _title;
-
-  DateTime get eventStartDate => _eventStartDate;
-
-  DateTime get eventEndDate => _eventEndDate;
-
-  get duration => _duration;
-
-  String get details => _details;
-
-  String get city => _city;
-
   bool get privateEvent => _privateEvent;
 
-  set title(String value) {
-    _title = value;
+  set privateEvent(bool value) {
+    _privateEvent = value;
   }
 
-  set eventStartDate(DateTime value) {
-    _eventStartDate = value;
-  }
-
-  set eventEndDate(DateTime value) {
-    _eventEndDate = value;
-  }
-
-  set details(String value) {
-    _details = value;
-  }
+  String get city => _city;
 
   set city(String value) {
     _city = value;
   }
 
-  set privateEvent(bool value) {
-    _privateEvent = value;
+  String get details => _details;
+
+  set details(String value) {
+    _details = value;
   }
+
+  get duration => _duration;
+
+  set duration(value) {
+    _duration = value;
+  }
+
+  DateTime get eventEndDate => _eventEndDate;
+
+  set eventEndDate(DateTime value) {
+    _eventEndDate = value;
+  }
+
+  DateTime get eventStartDate => _eventStartDate;
+
+  set eventStartDate(DateTime value) {
+    _eventStartDate = value;
+  }
+
+  String get title => _title;
+
+  set title(String value) {
+    _title = value;
+  }
+
+
 }
