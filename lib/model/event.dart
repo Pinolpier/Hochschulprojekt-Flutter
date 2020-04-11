@@ -1,9 +1,11 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Event{
   String _title;
-  DateTime _eventStartDate;
-  DateTime _eventEndDate;
+  Timestamp _eventStartDate;
+  Timestamp _eventEndDate;
   var _duration;
   String _details;
   String _city;
@@ -13,7 +15,7 @@ class Event{
   //an image
 
   Event(this._title, this._eventStartDate, this._eventEndDate, this._details, this._city, this._privateEvent,this._lat,this._lng) {
-    this._duration = _eventEndDate.difference(_eventStartDate);
+
   }
 
   bool get privateEvent => _privateEvent;
@@ -47,18 +49,6 @@ class Event{
     _duration = value;
   }
 
-  DateTime get eventEndDate => _eventEndDate;
-
-  set eventEndDate(DateTime value) {
-    _eventEndDate = value;
-  }
-
-  DateTime get eventStartDate => _eventStartDate;
-
-  set eventStartDate(DateTime value) {
-    _eventStartDate = value;
-  }
-
   String get title => _title;
 
   set title(String value) {
@@ -69,6 +59,18 @@ class Event{
 
   set lng(String value) {
     _lng = value;
+  }
+
+  Timestamp get eventEndDate => _eventEndDate;
+
+  set eventEndDate(Timestamp value) {
+    _eventEndDate = value;
+  }
+
+  Timestamp get eventStartDate => _eventStartDate;
+
+  set eventStartDate(Timestamp value) {
+    _eventStartDate = value;
   }
 
 

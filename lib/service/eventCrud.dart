@@ -42,15 +42,27 @@ import 'package:univents/model/event.dart';
     Firestore.instance.collection(collection).add(event).catchError((e){print(e);});
   }
 
-   getData() async{
-   return await db.collection(collection) .getDocuments();
+  Future<List<Event>> getEvents() async {
+    QuerySnapshot qShot =
+    await Firestore.instance.collection(collection).getDocuments();
+    return qShot.documents.map(
+            (doc) => Event(
+              doc.data['name'],
+              doc.data['startdate'],
+              doc.data['enddate'],
+              doc.data['details'],
+              doc.data['city'],
+              doc.data['private'],
+              doc.data['latitude'],
+              doc.data['longitude'],
+            )
+    ).toList();
   }
 
 
-  void testMethod(){
-    Event event = Event('testname',DateTime.now(),DateTime(2021),'testDetails','Heilbronn',true,'12.0','45.12');
-    saveEvent(event);
+  void testMethod() async{
+    List<Event> eventList = await getEvents();
+  print(eventList[0].title);
   }
-
 
 }

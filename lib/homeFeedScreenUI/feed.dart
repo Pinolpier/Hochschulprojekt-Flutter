@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:univents/homeFeedScreenUI/feedItemUI.dart';
 import 'package:univents/model/event.dart';
@@ -13,7 +14,7 @@ class Feed {
 
   static List<Widget> get feed => _feed;
 
-  static addNewFeed(String title, DateTime eventStartDate, DateTime eventEndDate, String details, String city, bool privateEvent,String lat,String lng) {
+  static addNewFeed(String title, Timestamp eventStartDate, Timestamp eventEndDate, String details, String city, bool privateEvent,String lat,String lng) {
     Event newFeed = Event(title, eventStartDate, eventEndDate, details, city, privateEvent,lat,lng);
     FeedItemUI newFeedUI = FeedItemUI(newFeed);
     _feed.add(newFeedUI);
