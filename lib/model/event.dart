@@ -1,15 +1,16 @@
-//@author mdarscht
-class FeedItemImpl{
+
+class event{
   String _title;
   DateTime _eventStartDate;
   DateTime _eventEndDate;
   var _duration;
   String _details;
   String _city;
+  String lat,lng;
   bool _privateEvent;
   //an image
 
-  FeedItemImpl(this._title, this._eventStartDate, this._eventEndDate, this._details, this._city, this._privateEvent) {
+  event(this._title, this._eventStartDate, this._eventEndDate, this._details, this._city, this._privateEvent,this.lat,this.lng) {
     this._duration = _eventEndDate.difference(_eventStartDate);
   }
 

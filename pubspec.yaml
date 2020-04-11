@@ -28,6 +28,9 @@ dependencies:
   firebase_auth: ^0.15.5+3
   google_sign_in: ^4.4.1
 
+  #The following dependencie is needed to use Firestore
+  cloud_firestore: ^0.13.4+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

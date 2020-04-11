@@ -1,12 +1,12 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/homeFeedScreenUI/feedActionBar.dart';
-import 'package:univents/homeFeedScreenUI/feedItemImpl.dart';
+import 'package:univents/model/event.dart';
 
 //@author mdarscht
 class FeedItemUI extends StatelessWidget {
 
-  final FeedItemImpl _data;
+  final event _data;
 
   FeedItemUI(this._data);
 
@@ -40,7 +40,7 @@ class FeedItemUI extends StatelessWidget {
               ),
             ),
             SizedBox(height: (MediaQuery.of(context).size.height/50),),
-            FeedActionBar(),
+           // FeedActionBar(),
             SizedBox(height: 12,),
           ],
         ),
@@ -48,6 +48,6 @@ class FeedItemUI extends StatelessWidget {
     );
   }
 
-  FeedItemImpl get data => data;
+  event get data => data;
 }
 

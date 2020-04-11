@@ -1,6 +1,7 @@
+
 import 'package:flutter/cupertino.dart';
-import 'package:univents/homeFeedScreenUI/feedItemImpl.dart';
 import 'package:univents/homeFeedScreenUI/feedItemUI.dart';
+import 'package:univents/model/event.dart';
 
 //@author
 //for managing feed
@@ -12,8 +13,8 @@ class Feed {
 
   static List<Widget> get feed => _feed;
 
-  static addNewFeed(String title, DateTime eventStartDate, DateTime eventEndDate, String details, String city, bool privateEvent) {
-    FeedItemImpl newFeed = FeedItemImpl(title, eventStartDate, eventEndDate, details, city, privateEvent);
+  static addNewFeed(String title, DateTime eventStartDate, DateTime eventEndDate, String details, String city, bool privateEvent,String lat,String lng) {
+    event newFeed = event(title, eventStartDate, eventEndDate, details, city, privateEvent,lat,lng);
     FeedItemUI newFeedUI = FeedItemUI(newFeed);
     _feed.add(newFeedUI);
     _feedOrientation.add(newFeedUI);
@@ -34,8 +35,8 @@ class Feed {
   }
 
   static List<Widget> test(){
-    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
-    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
+    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false,null,null);
+    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false,null,null);
     return _feed;
   }
 
