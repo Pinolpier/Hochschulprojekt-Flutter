@@ -1,3 +1,4 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -63,6 +64,62 @@ Future<bool> googleSignIn() async {
     //TODO log error
     print("Das hier ist der Error:");
     print(error);
+  }
+}
+
+Future<bool> appleSignIn() async {
+  final result = await AppleSignIn.performRequests(
+      [AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])]);
+  switch (result.status) {
+    case AuthorizationStatus.authorized:
+      final appleIdCredential = result.credential;
+      final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+      final _credentials = oAuthProvider.getCredential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken),
+          accessToken: String.fromCharCodes(
+              appleIdCredential.authorizationCode));
+      try {
+        final authResult = await _auth.signInWithCredential(_credentials);
+        _user = authResult.user;
+        final updateUser = UserUpdateInfo();
+        updateUser.displayName =
+        '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName
+            .familyName}';
+        await _user.updateProfile(updateUser);
+        return true;
+      } on PlatformException catch (platformException) {
+        switch (platformException.code) {
+          case "ERROR_INVALID_CREDENTIAL":
+          //If the credential data is malformed or has expired.
+            break;
+          case "ERROR_USER_DISABLED":
+          //If the user has been disabled (for example, in the Firebase console)
+            throw new UserDisabledException(platformException,
+                "The userAccount that tried to sign in with Apple was disabled. Credentilas were: " +
+                    _credentials.toString());
+            break;
+          case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
+          //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
+          // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
+            break;
+          case "ERROR_OPERATION_NOT_ALLOWED":
+          //Indicates that Google accounts are not enabled.
+            break;
+          case "ERROR_INVALID_ACTION_CODE":
+          //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
+            break;
+        }
+      }
+      break;
+    case AuthorizationStatus.error:
+    //TODO good exception handling here
+      print(result.error.toString());
+      //Throw an exception here
+      break;
+    case AuthorizationStatus.cancelled:
+      throw SignInAbortedException(null,
+          "The AppleSignIn was aborted by the user and thus no user is logged in!");
+      break;
   }
 }
 
