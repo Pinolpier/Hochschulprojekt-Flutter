@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -89,7 +87,7 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
         break;
       case "ERROR_USER_DISABLED": //If the user has been disabled (for example, in the Firebase console)
         throw new UserDisabledException(platformException,
-            "The user account with the given email ($email) was disabled (e.g. in the Firebase console).")
+            "The user account with the given email ($email) was disabled (e.g. in the Firebase console).");
         break;
       case "ERROR_TOO_MANY_REQUESTS": //If there was too many attempts to sign in as this user.
         break;
