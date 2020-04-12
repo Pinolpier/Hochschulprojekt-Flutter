@@ -9,6 +9,8 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 FirebaseUser _user;
 
+
+//TODO maybe use the following plugin to keep users signed in?: https://pub.dev/packages/flutter_secure_storage#-changelog-tab-
 Future<FirebaseUser> _refreshCurrentlyLoggedInUser() async {
   _user = await _auth.currentUser();
 }
@@ -113,7 +115,8 @@ Future<bool> appleSignIn() async {
       break;
     case AuthorizationStatus.error:
     //TODO good exception handling here
-      print(result.error.toString());
+      print("AppleSignIn AuthorizationStatus Error occured: " +
+          result.error.toString());
       //Throw an exception here
       break;
     case AuthorizationStatus.cancelled:
@@ -242,6 +245,7 @@ String getEmailOfCurrentlySignedInUser() {
 void signOut() async {
   await _auth.signOut();
   await _googleSignIn.signOut();
+
   _user = null;
   print("SignOut done!");
 }
