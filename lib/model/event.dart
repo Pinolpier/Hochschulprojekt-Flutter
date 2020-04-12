@@ -13,7 +13,7 @@ class Event{
   String _lat;
   String _lng;
   bool _privateEvent;
-  List<String> _teilnehmerIDs;
+  List<dynamic> _teilnehmerIDs;
 
   Event(this._title, this._eventStartDate, this._eventEndDate, this._details,
       this._city, this._privateEvent,this._lat,this._lng,this._teilnehmerIDs) {}
@@ -23,7 +23,7 @@ class Event{
   void addTeilnehmer(String teilnehmerID){
     teilnehmerIDs.add(teilnehmerID);
   }
-  List<String> get teilnehmerIDs => _teilnehmerIDs;
+  List<dynamic> get teilnehmerIDs => _teilnehmerIDs;
 
   set teilnehmerIDs(List<String> value) {
     _teilnehmerIDs = value;

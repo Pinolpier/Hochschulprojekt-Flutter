@@ -53,10 +53,17 @@ import 'package:univents/model/event.dart';
   /**
    * This Method writes the data into the database
    */
-   Future <void> addData(event) async {
-    if(isLoggedIn())
-     db.collection(collection).add(eventToMap(event)).catchError((e){print(e);});
-    else{
+   Future <void> addData(Event event) async {
+    if(isLoggedIn()) {
+      try {
+        db.collection(collection).add(eventToMap(event)).catchError((e) {
+          print(e);
+        });
+      }
+      catch(Exception){
+        print(Exception);
+      }
+    } else{
       print('User muss eingeloggt sein');
     }
   }
@@ -65,8 +72,14 @@ import 'package:univents/model/event.dart';
    * updates a event in a database
    */
   Future <void> updateData(Event event) async{
-    if(event.eventID !=null)
-    db.collection(collection).document(event.eventID).updateData(eventToMap(event));
+    try {
+      if (event.eventID != null)
+        db.collection(collection).document(event.eventID).updateData(
+            eventToMap(event));
+    }
+    catch(Exception){
+      print(Exception);
+    }
   }
 
   /**
@@ -74,7 +87,12 @@ import 'package:univents/model/event.dart';
    */
   Future<void> deleteEvent(Event event) async{
     if(event.eventID !=null){
-      db.collection(collection).document(event.eventID).delete();
+      try {
+        db.collection(collection).document(event.eventID).delete();
+      }
+      catch(Exception){
+        print(Exception);
+      }
     }
   }
 
@@ -82,21 +100,37 @@ import 'package:univents/model/event.dart';
    * This Method gets a List of Events from the Database with different Filters
    */
   Future<List<Event>> getEventswithQueryFilter() async{
-    if(start != null){
-      if(stop != null){
-        qShot =  await db.collectionGroup(collection).where('startdate',isGreaterThanOrEqualTo: start).where('enddate', isLessThanOrEqualTo: stop).getDocuments();
+    try {
+      if (start != null) {
+        if (stop != null) {
+          qShot = await db.collectionGroup(collection).where(
+              'startdate', isGreaterThanOrEqualTo: start).where(
+              'enddate', isLessThanOrEqualTo: stop).getDocuments();
+        }
+        else {
+          qShot = await db.collectionGroup(collection).where(
+              'startdate', isGreaterThanOrEqualTo: start).getDocuments();
+        }
+        if (stop != null) {
+          qShot = await db.collectionGroup(collection).where(
+              'enddate', isLessThanOrEqualTo: stop).getDocuments();
+        }
+        if (uid != null) {
+          qShot = await db.collectionGroup(collection).where(
+              'teilnehmerIDs', arrayContains: uid).getDocuments();
+        }
       }
-      else{
-        qShot =  await db.collectionGroup(collection).where('startdate',isGreaterThanOrEqualTo: start).getDocuments();
-      }
-      if(stop !=null){
-        qShot =  await db.collectionGroup(collection).where('enddate', isLessThanOrEqualTo: stop).getDocuments();
-      }
-      if(uid !=null){
-        qShot =  await db.collectionGroup(collection).where('teilnehmerIDs', arrayContains: uid).getDocuments();
+      List<Event> list = snapShotToList(qShot);
+      if (list != null) {
+        if (list.length > 0)
+          return list;
+        else
+          print('Keine Events gefunden');
       }
     }
-    return snapShotToList(qShot);
+    catch(Exception){
+      print(Exception);
+    }
   }
 
   /**
@@ -112,20 +146,23 @@ import 'package:univents/model/event.dart';
    * This method wraps a QuerySnapshot into a List of Events
    */
     List<Event> snapShotToList(QuerySnapshot qShot){
-    return qShot.documents.map(
-            (doc) => Event(
-              doc.data['name'],
-              doc.data['startdate'],
-              doc.data['enddate'],
-              doc.data['details'],
-              doc.data['city'],
-              doc.data['private'],
-              doc.data['latitude'],
-              doc.data['longitude'],
-              doc.data['teilnehmerIDs']
-            )
-    ).toList();
-    
+    if(qShot != null) {
+      return qShot.documents.map(
+              (doc) =>
+              Event(
+                  doc.data['name'],
+                  doc.data['startdate'],
+                  doc.data['enddate'],
+                  doc.data['details'],
+                  doc.data['city'],
+                  doc.data['private'],
+                  doc.data['latitude'],
+                  doc.data['longitude'],
+                  doc.data['teilnehmerIDs']
+              )
+      ).toList();
+    }
+    else return null;
   }
 
   /**
@@ -135,12 +172,6 @@ import 'package:univents/model/event.dart';
     for(int x=0;x<eventList.length;x++){
       eventList[x].eventID = qShot.documents[x].documentID;
     }
-  }
-
-  // just for testing the database service
-  void testMethod() async{
-    List<Event> eventList = await getEvents();
-    print(eventList[0].title);
   }
 
   Timestamp get stop => _stop;
