@@ -81,10 +81,27 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                       onTap: () async {
                         print(friends[index].name + " was pressed");
                         if (friends[index].name.contains("Link")) {
-                          String _toPrint = await googleSignIn();
-                          print(_toPrint);
-                          await new Future.delayed(const Duration(minutes: 2));
-                          signOutGoogle();
+                          print(await googleSignIn());
+                        }
+                        if (friends[index].name.contains("Häring")) {
+                          signOut();
+                        }
+                        if (friends[index].name.contains("Henrich")) {
+                          print(registerWithEmailAndPassword(
+                              "MarkusLinkS5@gmail.com", "1Passwört"));
+                        }
+                        if (friends[index].name.contains("Oster")) {
+                          print(signInWithEmailAndPassword(
+                              "MarkusLinkS5@gmail.com", "1Passwört"));
+                        }
+                        if (friends[index].name.contains("Darscht")) {
+                          //sendPasswordResetEMail(email: "spam1@markus-link.com");
+                          print((getUidOfCurrentlySignedInUser() != null
+                              ? getUidOfCurrentlySignedInUser()
+                              : "no_uid") + " is " +
+                              (getEmailOfCurrentlySignedInUser() != null
+                                  ? getEmailOfCurrentlySignedInUser()
+                                  : "no_email"));
                         }
                       },
                       title: Text(friends[index].name),
