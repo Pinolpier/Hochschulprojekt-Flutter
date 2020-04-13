@@ -11,9 +11,13 @@ class Event{
   String _lng;
   bool _privateEvent;
   List<dynamic> _teilnehmerIDs;
+  String _imageURL;
+
 
   Event(this._title, this._eventStartDate, this._eventEndDate, this._details,
-      this._city, this._privateEvent,this._lat,this._lng,this._teilnehmerIDs) {}
+      this._city, this._privateEvent,this._lat,this._lng,this._teilnehmerIDs,this._imageURL);
+
+
 
   bool get privateEvent => _privateEvent;
 
@@ -76,6 +80,12 @@ class Event{
 
   set eventID(String value) {
     _eventID = value;
+  }
+
+  String get imageURL => _imageURL;
+
+  set imageURL(String value) {
+    _imageURL = value;
   }
 
 

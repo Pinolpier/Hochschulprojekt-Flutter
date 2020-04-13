@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/storageService.dart';
 
 
  ///This class adds and gets data from the database
@@ -14,12 +16,13 @@ import 'package:univents/model/event.dart';
   QuerySnapshot qShot;
   String uid;
 
-  Timestamp get start => _start;
-  set start(Timestamp value) {
-    _start = value;
+  ///This Method should be called when a event should be created
+  void createEvent(File image,Event event)async{
+    if(image != null) {
+      event.imageURL = await storage().uploadImage('eventPicture', image);
+    }
+    addData(event);
   }
-
-
 
   ///This Method checks, if the user is logged in
   bool isLoggedIn() {
@@ -43,6 +46,7 @@ import 'package:univents/model/event.dart';
         'longitude' : event.lng,
         'private' : event.privateEvent,
         'teilnehmerIDs' : event.teilnehmerIDs,
+        'imageURL':event.imageURL,
       };
     }
   
@@ -144,7 +148,8 @@ import 'package:univents/model/event.dart';
                   doc.data['private'],
                   doc.data['latitude'],
                   doc.data['longitude'],
-                  doc.data['teilnehmerIDs']
+                  doc.data['teilnehmerIDs'],
+                  doc.data['imageURL']
               )
       ).toList();
     }
@@ -161,6 +166,11 @@ import 'package:univents/model/event.dart';
   Timestamp get stop => _stop;
   set stop(Timestamp value) {
     _stop = value;
+  }
+
+  Timestamp get start => _start;
+  set start(Timestamp value) {
+    _start = value;
   }
 
   ///First Version of Exceptionhandling (not tested)
