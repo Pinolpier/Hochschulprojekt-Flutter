@@ -1,10 +1,7 @@
-
-import 'package:univents/service/eventService.dart';
-import 'package:univents/model/event.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/UIScreens/constants.dart';
+import 'package:univents/service/storageService.dart';
 
 /**
  * this class creates a loginscreen with different textfields to put in email and username and a few
@@ -141,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('login buton pressed'),
+        onPressed: () => print('Login Button pressed'),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),

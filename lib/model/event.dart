@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event{
@@ -7,7 +5,6 @@ class Event{
   String _title;
   Timestamp _eventStartDate;
   Timestamp _eventEndDate;
-  var _duration;
   String _details;
   String _city;
   String _lat;
@@ -49,12 +46,6 @@ class Event{
 
   set details(String value) {
     _details = value;
-  }
-
-  get duration => _duration;
-
-  set duration(value) {
-    _duration = value;
   }
 
   String get title => _title;

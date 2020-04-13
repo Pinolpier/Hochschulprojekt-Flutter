@@ -1,52 +1,27 @@
-import 'dart:html';
-
+import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
 
+///This class represents the interface for image storage
+class storage {
 
-class storageService{
-
-  File _image;
-  String _uploadedFileURL;
-  final FirebaseStorage fb = new FirebaseStorage();
-
-
-
-  Future chooseFile() async {
-    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
-      setState(() {
-        _image = image;
-      });
-    });
+  ///This Method starts the cameramode and uploads the chosen picture
+    Future<String>saveCameraImage(String imageId)async{
+     return await uploadImage(imageId,await ImagePicker.pickImage(source: ImageSource.camera));
+  }
+///This Method starts the Gallery of the phone and uploads the selected image
+  Future<String> saveGalleryImage(String imageId)async{
+    return await uploadImage(imageId,await ImagePicker.pickImage(source: ImageSource.gallery));
   }
 
-
-  Future uploadFile() async {
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('chats/${Path.basename(_image.path)}}');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-    print('File Uploaded');
-    storageReference.getDownloadURL().then((fileURL) {
-      setState(() {
-        _uploadedFileURL = fileURL;
-      });
-    });
+  ///This Method uploads a File
+  Future<String> uploadImage(String imageId,File imageFile) async {
+    StorageReference ref =
+    FirebaseStorage.instance.ref().child(imageId).child("image.jpg");
+    StorageUploadTask uploadTask = ref.putFile(imageFile);
+    return await (await uploadTask.onComplete).ref.getDownloadURL();
   }
 
-  String get uploadedFileURL => _uploadedFileURL;
-
-  set uploadedFileURL(String value) {
-    _uploadedFileURL = value;
-  }
-
-  File get image => _image;
-
-  set image(File value) {
-    _image = value;
-  }
 
 
 }
