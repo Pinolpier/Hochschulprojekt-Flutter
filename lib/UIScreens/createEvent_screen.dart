@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (at this point only a placeholder)
-/// -Event Start Date (input-type: datetime)
-/// -Event Start Time (input-type: datetime)
-/// -Event End Date (input-type: datetime)
-/// -Event End Time (input-type: datetime)
+/// -Event Start DateTime (DateTimePicker)
+/// -Event End Date (DateTimePicker)
 /// -Event Name (input-type: text)
 /// -Event Location (input-type: text, maybe convert it to an button which opens the map and where you then can choose the location)
 /// -Event Description (input-type: multiline text)
@@ -21,6 +19,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   DateTime selectedStartDateTime;
   DateTime selectedEndDateTime;
+  String selectedStartString = "not set";
+  String selectedEndString = "not set";
 
   Future<TimeOfDay> _selectTime(BuildContext context) {
     final now = DateTime.now();
@@ -60,6 +60,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedTime.minute,
             );
             print(selectedStartDateTime);
+            selectedStartString = selectedStartDateTime.toIso8601String();
           });
         },
         padding: EdgeInsets.all(15.0),
@@ -103,6 +104,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedTime.minute,
             );
             print(selectedEndDateTime);
+            selectedEndString = selectedEndDateTime.toIso8601String();
           });
         },
         padding: EdgeInsets.all(15.0),
@@ -281,8 +283,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 fallbackHeight: 150,
               ),
               SizedBox(height: 20.0),
+              new Text(
+                "Start Date: " + selectedStartString,
+                style: labelStyleConstant,
+              ),
               _selectStartDateTimeButtonWidget(),
               SizedBox(height: 20.0),
+              new Text(
+                "End Date: " + selectedEndString,
+                style: labelStyleConstant,
+              ),
               _selectEndDateTimeButtonWidget(),
               SizedBox(height: 20.0),
               _eventNameTextfieldWidget(),
