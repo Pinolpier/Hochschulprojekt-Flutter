@@ -59,8 +59,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedTime.hour,
               selectedTime.minute,
             );
-            print(selectedStartDateTime);
-            selectedStartString = selectedStartDateTime.toIso8601String();
+            if (selectedStartDateTime.isBefore(new DateTime.now())) {
+              //TODO errormessage
+              print("failed startdate");
+            } else {
+              print(selectedStartDateTime);
+              selectedStartString = selectedStartDateTime.toIso8601String();
+            }
           });
         },
         padding: EdgeInsets.all(15.0),
@@ -103,8 +108,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedTime.hour,
               selectedTime.minute,
             );
-            print(selectedEndDateTime);
-            selectedEndString = selectedEndDateTime.toIso8601String();
+            if (selectedStartDateTime == null || selectedEndDateTime.isBefore(selectedStartDateTime)) {
+              //TODO errormessage
+              print("failed enddate");
+            } else {
+              print(selectedEndDateTime);
+              selectedEndString = selectedEndDateTime.toIso8601String();
+            }
           });
         },
         padding: EdgeInsets.all(15.0),
