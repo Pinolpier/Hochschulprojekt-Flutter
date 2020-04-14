@@ -46,6 +46,11 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen>{
     return Dialog(
         child: Scaffold(
           backgroundColor: Colors.grey[200],
+          appBar: AppBar(
+            backgroundColor: Colors.blueAccent,
+            title: Text("Add new Friends"),
+            centerTitle: true,
+          ),
           body: Column(
             children: <Widget>[
               TextField(

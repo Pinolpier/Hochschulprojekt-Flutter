@@ -50,10 +50,70 @@ class _ForeignProfileScreenState extends State<ForeignProfileScreen> {
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Montserrat'),
                   ),
+                  SizedBox(height: 25.0),
+                  Container(
+                      height: 50.0,
+                      width: 170.0,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(20.0),
+                        shadowColor: Colors.grey,
+                        color: Colors.black45,
+                        elevation: 7.0,
+                        child: GestureDetector(
+                          onTap: () {
+                            showAlertDialog(context);
+                          },
+                          child: Center(
+                            child: Text(
+                              'Send Friends Request',
+                              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                            ),
+                          ),
+                        ),
+                      )),
                 ],
               ))
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.pop(context);
+      },
+    );
+    Widget confirmButton = FlatButton(
+      child: Text("Confirm"),
+      onPressed:  () {
+        //contact.emails.forEach((item) {
+          //print(item.value);
+       // });
+       // print(contact.displayName);
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      //title: Text(contact.displayName),
+      content: Text("Do you really want to send "  " a friends request?"), //contact.displayname
+      actions: [
+        cancelButton,
+        confirmButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
