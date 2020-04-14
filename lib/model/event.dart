@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event{
@@ -18,8 +17,7 @@ class Event{
   Event(this._title, this._eventStartDate, this._eventEndDate, this._description,
       this._location, this._privateEvent,this._teilnehmerIDs,this._imageURL,this._tagsList);
 
-  Event.createEvent(this._title,this._eventStartDate,this._eventEndDate,this._description,this._location,this._privateEvent,this._tagsList,this.image);
-
+  Event.createEvent(this._title,this._eventStartDate,this._eventEndDate,this._description,this._location,this._privateEvent,this._tagsList,this._teilnehmerIDs);
 
   bool get privateEvent => _privateEvent;
 

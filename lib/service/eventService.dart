@@ -18,6 +18,7 @@ import 'package:univents/service/storageService.dart';
   QuerySnapshot qShot;
   String uid;
 
+
   ///This Method should be called when a event should be created
   void createEvent(File image,Event event)async{
     if(image != null) {
@@ -25,7 +26,6 @@ import 'package:univents/service/storageService.dart';
     }
     addData(event);
   }
-
 
   Widget getImage(String eventID){
 
