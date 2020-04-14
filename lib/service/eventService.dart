@@ -1,238 +1,340 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
 
-
- ///This class adds and gets data from the database
- class eventService {
+///This class adds and gets data from the database
+class eventService {
   final db = Firestore.instance;
   final String collection = 'events';
-  Timestamp _start;
-  Timestamp _stop;
-  QuerySnapshot qShot;
-  String uid;
-
+  Map<String, dynamic> urlToID;
 
   ///This Method should be called when a event should be created
-  void createEvent(File image,Event event)async{
-    if(image != null) {
+  ///The File gets uploaded to Firebase storage
+  ///The event gets uploaded to Firestore
+  ///and the imageUrl gets saved in a internal Map
+  ///@input: File reffering to event
+  ///@input: Event who gets created
+  void createEvent(File image, Event event) async {
+    if (image != null) {
       event.imageURL = await storage().uploadImage('eventPicture', image);
     }
-    addData(event);
+    String eventID = await addData(event);
+    urlToID[eventID] = event.imageURL;
   }
 
-  Widget getImage(String eventID){
-
-    return Image.network(eventID);
-  }
-
-  ///This Method checks, if the user is logged in
-  bool isLoggedIn() {
-    if (FirebaseAuth.instance.currentUser() != null) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-   ///This Method gets an Event and wrappes it into a map for the database.
-    Map<String, dynamic> eventToMap(Event event){
-      return {
-        'name' : event.title,
-        'description' : event.description,
-        'location' : event.location,
-        'startdate' : event.eventStartDate,
-        'enddate' : event.eventEndDate,
-        'private' : event.privateEvent,
-        'teilnehmerIDs' : event.teilnehmerIDs,
-        'imageURL':event.imageURL,
-      };
-    }
-  
-    ///This Method writes the data into the database
-   Future <void> addData(Event event) async {
-    if(isLoggedIn()) {
-      try {
-        db.collection(collection).add(eventToMap(event)).catchError((e) {
-          print(e);
-        });
-      }
-      on PlatformException catch(e){
-        exceptionhandling(e);
-      }
-    } else{
-      print('User muss eingeloggt sein');
+  ///This Method writes the data into the database
+  ///@input: Event who should added to database
+  ///@return String with eventID
+  Future<String> addData(Event event) async {
+    try {
+      DocumentReference documentReference =
+          await db.collection(collection).add(eventToMap(event));
+      return documentReference.documentID;
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
     }
   }
 
+  ///This Method searches for a Image belongs to an Event
+  ///If there is no Url local saved the needed url gets loaded
+  ///from database
+  ///@input: eventID String of the wanted Event-Image
+  ///@return: Widget with a image
+  Future<Widget> getImage(String eventID) async {
+    String key = '';
+    if (urlToID.containsValue(eventID)) {
+      key = urlToID.keys
+          .firstWhere((k) => urlToID[k] == eventID, orElse: () => null);
+    } else {
+      DocumentSnapshot documentSnapshot =
+          await db.collection(collection).document(eventID).get();
+      key = documentSnapshot.data['imageUrl'].toString();
+    }
+    return Image.network(key);
+  }
+
+  ///This Method gets an Event and wrappes it into a map for the database.
+  ///@input: Event who should be wrapped to a Map
+  ///@return: Map with the Informations that belong to an event
+  Map<String, dynamic> eventToMap(Event event) {
+    return {
+      'name': event.title,
+      'description': event.description,
+      'location': event.location,
+      'startdate': event.eventStartDate,
+      'enddate': event.eventEndDate,
+      'private': event.privateEvent,
+      'teilnehmerIDs': event.teilnehmerIDs,
+      'tagsList': event.tagsList,
+      'imageUrl': event.imageURL
+    };
+  }
 
   /// updates a event in a database
-  Future <void> updateData(Event event) async{
+  /// @input event which should get Updated
+  updateData(Event event) async {
     try {
       if (event.eventID != null)
-        db.collection(collection).document(event.eventID).updateData(
-            eventToMap(event));
-    }
-    on PlatformException catch(e){
+        db
+            .collection(collection)
+            .document(event.eventID)
+            .updateData(eventToMap(event));
+    } on PlatformException catch (e) {
       exceptionhandling(e);
     }
   }
 
-   ///deletes a event in the database
-  Future<void> deleteEvent(Event event) async{
-    if(event.eventID !=null){
+  ///deletes a event in the database
+  ///event which have to be deleted
+   deleteEvent(Event event) async {
+    if (event.eventID != null) {
       try {
         db.collection(collection).document(event.eventID).delete();
-      }
-      on PlatformException catch(e){
+      } on PlatformException catch (e) {
         exceptionhandling(e);
       }
     }
   }
 
-   ///This Method gets a List of Events from the Database with different Filters
-   Future<List<Event>> getEventswithQueryFilter() async{
+  ///Searches for Events in a specific Time
+  ///@input: Start and Stop Timestamps
+  ///@return: List of Events from the Database
+  Future<List<Event>> getEventsbyStartAndStopDate(
+      Timestamp start, Timestamp stop) async {
     try {
-      if (start != null) {
-        if (stop != null) {
-          qShot = await db.collectionGroup(collection).where(
-              'startdate', isGreaterThanOrEqualTo: start).where(
-              'enddate', isLessThanOrEqualTo: stop).getDocuments();
-        }
-        else {
-          qShot = await db.collectionGroup(collection).where(
-              'startdate', isGreaterThanOrEqualTo: start).getDocuments();
-        }
-        if (stop != null) {
-          qShot = await db.collectionGroup(collection).where(
-              'enddate', isLessThanOrEqualTo: stop).getDocuments();
-        }
-        if (uid != null) {
-          qShot = await db.collectionGroup(collection).where(
-              'teilnehmerIDs', arrayContains: uid).getDocuments();
-        }
-      }
-      List<Event> list = snapShotToList(qShot);
-      if (list != null) {
-        if (list.length > 0)
-          return list;
-        else
-          print('Keine Events gefunden');
-      }
-    }
-    on PlatformException catch(e){
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('startdate', isGreaterThanOrEqualTo: start)
+          .where('enddate', isLessThanOrEqualTo: stop)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
       exceptionhandling(e);
     }
   }
 
-   ///This method gets all Events from database
-   Future <List<Event>>getEvents() async {
-    qShot =
-    await db.collection(collection).getDocuments();
+  ///Searches for Events since a specific Time
+  ///@input: Timestamp of a startdate
+  ///@return: List of Events from the Database
+  Future<List<Event>> getEventsbyStartDate(Timestamp start) async {
+    try {
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('startdate', isGreaterThanOrEqualTo: start)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///Searches for Events until a specific Time
+  ///@input: Timestamp until events will be searched
+  ///@return: List of Events from the Database
+  Future<List<Event>> getEventsbyEndDate(Timestamp stop) async {
+    try {
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('enddate', isLessThanOrEqualTo: stop)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///Searches for events of a specific user
+  ///@return List of Events from the database
+  Future<List<Event>> getUsersEvents() async {
+    try {
+      FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      String uid = user.uid;
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('teilnehmerIDs', arrayContains: uid)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///Searches for Events in a specific Time for the currentUser
+  ///@input: Start and Stop Timestamps
+  Future<List<Event>> getEventsbyUserAndStartAndStopDate(
+      Timestamp start, Timestamp stop) async {
+    try {
+      FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      String uid = user.uid;
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('teilnehmerIDs', arrayContains: uid)
+          .where('startdate', isGreaterThanOrEqualTo: start)
+          .where('enddate', isLessThanOrEqualTo: stop)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///Searches for Events until a specific Time for the currentUser
+  ///@input: Stop Timestamps
+  Future<List<Event>> getEventsbyUserAndStopDate(
+      Timestamp start, Timestamp stop) async {
+    try {
+      FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      String uid = user.uid;
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('teilnehmerIDs', arrayContains: uid)
+          .where('enddate', isLessThanOrEqualTo: stop)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///Searches for Events since a specific Time for the currentUser
+  ///@input: Start Timestamps
+  Future<List<Event>> getEventsbyUserAndStartDate(
+      Timestamp start, Timestamp stop) async {
+    try {
+      FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      String uid = user.uid;
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('teilnehmerIDs', arrayContains: uid)
+          .where('startdate', isGreaterThanOrEqualTo: start)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///Searches for Events by specific tags
+  ///@input: List<String> with specific Tags
+  Future<List<Event>> getEventsbyTags(
+      List<String>tagsList) async {
+    try {
+
+      QuerySnapshot qShot = await db
+          .collectionGroup(collection)
+          .where('tagsList', arrayContains: tagsList)
+          .getDocuments();
+      return snapShotToList(qShot);
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+
+  ///This method gets all Events from database
+  ///@return List of Events
+  Future<List<Event>> getEvents() async {
+    QuerySnapshot qShot = await db.collection(collection).getDocuments();
     return snapShotToList(qShot);
   }
 
-
-   ///This method wraps a QuerySnapshot into a List of Events
-    List<Event> snapShotToList(QuerySnapshot qShot){
-    if(qShot != null) {
-      return qShot.documents.map(
-              (doc) =>
-              Event(
-                  doc.data['name'],
-                  doc.data['startdate'],
-                  doc.data['enddate'],
-                  doc.data['details'],
-                  doc.data['city'],
-                  doc.data['private'],
-                  doc.data['teilnehmerIDs'],
-                  doc.data['imageURL'],
-                  doc.data['']
-              )
-      ).toList();
-    }
-    else return null;
+  ///This method wraps a QuerySnapshot into a List of Events
+  ///@input: QuerySnapshot who should wrapped into a List of Events
+  List<Event> snapShotToList(QuerySnapshot qShot) {
+    if (qShot != null) {
+      return qShot.documents
+          .map((doc) => Event(
+              doc.data['name'],
+              doc.data['startdate'],
+              doc.data['enddate'],
+              doc.data['details'],
+              doc.data['city'],
+              doc.data['private'],
+              doc.data['teilnehmerIDs'],
+              doc.data['tagsList']))
+          .toList();
+    } else
+      print('Keine passenden Events gefunden');
   }
 
   ///To Update Events, each event needs it own EventID
-  void addEventIdToObjects(List<Event> eventList){
-    for(int x=0;x<eventList.length;x++){
+  ///@input: List of Events without ID,
+  ///@input: QuerySnapshot with the refference ID's
+  void addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
+    for (int x = 0; x < eventList.length; x++) {
       eventList[x].eventID = qShot.documents[x].documentID;
     }
   }
 
-  Timestamp get stop => _stop;
-  set stop(Timestamp value) {
-    _stop = value;
-  }
-
-  Timestamp get start => _start;
-  set start(Timestamp value) {
-    _start = value;
-  }
-
   ///First Version of Exceptionhandling (not tested)
-  void exceptionhandling(PlatformException e){
-    switch(e.code){
+  ///@input: PlatformException to handle
+  void exceptionhandling(PlatformException e) {
+    switch (e.code) {
       case ('ABORTED'):
-        print('The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.');
+        print(
+            'The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.');
         break;
-      case('ALREADY_EXISTS'):
+      case ('ALREADY_EXISTS'):
         print('Some document that we attempted to create already exists.');
         break;
-      case('CANCELLED'):
+      case ('CANCELLED'):
         print('The operation was cancelled (typically by the caller).');
         break;
-      case('DATA_LOSS'):
+      case ('DATA_LOSS'):
         print('Unrecoverable data loss or corruption.');
         break;
-      case('DEADLINE_EXCEEDED'):
-        print('Deadline expired before operation could complete. For operations that change the state of the system, this error may be returned even if the operation has completed successfully. For example, a successful response from a server could have been delayed long enough for the deadline to expire.');
+      case ('DEADLINE_EXCEEDED'):
+        print(
+            'Deadline expired before operation could complete. For operations that change the state of the system, this error may be returned even if the operation has completed successfully. For example, a successful response from a server could have been delayed long enough for the deadline to expire.');
         break;
-      case('FAILED_PRECONDITION'):
-        print('Operation was rejected because the system is not in a state required for the operations execution.');
+      case ('FAILED_PRECONDITION'):
+        print(
+            'Operation was rejected because the system is not in a state required for the operations execution.');
         break;
-      case('INTERNAL'):
-        print('Internal errors. Means some invariants expected by underlying system has been broken. If you see one of these errors, something is very broken.');
+      case ('INTERNAL'):
+        print(
+            'Internal errors. Means some invariants expected by underlying system has been broken. If you see one of these errors, something is very broken.');
         break;
-      case('INVALID_ARGUMENT'):
-        print('Client specified an invalid argument. Note that this differs from FAILED_PRECONDITION. INVALID_ARGUMENT indicates arguments that are problematic regardless of the state of the system (e.g., an invalid field name).');
+      case ('INVALID_ARGUMENT'):
+        print(
+            'Client specified an invalid argument. Note that this differs from FAILED_PRECONDITION. INVALID_ARGUMENT indicates arguments that are problematic regardless of the state of the system (e.g., an invalid field name).');
         break;
-      case('NOT_FOUND'):
+      case ('NOT_FOUND'):
         print('Some requested document was not found.');
         break;
-      case('OK'):
+      case ('OK'):
         //The operation completed successfully. FirebaseFirestoreException will never have a status of OK.
         print('The operation completed successfully.');
         break;
-      case('OUT_OF_RANGE'):
+      case ('OUT_OF_RANGE'):
         print('Operation was attempted past the valid range.');
         break;
-      case('PERMISSION_DENIED'):
-        print('The caller does not have permission to execute the specified operation.');
+      case ('PERMISSION_DENIED'):
+        print(
+            'The caller does not have permission to execute the specified operation.');
         break;
-      case('RESOURCE_EXHAUSTED'):
-        print('Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.');
+      case ('RESOURCE_EXHAUSTED'):
+        print(
+            'Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.');
         break;
-      case('UNAUTHENTICATED'):
-        print('The request does not have valid authentication credentials for the operation.');
+      case ('UNAUTHENTICATED'):
+        print(
+            'The request does not have valid authentication credentials for the operation.');
         break;
-      case('UNAVAILABLE'):
-        print('The service is currently unavailable. This is a most likely a transient condition and may be corrected by retrying with a backoff.');
+      case ('UNAVAILABLE'):
+        print(
+            'The service is currently unavailable. This is a most likely a transient condition and may be corrected by retrying with a backoff.');
         break;
-      case('UNIMPLEMENTED'):
+      case ('UNIMPLEMENTED'):
         print('Operation is not implemented or not supported/enabled.');
         break;
-      case('UNKNOWN'):
+      case ('UNKNOWN'):
         print('Unknown error or an error from a different error domain.');
         break;
     }
   }
- }
+}

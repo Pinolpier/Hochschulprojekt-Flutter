@@ -11,11 +11,11 @@ class Event{
   bool _privateEvent;
   List<dynamic> _teilnehmerIDs;
   List<dynamic> _tagsList;
-  String _imageURL;
   File image;
+  String _imageURL;
 
   Event(this._title, this._eventStartDate, this._eventEndDate, this._description,
-      this._location, this._privateEvent,this._teilnehmerIDs,this._imageURL,this._tagsList);
+      this._location, this._privateEvent,this._teilnehmerIDs,this._tagsList);
 
   Event.createEvent(this._title,this._eventStartDate,this._eventEndDate,this._description,this._location,this._privateEvent,this._tagsList,this._teilnehmerIDs);
 
