@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
 
@@ -24,6 +26,12 @@ import 'package:univents/service/storageService.dart';
     addData(event);
   }
 
+
+  Widget getImage(String eventID){
+
+    return Image.network(eventID);
+  }
+
   ///This Method checks, if the user is logged in
   bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser() != null) {
@@ -38,12 +46,10 @@ import 'package:univents/service/storageService.dart';
     Map<String, dynamic> eventToMap(Event event){
       return {
         'name' : event.title,
-        'details' : event.details,
-        'city' : event.city,
+        'description' : event.description,
+        'location' : event.location,
         'startdate' : event.eventStartDate,
         'enddate' : event.eventEndDate,
-        'latitude': event.lat,
-        'longitude' : event.lng,
         'private' : event.privateEvent,
         'teilnehmerIDs' : event.teilnehmerIDs,
         'imageURL':event.imageURL,
@@ -146,10 +152,9 @@ import 'package:univents/service/storageService.dart';
                   doc.data['details'],
                   doc.data['city'],
                   doc.data['private'],
-                  doc.data['latitude'],
-                  doc.data['longitude'],
                   doc.data['teilnehmerIDs'],
-                  doc.data['imageURL']
+                  doc.data['imageURL'],
+                  doc.data['']
               )
       ).toList();
     }

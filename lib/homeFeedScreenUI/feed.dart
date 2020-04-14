@@ -15,10 +15,7 @@ class Feed {
   static List<Widget> get feed => _feed;
 
   static addNewFeed(String title, Timestamp eventStartDate, Timestamp eventEndDate, String details, String city, bool privateEvent,String lat,String lng,String url) {
-    Event newFeed = Event(title, eventStartDate, eventEndDate, details, city, privateEvent,lat,lng, new List<String>(),url);
-    FeedItemUI newFeedUI = FeedItemUI(newFeed);
-    _feed.add(newFeedUI);
-    _feedOrientation.add(newFeedUI);
+
   }
 
   static removeFeedByIndex(int index) {

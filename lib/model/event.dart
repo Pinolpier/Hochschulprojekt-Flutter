@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event{
@@ -5,18 +7,18 @@ class Event{
   String _title;
   Timestamp _eventStartDate;
   Timestamp _eventEndDate;
-  String _details;
-  String _city;
-  String _lat;
-  String _lng;
+  String _description;
+  String _location;
   bool _privateEvent;
   List<dynamic> _teilnehmerIDs;
+  List<dynamic> _tagsList;
   String _imageURL;
+  File image;
 
+  Event(this._title, this._eventStartDate, this._eventEndDate, this._description,
+      this._location, this._privateEvent,this._teilnehmerIDs,this._imageURL,this._tagsList);
 
-  Event(this._title, this._eventStartDate, this._eventEndDate, this._details,
-      this._city, this._privateEvent,this._lat,this._lng,this._teilnehmerIDs,this._imageURL);
-
+  Event.createEvent(this._title,this._eventStartDate,this._eventEndDate,this._description,this._location,this._privateEvent,this._tagsList,this.image);
 
 
   bool get privateEvent => _privateEvent;
@@ -30,27 +32,10 @@ class Event{
     _teilnehmerIDs = value;
   }
 
-  String get lat => _lat;
-
-  set lat(String value) {
-    _lat = value;
-  }
-
   set privateEvent(bool value) {
     _privateEvent = value;
   }
 
-  String get city => _city;
-
-  set city(String value) {
-    _city = value;
-  }
-
-  String get details => _details;
-
-  set details(String value) {
-    _details = value;
-  }
 
   String get title => _title;
 
@@ -58,10 +43,11 @@ class Event{
     _title = value;
   }
 
-  String get lng => _lng;
 
-  set lng(String value) {
-    _lng = value;
+  String get description => _description;
+
+  set description(String value) {
+    _description = value;
   }
 
   Timestamp get eventEndDate => _eventEndDate;
@@ -86,6 +72,18 @@ class Event{
 
   set imageURL(String value) {
     _imageURL = value;
+  }
+
+  String get location => _location;
+
+  set location(String value) {
+    _location = value;
+  }
+
+  List<dynamic> get tagsList => _tagsList;
+
+  set tagsList(List<dynamic> value) {
+    _tagsList = value;
   }
 
 
