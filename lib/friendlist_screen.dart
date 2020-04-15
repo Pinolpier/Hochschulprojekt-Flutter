@@ -81,7 +81,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                       onTap: () async {
                         print(friends[index].name + " was pressed");
                         if (friends[index].name.contains("Link")) {
-                          print(await appleSignIn());
+                          print(await googleSignIn());
                         }
                         if (friends[index].name.contains("Häring")) {
                           signOut();

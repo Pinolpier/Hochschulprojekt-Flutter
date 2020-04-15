@@ -86,11 +86,11 @@ Future<bool> googleSignIn() async {
     }
 
     return await isUserSignedIn();
-  } on Exception catch (error) {
+  } on Exception catch (error, stacktrace) {
     //TODO maybe add error type based error handling?
     //TODO log error
     print("Das hier ist der Error:");
-    print(error);
+    print(error.toString() + "\n" + stacktrace.toString());
   }
 }
 
