@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:aiblabswp2020ssunivents/DialogHelper.dart';
-import 'package:aiblabswp2020ssunivents/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/DialogHelper.dart';
+import 'package:univents/FriendslistDummies.dart';
+import 'package:univents/backendAPI.dart';
 
 class FriendlistScreen extends StatefulWidget{
   @override
@@ -77,8 +78,14 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
                   child: Card(
                     child: ListTile(
-                      onTap: () {
+                      onTap: () async {
                         print(friends[index].name + " was pressed");
+                        if (friends[index].name.contains("Link")) {
+                          String _toPrint = await googleSignIn();
+                          print(_toPrint);
+                          await new Future.delayed(const Duration(minutes: 2));
+                          signOutGoogle();
+                        }
                       },
                       title: Text(friends[index].name),
                       leading: CircleAvatar(

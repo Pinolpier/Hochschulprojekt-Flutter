@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/homeFeedScreenUI/navigationBarUI.dart';
+import 'package:univents/homeFeedScreenUI/navigationBarUI.dart';
 
 //@author mdarscht
 class HomeFeedScreenUI extends StatelessWidget{

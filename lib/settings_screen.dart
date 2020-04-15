@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/option_model.dart';
+import 'package:univents/option_model.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override

@@ -1,5 +1,5 @@
-import 'package:aiblabswp2020ssunivents/friendslistdialog_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/friendslistdialog_screen.dart';
 
 class DialogHelper {
 
