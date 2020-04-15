@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/UIScreens/constants.dart';
@@ -309,11 +310,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {/*
+        onPressed: () { /*
           Event event = new Event.createEvent(
               eventNameController.text,
-              selectedStartDateTime.millisecondsSinceEpoch,
-              selectedEndDateTime.millisecondsSinceEpoch,
+              selectedStartDateTime.millisecondsSinceEpoch as Timestamp,
+              selectedEndDateTime.millisecondsSinceEpoch as Timestamp,
               eventDescriptionController.text,
               eventLocationController.text,
               isPrivate,
