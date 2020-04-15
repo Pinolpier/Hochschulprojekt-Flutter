@@ -5,37 +5,40 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:univents/backendExceptions.dart';
 
-///These variables are references to our Auth plugins
+/// These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-///This variable is used to keep a reference to the current [FirebaseUser] that is logged in or [null] otherwise.
+/// This variable is used to keep a reference to the current [FirebaseUser] that is logged in or [null] otherwise.
 FirebaseUser _user;
 
-///These variables are needed to persistently safe, whether Apple Sign In is available on the device
-bool isAvailable;
+/// These variables are needed to persistently safe, whether Apple Sign In is available on the device
+bool isAppleSignInAvailable;
 bool _hasBeenChecked = false;
 
-Future<bool> check() async {
+/// Call this method to get a return bool that tells whether the device supports Sign-In-With-Apple. This feature is only supported on iOS 13+ devices.
+/// If this information has not been checked before this method needs time for asynchronously checking, that's why a [Future] is returned.
+/// This method completely relies on a method from the [AppleSignIn] class which is provided by a plugin.
+Future<bool> checkAppleSignInAvailability() async {
   if (!_hasBeenChecked) {
     _hasBeenChecked = true;
-    isAvailable = await AppleSignIn.isAvailable();
+    isAppleSignInAvailable = await AppleSignIn.isAvailable();
   }
-  return isAvailable;
+  return isAppleSignInAvailable;
 }
 
 //TODO maybe use the following plugin to keep users signed in?: https://pub.dev/packages/flutter_secure_storage#-changelog-tab-
 
-///used only internally (therefore _privateMethod). Used to update the reference to the currently logged in [_user].
+/// used only internally (therefore _privateMethod). Used to update the reference to the currently logged in [_user].
 Future<FirebaseUser> _refreshCurrentlyLoggedInUser() async {
   _user = await _auth.currentUser();
 }
 
-///Call this method to start the process of Google Sign In. Everything is handled automatically.
-///Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
-///Throws [SignInAbortedException] if the user aborted the Google Sign In, e.g. by pressing Cancel.
-///In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
-///Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
+/// Call this method to start the process of Google Sign In. Everything is handled automatically.
+/// Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
+/// Throws [SignInAbortedException] if the user aborted the Google Sign In, e.g. by pressing Cancel.
+/// In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
+/// Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
 Future<bool> googleSignIn() async {
   //the following code is from this tutorial with slight changes made: https://blog.codemagic.io/firebase-authentication-google-sign-in-using-flutter/
   try {
@@ -91,14 +94,13 @@ Future<bool> googleSignIn() async {
   }
 }
 
-///Call this method to start the process of Apple Sign In. Everything is handled automatically, except that
-///this METHOD DOES NOT CHECK, WHETHER APPLE SIGN IS AVAILABLE ON THE DEVICE, THIS HAS TO BE DONE BEFORE CALLING THIS METHOD!
-///Check for Apple Sign In availability (iOS 13 and higher) by calling [AppleSignInAvailability.isAvailable]. To be sure it has been checked and the value is correct
-///check [AppleSignInAvailability.hasBeenChecked] prior to checking the availability and only if it has not been checked so far call [AppleSignInAvailability.check]
-///Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
-///Throws [SignInAbortedException] if the user aborted the Apple Sign In, e.g. by pressing Cancel.
-///In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
-///Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
+/// Call this method to start the process of Apple Sign In. Everything is handled automatically, except that
+/// this METHOD DOES NOT CHECK, WHETHER APPLE SIGN IS AVAILABLE ON THE DEVICE, THIS HAS TO BE DONE BEFORE CALLING THIS METHOD!
+/// Check for Apple Sign In availability (iOS 13 and higher) by calling [backendAPI.checkAppleSignInAvailability].
+/// Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
+/// Throws [SignInAbortedException] if the user aborted the Apple Sign In, e.g. by pressing Cancel.
+/// In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
+/// Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
 Future<bool> appleSignIn() async {
   final result = await AppleSignIn.performRequests([
     AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
@@ -158,14 +160,14 @@ Future<bool> appleSignIn() async {
   }
 }
 
-///Call this method to sign a [FirebaseUser] in with email and password.
-///You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
-///None of the parameters [email] & [password] can be null!
-///Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
-///Throws [WrongPasswordException] if the given combination of [email] and [password] do not match, meaning no user could be signed in because the password is wrong.
-///Think twice, whether you tell in the error that the user exists. Should probably be catched together with:
-///Throws [UserNotFoundException] if the given user doesn't exist and should be registered first.
-///Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
+/// Call this method to sign a [FirebaseUser] in with email and password.
+/// You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
+/// None of the parameters [email] & [password] can be null!
+/// Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
+/// Throws [WrongPasswordException] if the given combination of [email] and [password] do not match, meaning no user could be signed in because the password is wrong.
+/// Think twice, whether you tell in the error that the user exists. Should probably be catched together with:
+/// Throws [UserNotFoundException] if the given user doesn't exist and should be registered first.
+/// Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
 Future<bool> signInWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.signInWithEmailAndPassword(
@@ -205,11 +207,11 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
 }
 
 //TODO throw a NullParameterException in Email And Password methods and also throw a WeakPasswordException.
-///Call this method to register a [FirebaseUser] with email and password.
-///You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
-///You should check [password] for strength (meaning 8 characters, containing at least one number and letter) before calling this method!
-///None of the parameters [email] & [password] can be null!
-///Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
+/// Call this method to register a [FirebaseUser] with email and password.
+/// You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
+/// You should check [password] for strength (meaning 8 characters, containing at least one number and letter) before calling this method!
+/// None of the parameters [email] & [password] can be null!
+/// Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
 Future<bool> registerWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.createUserWithEmailAndPassword(
@@ -240,6 +242,10 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
   return _user != null ? true : false;
 }
 
+/// Call this method so Firebase can send an email for password reset.
+/// Parameter [email] must be a correctly formatted email address.
+/// Throws an [NotAnEmailException] if the parameter [email] was malformed.
+/// Throws an [UserNotFoundException] if no user with the given email could be found. Think twice before telling a random guy entering random emails, whether or not a user can or cannot be found!
 Future<void> sendPasswordResetEMail({@required String email}) async {
   try {
     await _auth.sendPasswordResetEmail(email: email);
@@ -263,15 +269,19 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
   }
 }
 
+/// this method checks asynchronously whether a user is signed in in the firebase. Takes time because it uses the plugins method to check at firebase.
 Future<bool> isUserSignedIn() async {
   await _refreshCurrentlyLoggedInUser();
   return _user != null ? true : false;
 }
 
+/// this method checks whether a user is signed in in the firebase. Is the quicker than [backendAPI.isUserSignedIn] because it only checks the internal variables.
+/// Only use this if asynchronous requests are not an option for your code.
 bool isUserSignedInQuickCheck() {
   return _user != null ? true : false;
 }
 
+/// Returns the [FirebaseUser.uid] of the currently signed in user or null if no user is signed in.
 String getUidOfCurrentlySignedInUser() {
   if (isUserSignedInQuickCheck()) {
     return _user.uid;
@@ -280,6 +290,7 @@ String getUidOfCurrentlySignedInUser() {
   }
 }
 
+/// Returns the [FirebaseUser.email] of the currently signed in user or null if no user is signed in.
 String getEmailOfCurrentlySignedInUser() {
   if (isUserSignedInQuickCheck()) {
     return _user.email;
@@ -288,6 +299,7 @@ String getEmailOfCurrentlySignedInUser() {
   }
 }
 
+/// Starts the sign out process from Firebase.
 void signOut() async {
   await _auth.signOut();
   await _googleSignIn.signOut();
@@ -296,7 +308,7 @@ void signOut() async {
   print("SignOut done!");
 }
 
-//auth stream to be registered of user changes
+/// auth stream to be registered of user changes, should probably only be used to display the correct screen (Login vs. App)
 Stream<FirebaseUser> get user {
   return _auth.onAuthStateChanged;
 }
