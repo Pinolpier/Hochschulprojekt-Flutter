@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:univents/backendExceptions.dart';
+import 'package:univents/Model/backendExceptions.dart';
 
 /// These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
