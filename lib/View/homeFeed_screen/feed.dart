@@ -1,6 +1,6 @@
-import 'package:aiblabswp2020ssunivents/View/homeFeed_screen/feedItemImpl.dart';
-import 'package:aiblabswp2020ssunivents/View/homeFeed_screen/feedItemUI.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:univents/View/homeFeed_screen/feedItemImpl.dart';
+import 'package:univents/View/homeFeed_screen/feedItemUI.dart';
 
 //@author
 //for managing feed

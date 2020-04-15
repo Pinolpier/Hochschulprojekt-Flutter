@@ -1,8 +1,8 @@
-import 'package:aiblabswp2020ssunivents/Model/FriendslistDummies.dart';
+import 'package:contact_picker/contact_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/View/dialogs/Debouncer.dart';
-import 'package:contact_picker/contact_picker.dart';
+import 'package:univents/Model/FriendslistDummies.dart';
+import 'package:univents/View/dialogs/Debouncer.dart';
 
 /**
  * this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add

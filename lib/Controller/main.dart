@@ -1,6 +1,5 @@
-import 'package:aiblabswp2020ssunivents/View/friendList_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/View/createEvent_screen.dart';
+import 'package:univents/View/friendList_screen.dart';
 
 void main() => runApp(MyApp());
 

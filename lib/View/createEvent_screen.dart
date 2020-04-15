@@ -1,6 +1,6 @@
-import 'package:aiblabswp2020ssunivents/Model/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/Model/constants.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (at this point only a placeholder)

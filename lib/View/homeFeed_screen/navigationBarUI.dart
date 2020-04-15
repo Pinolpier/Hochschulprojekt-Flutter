@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:aiblabswp2020ssunivents/View/homeFeed_screen/feed.dart';
+import 'package:flutter/material.dart';
+import 'package:univents/View/homeFeed_screen/feed.dart';
 
 //@author mdarscht
 class NavigationBarUI extends StatefulWidget {
