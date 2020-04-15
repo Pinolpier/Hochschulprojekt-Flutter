@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/UIScreens/createEvent_screen.dart';
+import 'package:univents/UIScreens/createEvent_screen.dart';
 
 void main() => runApp(MyApp());
 

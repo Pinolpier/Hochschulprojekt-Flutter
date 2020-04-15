@@ -1,4 +1,4 @@
-import 'package:aiblabswp2020ssunivents/UIScreens/constants.dart';
+import 'package:univents/UIScreens/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +21,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   DateTime selectedEndDateTime;
   String selectedStartString = "not set";
   String selectedEndString = "not set";
+  bool isPrivate = false;
+
+  Widget _eventImage(){
+    return GestureDetector(
+      onTap: () {
+        print('image pressed');
+      }, // handle your image tap here
+      child: Image.asset(
+        'assets/eventPlaceholder.png',
+        height: 150.0,
+      ),
+    );
+}
 
   Future<TimeOfDay> _selectTime(BuildContext context) {
     final now = DateTime.now();
@@ -242,6 +255,46 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  Widget _addFriendsButtonWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () => print('addFriends Button Pressed'),
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'addFriends',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _isPrivateCheckbox() {
+    return Container(
+      child: Checkbox(
+      value: isPrivate,
+      onChanged: (value) {
+        setState(() {
+          isPrivate = value;
+          print(isPrivate);
+        });
+      },
+      ),
+    );
+  }
+
   Widget _createButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -284,15 +337,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Event Picture Placeholder',
-                style: labelStyleConstant,
-              ),
-              SizedBox(height: 20),
-              Placeholder(
-                fallbackHeight: 150,
-              ),
-              SizedBox(height: 20.0),
+              _eventImage(),
+              SizedBox(height: 40.0),
               new Text(
                 "Start Date: " + selectedStartString,
                 style: labelStyleConstant,
@@ -310,6 +356,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               _locationTextfieldWidget(),
               SizedBox(height: 20.0),
               _eventDescriptionTextfieldWidget(),
+              SizedBox(height: 20.0),
+              new Text(
+                "isPrivate:",
+                style: labelStyleConstant,
+              ),
+              _isPrivateCheckbox(),
+              _addFriendsButtonWidget(),
               _createButtonWidget(),
             ],
           ),
