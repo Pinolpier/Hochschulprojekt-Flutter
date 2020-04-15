@@ -9,13 +9,14 @@ class Event{
   String _description;
   String _location;
   bool _privateEvent;
+  String _latitude,_longitude;
   List<dynamic> _teilnehmerIDs;
   List<dynamic> _tagsList;
   File image;
   String _imageURL;
 
   Event(this._title, this._eventStartDate, this._eventEndDate, this._description,
-      this._location, this._privateEvent,this._teilnehmerIDs,this._tagsList);
+      this._location, this._privateEvent,this._teilnehmerIDs,this._tagsList,this._latitude,this._longitude);
 
   Event.createEvent(this._title,this._eventStartDate,this._eventEndDate,this._description,this._location,this._privateEvent,this._tagsList,this._teilnehmerIDs);
 
@@ -82,6 +83,18 @@ class Event{
 
   set tagsList(List<dynamic> value) {
     _tagsList = value;
+  }
+
+  get longitude => _longitude;
+
+  set longitude(value) {
+    _longitude = value;
+  }
+
+  String get latitude => _latitude;
+
+  set latitude(String value) {
+    _latitude = value;
   }
 
 

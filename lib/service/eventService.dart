@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,6 +59,32 @@ class eventService {
     return Image.network(key);
   }
 
+  ///Search for a Event by the EventID
+  ///@input: String containing the specific eventID
+  ///@return: Event object
+  Future<Event> getEventbyID(String eventID)async{
+    DocumentSnapshot documentSnapshot = await db.collection(collection).document(eventID).get();
+    return documentSnapshotToEvent(documentSnapshot);
+  }
+
+  ///Transforms a documentSnapshot into a event object
+  ///@input: documentSnapshot from Firebase containing the event informations
+  ///@return: Transformed Event Object
+  Event documentSnapshotToEvent(DocumentSnapshot documentSnapshot){
+    Event event = new Event(
+        documentSnapshot.data['name'],
+        documentSnapshot.data['startdate'],
+        documentSnapshot.data['enddate'],
+        documentSnapshot.data['description'],
+        documentSnapshot.data['location'],
+        documentSnapshot.data['private'],
+        documentSnapshot.data['teilnehmerIDs'],
+        documentSnapshot.data['tagsList'],
+        documentSnapshot.data['latitude'],
+        documentSnapshot.data['longitude']);
+    return event;
+  }
+
   ///This Method gets an Event and wrappes it into a map for the database.
   ///@input: Event who should be wrapped to a Map
   ///@return: Map with the Informations that belong to an event
@@ -71,7 +98,9 @@ class eventService {
       'private': event.privateEvent,
       'teilnehmerIDs': event.teilnehmerIDs,
       'tagsList': event.tagsList,
-      'imageUrl': event.imageURL
+      'imageUrl': event.imageURL,
+      'latitude' : event.latitude,
+      'longitude' : event.longitude
     };
   }
 
@@ -255,7 +284,10 @@ class eventService {
               doc.data['city'],
               doc.data['private'],
               doc.data['teilnehmerIDs'],
-              doc.data['tagsList']))
+              doc.data['tagsList'],
+              doc.data['latitude'],
+              doc.data['longitude']
+      ))
           .toList();
     } else
       print('Keine passenden Events gefunden');
