@@ -5,16 +5,37 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:univents/backendExceptions.dart';
 
+///These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+///This variable is used to keep a reference to the current [FirebaseUser] that is logged in or [null] otherwise.
 FirebaseUser _user;
 
+///These variables are needed to persistently safe, whether Apple Sign In is available on the device
+bool isAvailable;
+bool _hasBeenChecked = false;
+
+Future<bool> check() async {
+  if (!_hasBeenChecked) {
+    _hasBeenChecked = true;
+    isAvailable = await AppleSignIn.isAvailable();
+  }
+  return isAvailable;
+}
 
 //TODO maybe use the following plugin to keep users signed in?: https://pub.dev/packages/flutter_secure_storage#-changelog-tab-
+
+///used only internally (therefore _privateMethod). Used to update the reference to the currently logged in [_user].
 Future<FirebaseUser> _refreshCurrentlyLoggedInUser() async {
   _user = await _auth.currentUser();
 }
 
+///Call this method to start the process of Google Sign In. Everything is handled automatically.
+///Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
+///Throws [SignInAbortedException] if the user aborted the Google Sign In, e.g. by pressing Cancel.
+///In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
+///Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
 Future<bool> googleSignIn() async {
   //the following code is from this tutorial with slight changes made: https://blog.codemagic.io/firebase-authentication-google-sign-in-using-flutter/
   try {
@@ -37,7 +58,8 @@ Future<bool> googleSignIn() async {
             break;
           case "ERROR_USER_DISABLED":
           //If the user has been disabled (for example, in the Firebase console)
-            throw new UserDisabledException(platformException,
+            throw new UserDisabledException(
+                platformException,
                 "The userAccount that tried to sign in with Google was disabled. Credentilas were: " +
                     _credentials.toString());
             break;
@@ -69,17 +91,26 @@ Future<bool> googleSignIn() async {
   }
 }
 
+///Call this method to start the process of Apple Sign In. Everything is handled automatically, except that
+///this METHOD DOES NOT CHECK, WHETHER APPLE SIGN IS AVAILABLE ON THE DEVICE, THIS HAS TO BE DONE BEFORE CALLING THIS METHOD!
+///Check for Apple Sign In availability (iOS 13 and higher) by calling [AppleSignInAvailability.isAvailable]. To be sure it has been checked and the value is correct
+///check [AppleSignInAvailability.hasBeenChecked] prior to checking the availability and only if it has not been checked so far call [AppleSignInAvailability.check]
+///Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
+///Throws [SignInAbortedException] if the user aborted the Apple Sign In, e.g. by pressing Cancel.
+///In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
+///Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
 Future<bool> appleSignIn() async {
-  final result = await AppleSignIn.performRequests(
-      [AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])]);
+  final result = await AppleSignIn.performRequests([
+    AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+  ]);
   switch (result.status) {
     case AuthorizationStatus.authorized:
       final appleIdCredential = result.credential;
       final oAuthProvider = OAuthProvider(providerId: 'apple.com');
       final _credentials = oAuthProvider.getCredential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
-          accessToken: String.fromCharCodes(
-              appleIdCredential.authorizationCode));
+          accessToken:
+          String.fromCharCodes(appleIdCredential.authorizationCode));
       try {
         final authResult = await _auth.signInWithCredential(_credentials);
         _user = authResult.user;
@@ -96,7 +127,8 @@ Future<bool> appleSignIn() async {
             break;
           case "ERROR_USER_DISABLED":
           //If the user has been disabled (for example, in the Firebase console)
-            throw new UserDisabledException(platformException,
+            throw new UserDisabledException(
+                platformException,
                 "The userAccount that tried to sign in with Apple was disabled. Credentilas were: " +
                     _credentials.toString());
             break;
@@ -126,6 +158,14 @@ Future<bool> appleSignIn() async {
   }
 }
 
+///Call this method to sign a [FirebaseUser] in with email and password.
+///You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
+///None of the parameters [email] & [password] can be null!
+///Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
+///Throws [WrongPasswordException] if the given combination of [email] and [password] do not match, meaning no user could be signed in because the password is wrong.
+///Think twice, whether you tell in the error that the user exists. Should probably be catched together with:
+///Throws [UserNotFoundException] if the given user doesn't exist and should be registered first.
+///Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
 Future<bool> signInWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.signInWithEmailAndPassword(
@@ -164,6 +204,12 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
   return _user != null ? true : false;
 }
 
+//TODO throw a NullParameterException in Email And Password methods and also throw a WeakPasswordException.
+///Call this method to register a [FirebaseUser] with email and password.
+///You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
+///You should check [password] for strength (meaning 8 characters, containing at least one number and letter) before calling this method!
+///None of the parameters [email] & [password] can be null!
+///Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
 Future<bool> registerWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.createUserWithEmailAndPassword(
