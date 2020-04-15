@@ -1,9 +1,10 @@
-import 'package:univents/UIScreens/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/UIScreens/constants.dart';
+import 'package:univents/model/event.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
-/// -Event Picture (at this point only a placeholder)
+/// -Event Picture (AssetImage)
 /// -Event Start DateTime (DateTimePicker)
 /// -Event End Date (DateTimePicker)
 /// -Event Name (input-type: text)
@@ -16,14 +17,17 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-
   DateTime selectedStartDateTime;
   DateTime selectedEndDateTime;
   String selectedStartString = "not set";
   String selectedEndString = "not set";
   bool isPrivate = false;
+  TextEditingController eventNameController = new TextEditingController();
+  TextEditingController eventLocationController = new TextEditingController();
+  TextEditingController eventDescriptionController =
+      new TextEditingController();
 
-  Widget _eventImage(){
+  Widget _eventImage() {
     return GestureDetector(
       onTap: () {
         print('image pressed');
@@ -33,7 +37,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         height: 150.0,
       ),
     );
-}
+  }
 
   Future<TimeOfDay> _selectTime(BuildContext context) {
     final now = DateTime.now();
@@ -45,11 +49,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Future<DateTime> _selectDate(BuildContext context) => showDatePicker(
-    context: context,
-    initialDate: DateTime.now().add(Duration(seconds: 1)),
-    firstDate: DateTime.now(),
-    lastDate: DateTime(2100),
-  );
+        context: context,
+        initialDate: DateTime.now().add(Duration(seconds: 1)),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2100),
+      );
 
   Widget _selectStartDateTimeButtonWidget() {
     return Container(
@@ -121,7 +125,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedTime.hour,
               selectedTime.minute,
             );
-            if (selectedStartDateTime == null || selectedEndDateTime.isBefore(selectedStartDateTime)) {
+            if (selectedStartDateTime == null ||
+                selectedEndDateTime.isBefore(selectedStartDateTime)) {
               //TODO errormessage
               print("failed enddate");
             } else {
@@ -163,6 +168,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           decoration: boxStyleConstant,
           height: 60.0,
           child: TextField(
+            controller: eventNameController,
             keyboardType: TextInputType.text,
             style: TextStyle(
               color: Colors.white,
@@ -198,6 +204,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           decoration: boxStyleConstant,
           height: 60.0,
           child: TextField(
+            controller: eventLocationController,
             keyboardType: TextInputType.text,
             style: TextStyle(
               color: Colors.white,
@@ -233,6 +240,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           decoration: boxStyleConstant,
           height: 120.0,
           child: TextField(
+            controller: eventDescriptionController,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             style: TextStyle(
@@ -284,13 +292,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _isPrivateCheckbox() {
     return Container(
       child: Checkbox(
-      value: isPrivate,
-      onChanged: (value) {
-        setState(() {
-          isPrivate = value;
-          print(isPrivate);
-        });
-      },
+        value: isPrivate,
+        onChanged: (value) {
+          setState(() {
+            isPrivate = value;
+            print(isPrivate);
+          });
+        },
       ),
     );
   }
@@ -301,7 +309,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Create Button Pressed'),
+        onPressed: () {/*
+          Event event = new Event.createEvent(
+              eventNameController.text,
+              selectedStartDateTime.millisecondsSinceEpoch,
+              selectedEndDateTime.millisecondsSinceEpoch,
+              eventDescriptionController.text,
+              eventLocationController.text,
+              isPrivate,
+              _tagsList,
+              _teilnehmerIDs); */
+          //TODO Event erstellen -> Rücksprache mit @Markus Haering
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -327,7 +346,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       backgroundColor: Colors.blueAccent,
       body: new Container(
         height: double.infinity,
-        child: SingleChildScrollView(     //fixes pixel overflow error when keyboard is used
+        child: SingleChildScrollView(
+          //fixes pixel overflow error when keyboard is used
           physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(
             horizontal: 40.0,
