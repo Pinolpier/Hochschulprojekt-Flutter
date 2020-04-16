@@ -1,14 +1,14 @@
 /**
  * dummie class to test the listview
  */
-class FriendslistDummies{
+class GroupDummies{
   String name;
   String profilepic;
   bool isSelected = false;
 
-  FriendslistDummies({
+  GroupDummies({
     this.name, this.profilepic
-});
+  });
 
   String getName() {
     return name;

@@ -5,16 +5,16 @@ import 'package:univents/Model/GroupDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
 
-class FriendlistScreen extends StatefulWidget{
+class FriendlistGroupScreen extends StatefulWidget{
   @override
-  _FriendlistScreenState createState() => _FriendlistScreenState();
+  _FriendlistGroupScreenState createState() => _FriendlistGroupScreenState();
 }
 
 /**
  * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
  * button at the bottom to add new friends
  */
-class _FriendlistScreenState extends State<FriendlistScreen>{
+class _FriendlistGroupScreenState extends State<FriendlistGroupScreen>{
 
   final _debouncer = new Debouncer(500);
 
@@ -29,7 +29,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
 
   List<GroupDummies> groups = [
     GroupDummies(name: "GROUP1", profilepic: "mango.png")
-    ];
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,69 +37,58 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: Text("Your Friendslist"),
+        title: Text("Your Groups"),
         centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
           TextField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(10.0),
-              hintText: "search for a friend"
-            ),
-            onChanged: (string) {
-              //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
-              _debouncer.run(() {
-                print(string);
-              });
-            }
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(10.0),
+                  hintText: "search for a group"
+              ),
+              onChanged: (string) {
+                //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
+                _debouncer.run(() {
+                  print(string);
+                });
+              }
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: friends.length,
-              itemBuilder: (context, index){
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
-                  child: Card(
-                    child: ListTile(
-                      onTap: () {
-                        print(friends[index].name + " was pressed");
-                      },
-                      title: Text(friends[index].name),
-                      leading: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
+                itemCount: groups.length,
+                itemBuilder: (context, index){
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+                    child: Card(
+                      child: ListTile(
                         onTap: () {
+                          print(groups[index].name + " was pressed");
                         },
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
+                        title: Text(groups[index].name),
+                        leading: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage('assets/${groups[index].profilepic}'),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }
+                  ); }
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showfriendsgroupsdialog(context);
+                DialogHelper.showfriendsdialog(context);
               },
-              child: Icon(Icons.group),
+              child: Icon(Icons.add),
               backgroundColor: Colors.blueAccent,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                DialogHelper.showaddfriendsdialog(context);
-              },
-              child: Icon(Icons.group_add),
-              backgroundColor: Colors.blueAccent,
-            ),
-          )
         ],
       ),
     );

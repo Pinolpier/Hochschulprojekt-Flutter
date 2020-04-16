@@ -86,7 +86,6 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         leading: GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-
                           },
                           child: CircleAvatar(
                             backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
