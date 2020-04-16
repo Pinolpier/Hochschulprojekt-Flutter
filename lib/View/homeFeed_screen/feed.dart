@@ -1,8 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:univents/homeFeedScreenUI/feedItemUI.dart';
-import 'package:univents/model/event.dart';
+import 'package:univents/View/homeFeed_screen/feedItemUI.dart';
 
 //@author
 //for managing feed

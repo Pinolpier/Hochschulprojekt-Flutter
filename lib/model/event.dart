@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
   String _eventID;
   String _title;
-  Timestamp _eventStartDate;
-  Timestamp _eventEndDate;
+  DateTime _eventStartDate;
+  DateTime _eventEndDate;
   String _description;
   String _location;
   bool _privateEvent;
@@ -26,16 +25,6 @@ class Event {
       this._tagsList,
       this._latitude,
       this._longitude);
-
-  Event.createEvent(
-      this._title,
-      this._eventStartDate,
-      this._eventEndDate,
-      this._description,
-      this._location,
-      this._privateEvent,
-      this._tagsList,
-      this._teilnehmerIDs);
 
   bool get privateEvent => _privateEvent;
 
@@ -65,15 +54,15 @@ class Event {
     _description = value;
   }
 
-  Timestamp get eventEndDate => _eventEndDate;
+  DateTime get eventEndDate => _eventEndDate;
 
-  set eventEndDate(Timestamp value) {
+  set eventEndDate(DateTime value) {
     _eventEndDate = value;
   }
 
-  Timestamp get eventStartDate => _eventStartDate;
+  DateTime get eventStartDate => _eventStartDate;
 
-  set eventStartDate(Timestamp value) {
+  set eventStartDate(DateTime value) {
     _eventStartDate = value;
   }
 
