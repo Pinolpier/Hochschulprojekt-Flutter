@@ -8,12 +8,16 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/eventService.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
-/// -Event Picture (AssetImage)
+/// -Event Picture (AssetImage with ImagePicker from gallery onPress)
 /// -Event Start DateTime (DateTimePicker)
 /// -Event End Date (DateTimePicker)
 /// -Event Name (input-type: text)
 /// -Event Location (input-type: text, maybe convert it to an button which opens the map and where you then can choose the location)
 /// -Event Description (input-type: multiline text)
+/// -Event Tags (input-type: text, separated by comma)
+/// -Event Visibility (input-type: checkbox)
+/// -Event addFriends (button)
+/// -Event CREATE (button)
 
 class CreateEventScreen extends StatefulWidget {
   @override
