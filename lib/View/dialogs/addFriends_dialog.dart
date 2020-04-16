@@ -1,7 +1,5 @@
-import 'package:aiblabswp2020ssunivents/Model/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:aiblabswp2020ssunivents/View/dialogs/Debouncer.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:univents/Model/FriendslistDummies.dart';

@@ -1,6 +1,7 @@
-import 'package:aiblabswp2020ssunivents/View/dialogs/DialogHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'dialogs/DialogHelper.dart';
 
 class ProfileScreen extends StatefulWidget  {
   @override
