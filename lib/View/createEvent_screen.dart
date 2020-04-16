@@ -1,8 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/UIScreens/constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:univents/Model/constants.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/eventService.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage)
@@ -18,25 +21,46 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  DateTime selectedStartDateTime;
-  DateTime selectedEndDateTime;
-  String selectedStartString = "not set";
-  String selectedEndString = "not set";
+  DateTime selectedStartDateTime = DateTime.now();
+  DateTime selectedEndDateTime ;
+  String selectedStartString = 'not set';
+  String selectedEndString = 'not set';
   bool isPrivate = false;
+  List<dynamic> tagsList = new List();
+  List<dynamic> attendeeIDs = new List();
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
-  TextEditingController eventDescriptionController =
-      new TextEditingController();
+  TextEditingController eventDescriptionController = new TextEditingController();
+  TextEditingController eventTagsController = new TextEditingController();
+  File eventImage;
 
-  Widget _eventImage() {
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      eventImage = image;
+    });
+  }
+
+  Widget _eventImagePlaceholder()  {
     return GestureDetector(
       onTap: () {
+        getImage();
         print('image pressed');
       }, // handle your image tap here
-      child: Image.asset(
-        'assets/eventPlaceholder.png',
-        height: 150.0,
-      ),
+      child:
+        Image.asset('assets/eventImagePlaceholder.png', height: 150)
+    );
+  }
+
+  Widget _eventImage()  {
+    return GestureDetector(
+        onTap: () {
+          getImage();
+          print('image pressed');
+        }, // handle your image tap here
+        child:
+        Image.file(eventImage, height: 150)
     );
   }
 
@@ -79,7 +103,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             );
             if (selectedStartDateTime.isBefore(new DateTime.now())) {
               //TODO errormessage
-              print("failed startdate");
+              print('failed startdate');
             } else {
               print(selectedStartDateTime);
               selectedStartString = selectedStartDateTime.toIso8601String();
@@ -129,7 +153,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             if (selectedStartDateTime == null ||
                 selectedEndDateTime.isBefore(selectedStartDateTime)) {
               //TODO errormessage
-              print("failed enddate");
+              print('failed enddate');
             } else {
               print(selectedEndDateTime);
               selectedEndString = selectedEndDateTime.toIso8601String();
@@ -264,6 +288,42 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  Widget _eventTagsTextfieldWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Event Tags',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.topLeft,
+          decoration: boxStyleConstant,
+          child: TextField(
+            controller: eventTagsController,
+            keyboardType: TextInputType.text,
+            maxLines: null,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              hintText: 'Tags, seperated by comma',
+              hintStyle: textStyleConstant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _addFriendsButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -310,17 +370,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () { /*
-          Event event = new Event.createEvent(
+        onPressed: () {
+          tagsList = eventTagsController.text.split(", ");
+          print(tagsList);
+
+          Event event = new Event(
               eventNameController.text,
-              selectedStartDateTime.millisecondsSinceEpoch as Timestamp,
-              selectedEndDateTime.millisecondsSinceEpoch as Timestamp,
+              selectedStartDateTime,
+              selectedEndDateTime,
               eventDescriptionController.text,
               eventLocationController.text,
               isPrivate,
-              _tagsList,
-              _teilnehmerIDs); */
-          //TODO Event erstellen -> Rücksprache mit @Markus Haering
+              attendeeIDs,
+              tagsList,
+              'lat',
+              'long'
+          );
+          //TODO fill the attendeeIDs list @Christan Henrich
+
+          createEvent(eventImage, event);
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -358,16 +426,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _eventImage(),
+              eventImage == null ? _eventImagePlaceholder() : _eventImage(),
               SizedBox(height: 40.0),
               new Text(
-                "Start Date: " + selectedStartString,
+                'Start Date: ' + selectedStartString,
                 style: labelStyleConstant,
               ),
               _selectStartDateTimeButtonWidget(),
               SizedBox(height: 20.0),
               new Text(
-                "End Date: " + selectedEndString,
+                'End Date: ' + selectedEndString,
                 style: labelStyleConstant,
               ),
               _selectEndDateTimeButtonWidget(),
@@ -378,8 +446,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               SizedBox(height: 20.0),
               _eventDescriptionTextfieldWidget(),
               SizedBox(height: 20.0),
+              _eventTagsTextfieldWidget(),
+              SizedBox(height: 20.0),
               new Text(
-                "isPrivate:",
+                'isPrivate: ',
                 style: labelStyleConstant,
               ),
               _isPrivateCheckbox(),
