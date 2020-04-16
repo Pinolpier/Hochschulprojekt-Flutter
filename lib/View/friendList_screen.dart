@@ -3,7 +3,6 @@ import 'package:aiblabswp2020ssunivents/Model/FriendslistDummies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:aiblabswp2020ssunivents/View/dialogs/Debouncer.dart';
-import 'package:grouped_list/grouped_list.dart';
 
 class FriendlistScreen extends StatefulWidget{
   @override

@@ -17,7 +17,6 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  grouped_list: ^2.3.0
   contacts_service: ^0.3.10
   permission_handler: ^5.0.0+hotfix.3
   flutter:
