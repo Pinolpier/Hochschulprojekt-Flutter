@@ -64,24 +64,6 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                       child: ListTile(
                         onTap: () async {
                           print(friends[index].name + " was pressed");
-                          print(await signInWithEmailAndPassword(
-                              "haringmarkus@yahoo.de", "password"));
-                          Event event = Event(
-                              'Partey',
-                              DateTime(2020, 16, 4, 0, 0),
-                              DateTime(2020, 17, 4, 0, 0),
-                              'Das ist eine Partey',
-                              'Bei mir daheim',
-                              true,
-                              ["012356", "1478523"],
-                              ["#mongo", '#mango'],
-                              '000',
-                              '000');
-                          File file = await saveCameraImage();
-
-                          await createEvent(null, event);
-                          await uploadImage(
-                              'eventPicture', file, event.eventID);
                         },
                         title: Text(friends[index].name),
                         leading: CircleAvatar(

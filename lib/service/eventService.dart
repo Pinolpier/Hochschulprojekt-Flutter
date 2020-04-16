@@ -58,6 +58,33 @@ Future<String> _addData(Event event) async {
   }
 }
 
+/// updates an event in the database based on an [Event]
+updateData(Event event) async {
+  try {
+    if (event.eventID != null)
+      db
+          .collection(collection)
+          .document(event.eventID)
+          .updateData(_eventToMap(event));
+  } on PlatformException catch (e) {
+    exceptionhandling(e);
+  }
+}
+
+/// deletes an event in the databse based on an [Event]
+deleteEvent(Event event) async {
+  if (event.eventID != null) {
+    try {
+      if(event.imageURL != null){
+        deleteImage(event.eventID);
+      }
+      db.collection(collection).document(event.eventID).delete();
+    } on PlatformException catch (e) {
+      exceptionhandling(e);
+    }
+  }
+}
+
 /// Returns a [Widget] with a image based on an [String] eventID
 Future<Widget> getImage(String eventID) async {
   String key = '';
@@ -110,30 +137,6 @@ Map<String, dynamic> _eventToMap(Event event) {
     'latitude': event.latitude,
     'longitude': event.longitude
   };
-}
-
-/// updates an event in the database based on an [Event]
-updateData(Event event) async {
-  try {
-    if (event.eventID != null)
-      db
-          .collection(collection)
-          .document(event.eventID)
-          .updateData(_eventToMap(event));
-  } on PlatformException catch (e) {
-    exceptionhandling(e);
-  }
-}
-
-/// deletes an event in the databse based on an [Event]
-deleteEvent(Event event) async {
-  if (event.eventID != null) {
-    try {
-      db.collection(collection).document(event.eventID).delete();
-    } on PlatformException catch (e) {
-      exceptionhandling(e);
-    }
-  }
 }
 
 /// returns a [List] of events based on a [Timestamp]
