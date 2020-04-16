@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/UIScreens/constants.dart';
-import 'package:univents/service/storageService.dart';
+import 'package:univents/Model/constants.dart';
 
 /**
  * this class creates a loginscreen with different textfields to put in email and username and a few
@@ -13,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+
   bool _rememberMe = false;
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button pressed'),
+        onPressed: () => print('Login Button Pressed'),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
