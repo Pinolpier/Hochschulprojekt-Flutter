@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Event{
+class Event {
   String _eventID;
   String _title;
   Timestamp _eventStartDate;
@@ -9,21 +9,40 @@ class Event{
   String _description;
   String _location;
   bool _privateEvent;
+  String _latitude, _longitude;
   List<dynamic> _teilnehmerIDs;
   List<dynamic> _tagsList;
   File image;
   String _imageURL;
 
-  Event(this._title, this._eventStartDate, this._eventEndDate, this._description,
-      this._location, this._privateEvent,this._teilnehmerIDs,this._tagsList);
+  Event(
+      this._title,
+      this._eventStartDate,
+      this._eventEndDate,
+      this._description,
+      this._location,
+      this._privateEvent,
+      this._teilnehmerIDs,
+      this._tagsList,
+      this._latitude,
+      this._longitude);
 
-  Event.createEvent(this._title,this._eventStartDate,this._eventEndDate,this._description,this._location,this._privateEvent,this._tagsList,this._teilnehmerIDs);
+  Event.createEvent(
+      this._title,
+      this._eventStartDate,
+      this._eventEndDate,
+      this._description,
+      this._location,
+      this._privateEvent,
+      this._tagsList,
+      this._teilnehmerIDs);
 
   bool get privateEvent => _privateEvent;
 
-  void addTeilnehmer(String teilnehmerID){
+  void addTeilnehmer(String teilnehmerID) {
     teilnehmerIDs.add(teilnehmerID);
   }
+
   List<dynamic> get teilnehmerIDs => _teilnehmerIDs;
 
   set teilnehmerIDs(List<String> value) {
@@ -34,13 +53,11 @@ class Event{
     _privateEvent = value;
   }
 
-
   String get title => _title;
 
   set title(String value) {
     _title = value;
   }
-
 
   String get description => _description;
 
@@ -84,5 +101,15 @@ class Event{
     _tagsList = value;
   }
 
+  get longitude => _longitude;
 
+  set longitude(value) {
+    _longitude = value;
+  }
+
+  String get latitude => _latitude;
+
+  set latitude(String value) {
+    _latitude = value;
+  }
 }
