@@ -75,7 +75,7 @@ updateData(Event event) async {
 deleteEvent(Event event) async {
   if (event.eventID != null) {
     try {
-      if(event.imageURL != null){
+      if (event.imageURL != null) {
         deleteImage(event.eventID);
       }
       db.collection(collection).document(event.eventID).delete();
