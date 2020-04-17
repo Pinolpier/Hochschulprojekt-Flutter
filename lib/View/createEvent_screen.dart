@@ -1,12 +1,11 @@
-
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:univents/Model/constants.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/eventService.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -27,7 +26,8 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   DateTime selectedStartDateTime = DateTime.now();
-  DateTime selectedEndDateTime ;
+  DateTime selectedEndDateTime;
+
   String selectedStartString = 'not set';
   String selectedEndString = 'not set';
   bool isPrivate = false;
@@ -35,14 +35,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   List<dynamic> attendeeIDs = new List();
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
-  TextEditingController eventDescriptionController = new TextEditingController();
+  TextEditingController eventDescriptionController =
+      new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
 
   var latLongArray = new List.generate(10, (_) => new List(2));
   List<dynamic> latLongList;
 
-  Future getImage() async {
+  Future getImageFromCamera() async {
     File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
 
     setState(() {
@@ -50,26 +51,106 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     });
   }
 
-  Widget _eventImagePlaceholder()  {
-    return GestureDetector(
-      onTap: () {
-        getImage();
-        print('image pressed');
-      }, // handle your image tap here
-      child:
-        Image.asset('assets/eventImagePlaceholder.png', height: 150)
+  Future getImageFromGallery() async {
+    File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      eventImage = pickedImage;
+    });
+  }
+
+  Future<void> chooseImage() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Upload an Image'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Choose from where you want to upload the iamge'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () {
+                getImageFromCamera();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                getImageFromGallery();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Remove'),
+              onPressed: () {
+                setState(() {
+                  eventImage = null;
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _eventImage()  {
+  Future<void> errorEndDateTime() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Rewind and remember'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('1. please specify first a startDateTime'),
+                Text('2. endDateTime can#t be earlier than startDateTime'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () {
-          getImage();
-          print('image pressed');
+          chooseImage();
         }, // handle your image tap here
-        child:
-        Image.file(eventImage, height: 150)
-    );
+        child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
+  }
+
+  Widget _eventImage() {
+    return GestureDetector(
+        onTap: () {
+          chooseImage();
+        }, // handle your image tap here
+        child: Image.file(eventImage, height: 150));
   }
 
   Future<TimeOfDay> _selectTime(BuildContext context) {
@@ -109,13 +190,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedTime.hour,
               selectedTime.minute,
             );
-            if (selectedStartDateTime.isBefore(new DateTime.now())) {
-              //TODO errormessage
-              print('failed startdate');
-            } else {
-              print(selectedStartDateTime);
-              selectedStartString = selectedStartDateTime.toIso8601String();
-            }
+            print(selectedStartDateTime);
+            selectedStartString = selectedStartDateTime.toIso8601String();
+
+            ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
+            selectedEndDateTime = null;
+            selectedEndString = 'not set';
           });
         },
         padding: EdgeInsets.all(15.0),
@@ -160,8 +240,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             );
             if (selectedStartDateTime == null ||
                 selectedEndDateTime.isBefore(selectedStartDateTime)) {
-              //TODO errormessage
-              print('failed enddate');
+              errorEndDateTime();
             } else {
               print(selectedEndDateTime);
               selectedEndString = selectedEndDateTime.toIso8601String();
@@ -396,8 +475,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               attendeeIDs,
               tagsList,
               latLongList[0],
-              latLongList[1]
-          );
+              latLongList[1]);
           //TODO fill the attendeeIDs list @Christan Henrich
 
           //TODO -> Auskommentiert wegen Errormessages: createEvent(eventImage, event);
@@ -491,16 +569,66 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     latLongList = new List();
 
     switch (i) {
-      case 0: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 1: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 2: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 3: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 4: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 5: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 6: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 7: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 8: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
-      case 9: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 0:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 1:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 2:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 3:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 4:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 5:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 6:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 7:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 8:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
+      case 9:
+        {
+          latLongList.add(latLongArray[i][0]);
+          latLongList.add(latLongArray[i][1]);
+          break;
+        }
     }
   }
 }
