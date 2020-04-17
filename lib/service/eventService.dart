@@ -5,16 +5,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:univents/Controller/backendAPI.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
 
 final db = Firestore.instance;
 final String collection = 'events';
 Map<String, String> urlToID = new Map();
-String _uid;
 Timestamp _startDate;
 Timestamp _endDate;
 List<dynamic> _tags;
+bool _privateEvent = true;
+
+String queryBuilder() {
+  // 'await db.collectionGroup(collection).reference()'
+  String query = '';
+  query += _startDate != null
+      ? '.where(\'startdate\', isGreaterThanOrEqualTo: _startDate)'
+      : '';
+  query += _endDate != null
+      ? '.where(\'enddate\', isLessThanOrEqualTo: _stopDate)'
+      : '';
+  query += _tags != null
+      ? '.where(\'teilnehmerIDs\', arrayContains: arrayContains: uid)'
+      : '';
+}
 
 /// uploads the data into the database when creating an [Event]
 /// if a [File] is also handed over, it is also uploaded and the
@@ -30,21 +45,32 @@ void createEvent(File image, Event event) async {
 /// fetches a [List<Event>] of events from the database and checks
 /// which filters are set
 Future<List<Event>> getEvents() async {
-  if (startDate != null) {
-    if (endDate != null) {
-      if (tags != null) {
-        return await getEventsbyStartStopdateAndTag(startDate, endDate, tags);
-      } else {
-        return await getEventsbyStartAndStopDate(startDate, endDate);
-      }
-    } else {
-      return await _getEventsbyStartDate(startDate);
-    }
-  } else if (tags != null) {
-  } else if (endDate != null) {
-    return await _getEventsbyEndDate(endDate);
-  } else
-    getallEvents();
+  String uid = await getUidOfCurrentlySignedInUser();
+  var x;
+  if (_privateEvent) {
+    x = db
+        .collectionGroup(collection)
+        .reference()
+        .where('private', isEqualTo: true)
+        .where('teilnehmerIDs', arrayContains: uid);
+  }
+  if (_privateEvent == false) {
+    x = db
+        .collectionGroup(collection)
+        .reference()
+        .where('private', isEqualTo: false);
+  }
+  if (_startDate != null) {
+    x = x.where('startdate', isGreaterThanOrEqualTo: _startDate);
+  }
+  if (_endDate != null) {
+    x = x.where('endDate', isLessThanOrEqualTo: _endDate);
+  }
+  if (_tags != null) {
+    x = x.where('tagsList', arrayContainsAny: tags);
+  }
+  QuerySnapshot qShot = await x.getDocuments();
+  return _addEventIdToObjects(snapShotToList(qShot), qShot);
 }
 
 /// adds [Event] data to the database
@@ -61,11 +87,10 @@ Future<String> _addData(Event event) async {
 /// updates an event in the database based on an [Event]
 updateData(Event event) async {
   try {
-    if (event.eventID != null)
-      db
-          .collection(collection)
-          .document(event.eventID)
-          .updateData(_eventToMap(event));
+    db
+        .collection(collection)
+        .document(event.eventID)
+        .updateData(_eventToMap(event));
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
@@ -79,7 +104,7 @@ deleteEvent(Event event) async {
         deleteImage(event.eventID);
       }
       db.collection(collection).document(event.eventID).delete();
-    } on PlatformException catch (e) {
+    } on Exception catch (e) {
       exceptionhandling(e);
     }
   }
@@ -139,32 +164,39 @@ Map<String, dynamic> _eventToMap(Event event) {
   };
 }
 
+Future<List<Event>> getpublicEvents() {}
+
 /// returns a [List] of events based on a [Timestamp]
 /// start and [Timestamp] stopdate
 Future<List<Event>> getEventsbyStartAndStopDate(
     Timestamp start, Timestamp stop) async {
   try {
+    dynamic isGreaterThanOrEqualTo = start;
+    String uid = getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
+        .where('teilnehmerIDs', arrayContains: uid)
         .where('startdate', isGreaterThanOrEqualTo: start)
         .where('enddate', isLessThanOrEqualTo: stop)
         .getDocuments();
-    return snapShotToList(qShot);
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
 }
 
 /// returns a [List] of events based on a [Timestamp] startdate
-Future<List<Event>> _getEventsbyStartDate(Timestamp start) async {
+Future<List<Event>> getEventsbyStartDate(Timestamp start) async {
   try {
+    String uid = await getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('startdate', isLessThanOrEqualTo: start)
+        .where('teilnehmerIDs', arrayContains: uid)
+        .where('startdate', isGreaterThanOrEqualTo: start)
         .getDocuments();
-    return snapShotToList(qShot);
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
@@ -173,12 +205,14 @@ Future<List<Event>> _getEventsbyStartDate(Timestamp start) async {
 /// returns a [List] of events based on a [Timestamp] enddate
 Future<List<Event>> _getEventsbyEndDate(Timestamp stop) async {
   try {
+    String uid = getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('enddate', isGreaterThanOrEqualTo: stop)
+        .where('teilnehmerIDs', arrayContains: uid)
+        .where('enddate', isLessThanOrEqualTo: stop)
         .getDocuments();
-    return snapShotToList(qShot);
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
@@ -189,14 +223,16 @@ Future<List<Event>> _getEventsbyEndDate(Timestamp stop) async {
 Future<List<Event>> getEventsbyStartStopdateAndTag(
     Timestamp start, Timestamp stop, List<String> tags) async {
   try {
+    String uid = getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
+        .where('teilnehmerIDs', arrayContains: uid)
         .where('startdate', isLessThanOrEqualTo: start)
         .where('enddate', isGreaterThanOrEqualTo: stop)
         .where('tagsList', arrayContainsAny: tags)
         .getDocuments();
-    return snapShotToList(qShot);
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
@@ -205,71 +241,13 @@ Future<List<Event>> getEventsbyStartStopdateAndTag(
 /// returns a [List] of events based on a [Timestamp] startdate
 Future<List<Event>> getUsersEvents() async {
   try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
+    String uid = getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
         .where('teilnehmerIDs', arrayContains: uid)
         .getDocuments();
-    return snapShotToList(qShot);
-  } on PlatformException catch (e) {
-    exceptionhandling(e);
-  }
-}
-
-/// returns a [List] of events based on a [Timestamp]
-/// start and [Timestamp] stopdate for the current User
-Future<List<Event>> getEventsbyUserAndStartAndStopDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where('teilnehmerIDs', arrayContains: uid)
-        .where('startdate', isGreaterThanOrEqualTo: start)
-        .where('enddate', isLessThanOrEqualTo: stop)
-        .getDocuments();
-    return snapShotToList(qShot);
-  } on PlatformException catch (e) {
-    exceptionhandling(e);
-  }
-}
-
-/// returns a [List] of events based on a
-/// [Timestamp] stopdate for the current User
-Future<List<Event>> getEventsbyUserAndStopDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where('teilnehmerIDs', arrayContains: uid)
-        .where('enddate', isLessThanOrEqualTo: stop)
-        .getDocuments();
-    return snapShotToList(qShot);
-  } on PlatformException catch (e) {
-    exceptionhandling(e);
-  }
-}
-
-/// returns a [List] of events based on a
-/// [Timestamp] startdate for the current User
-Future<List<Event>> getEventsbyUserAndStartDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .where('teilnehmerIDs', arrayContains: uid)
-        .where('startdate', isGreaterThanOrEqualTo: start)
-        .getDocuments();
-    return snapShotToList(qShot);
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
@@ -279,12 +257,14 @@ Future<List<Event>> getEventsbyUserAndStartDate(
 /// [List] with tags
 Future<List<Event>> getEventsbyTags(List<String> tagsList) async {
   try {
+    String uid = getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
+        .where('teilnehmerIDs', arrayContains: uid)
         .where('tagsList', arrayContainsAny: tagsList)
         .getDocuments();
-    return snapShotToList(qShot);
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
     exceptionhandling(e);
   }
@@ -292,8 +272,17 @@ Future<List<Event>> getEventsbyTags(List<String> tagsList) async {
 
 /// returns a [List] of all available events
 Future<List<Event>> getallEvents() async {
-  QuerySnapshot qShot = await db.collection(collection).getDocuments();
-  return snapShotToList(qShot);
+  try {
+    String uid = getUidOfCurrentlySignedInUser();
+    QuerySnapshot qShot = await db
+        .collectionGroup(collection)
+        .reference()
+        .where('teilnehmerIDs', arrayContains: uid)
+        .getDocuments();
+    return _addEventIdToObjects(snapShotToList(qShot), qShot);
+  } catch (PlatformException) {
+    exceptionhandling(PlatformException);
+  }
 }
 
 /// returns a [List] of events that was created based
@@ -318,10 +307,11 @@ List<Event> snapShotToList(QuerySnapshot qShot) {
 }
 
 /// adds Event'ids based on a [QuerySnapshot] to a [List] of events
-void addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
+List<Event> _addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
   for (int x = 0; x < eventList.length; x++) {
     eventList[x].eventID = qShot.documents[x].documentID;
   }
+  return eventList;
 }
 
 /// handles errors by [PlatformException]
@@ -391,12 +381,12 @@ void exceptionhandling(PlatformException e) {
   }
 }
 
-set startDate(Timestamp value) {
-  _startDate = value;
+set startDate(DateTime value) {
+  _startDate = Timestamp.fromDate(value);
 }
 
-set endDate(Timestamp value) {
-  _endDate = value;
+set endDate(DateTime value) {
+  _endDate = Timestamp.fromDate(value);
 }
 
 void deleteEndFilter() {
@@ -415,8 +405,8 @@ set tags(List<String> value) {
   _tags = value;
 }
 
-Timestamp get startDate => _startDate;
+DateTime get startDate => _startDate.toDate();
 
-Timestamp get endDate => _endDate;
+DateTime get endDate => _endDate.toDate();
 
 List<String> get tags => _tags;

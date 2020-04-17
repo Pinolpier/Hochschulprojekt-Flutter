@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:univents/service/storageService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,32 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                       child: ListTile(
                         onTap: () async {
                           print(friends[index].name + " was pressed");
+                          print(await signInWithEmailAndPassword(
+                              'haringmarkus@yahoo.de', 'password'));
+                          String uid = getUidOfCurrentlySignedInUser();
+                          List<dynamic> userList = new List();
+                          userList.add(uid);
+                          DateTime startDate = DateTime(2020, 10, 17);
+                          DateTime stopDate = DateTime(2020, 5, 25);
+                          Event event = new Event(
+                              'neuerTitel',
+                              startDate,
+                              stopDate,
+                              'description',
+                              'location',
+                              true,
+                              userList,
+                              ['tags', 'neuerTag'],
+                              '20',
+                              '47');
+                          //await createEvent(null, event);
+
+                          endDate = stopDate;
+                          //List<Event> eventList = await getEventsbyStartAndStopDate(Timestamp.fromDate(DateTime(2020,4,16,0)), Timestamp.fromDate(DateTime(2020,9,10,0)));
+
+                          List<Event> eventList = await getEvents();
+                          print(eventList.length);
+                          print(eventList[0].eventStartDate.toIso8601String());
                         },
                         title: Text(friends[index].name),
                         leading: CircleAvatar(
