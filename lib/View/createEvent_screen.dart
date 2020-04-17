@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,11 +39,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
 
+  var latLongArray = new List.generate(10, (_) => new List(2));
+  List<dynamic> latLongList;
+
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
 
     setState(() {
-      eventImage = image;
+      eventImage = pickedImage;
     });
   }
 
@@ -378,6 +382,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           tagsList = eventTagsController.text.split(", ");
           print(tagsList);
 
+          getLatLong();
+          print(latLongList[0]);
+          print(latLongList[1]);
+
           Event event = new Event(
               eventNameController.text,
               selectedStartDateTime,
@@ -387,12 +395,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               isPrivate,
               attendeeIDs,
               tagsList,
-              'lat',
-              'long'
+              latLongList[0],
+              latLongList[1]
           );
           //TODO fill the attendeeIDs list @Christan Henrich
 
-          createEvent(eventImage, event);
+          //TODO -> Auskommentiert wegen Errormessages: createEvent(eventImage, event);
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -464,5 +472,35 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
+  }
+
+  void getLatLong() {
+    latLongArray[0] = ['49.142413', '9.219539'];
+    latLongArray[1] = ['49.139957', '9.246418'];
+    latLongArray[2] = ['49.133698', '9.268036'];
+    latLongArray[3] = ['49.160640', '9.221719'];
+    latLongArray[4] = ['49.163503', '9.201642'];
+    latLongArray[5] = ['49.159195', '9.196814'];
+    latLongArray[6] = ['49.151414', '9.190218'];
+    latLongArray[7] = ['49.145704', '9.188501']; //Friedhof
+    latLongArray[8] = ['49.140341', '9.185237'];
+    latLongArray[9] = ['49.132612', '9.179011'];
+
+    Random rnd = new Random();
+    int i = rnd.nextInt(10);
+    latLongList = new List();
+
+    switch (i) {
+      case 0: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 1: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 2: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 3: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 4: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 5: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 6: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 7: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 8: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+      case 9: {latLongList.add(latLongArray[i][0]); latLongList.add(latLongArray[i][1]); break;}
+    }
   }
 }
