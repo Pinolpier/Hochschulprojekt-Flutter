@@ -6,7 +6,7 @@ class BackendException implements Exception {
   final Exception _originalException;
   final String _message;
 
-  BackendException(this._originalException, this._message);
+  const BackendException(this._originalException, this._message);
 
   String toString() {
     return (_message != null
@@ -24,26 +24,26 @@ class BackendException implements Exception {
 }
 
 class UserDisabledException extends BackendException {
-  UserDisabledException(Exception originalException, String message)
+  const UserDisabledException(Exception originalException, String message)
       : super(originalException, message);
 }
 
 class NotAnEmailException extends BackendException {
-  NotAnEmailException(Exception originalException, String message)
+  const NotAnEmailException(Exception originalException, String message)
       : super(originalException, message);
 }
 
 class WrongPasswordException extends BackendException {
-  WrongPasswordException(Exception originalException, String message)
+  const WrongPasswordException(Exception originalException, String message)
       : super(originalException, message);
 }
 
 class UserNotFoundException extends BackendException {
-  UserNotFoundException(Exception originalException, String message)
+  const UserNotFoundException(Exception originalException, String message)
       : super(originalException, message);
 }
 
 class SignInAbortedException extends BackendException {
-  SignInAbortedException(Exception originalException, String message)
+  const SignInAbortedException(Exception originalException, String message)
       : super(originalException, message);
 }
