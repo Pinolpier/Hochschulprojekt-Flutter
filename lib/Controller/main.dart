@@ -1,3 +1,4 @@
+import 'package:univents/View/eventInfo_screen.dart';
 import 'package:univents/View/friendList_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter create event UI',
-      home: FriendlistScreen(),
+      home: EventInfo(),
     );
   }
 }
