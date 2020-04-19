@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,7 @@ import 'package:univents/service/storageService.dart';
 
 final db = Firestore.instance;
 final String collection = 'events';
-Map<String, String> urlToID = new Map();
+Map<String, String> _urlToID = new Map();
 Timestamp _startDate;
 Timestamp _endDate;
 List<dynamic> _tags;
@@ -24,7 +25,9 @@ void createEvent(File image, Event event) async {
   String eventID = await _addData(event);
   if (image != null) {
     Map<String, dynamic> eventMap;
-    eventMap['imageURL'] = await uploadImage('eventPicture', image, event.eventID);
+    String imageURL = await uploadImage('eventPicture', image, event.eventID);
+    eventMap['imageURL'] = imageURL;
+    _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
   }
 }
@@ -109,17 +112,17 @@ deleteEvent(Event event) async {
 
 /// Returns a [Widget] with a image based on an [String] eventID
 Future<Widget> getImage(String eventID) async {
-  String key = '';
-  if (urlToID.containsValue(eventID)) {
-    key = urlToID.keys
-        .firstWhere((k) => urlToID[k] == eventID, orElse: () => null);
+  String url;
+  if (_urlToID.containsKey(eventID)) {
+    url = _urlToID[eventID];
   } else {
     DocumentSnapshot documentSnapshot =
         await db.collection(collection).document(eventID).get();
-    key = documentSnapshot.data['imageUrl'].toString();
+    url = documentSnapshot.data['imageUrl'].toString();
+    _urlToID[eventID] = url;
   }
-  if(key !=null)
-  return Image.network(key);
+  if (url != null)
+    return Image.network(url);
   else return Image();
 }
 
