@@ -1,43 +1,55 @@
-import 'dart:io';
-
 class UserProfile {
-  String _uid, _username, _email, _forename, _surname, _biography;
-  File picture;
+  String _uid;
+  String _username;
+  String _email;
+  String _forename;
+  String _surname;
+  String _biography;
 
   UserProfile(this._uid, this._username, this._email, this._forename,
-      this._surname, this._biography, this.picture);
-
-  get biography => _biography;
+      this._surname, this._biography);
 
   String toString() {
     return 'UserProfile{_uid: $_uid, _username: $_username, _email: $_email, _forename: $_forename, _surname: $_surname, _biography: $_biography}';
   }
 
-  set biography(value) {
+  Map <String, dynamic> toMap() {
+    return {
+      'username': _username,
+      'email': _email,
+      'forename': _forename,
+      'surname': _surname,
+      'biography': _biography
+    };
+  }
+
+  String get biography => _biography;
+
+  set biography(String value) {
     _biography = value;
   }
 
-  get surname => _surname;
+  String get surname => _surname;
 
-  set surname(value) {
+  set surname(String value) {
     _surname = value;
   }
 
-  get forename => _forename;
+  String get forename => _forename;
 
-  set forename(value) {
+  set forename(String value) {
     _forename = value;
   }
 
-  get email => _email;
+  String get email => _email;
 
-  set email(value) {
+  set email(String value) {
     _email = value;
   }
 
-  get username => _username;
+  String get username => _username;
 
-  set username(value) {
+  set username(String value) {
     _username = value;
   }
 

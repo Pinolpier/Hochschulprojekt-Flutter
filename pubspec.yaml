@@ -35,6 +35,12 @@ dependencies:
   #The following dependency supports state changes of the login screen to HomeScreen on changes of the logged in user, but has to be implemented later on
   provider: ^4.0.5
 
+  #The following dependency enables us to use Firebase Cloud Firestore as database.
+  cloud_firestore: ^0.13.5
+
+  #The following dependency enables us to use Firebase Cloud Storage
+  firebase_storage: ^3.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
