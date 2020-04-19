@@ -85,9 +85,6 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                               '47');
                           //await createEvent(null, event);
 
-                          endDate = stopDate;
-                          //List<Event> eventList = await getEventsbyStartAndStopDate(Timestamp.fromDate(DateTime(2020,4,16,0)), Timestamp.fromDate(DateTime(2020,9,10,0)));
-
                           List<Event> eventList = await getEvents();
                           print(eventList.length);
                           print(eventList[0].eventStartDate.toIso8601String());
