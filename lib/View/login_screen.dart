@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     _logoAnimationController = new AnimationController(
         vsync: this,
         duration: new Duration(milliseconds: 1500)
+
     );
     _logoAnimation = new CurvedAnimation(
         parent: _logoAnimationController,
