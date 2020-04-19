@@ -14,6 +14,7 @@ class Event {
   File image;
   String _imageURL;
 
+  /// constructor for creating a event by a user
   Event(
       this._title,
       this._eventStartDate,
@@ -25,6 +26,22 @@ class Event {
       this._tagsList,
       this._latitude,
       this._longitude);
+
+  /// constructor for creating a event from the database
+  /// from database the event getting a [eventId] and [imageUrl]
+  /// additionally
+  Event.createFrommDB(
+      this._title,
+      this._eventStartDate,
+      this._eventEndDate,
+      this._description,
+      this._location,
+      this._privateEvent,
+      this._teilnehmerIDs,
+      this._tagsList,
+      this._latitude,
+      this._longitude,
+      this._imageURL);
 
   bool get privateEvent => _privateEvent;
 
