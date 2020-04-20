@@ -18,7 +18,9 @@ Future<String> uploadFile(
   }
 }
 
-/// deletes a [File] based on a [collectionID]
-Future deleteFile(String collectionID) async {
-  await FirebaseStorage.instance.ref().child(collectionID).delete();
+/// deletes a [File] located in a [collectionID] (path) named [filename].
+Future deleteFile(String collectionID, String filename) async {
+  await FirebaseStorage.instance.ref().child(collectionID)
+      .child(filename)
+      .delete();
 }
