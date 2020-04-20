@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         elevation: 7.0,
                         child: GestureDetector(
                           onTap: () {
-                            DialogHelper.showchangebiodialog(context);
+                            DialogHelper.showChangeBioDialog(context);
                           },
                           child: Center(
                             child: Text(
