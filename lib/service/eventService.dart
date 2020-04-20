@@ -25,7 +25,7 @@ void createEvent(File image, Event event) async {
   String eventID = await _addData(event);
   if (image != null) {
     Map<String, dynamic> eventMap;
-    String imageURL = await uploadImage('eventPicture', image, eventID);
+    String imageURL = await uploadImage(collection, image, eventID);
     eventMap['imageURL'] = imageURL;
     _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
