@@ -4,7 +4,7 @@ import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
 
-class FriendlistScreen extends StatefulWidget {
+class FriendlistScreen extends StatefulWidget{
   @override
   _FriendlistScreenState createState() => _FriendlistScreenState();
 }
@@ -13,8 +13,11 @@ class FriendlistScreen extends StatefulWidget {
  * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
  * button at the bottom to add new friends
  */
-class _FriendlistScreenState extends State<FriendlistScreen> {
+class _FriendlistScreenState extends State<FriendlistScreen>{
+
   final _debouncer = new Debouncer(500);
+  bool longPressFlag = false;
+  int selectedCount = 0;
 
   //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
@@ -24,6 +27,16 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
     FriendslistDummies(name: "Mathias Darscht", profilepic: "mango.png"),
     FriendslistDummies(name: "Christian Henrich", profilepic: "mango.png")
   ];
+
+  void longPress() {
+    setState(() {
+      if (friends.isEmpty) {
+        longPressFlag = false;
+      } else {
+        longPressFlag = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,42 +50,56 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
       body: Column(
         children: <Widget>[
           TextField(
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10.0),
-                  hintText: "search for a friend"),
-              onChanged: (string) {
-                //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
-                _debouncer.run(() {
-                  print(string);
-                });
-              }),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.all(10.0),
+              hintText: "search for a friend"
+            ),
+            onChanged: (string) {
+              //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
+              _debouncer.run(() {
+                print(string);
+              });
+            }
+          ),
           Expanded(
             child: ListView.builder(
-                itemCount: friends.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 1.0, horizontal: 4.0),
-                    child: Card(
-                      child: ListTile(
-                        onTap: () async {
-                          print(friends[index].name + " was pressed");
+              itemCount: friends.length,
+              itemBuilder: (context, index){
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+                  child: Card(
+                    child: ListTile(
+                      onLongPress: () {
+                        setState(() {
+                          friends[index].isSelected = !friends[index].isSelected;
+                        });
+                      },
+                      selected: friends[index].isSelected,
+                      onTap: () {
+                        print(friends[index].name + " was pressed");
+                      },
+                      title: Text(friends[index].name),
+                      trailing: (friends[index].isSelected) ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
+                      leading: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+
                         },
-                        title: Text(friends[index].name),
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/${friends[index].profilepic}'),
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
                         ),
                       ),
                     ),
-                  );
-                }),
+                  ),
+                );
+              }
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showaddfriendsdialog(context);
+                DialogHelper.showAddFriendsDialog(context);
               },
               child: Icon(Icons.group_add),
               backgroundColor: Colors.blueAccent,
