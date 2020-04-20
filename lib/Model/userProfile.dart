@@ -9,6 +9,17 @@ class UserProfile {
   UserProfile(this._uid, this._username, this._email, this._forename,
       this._surname, this._biography);
 
+
+  UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot,
+      String uid) {
+    _uid = uid;
+    _username = documentSnapshot['username'];
+    _email = documentSnapshot['email'];
+    _forename = documentSnapshot['forename'];
+    _surname = documentSnapshot['surname'];
+    _biography = documentSnapshot['biography'];
+  }
+
   String toString() {
     return 'UserProfile{_uid: $_uid, _username: $_username, _email: $_email, _forename: $_forename, _surname: $_surname, _biography: $_biography}';
   }

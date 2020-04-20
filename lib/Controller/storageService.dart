@@ -12,9 +12,9 @@ Future<String> uploadFile(
         FirebaseStorage.instance.ref().child(collectionID).child(filename);
     StorageUploadTask uploadTask = ref.putFile(file);
     return await (await uploadTask.onComplete).ref.getDownloadURL();
-  } catch (Excpetion) {
+  } catch (e) {
     //TODO improve exception handling
-    print(Excpetion.toString());
+    print(e.toString());
   }
 }
 
