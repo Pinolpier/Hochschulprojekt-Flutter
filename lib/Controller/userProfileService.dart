@@ -17,6 +17,7 @@ Map<String, String> uidToUri = {};
 ///All field will be overwritten with the values from the parameter [profile].
 ///Only the [FirebaseUser] references by [profile.uid] is allowed to update his own profile.
 Future<bool> updateProfile(UserProfile profile) async {
+  //TODO is username unique?
   if (await _isOperationAllowed(profile)) {
     try {
       await firestore
@@ -111,6 +112,46 @@ Future<UserProfile> getUserProfile(String uid) async {
   } on PlatformException catch (platformException) {
     throw new PermissionDeniedException(platformException,
         "Cannot retrieve the User profile with uid: $uid, probably because permission is denied.");
+  }
+}
+
+Future<String> getUidFromUserName(String username) async {
+  var x = firestore.collectionGroup(collection).reference().where(
+      'username', isEqualTo: username);
+  QuerySnapshot querySnapshot = await x.getDocuments();
+  switch (querySnapshot.documents.length) {
+    case 0:
+      throw new NoUserProfileFoundException(
+          null, "No user with the given username: $username could be found.");
+      break;
+    case 1:
+      DocumentSnapshot documentSnapshot = querySnapshot.documents[0];
+      return documentSnapshot.data['uid'];
+      break;
+    default:
+      throw new IllegalDatabaseStateException(null,
+          "More than 1 or less than 0 users with username: $username have been returned from database! Length og List is: ${querySnapshot
+              .documents.length}");
+  }
+}
+
+Future<String> getUidFromEmail(String email) async {
+  var x = firestore.collectionGroup(collection).reference().where(
+      'email', isEqualTo: email);
+  QuerySnapshot querySnapshot = await x.getDocuments();
+  switch (querySnapshot.documents.length) {
+    case 0:
+      throw new NoUserProfileFoundException(
+          null, "No user with the given email address: $email could be found.");
+      break;
+    case 1:
+      DocumentSnapshot documentSnapshot = querySnapshot.documents[0];
+      return documentSnapshot.data['uid'];
+      break;
+    default:
+      throw new IllegalDatabaseStateException(null,
+          "More than 1 or less than 0 users with email adress: $email have been returned from database! Length og List is: ${querySnapshot
+              .documents.length}");
   }
 }
 
