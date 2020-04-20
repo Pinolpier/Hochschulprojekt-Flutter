@@ -83,7 +83,7 @@ class _FriendlistGroupScreenState extends State<FriendlistGroupScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showfriendsdialog(context);
+                DialogHelper.showFriendsDialog(context);
               },
               child: Icon(Icons.add),
               backgroundColor: Colors.blueAccent,
