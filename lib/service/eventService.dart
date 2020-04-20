@@ -15,7 +15,7 @@ Map<String, String> _urlToID = new Map();
 Timestamp _startDate;
 Timestamp _endDate;
 List<dynamic> _tags;
-bool _privateEvent = true;
+bool _privateEvent = false;
 bool _myEvents = false;
 
 /// uploads the data into the database when creating an [Event]
@@ -35,7 +35,7 @@ void createEvent(File image, Event event) async {
 /// fetches a [List] of events from the database and checks
 /// which filters are set
 Future<List<Event>> getEvents() async {
-  var x = db.collectionGroup(collection).reference();
+  var x;
   String uid = await getUidOfCurrentlySignedInUser();
   if (_privateEvent) {
     x = db
@@ -52,11 +52,11 @@ Future<List<Event>> getEvents() async {
       x = x.where('teilnehmerIDs', arrayContains: uid);
     }
   }
-  if (startDate != null) {
+  if (_startDate != null) {
     x = x.where('startdate', isGreaterThanOrEqualTo: _startDate);
   }
   if (_tags != null) {
-    x = x.where('tagsList', arrayContainsAny: _tags);
+    //  x = x.where('tagsList', arrayContains: _tags);
   }
   QuerySnapshot querySnapshot = await x.getDocuments();
   return _snapShotToList(querySnapshot);
@@ -123,14 +123,15 @@ Future<Widget> getImage(String eventID) async {
   }
   if (url != null)
     return Image.network(url);
-  else return Image();
+  else
+    return Image();
 }
 
 /// Returns a [Event] based on the [eventID]
 Future<Event> _getEventbyID(String eventID) async {
   DocumentSnapshot documentSnapshot =
       await db.collection(collection).document(eventID).get();
-  Event event= _documentSnapshotToEvent(documentSnapshot);
+  Event event = _documentSnapshotToEvent(documentSnapshot);
   event.eventID = documentSnapshot.documentID;
   return event;
 }
@@ -424,33 +425,33 @@ void exceptionhandling(PlatformException e) {
   }
 }
 
-set startDate(Timestamp value) {
-  _startDate = value;
+set startDate(DateTime value) {
+  _startDate = Timestamp.fromDate(value);
 }
 
-set endDate(Timestamp value) {
-  _endDate = value;
+set endDate(DateTime value) {
+  _endDate = Timestamp.fromDate(value);
 }
 
 void deleteEndFilter() {
-  endDate = null;
+  _endDate = null;
 }
 
 void deleteStartFilter() {
-  startDate = null;
+  _startDate = null;
 }
 
 void deleteTagFilter() {
-  tags = null;
+  _tags = null;
 }
 
 set tags(List<String> value) {
   _tags = value;
 }
 
-Timestamp get startDate => _startDate;
+DateTime get startDate => _startDate.toDate();
 
-Timestamp get endDate => _endDate;
+DateTime get endDate => _endDate.toDate();
 
 List<String> get tags => _tags;
 
@@ -458,4 +459,12 @@ set myEvent(bool value) {
   _myEvents = value;
 }
 
+set privateEvent(bool value) {
+  _privateEvent = value;
+}
+
 bool get myEvent => _myEvents;
+
+bool get privatEvent => _privateEvent;
+
+Map<String, String> get urlToID => _urlToID;

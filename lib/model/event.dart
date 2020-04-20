@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Event {
   String _eventID;
   String _title;
@@ -32,8 +34,8 @@ class Event {
   /// additionally
   Event.createFrommDB(
       this._title,
-      this._eventStartDate,
-      this._eventEndDate,
+      Timestamp startdate,
+      Timestamp enddate,
       this._description,
       this._location,
       this._privateEvent,
@@ -41,7 +43,10 @@ class Event {
       this._tagsList,
       this._latitude,
       this._longitude,
-      this._imageURL);
+      this._imageURL){
+    _eventStartDate = startdate.toDate();
+    _eventEndDate = enddate.toDate();
+  }
 
   bool get privateEvent => _privateEvent;
 

@@ -1,16 +1,8 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:univents/service/storageService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
-import 'package:univents/Controller/backendAPI.dart';
-import 'package:univents/model/event.dart';
-import 'package:univents/service/eventService.dart';
 
 class FriendlistScreen extends StatefulWidget {
   @override
@@ -65,29 +57,6 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                       child: ListTile(
                         onTap: () async {
                           print(friends[index].name + " was pressed");
-                          print(await signInWithEmailAndPassword(
-                              'haringmarkus@yahoo.de', 'password'));
-                          String uid = getUidOfCurrentlySignedInUser();
-                          List<dynamic> userList = new List();
-                          userList.add(uid);
-                          DateTime startDate = DateTime(2020, 10, 17);
-                          DateTime stopDate = DateTime(2020, 5, 25);
-                          Event event = new Event(
-                              'neuerTitel',
-                              startDate,
-                              stopDate,
-                              'description',
-                              'location',
-                              true,
-                              userList,
-                              ['tags', 'neuerTag'],
-                              '20',
-                              '47');
-                          //await createEvent(null, event);
-
-                          List<Event> eventList = await getEvents();
-                          print(eventList.length);
-                          print(eventList[0].eventStartDate.toIso8601String());
                         },
                         title: Text(friends[index].name),
                         leading: CircleAvatar(
