@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/View/homeFeed_screen/feedActionBar.dart';
 import 'package:univents/View/homeFeed_screen/feedItemImpl.dart';
 
-//@author mdarscht
+
 class FeedItemUI extends StatelessWidget {
 
   final FeedItemImpl _data;

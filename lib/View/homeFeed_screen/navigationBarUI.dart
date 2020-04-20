@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/View/homeFeed_screen/feed.dart';
 
-//@author mdarscht
 class NavigationBarUI extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => NavigationBarUIControl();

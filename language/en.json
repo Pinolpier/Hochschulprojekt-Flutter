@@ -1,4 +1,8 @@
 {
-  "test1": "hello, this is a test",
-  "test2": "this is another test"
+  "forgot_password": "Forgot Password?",
+  "enter_password": "Enter your Password",
+  "password": "Password",
+  "enter_email": "Enter your Email",
+  "dont_have_an_account": "Don\\'t have an Account? ",
+  "sign_up": " Sign Up"
 }
