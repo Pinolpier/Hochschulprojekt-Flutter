@@ -38,3 +38,8 @@ class ForeignProfileAccessForbiddenException extends UserProfileException {
       Exception originalException, String message)
       : super(originalException, message);
 }
+
+class PermissionDeniedException extends UserProfileException {
+  const PermissionDeniedException(Exception originalException, String message)
+      : super(originalException, message);
+}

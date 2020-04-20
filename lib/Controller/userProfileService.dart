@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Controller/storageService.dart';
 import 'package:univents/Model/userProfile.dart';
@@ -100,10 +101,17 @@ Future<Widget> getProfilePicture(String uid) async {
 
 /// Use this method to retrieve a [UserProfile] referenced by a [uid].
 Future<UserProfile> getUserProfile(String uid) async {
-  //fix: [ERROR:flutter/lib/ui/ui_dart_state.cc(157)] Unhandled Exception: PlatformException(Error performing get, PERMISSION_DENIED: Missing or insufficient permissions., null)
-
-  return UserProfile.fromDocumentSnapshot(
-      (await firestore.collection(collection).document(uid).get()).data, uid);
+  if (!await isUserSignedIn()) {
+    throw new UserNotSignedInException(null,
+        "A user has to be signed in to be able to update his/her profile! No user is signed in right now!");
+  }
+  try {
+    return UserProfile.fromDocumentSnapshot(
+        (await firestore.collection(collection).document(uid).get()).data, uid);
+  } on PlatformException catch (platformException) {
+    throw new PermissionDeniedException(platformException,
+        "Cannot retrieve the User profile with uid: $uid, probably because permission is denied.");
+  }
 }
 
 ///this method is used twice internally to check that only a signed in user can change his own profile.
