@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter create event UI',
-      home: FriendlistScreen(),
+      home: EventInfo(),
     );
   }
 }

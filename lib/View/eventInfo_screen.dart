@@ -1,11 +1,20 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:univents/View/dialogs/DialogHelper.dart';
 
 /**
  * This class represents a Screen for Event informations
  * The Event text is scrollable and the date and location stay always on button on screen
  */
-class EventInfo extends StatelessWidget{
+class EventInfo extends StatefulWidget {
   @override
+  _EventInfoState createState() => _EventInfoState();
+}
+
+  class _EventInfoState extends State<EventInfo> {
+
   DateTime now = new DateTime.fromMicrosecondsSinceEpoch(new DateTime.now().millisecondsSinceEpoch);
   bool isEventOpen = true;
   String eventAttendeesCount = "400";
@@ -13,6 +22,93 @@ class EventInfo extends StatelessWidget{
   String eventName = "EventName";
   String eventLocation = 'Hochschule Heilbronn';
   String eventText = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
+  File eventImage;
+
+  Future getImageFromCamera() async {
+    File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      eventImage = pickedImage;
+    });
+  }
+
+  Future getImageFromGallery() async {
+    File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      eventImage = pickedImage;
+    });
+  }
+
+  Future<void> chooseImage() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Upload an Image'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Choose from where you want to upload the iamge'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () {
+                getImageFromCamera();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                getImageFromGallery();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Remove'),
+              onPressed: () {
+                setState(() {
+                  eventImage = null;
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  Widget _eventImagePlaceholder() {
+    return GestureDetector(
+        onTap: () {
+          chooseImage();
+        }, // handle your image tap here
+        child: Image.asset('assets/eventlogo.png', height: 150));
+  }
+
+  Widget _eventImage() {
+    return GestureDetector(
+        onTap: () {
+          chooseImage();
+        },
+        child: Image.file(eventImage, height: 150)
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -43,10 +139,7 @@ class EventInfo extends StatelessWidget{
                             SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: ClipOval(
-                                  // logo of the event
-                                  child: Image.asset('assets/eventlogo.png', fit: BoxFit.cover,),
-                                )
+                                child:  eventImage == null ? _eventImagePlaceholder() : _eventImage(),
                             ),
 
                             SizedBox(width: 16,),
@@ -89,7 +182,16 @@ class EventInfo extends StatelessWidget{
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    Icon(Icons.lock, color: Colors.white, size: 30,),
+                                    GestureDetector(
+                                        onTap: () {
+                                          print("was oressed");
+                                          setState(() {
+                                            isEventOpen = !isEventOpen;
+                                          });
+                                        },
+                                        child: isEventOpen == true ? Icon(Icons.lock_open, color: Colors.white, size: 30,) :
+                                        isEventOpen == false ? Icon(Icons.lock,color: Colors.white, size: 30,) : null
+                                    ),
                                     SizedBox(width: 4,),
 
                                        isEventOpen == true ? Text("open", style: TextStyle(
@@ -200,6 +302,16 @@ class EventInfo extends StatelessWidget{
 
                             SizedBox(height: 16,),
 
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  DialogHelper.showFriendsDialog(context);
+                                },
+                                child: Icon(Icons.group_add),
+                                backgroundColor: Colors.blueAccent,
+                              ),
+                            )
                           ],
                         ),
                       ),
