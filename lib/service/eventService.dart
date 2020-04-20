@@ -25,7 +25,7 @@ void createEvent(File image, Event event) async {
   String eventID = await _addData(event);
   if (image != null) {
     Map<String, dynamic> eventMap;
-    String imageURL = await uploadImage('eventPicture', image, event.eventID);
+    String imageURL = await uploadImage('eventPicture', image, eventID);
     eventMap['imageURL'] = imageURL;
     _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
@@ -101,7 +101,7 @@ deleteEvent(Event event) async {
   if (event.eventID != null) {
     try {
       if (event.imageURL != null) {
-        deleteImage(event.eventID);
+        deleteImage(event.eventID, collection);
       }
       db.collection(collection).document(event.eventID).delete();
     } on PlatformException catch (e) {

@@ -1,7 +1,8 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 
-///This Method uploads a [File]
+/// This Method uploads a [File] to Firebase Storage
 Future<String> uploadImage(
     String collectionID, File imageFile, String imagename) async {
   try {
@@ -14,7 +15,9 @@ Future<String> uploadImage(
   }
 }
 
-/// deletes a Image based on the eventId
-Future deleteImage(String eventID) async {
-  await FirebaseStorage.instance.ref().child(eventID).delete();
+/// deletes a Image based on the [String] collectionname and filename
+Future deleteImage(String collection, String filename) async {
+  await FirebaseStorage.instance.ref().child(collection)
+      .child(filename)
+      .delete();
 }
