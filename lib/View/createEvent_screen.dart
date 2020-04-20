@@ -417,7 +417,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('addFriends Button Pressed'),
+        onPressed: () {
+          //Friendslist öffnen
+          //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
+          //Friendslist schließen
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
