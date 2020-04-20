@@ -16,6 +16,8 @@ class FriendlistScreen extends StatefulWidget{
 class _FriendlistScreenState extends State<FriendlistScreen>{
 
   final _debouncer = new Debouncer(500);
+  bool longPressFlag = false;
+  int selectedCount = 0;
 
   //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
@@ -25,6 +27,16 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
     FriendslistDummies(name: "Mathias Darscht", profilepic: "mango.png"),
     FriendslistDummies(name: "Christian Henrich", profilepic: "mango.png")
   ];
+
+  void longPress() {
+    setState(() {
+      if (friends.isEmpty) {
+        longPressFlag = false;
+      } else {
+        longPressFlag = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +69,25 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
                   child: Card(
                     child: ListTile(
+                      onLongPress: () {
+                        setState(() {
+                          friends[index].isSelected = !friends[index].isSelected;
+                        });
+                      },
+                      selected: friends[index].isSelected,
                       onTap: () {
                         print(friends[index].name + " was pressed");
                       },
                       title: Text(friends[index].name),
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
+                      trailing: (friends[index].isSelected) ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
+                      leading: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
+                        ),
                       ),
                     ),
                   ),
@@ -74,7 +99,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showaddfriendsdialog(context);
+                DialogHelper.showAddFriendsDialog(context);
               },
               child: Icon(Icons.group_add),
               backgroundColor: Colors.blueAccent,

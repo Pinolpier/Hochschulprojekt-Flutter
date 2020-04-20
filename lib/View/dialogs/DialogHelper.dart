@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:univents/View/dialogs/addFriends_dialog.dart';
-import 'package:univents/View/dialogs/friendList_dialog.dart';
+
+import 'addFriends_dialog.dart';
+import 'changeBio_dialog.dart';
+import 'friendList_dialog.dart';
 
 class DialogHelper {
 
-  static showfriendsdialog(context) => showDialog(context: context, builder: (context) => FriendslistdialogScreen());
-  static showaddfriendsdialog(context) => showDialog(context: context, builder: (context) => AddFriendsDialogScreen());
+  static showFriendsDialog(context) => showDialog(context: context, builder: (context) => FriendslistdialogScreen());
+  static showAddFriendsDialog(context) => showDialog(context: context, builder: (context) => AddFriendsDialogScreen());
+  static showChangeBioDialog(context) => showDialog(context: context, builder: (context) => ChangeBioDialog());
 }
