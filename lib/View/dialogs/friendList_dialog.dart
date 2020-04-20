@@ -21,6 +21,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
   int selectedCount = 0;
+  List<String> selected = [];
 
   //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
@@ -75,6 +76,14 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         onLongPress: () {
                           setState(() {
                             friends[index].isSelected = !friends[index].isSelected;
+                            if(selected.contains(friends[index].name))
+                            {
+                              selected.removeLast();
+                            }
+                            else {
+                              selected.add(friends[index].name);
+                            }
+                            print(selected.toString());
                           });
                         },
                         selected: friends[index].isSelected,
@@ -95,6 +104,16 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                     ),
                   );
                 }
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.check),
+              backgroundColor: Colors.blueAccent,
             ),
           ),
         ],
