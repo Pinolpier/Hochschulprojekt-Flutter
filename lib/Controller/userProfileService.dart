@@ -100,6 +100,8 @@ Future<Widget> getProfilePicture(String uid) async {
 
 /// Use this method to retrieve a [UserProfile] referenced by a [uid].
 Future<UserProfile> getUserProfile(String uid) async {
+  //fix: [ERROR:flutter/lib/ui/ui_dart_state.cc(157)] Unhandled Exception: PlatformException(Error performing get, PERMISSION_DENIED: Missing or insufficient permissions., null)
+
   return UserProfile.fromDocumentSnapshot(
       (await firestore.collection(collection).document(uid).get()).data, uid);
 }

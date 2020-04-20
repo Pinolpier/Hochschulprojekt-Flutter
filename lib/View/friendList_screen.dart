@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/Controller/authService.dart';
+import 'package:univents/Controller/userProfileService.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
+import 'package:univents/Model/userProfile.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
 
@@ -57,8 +60,33 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
                   child: Card(
                     child: ListTile(
-                      onTap: () {
+                      onTap: () async {
                         print(friends[index].name + " was pressed");
+                        switch (friends[index].name) {
+                          case "Markus Link":
+                          //registerWithEmailAndPassword("MaxMustermannTestNutzer@markus-link.com", "1Eins11Elf!Passwort");
+                            signInWithEmailAndPassword(
+                                "MaxMustermannTestNutzer@markus-link.com",
+                                "1Eins11Elf!Passwort");
+                            break;
+                          case "Markus Häring":
+                            signOut();
+                            break;
+                          case "Jan Oster":
+                            updateProfile(new UserProfile(
+                                getUidOfCurrentlySignedInUser(),
+                                "MaxMustermannTestNutzer",
+                                "MaxMustermannTestNutzer@markus-link.com",
+                                "MaxMustermmann", "TestNutzer",
+                                "Ich werde sehr bald wieder sterben\nDenn ich bin eigentlich nicht echt...\n...nur die Personalausweisbehörde kennt mich"));
+                            break;
+                          case "Mathias Darscht":
+                            print(await getUserProfile(
+                                getUidOfCurrentlySignedInUser()));
+                            break;
+                          case "Christian Henrich":
+                            break;
+                        }
                       },
                       title: Text(friends[index].name),
                       leading: CircleAvatar(
