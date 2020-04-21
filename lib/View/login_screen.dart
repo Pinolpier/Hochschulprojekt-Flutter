@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
 
-  bool _rememberMe = false;
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
 
@@ -25,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     super.initState();
     _logoAnimationController = new AnimationController(
         vsync: this,
-        duration: new Duration(milliseconds: 1500)
+        duration: new Duration(milliseconds: 5000)
     );
     _logoAnimation = new CurvedAnimation(
         parent: _logoAnimationController,
@@ -35,12 +34,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     _logoAnimationController.forward();
   }
 
+  //TODO Exceptions werfen, bei Änderunge von unique Feldern im ProfileService!
   Widget _animatedLogoWidget(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Image(
-          image: new AssetImage("assets/eventlogo.png"),  //should be changed to the actual univents logo in assets later
+          image: new AssetImage("assets/eventlogo.png"),
+          // TODO should be changed to the actual univents logo in assets later
           width: _logoAnimation.value * 100,
           height: _logoAnimation.value * 100,
         )
@@ -122,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () => print("Forgot password Button Pressed"),
+          onPressed: () => print("Forgot password Button Pressed"),
+          //TODO call method here
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           "Forgot Password?",
@@ -238,13 +240,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       backgroundColor: Colors.blueAccent,
       body: new Container(
         height: double.infinity,
-        child: SingleChildScrollView(     //fixes pixel overflow error when keyboard is used
+        child: SingleChildScrollView( //fixes pixel overflow error when keyboard is used // TODO is this good coding?
           physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(
             horizontal: 40.0,
             vertical: 120.0,
           ),
-          child: new Column(
+          child: new Column( // TODO hard coded sizes? Is this good coding? Test on very small and large display scales (get emulators)
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
