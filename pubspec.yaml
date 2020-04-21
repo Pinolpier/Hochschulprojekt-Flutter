@@ -40,6 +40,9 @@ dependencies:
   #The following dependency enables us to use Firebase Cloud Storage
   firebase_storage: ^3.1.5
 
+  #The following dependency enables us to use the nave share window
+  share: ^0.6.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

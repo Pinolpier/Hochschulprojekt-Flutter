@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:univents/Model/constants.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -8,6 +9,16 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
+
+  void share(BuildContext context, String text) {
+    final RenderBox box = context.findRenderObject();   //fix for iPad
+
+    Share.share(
+      text,
+      subject: text,
+      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +40,12 @@ class _AboutScreenState extends State<AboutScreen> {
                   Text('Privacy',
                   style: textStyleConstant,
                   ),
-                  //TODO code here
+                  RaisedButton(
+                    onPressed: () {
+                      share(context, "Test123");
+                    },
+
+                  ),
                 ],
               ),
             )
