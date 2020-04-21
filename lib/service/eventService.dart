@@ -69,7 +69,7 @@ Future<String> _addData(Event event) async {
         await db.collection(collection).add(_eventToMap(event));
     return documentReference.documentID;
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -82,7 +82,7 @@ updateData(Event event) async {
           .document(event.eventID)
           .updateData(_eventToMap(event));
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -92,7 +92,7 @@ void updateField(String eventID, Map<dynamic, dynamic> map) {
   try {
     db.collection(collection).document(eventID).updateData(map);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -105,7 +105,7 @@ deleteEvent(Event event) async {
       }
       db.collection(collection).document(event.eventID).delete();
     } on PlatformException catch (e) {
-      exceptionhandling(e);
+      exceptionHandling(e);
     }
   }
 }
@@ -149,7 +149,7 @@ Future<List<Event>> getEventsbyStartAndStopDate(
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -164,7 +164,7 @@ Future<List<Event>> _getEventsbyStartDate(Timestamp start) async {
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -178,7 +178,7 @@ Future<List<Event>> _getEventsbyEndDate(Timestamp stop) async {
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -196,7 +196,7 @@ Future<List<Event>> getEventsbyStartStopdateAndTag(
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -212,7 +212,7 @@ Future<List<Event>> getUsersEvents() async {
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -232,7 +232,7 @@ Future<List<Event>> getEventsbyUserAndStartAndStopDate(
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -251,7 +251,7 @@ Future<List<Event>> getEventsbyUserAndStopDate(
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -269,7 +269,7 @@ Future<List<Event>> getEventsbyUserAndStartDate(
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -284,7 +284,7 @@ Future<List<Event>> getEventsbyTags(List<String> tagsList) async {
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
-    exceptionhandling(e);
+    exceptionHandling(e);
   }
 }
 
@@ -359,7 +359,7 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
 }
 
 /// handles errors by [PlatformException]
-void exceptionhandling(PlatformException e) {
+void exceptionHandling(PlatformException e) {
   switch (e.code) {
     case ('ABORTED'):
       print(
