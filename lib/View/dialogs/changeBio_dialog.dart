@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// this is used as a dialog that opens when you press the "change bio" button on the profile screen while your logged in as the profile owner on your own profile
+/// it gives you the option to input a new bio in the textfield and confirm it through the button at the right so your new bio text gets displayed
 class ChangeBioDialog extends StatefulWidget{
   @override
   _ChangeBioDialogState createState() => _ChangeBioDialogState();
@@ -9,7 +11,7 @@ class ChangeBioDialog extends StatefulWidget{
 class _ChangeBioDialogState extends State<ChangeBioDialog> {
 
   final _textController = TextEditingController();
-  String newBioText = "";
+  String newBioText = "";     //TODO: fill this with the bio text from the database of the user
 
   @override
   Widget build(BuildContext context) {

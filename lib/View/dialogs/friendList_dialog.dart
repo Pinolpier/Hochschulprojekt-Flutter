@@ -3,19 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 
-/**
- * this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
- * an option to directly invite friends to events
- */
+/// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
+/// an option to directly invite friends to events and to add new users to a group
 class FriendslistdialogScreen extends StatefulWidget{
   @override
   _FriendlistdialogScreenState createState() => _FriendlistdialogScreenState();
 }
 
-/**
- * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
- * button at the bottom to create a new message
- */
+/// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
+/// button at the bottom to create a new message
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
 
   final _debouncer = new Debouncer(500);
@@ -23,7 +19,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
   int selectedCount = 0;
   List<String> selected = [];
 
-  //simple dummie list filled with dummie friend objects to test the list
+  /// simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
     FriendslistDummies(name: "Markus Link", profilepic: "mango.png"),
     FriendslistDummies(name: "Markus Häring", profilepic: "mango.png"),

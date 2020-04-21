@@ -5,6 +5,7 @@ import 'addFriends_dialog.dart';
 import 'changeBio_dialog.dart';
 import 'friendList_dialog.dart';
 
+/// Helper class that calls the different dialogs when the buttons were pressed and displays them
 class DialogHelper {
 
   static showFriendsDialog(context) => showDialog(context: context, builder: (context) => FriendslistdialogScreen());

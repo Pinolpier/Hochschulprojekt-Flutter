@@ -1,6 +1,4 @@
-/**
- * dummie class to test the listview
- */
+/// dummie class to test the listview
 class GroupDummies{
   String name;
   String profilepic;

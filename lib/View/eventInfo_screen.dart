@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
 
-/**
- * This class represents a Screen for Event informations
- * The Event text is scrollable and the date and location stay always on button on screen
- */
+/// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
+/// Furthermore it shows stuff like an event picture, how many people will attend, open or closed and also adds functionality
+/// so that the user can change the event picture and set the event to private or open
 class EventInfo extends StatefulWidget {
   @override
   _EventInfoState createState() => _EventInfoState();
@@ -16,12 +15,19 @@ class EventInfo extends StatefulWidget {
   class _EventInfoState extends State<EventInfo> {
 
   DateTime now = new DateTime.fromMicrosecondsSinceEpoch(new DateTime.now().millisecondsSinceEpoch);
+  /// if the event is open for everyone or private
   bool isEventOpen = true;
+  /// how many people promised to attend
   String eventAttendeesCount = "400";
+  /// the date on which the event holds place
   String eventDate = "24.04";
+  /// name of the event
   String eventName = "EventName";
+  /// location of the event
   String eventLocation = 'Hochschule Heilbronn';
+  /// description of the event (set by event creator)
   String eventText = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
+  /// eventpicture
   File eventImage;
 
   Future getImageFromCamera() async {
@@ -130,7 +136,6 @@ class EventInfo extends StatefulWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      //for user profile header
                       Container(
                         padding : EdgeInsets.only(left: 32, right: 32, top: 32),
                         child: Row(
@@ -168,8 +173,6 @@ class EventInfo extends StatefulWidget {
 
                       SizedBox(height: 10,),
 
-                      //performace bar
-
                       SizedBox(height: 10,),
                       Container(
                         padding: EdgeInsets.all(32),
@@ -184,7 +187,6 @@ class EventInfo extends StatefulWidget {
                                   children: <Widget>[
                                     GestureDetector(
                                         onTap: () {
-                                          print("was oressed");
                                           setState(() {
                                             isEventOpen = !isEventOpen;
                                           });
