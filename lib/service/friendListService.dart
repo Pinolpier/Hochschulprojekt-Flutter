@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:univents/Controller/backendAPI.dart';
+import 'package:univents/Controller/authService.dart';
+
 
 final firebaseInstance = Firestore.instance
     .collection(COLLECTION)
