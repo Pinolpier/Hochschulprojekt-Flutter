@@ -11,7 +11,7 @@ class Event {
   String _location;
   bool _privateEvent;
   String _latitude, _longitude;
-  List<dynamic> _teilnehmerIDs;
+  List<dynamic> _attendeesIds;
   List<dynamic> _tagsList;
   File image;
   String _imageURL;
@@ -24,7 +24,7 @@ class Event {
       this._description,
       this._location,
       this._privateEvent,
-      this._teilnehmerIDs,
+      this._attendeesIds,
       this._tagsList,
       this._latitude,
       this._longitude);
@@ -39,7 +39,7 @@ class Event {
       this._description,
       this._location,
       this._privateEvent,
-      this._teilnehmerIDs,
+      this._attendeesIds,
       this._tagsList,
       this._latitude,
       this._longitude,
@@ -50,14 +50,14 @@ class Event {
 
   bool get privateEvent => _privateEvent;
 
-  void addTeilnehmer(String teilnehmerID) {
-    teilnehmerIDs.add(teilnehmerID);
+  void addAttendeesIds(String attendeesIds) {
+    _attendeesIds.add(attendeesIds);
   }
 
-  List<dynamic> get teilnehmerIDs => _teilnehmerIDs;
+  List<dynamic> get attendeesIds => _attendeesIds;
 
-  set teilnehmerIDs(List<String> value) {
-    _teilnehmerIDs = value;
+  set attendeesIds(List<String> value) {
+    _attendeesIds = value;
   }
 
   set privateEvent(bool value) {
