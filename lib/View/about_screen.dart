@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:univents/Model/constants.dart';
 
+import '../Model/constants.dart';
+import '../Model/constants.dart';
+
 class AboutScreen extends StatefulWidget {
   @override
   State createState() => _AboutScreenState();
@@ -10,13 +13,40 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
 
+  String shareMessage = "Um Beta-Acess für UNIVENTS zu bekommen, schreibe eine E-Mail an info@univents.app";
+
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject();   //fix for iPad
 
     Share.share(
       text,
-      subject: text,
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    );
+  }
+
+  Widget _shareButtonWidget(String text) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () => Share.share(text),
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'share',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
     );
   }
 
@@ -38,14 +68,22 @@ class _AboutScreenState extends State<AboutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text('Privacy',
-                  style: textStyleConstant,
+                  style: labelStyleConstant,
                   ),
-                  RaisedButton(
-                    onPressed: () {
-                      share(context, "Test123");
-                    },
-
+                  Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    style: textStyleConstant,
                   ),
+                  SizedBox(height: 20.0),
+                  Text('Impressum',
+                    style: labelStyleConstant,
+                  ),
+                  Text(
+                    "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    style: textStyleConstant,
+                  ),
+                  SizedBox(height: 20.0),
+                  _shareButtonWidget(shareMessage),
                 ],
               ),
             )
