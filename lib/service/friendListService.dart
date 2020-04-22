@@ -4,31 +4,33 @@ import 'package:univents/Controller/userProfileService.dart';
 import 'package:univents/service/eventService.dart';
 
 //final collectionName for all friends in database
-final String COLLECTION = 'friends';
+final String collection = 'friends';
+final String friendsList = 'friends';
 final firebaseInstance = Firestore.instance;
 
-/// adding a Friend by a [String] email-adress to the database
+/// adding a Friend by a [E-mail-address] to the database
 ///  the email gets converted to a unique UserId
-void addFriendbyEmail(String email) async {
+void addFriendByEmail(String email) async {
   try {
-    String uid = await getUidOfCurrentlySignedInUser();
-    String friendID = email;
+    String uid = getUidOfCurrentlySignedInUser();
+    String friendID = await getUidFromEmail(email);
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(COLLECTION).document(uid).get();
+    await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
-      friendMap['friends'] = documentSnapshot.data['friends'];
+      friendMap[friendsList] = documentSnapshot.data[friendsList];
     }
     List<dynamic> friendList = new List();
-    if (friendMap['friends'] != null) friendList = friendMap['friends'];
+    if (friendMap[friendsList] != null) friendList = friendMap[friendsList];
     if (friendList.contains(friendID)) {
-      print('friend is already in List');
+      throw new FriendAlreadyInListException(
+          null, 'The friend is already on the list');
     } else {
       friendList.add(friendID);
-      friendMap['friends'] = friendList;
+      friendMap[friendsList] = friendList;
       WriteBatch batch = Firestore.instance.batch();
       batch.setData(
-          firebaseInstance.collection(COLLECTION).document(uid), friendMap,
+          firebaseInstance.collection(collection).document(uid), friendMap,
           merge: true);
       await batch.commit();
     }
@@ -37,28 +39,29 @@ void addFriendbyEmail(String email) async {
   }
 }
 
-/// adding a Friend by a [String] username to the database
+/// adding a Friend by a [username] to the database
 /// the username gets converted to a unique UserId
-void addFriendbyUsername(String username) async {
+void addFriendByUsername(String username) async {
   try {
-    String uid = await getUidOfCurrentlySignedInUser();
+    String uid = getUidOfCurrentlySignedInUser();
     String friendID = await getUidFromUserName(username);
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(COLLECTION).document(uid).get();
+    await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
-      friendMap['friends'] = documentSnapshot.data['friends'];
+      friendMap[friendsList] = documentSnapshot.data[friendsList];
     }
     List<dynamic> friendList = new List();
-    if (friendMap['friends'] != null) friendList = friendMap['friends'];
+    if (friendMap[friendsList] != null) friendList = friendMap[friendsList];
     if (friendList.contains(friendID)) {
-      print('friend is already in List');
+      throw new FriendAlreadyInListException(
+          null, 'The friend is already on the list');
     } else {
       friendList.add(friendID);
-      friendMap['friends'] = friendList;
+      friendMap[friendsList] = friendList;
       WriteBatch batch = Firestore.instance.batch();
       batch.setData(
-          firebaseInstance.collection(COLLECTION).document(uid), friendMap,
+          firebaseInstance.collection(collection).document(uid), friendMap,
           merge: true);
       await batch.commit();
     }
@@ -67,16 +70,16 @@ void addFriendbyUsername(String username) async {
   }
 }
 
-/// remove a Friend from a group by getting a [Strin] friendId and
-/// a [String] groupName
+/// remove a Friend from a group by getting a [friendId] and
+/// a [groupName]
 void removeFriend(String friendId, String groupName) async {
   try {
-    String uid = await getUidOfCurrentlySignedInUser();
+    String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(COLLECTION).document(uid).get();
+    await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
-      friendMap['friends'] = documentSnapshot.data['friends'];
+      friendMap[friendsList] = documentSnapshot.data[friendsList];
     }
     List<dynamic> friendList = new List();
     if (friendMap[groupName] != null) {
@@ -86,26 +89,27 @@ void removeFriend(String friendId, String groupName) async {
         friendMap[groupName] = friendList;
         WriteBatch batch = Firestore.instance.batch();
         batch.setData(
-            firebaseInstance.collection(COLLECTION).document(uid), friendMap,
+            firebaseInstance.collection(collection).document(uid), friendMap,
             merge: true);
         await batch.commit();
       } else {
-        print('friend not exists');
+        throw new FriendNotExistException(
+            null, 'the friend you are looking for does not exist');
       }
     } else {
-      print('Groupname not exists');
+      throw new GroupNotExistException(null, 'the group does not exist');
     }
   } on Exception catch (e) {
     exceptionHandling(e);
   }
 }
 
-/// returns a [Map] with [List]friends and their [String] grouping
+/// returns a [Map] with [friends] and their [String] grouping
 Future<Map<String, dynamic>> getFriends() async {
   try {
-    String uid = await getUidOfCurrentlySignedInUser();
+    String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(COLLECTION).document(uid).get();
+    await firebaseInstance.collection(collection).document(uid).get();
     print(documentSnapshot.data);
     print(documentSnapshot.toString());
     return documentSnapshot.data;
@@ -114,12 +118,12 @@ Future<Map<String, dynamic>> getFriends() async {
   }
 }
 
-/// adds a User to a Group by a [String] userId and a [String] groupName
-void addUsertoGroup(String userId, String groupName) async {
+/// adds a User to a Group by a [userId]  and a [groupName]
+void addUserToGroup(String userId, String groupName) async {
   try {
-    String uid = await getUidOfCurrentlySignedInUser();
+    String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(COLLECTION).document(uid).get();
+    await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
       friendMap[groupName] = documentSnapshot.data[groupName];
@@ -127,13 +131,14 @@ void addUsertoGroup(String userId, String groupName) async {
     List<dynamic> friendList = new List();
     if (friendMap[groupName] != null) friendList = friendMap[groupName];
     if (friendList.contains(userId)) {
-      print('friend is already in List');
+      throw new FriendAlreadyInListException(
+          null, 'The friend is already on the list');
     } else {
       friendList.add(userId);
       friendMap[groupName] = friendList;
       WriteBatch batch = Firestore.instance.batch();
       batch.setData(
-          firebaseInstance.collection(COLLECTION).document(uid), friendMap,
+          firebaseInstance.collection(collection).document(uid), friendMap,
           merge: true);
       await batch.commit();
     }
@@ -142,18 +147,55 @@ void addUsertoGroup(String userId, String groupName) async {
   }
 }
 
-/// creates a new Group by a [List] of UserId's and a [String] for groupName
-void createGroupFriend(List<String> userID, String groupName) async {
+/// creates a new Group by a [userId] and a [groupName]
+void createGroupFriend(List<String> userId, String groupName) async {
   try {
     String uid = await getUidOfCurrentlySignedInUser();
     Map<String, List<String>> groupMap = new Map();
-    groupMap[groupName] = userID;
+    groupMap[groupName] = userId;
     WriteBatch writeBatch = firebaseInstance.batch();
     writeBatch.setData(
-        firebaseInstance.collection(COLLECTION).document(uid), groupMap,
+        firebaseInstance.collection(collection).document(uid), groupMap,
         merge: true);
     writeBatch.commit();
   } on Exception catch (e) {
     exceptionHandling(e);
   }
+}
+
+class FriendsException implements Exception {
+  final Exception _originalException;
+  final String _message;
+
+  const FriendsException(this._originalException, this._message);
+
+  String toString() {
+    return (_message != null
+        ? _message
+        : "no Message has been provided when this instance of Backend Exception was created.") +
+        " " +
+        (_originalException != null
+            ? (_originalException.toString() != null &&
+            _originalException.toString() != ""
+            ? "Originale exception's message was :" +
+            _originalException.toString()
+            : "Original exception had no or an empty message.")
+            : "no original exception has been provided when this instance of Backend exception was created.");
+  }
+}
+
+class FriendNotExistException extends FriendsException {
+  const FriendNotExistException(Exception originalException, String message)
+      : super(originalException, message);
+}
+
+class FriendAlreadyInListException extends FriendsException {
+  const FriendAlreadyInListException(Exception originalException,
+      String message)
+      : super(originalException, message);
+}
+
+class GroupNotExistException extends FriendsException {
+  const GroupNotExistException(Exception originalException, String message)
+      : super(originalException, message);
 }
