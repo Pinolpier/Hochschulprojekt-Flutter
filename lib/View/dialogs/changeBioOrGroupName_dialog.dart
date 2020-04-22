@@ -23,7 +23,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: Colors.blueAccent,
-          title: isBioScreen == true ? Text("Change your Bio") : isBioScreen == false ? Text("Creating new Group") : null,
+          title: isBioScreen == true ? Text("Change your Bio") : Text("Creating a new Group"),
           centerTitle: true,
         ),
         body: Column(
@@ -34,7 +34,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
                   controller: _textController,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(10.0),
-                      hintText: isBioScreen == true ? "input new bio here" : isBioScreen == false ? "enter group name here" : null,
+                      hintText: isBioScreen == true ? "input new bio here" : "enter group name here",
                   ),
               ),
             ),
