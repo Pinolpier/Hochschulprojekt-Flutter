@@ -38,15 +38,15 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: isFriendsScreen == true ? Text("Your Friendslist") : isFriendsScreen == false ? Text("Your Groups") : null,
-        leading: isFriendsScreen == true ? null : isFriendsScreen == false ? new IconButton(
+        title: isFriendsScreen == true ? Text("Your Friendslist") :  Text("Your Groups"),
+        leading: isFriendsScreen == true ? null : new IconButton(
             icon: new Icon(Icons.arrow_back),
             onPressed: () {
               setState(() {
                 isFriendsScreen = true;
               });
             },
-        ): null,
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -54,7 +54,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
           TextField(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(10.0),
-              hintText: isFriendsScreen == true ? "search for a friend" : isFriendsScreen == false ? "search for a group" : null,
+              hintText: isFriendsScreen == true ? "search for a friend" :  "search for a group",
             ),
             onChanged: (string) {
               //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
@@ -65,7 +65,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: isFriendsScreen == true ? friends.length : isFriendsScreen == false ? groups.length : null,
+              itemCount: isFriendsScreen == true ? friends.length : groups.length,
               itemBuilder: (context, index){
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
@@ -73,18 +73,16 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                     child: ListTile(
                       onTap: () {
                         setState(() {
-                          isFriendsScreen == true ? print(friends[index].name + " was pressed")
-                          : isFriendsScreen == false ? isFriendsScreen = true : null;
+                          isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
                         });
                       },
-                      title: isFriendsScreen == true ? Text(friends[index].name) : isFriendsScreen == false ? Text(groups[index].name) : null,
+                      title: isFriendsScreen == true ? Text(friends[index].name) : Text(groups[index].name),
                       leading: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                         },
                         child: CircleAvatar(
-                          backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}')
-                          : isFriendsScreen == false ? AssetImage('assets/${groups[index].profilepic}') : null,
+                          backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}') : AssetImage('assets/${groups[index].profilepic}'),  //Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
                         ),
                       ),
                     ),
@@ -119,7 +117,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
               ),
             ],
           )
-          : isFriendsScreen == false ? Padding(
+          : Padding(
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
@@ -128,7 +126,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
               child: Icon(Icons.add),
               backgroundColor: Colors.blueAccent,
             ),
-          ) : null,
+          ),
         ],
       ),
     );

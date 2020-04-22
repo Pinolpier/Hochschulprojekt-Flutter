@@ -14,7 +14,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
 
   final _textController = TextEditingController();
   String newText = "";     //TODO: fill this with the bio text from the database of the user
-  bool isBioScreen = true; //TODO: set this to true if the user used this dialog to change his profile bio, change to false if he uses it for a new group name in the friendslist
+  bool isBioScreen = false; //TODO: set this to true if the user used this dialog to change his profile bio, change to false if he uses it for a new group name in the friendslist
 
   @override
   Widget build(BuildContext context) {
