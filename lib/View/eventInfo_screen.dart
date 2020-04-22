@@ -289,14 +289,19 @@ class EventInfo extends StatefulWidget {
                               height: 80,
                               child: ListView.builder(
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    width: 80,
-                                    height: 80,
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: ClipOval(child: Image.network("https://www.beautycastnetwork.com/images/banner-profile_pic.jpg", fit: BoxFit.cover,),),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      //TODO: Open profile of clicked user and show if he promised to attened the event, denied or hasnt decided yet
+                                    },
+                                    child: Container(
+                                      width: 80,
+                                      height: 80,
+                                      margin: EdgeInsets.only(right: 8),
+                                      child: ClipOval(child: Image.network("https://www.beautycastnetwork.com/images/banner-profile_pic.jpg", fit: BoxFit.cover,),),
+                                    ),
                                   );
                                 },
-                                itemCount: 10,
+                                itemCount:int.parse(eventAttendeesCount),
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
                               ),
