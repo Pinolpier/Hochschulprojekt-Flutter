@@ -12,11 +12,12 @@ class FriendlistScreen extends StatefulWidget{
 
 /**
  * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
- * button at the bottom to add new friends
+ * button at the bottom to add new friends, also used to display groups depending on the bool [isFriendsScreen] to avoid code duplication!
  */
 class _FriendlistScreenState extends State<FriendlistScreen>{
 
   final _debouncer = new Debouncer(500);
+  bool isFriendsScreen = true;
 
   //simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
@@ -37,7 +38,15 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: Text("Your Friendslist"),
+        title: isFriendsScreen == true ? Text("Your Friendslist") : isFriendsScreen == false ? Text("Your Groups") : null,
+        leading: isFriendsScreen == true ? null : isFriendsScreen == false ? new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+              setState(() {
+                isFriendsScreen = true;
+              });
+            },
+        ): null,
         centerTitle: true,
       ),
       body: Column(
@@ -45,7 +54,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
           TextField(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(10.0),
-              hintText: "search for a friend"
+              hintText: isFriendsScreen == true ? "search for a friend" : isFriendsScreen == false ? "search for a group" : null,
             ),
             onChanged: (string) {
               //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
@@ -56,22 +65,26 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: friends.length,
+              itemCount: isFriendsScreen == true ? friends.length : isFriendsScreen == false ? groups.length : null,
               itemBuilder: (context, index){
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
                   child: Card(
                     child: ListTile(
                       onTap: () {
-                        print(friends[index].name + " was pressed");
+                        setState(() {
+                          isFriendsScreen == true ? print(friends[index].name + " was pressed")
+                          : isFriendsScreen == false ? isFriendsScreen = true : null;
+                        });
                       },
-                      title: Text(friends[index].name),
+                      title: isFriendsScreen == true ? Text(friends[index].name) : isFriendsScreen == false ? Text(groups[index].name) : null,
                       leading: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                         },
                         child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
+                          backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}')
+                          : isFriendsScreen == false ? AssetImage('assets/${groups[index].profilepic}') : null,
                         ),
                       ),
                     ),
@@ -80,26 +93,42 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
               }
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                DialogHelper.showFriendsGroupDialog(context);
-              },
-              child: Icon(Icons.group),
-              backgroundColor: Colors.blueAccent,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                DialogHelper.showAddFriendsDialog(context);
-              },
-              child: Icon(Icons.group_add),
-              backgroundColor: Colors.blueAccent,
-            ),
+          isFriendsScreen == true ? Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      isFriendsScreen = false;
+                    });
+                  },
+                  child: Icon(Icons.group),
+                  backgroundColor: Colors.blueAccent,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    DialogHelper.showAddFriendsDialog(context);
+                  },
+                  child: Icon(Icons.group_add),
+                  backgroundColor: Colors.blueAccent,
+                ),
+              ),
+            ],
           )
+          : isFriendsScreen == false ? Padding(
+            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                DialogHelper.showFriendsDialog(context);
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Colors.blueAccent,
+            ),
+          ) : null,
         ],
       ),
     );

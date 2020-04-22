@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
+import 'package:univents/View/dialogs/DialogHelper.dart';
 
 /// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
-/// an option to directly invite friends to events and to add new users to a group
+/// an option to directly invite friends to events and also to add new users to a group
 class FriendslistdialogScreen extends StatefulWidget{
   @override
   _FriendlistdialogScreenState createState() => _FriendlistdialogScreenState();
@@ -106,7 +107,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                Navigator.pop(context);
+                DialogHelper.showChangeBioDialog(context);
+                //TODO: Save selected friends from list "selected" into database and send them an invite/add them to a new group, depending on the context of the actions of the user
               },
               child: Icon(Icons.check),
               backgroundColor: Colors.blueAccent,
