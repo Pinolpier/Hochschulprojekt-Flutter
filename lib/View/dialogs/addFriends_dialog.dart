@@ -5,19 +5,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 
-/**
- * this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
- * an option to directly invite friends to events
- */
+/// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
+/// here you have the option to search for new friends through username or import local friends from your phone contacts
+//TODO: implement backend so the user gets users to choose from when searching for them via name/through import, only dummies implemented yet
 class AddFriendsDialogScreen extends StatefulWidget{
   @override
   _AddFriendsDialogScreenState createState() => _AddFriendsDialogScreenState();
 }
 
-/**
- * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
- * button at the bottom to add a friend through name search or through importing contacts
- */
 class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen>{
 
   final _debouncer = new Debouncer(500);
@@ -29,9 +24,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen>{
     FriendslistDummies(name: "Markus Link", profilepic: "mango.png"),
   ];
 
-  /**
-   * request permissions to use contacts from phone
-   */
+  /// request permissions to use contacts from phone
   Future<void> requestPermission(Permission permission) async {
     final status = await Permission.contacts.request();
       setState(() {
@@ -107,8 +100,8 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen>{
     );
   }
 
+  /// Alertdialog to cancel or confirm the action of sending a marked user a friends request
   showAlertDialog(BuildContext context, Contact contact) {
-
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
@@ -146,6 +139,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen>{
     );
   }
 
+  /// Alertdialog to cancel or confirm the action of importing friends through the local contacts from your phone
   showContactsImportDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = FlatButton(

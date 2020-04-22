@@ -30,6 +30,7 @@ dependencies:
   firebase_auth: ^0.15.5+3
   google_sign_in: ^4.4.1
   apple_sign_in: ^0.1.0
+  image_picker: ^0.6.5
 
   #The following dependency supports state changes of the login screen to HomeScreen on changes of the logged in user, but has to be implemented later on
   provider: ^4.0.5

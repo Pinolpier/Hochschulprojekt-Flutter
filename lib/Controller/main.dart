@@ -1,3 +1,6 @@
+import 'package:univents/View/dialogs/friendList_dialog.dart';
+import 'package:univents/View/eventInfo_screen.dart';
+import 'package:univents/View/friendList_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/View/profile_screen.dart';
 
@@ -8,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter create event UI',
-      home: ProfileScreen(),
+      home: FriendlistScreen(),
     );
   }
 }

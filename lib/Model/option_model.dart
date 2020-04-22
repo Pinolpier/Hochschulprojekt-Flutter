@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// option model for the settings_screen
 class Option {
   Icon icon;
   String title;
