@@ -20,8 +20,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
-    String jsonString =
-    await rootBundle.loadString('assets/res/strings.json');
+    String jsonString = await rootBundle.loadString('assets/res/strings.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
     _loadedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
@@ -30,7 +29,7 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   void share(BuildContext context, String text) {
-    final RenderBox box = context.findRenderObject();   //fix for iPad
+    final RenderBox box = context.findRenderObject(); //fix for iPad
 
     Share.share(
       text,
@@ -67,7 +66,8 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   _launchURL() async {
-    const url = 'mailto:feedback@univents.app?subject=Feedback&body=What could be better: ';
+    const url =
+        'mailto:feedback@univents.app?subject=Feedback&body=What could be better: ';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -140,7 +140,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text('Privacy',
+                    Text(
+                      'Privacy',
                       style: labelStyleConstant,
                     ),
                     Text(
@@ -148,7 +149,8 @@ class _AboutScreenState extends State<AboutScreen> {
                       style: textStyleConstant,
                     ),
                     SizedBox(height: 20.0),
-                    Text('impressum',
+                    Text(
+                      'impressum',
                       style: labelStyleConstant,
                     ),
                     Text(
@@ -160,9 +162,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     _shareButtonWidget('load shareMessage text'),
                   ],
                 ),
-              )
-          )
-      );
+              )));
     }
   }
 }
