@@ -12,7 +12,14 @@ final firebaseInstance = Firestore.instance;
 ///  the email gets converted to a unique UserId
 void addFriendByEmail(String email) async {
   try {
-    addFriend(await getUidFromEmail(email));
+    String friendId = await getUidFromEmail(email);
+    if (friendId != null) {
+      addFriend(await getUidFromEmail(email));
+    }
+    else {
+      throw new FriendNotExistException(
+          null, 'no user with this email address found');
+    }
   }
   on Exception catch (e) {
     exceptionHandling(e);
@@ -23,7 +30,14 @@ void addFriendByEmail(String email) async {
 /// the username gets converted to a unique UserId
 void addFriendByUsername(String username) async {
   try {
-    addFriend(await getUidFromUserName(username));
+    String friendId = await getUidFromUserName(username);
+    if (friendId != null) {
+      addFriend(await getUidFromUserName(username));
+    }
+    else {
+      throw new FriendNotExistException(
+          null, 'No user found with this username');
+    }
     }
   on Exception catch (e) {
     exceptionHandling(e);
