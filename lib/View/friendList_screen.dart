@@ -4,6 +4,7 @@ import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/Model/GroupDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
+import 'package:univents/service/app_localizations.dart';
 
 class FriendlistScreen extends StatefulWidget{
   @override
@@ -38,7 +39,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: isFriendsScreen == true ? Text("Your Friendslist") :  Text("Your Groups"),
+        title: isFriendsScreen == true ? Text(
+            AppLocalizations.of(context).translate('your_friendsList')) : Text(
+            AppLocalizations.of(context).translate('your_groups')),
         leading: isFriendsScreen == true ? null : new IconButton(
             icon: new Icon(Icons.arrow_back),
             onPressed: () {
@@ -54,7 +57,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
           TextField(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(10.0),
-              hintText: isFriendsScreen == true ? "search for a friend" :  "search for a group",
+              hintText: isFriendsScreen == true ? AppLocalizations.of(context)
+                  .translate('search_for_friend') : AppLocalizations.of(context)
+                  .translate('search_for_group'),
             ),
             onChanged: (string) {
               //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
