@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 import 'package:univents/Model/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Model/constants.dart';
 
@@ -34,6 +35,43 @@ class _AboutScreenState extends State<AboutScreen> {
       text,
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
     );
+  }
+
+  Widget _feedbackButtonWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () {
+          _launchURL();
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'feedback',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
+  }
+
+  _launchURL() async {
+    const url = 'mailto:feedback@univents.app?subject=Feedback&body=What could be better: ';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
   }
 
   Widget _shareButtonWidget(String text) {
@@ -84,7 +122,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   style: labelStyleConstant,
                   ),
                   Text(
-                    _loadedStrings["privacy"],
+                    'load privacy text',
                     style: textStyleConstant,
                   ),
                   SizedBox(height: 20.0),
@@ -92,11 +130,12 @@ class _AboutScreenState extends State<AboutScreen> {
                     style: labelStyleConstant,
                   ),
                   Text(
-                    _loadedStrings["impressum"],
+                    'load impressum text',
                     style: textStyleConstant,
                   ),
                   SizedBox(height: 20.0),
-                  _shareButtonWidget(_loadedStrings["shareMessage"]),
+                  _feedbackButtonWidget(),
+                  _shareButtonWidget('load shareMessage text'),
                 ],
               ),
             )

@@ -40,8 +40,11 @@ dependencies:
   #The following dependency enables us to use Firebase Cloud Storage
   firebase_storage: ^3.1.5
 
-  #The following dependency enables us to use the nave share window
+  #The following dependency enables us to use the native share window
   share: ^0.6.4
+
+  #The following dependency enables us to launch URLs in Flutter (e. g. <mailto:>)
+  url_launcher: ^5.4.5
 
 dev_dependencies:
   flutter_test:
