@@ -7,7 +7,7 @@ void main() {
   runApp(MyApp());
 }
 
-///
+/// Start of the App where the localization gets initialized
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,16 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode &&
+        //ToDo This is just a workaround -> on IOS we don't get the locale at the first millisecond so when the locale is null we first take english as favorite language
+        if (locale == null) {
+          return supportedLocales.first;
+        }
+        for (Locale supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode ||
               supportedLocale.countryCode == locale.countryCode) {
             return supportedLocale;
           }
         }
-
         return supportedLocales.first;
       },
       home: LoginScreen(),
