@@ -117,7 +117,7 @@ Future<UserProfile> getUserProfile(String uid) async {
 
 Future<String> getUidFromUserName(String username) async {
   var x = firestore.collectionGroup(collection).reference().where(
-      'username', isEqualTo: username);
+      'username', isEqualTo: username); //TODO search is case sensitive.
   QuerySnapshot querySnapshot = await x.getDocuments();
   switch (querySnapshot.documents.length) {
     case 0:
@@ -126,7 +126,7 @@ Future<String> getUidFromUserName(String username) async {
       break;
     case 1:
       DocumentSnapshot documentSnapshot = querySnapshot.documents[0];
-      return documentSnapshot.data['uid'];
+      return documentSnapshot.documentID;
       break;
     default:
       throw new IllegalDatabaseStateException(null,
@@ -137,7 +137,7 @@ Future<String> getUidFromUserName(String username) async {
 
 Future<String> getUidFromEmail(String email) async {
   var x = firestore.collectionGroup(collection).reference().where(
-      'email', isEqualTo: email);
+      'email', isEqualTo: email); //TODO search is case sensitive.
   QuerySnapshot querySnapshot = await x.getDocuments();
   switch (querySnapshot.documents.length) {
     case 0:
@@ -146,7 +146,7 @@ Future<String> getUidFromEmail(String email) async {
       break;
     case 1:
       DocumentSnapshot documentSnapshot = querySnapshot.documents[0];
-      return documentSnapshot.data['uid'];
+      return documentSnapshot.documentID;
       break;
     default:
       throw new IllegalDatabaseStateException(null,
