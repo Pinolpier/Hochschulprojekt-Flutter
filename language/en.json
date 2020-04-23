@@ -4,5 +4,14 @@
   "password": "Password",
   "enter_email": "Enter your Email",
   "dont_have_an_account": "Don\\'t have an Account? ",
-  "sign_up": " Sign Up"
+  "sign_up": " Sign Up",
+  "send_friends_request": "Send Friends Request",
+  "edit_bio": "Edit Bio",
+  "confirm": "confirm",
+  "cancel": "cancel",
+  "confirm_friend_request": "Do you really want to send a Friend Request to:",
+  "your_friendsList": "your friendsList",
+  "your_groups": "Your Groups",
+  "search_for_friend": "Search for a friend",
+  "search_for_group": "Search for a Group"
 }

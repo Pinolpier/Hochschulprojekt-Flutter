@@ -4,5 +4,14 @@
   "password": "Passwort",
   "enter_email": "Email eingeben",
   "dont_have_an_account": "Noch kein Account? ",
-  "sign_up": "Registrieren"
+  "sign_up": "Registrieren",
+  "send_friends_request": "Freundschaftsanfrage senden",
+  "edit_bio": "Bio bearbeiten",
+  "confirm": "Bestätigen",
+  "cancel": "Abbrechen",
+  "confirm_friend_request": "Möchtest du wirklich eine Freundschaftsanfrage senden an:",
+  "your_friendsList": "Deine Freundesliste",
+  "your_groups": "Deine Gruppen",
+  "search_for_friend": "Suche nach einem Freund",
+  "search_for_group": "Suche nach einer Gruppe"
 }
