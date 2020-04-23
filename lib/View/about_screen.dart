@@ -155,12 +155,12 @@ class _AboutScreenState extends State<AboutScreen> {
                       style: labelStyleConstant,
                     ),
                     Text(
-                      'load impressum text',
+                      _loadedStrings["impressum"],
                       style: textStyleConstant,
                     ),
                     SizedBox(height: 20.0),
                     _feedbackButtonWidget(),
-                    _shareButtonWidget('load shareMessage text'),
+                    _shareButtonWidget(_loadedStrings["shareMessage"]),
                   ],
                 ),
               )));
