@@ -1,3 +1,4 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Model/constants.dart';
@@ -122,12 +123,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () => print("Forgot password Button Pressed"),
-        padding: EdgeInsets.only(right: 0.0),
-        child: Text(
-          "Forgot Password?",
-          style: labelStyleConstant,
-        )
+          onPressed: () => print("Forgot password Button Pressed"),
+          padding: EdgeInsets.only(right: 0.0),
+          child: Text(
+            "Forgot Password?",
+            style: labelStyleConstant,
+          )
       ),
     );
   }
@@ -158,49 +159,59 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
-  Widget _socialMediaButtonsWidget() {
+  Widget _appleSignInWidget() {
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: AppleSignInButton(
+            style: ButtonStyle.black
+        )
+    );
+  }
+
+  Widget _googleSignInWidget() {
     return GestureDetector(
-     child: Row(
-       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-       children: <Widget>[
-         new Container(
-             width:  50,
-             height: 50,
-             decoration: BoxDecoration(
-               color: Colors.black,
-               shape: BoxShape.circle,
-               image: DecorationImage(
-                   image:AssetImage("assets/google.jpg"),
-                   fit:BoxFit.cover
-               ),
-             )
-         ),
-         new Container(
-             width:  50,
-             height: 50,
-             decoration: BoxDecoration(
-               color: Colors.black,
-               shape: BoxShape.circle,
-               image: DecorationImage(
-                   image:AssetImage("assets/facebook.jpg"),
-                   fit:BoxFit.cover
-               ),
-             )
-         ),
-         new Container(
-             width:  50,
-             height: 50,
-             decoration: BoxDecoration(
-               color: Colors.black,
-               shape: BoxShape.circle,
-               image: DecorationImage(
-                   image:AssetImage("assets/twitter.webp"),
-                   fit:BoxFit.cover
-               ),
-             )
-         ),
-       ],
-     ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          new Container(
+              width:  50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image:AssetImage("assets/google.jpg"),
+                    fit:BoxFit.cover
+                ),
+              )
+          ),
+          new Container(
+              width:  50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image:AssetImage("assets/facebook.jpg"),
+                    fit:BoxFit.cover
+                ),
+              )
+          ),
+          new Container(
+              width:  50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image:AssetImage("assets/twitter.webp"),
+                    fit:BoxFit.cover
+                ),
+              )
+          ),
+        ],
+      ),
     );
   }
 
@@ -245,20 +256,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             vertical: 120.0,
           ),
           child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  _animatedLogoWidget(),
-                  SizedBox(height: 30.0),
-                  _emailTextfieldWidget(),
-                  SizedBox(height: 20.0),
-                  _passwordTextfieldWidget(),
-                  _forgotPasswordWidget(),
-                  _loginButtonWidget(),
-                  _socialMediaButtonsWidget(),
-                  SizedBox(height: 20.0),
-                  _signUpWidget()
-                ],
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _animatedLogoWidget(),
+              SizedBox(height: 30.0),
+              _emailTextfieldWidget(),
+              SizedBox(height: 20.0),
+              _passwordTextfieldWidget(),
+              _forgotPasswordWidget(),
+              _loginButtonWidget(),
+//                  _googleSignInWidget(),
+              _appleSignInWidget(),
+              SizedBox(height: 20.0),
+              _signUpWidget()
+            ],
           ),
         ),
       ),
