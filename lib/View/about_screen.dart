@@ -15,7 +15,8 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  Map<String, String> _loadedStrings;
+  Map<dynamic, dynamic> _loadedStrings;
+  var _result;
 
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
@@ -101,45 +102,67 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   @override
+  void initState() {
+    // This is the proper place to make the async calls
+    // This way they only get called once
+
+    // During development, if you change this code,
+    // you will need to do a full restart instead of just a hot reload
+
+    // You can't use async/await here,
+    // We can't mark this method as async because of the @override
+    load().then((result) {
+      // If we need to rebuild the widget with the resulting data,
+      // make sure to use `setState`
+      setState(() {
+        _result = result;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    load();
-    return Scaffold(
-        backgroundColor: Colors.blueAccent,
-        body: new Container(
-            height: double.infinity,
-            child: SingleChildScrollView(
-              //fixes pixel overflow error when keyboard is used
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: 40.0,
-                vertical: 120.0,
-              ),
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('Privacy',
-                  style: labelStyleConstant,
-                  ),
-                  Text(
-                    'load privacy text',
-                    style: textStyleConstant,
-                  ),
-                  SizedBox(height: 20.0),
-                  Text('impressum',
-                    style: labelStyleConstant,
-                  ),
-                  Text(
-                    'load impressum text',
-                    style: textStyleConstant,
-                  ),
-                  SizedBox(height: 20.0),
-                  _feedbackButtonWidget(),
-                  _shareButtonWidget('load shareMessage text'),
-                ],
-              ),
-            )
-        )
-    );
+    if (_result == null) {
+      return new Container();
+    } else {
+      return Scaffold(
+          backgroundColor: Colors.blueAccent,
+          body: new Container(
+              height: double.infinity,
+              child: SingleChildScrollView(
+                //fixes pixel overflow error when keyboard is used
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 120.0,
+                ),
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Privacy',
+                      style: labelStyleConstant,
+                    ),
+                    Text(
+                      _loadedStrings["privacy"],
+                      style: textStyleConstant,
+                    ),
+                    SizedBox(height: 20.0),
+                    Text('impressum',
+                      style: labelStyleConstant,
+                    ),
+                    Text(
+                      'load impressum text',
+                      style: textStyleConstant,
+                    ),
+                    SizedBox(height: 20.0),
+                    _feedbackButtonWidget(),
+                    _shareButtonWidget('load shareMessage text'),
+                  ],
+                ),
+              )
+          )
+      );
+    }
   }
 }
