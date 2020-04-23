@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:univents/Model/constants.dart';
+import 'package:univents/View/dialogs/DialogHelper.dart';
+import 'package:univents/View/dialogs/friendList_dialog.dart';
 import 'package:univents/model/event.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
@@ -27,7 +29,6 @@ class CreateEventScreen extends StatefulWidget {
 class _CreateEventScreenState extends State<CreateEventScreen> {
   DateTime selectedStartDateTime = DateTime.now();
   DateTime selectedEndDateTime;
-
   String selectedStartString = 'not set';
   String selectedEndString = 'not set';
   bool isPrivate = false;
@@ -417,8 +418,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {
-          //Friendslist öffnen
+        onPressed: () async {
+          final List<String> result = await Navigator.push(context, MaterialPageRoute(
+            builder: (context) => FriendslistdialogScreen(),
+          ));
+          setState(() {
+            for(String s in result)
+              {
+                 attendeeIDs.add(s);
+              }
+          });
           //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
           //Friendslist schließen
         },
@@ -465,6 +474,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           tagsList = eventTagsController.text.split(", ");
           print(tagsList);
 
+          print(attendeeIDs);
+
           getLatLong();
           print(latLongList[0]);
           print(latLongList[1]);
@@ -480,7 +491,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               tagsList,
               latLongList[0],
               latLongList[1]);
-          //TODO fill the attendeeIDs list @Christan Henrich
 
           //TODO -> Auskommentiert wegen Errormessages: createEvent(eventImage, event);
         },

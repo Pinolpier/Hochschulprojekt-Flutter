@@ -17,6 +17,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
 
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
+  bool comeFromCreateEventScreen = true;
   int selectedCount = 0;
   List<String> selected = [];
 
@@ -107,7 +108,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showChangeBioDialog(context);
+                comeFromCreateEventScreen == false ? DialogHelper.showChangeBioDialog(context) : Navigator.pop(context, selected);
                 //TODO: Save selected friends from list "selected" into database and send them an invite/add them to a new group, depending on the context of the actions of the user
               },
               child: Icon(Icons.check),
