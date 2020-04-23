@@ -12,29 +12,9 @@ final firebaseInstance = Firestore.instance;
 ///  the email gets converted to a unique UserId
 void addFriendByEmail(String email) async {
   try {
-    String uid = getUidOfCurrentlySignedInUser();
-    String friendID = await getUidFromEmail(email);
-    DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(collection).document(uid).get();
-    Map<String, List<dynamic>> friendMap = new Map();
-    if (documentSnapshot.exists) {
-      friendMap[friendsList] = documentSnapshot.data[friendsList];
-    }
-    List<dynamic> friendList = new List();
-    if (friendMap[friendsList] != null) friendList = friendMap[friendsList];
-    if (friendList.contains(friendID)) {
-      throw new FriendAlreadyInListException(
-          null, 'The friend is already on the list');
-    } else {
-      friendList.add(friendID);
-      friendMap[friendsList] = friendList;
-      WriteBatch batch = Firestore.instance.batch();
-      batch.setData(
-          firebaseInstance.collection(collection).document(uid), friendMap,
-          merge: true);
-      await batch.commit();
-    }
-  } on Exception catch (e) {
+    addFriend(await getUidFromEmail(email));
+  }
+  on Exception catch (e) {
     exceptionHandling(e);
   }
 }
@@ -43,8 +23,18 @@ void addFriendByEmail(String email) async {
 /// the username gets converted to a unique UserId
 void addFriendByUsername(String username) async {
   try {
+    addFriend(await getUidFromUserName(username));
+    }
+  on Exception catch (e) {
+    exceptionHandling(e);
+  }
+}
+
+/// adding a Friend to database by a [friendId]
+void addFriend(String friendId) async {
+  try {
     String uid = getUidOfCurrentlySignedInUser();
-    String friendID = await getUidFromUserName(username);
+    String friendID = friendId;
     DocumentSnapshot documentSnapshot =
     await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
@@ -65,8 +55,9 @@ void addFriendByUsername(String username) async {
           merge: true);
       await batch.commit();
     }
-  } on Exception catch (e) {
-    exceptionHandling(e);
+  }
+  on Exception catch (exception) {
+    exceptionHandling(exception);
   }
 }
 
@@ -110,8 +101,6 @@ Future<Map<String, dynamic>> getFriends() async {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
     await firebaseInstance.collection(collection).document(uid).get();
-    print(documentSnapshot.data);
-    print(documentSnapshot.toString());
     return documentSnapshot.data;
   } on Exception catch (e) {
     exceptionHandling(e);
@@ -166,7 +155,6 @@ void createGroupFriend(List<String> userId, String groupName) async {
 class FriendsException implements Exception {
   final Exception _originalException;
   final String _message;
-
   const FriendsException(this._originalException, this._message);
 
   String toString() {
