@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/**
- * some constants for consistent decoration style and design
- */
+/// some constants for consistent decoration style and design
 
 final textStyleConstant = TextStyle(
   color: Colors.white54,

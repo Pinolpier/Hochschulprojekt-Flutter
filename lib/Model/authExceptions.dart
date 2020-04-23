@@ -2,11 +2,11 @@
 In Dart an exception doesn't need to inherit from Exception, I decided not to do so, because
 1) I want the the original Exception that has happened in the backend to be attached to my BackendException, but if it's final I can't build a constructor that fits Exception's needs
  */
-class BackendException implements Exception {
+class AuthException implements Exception {
   final Exception _originalException;
   final String _message;
 
-  BackendException(this._originalException, this._message);
+  const AuthException(this._originalException, this._message);
 
   String toString() {
     return (_message != null
@@ -23,27 +23,27 @@ class BackendException implements Exception {
   }
 }
 
-class UserDisabledException extends BackendException {
-  UserDisabledException(Exception originalException, String message)
+class UserDisabledException extends AuthException {
+  const UserDisabledException(Exception originalException, String message)
       : super(originalException, message);
 }
 
-class NotAnEmailException extends BackendException {
-  NotAnEmailException(Exception originalException, String message)
+class NotAnEmailException extends AuthException {
+  const NotAnEmailException(Exception originalException, String message)
       : super(originalException, message);
 }
 
-class WrongPasswordException extends BackendException {
-  WrongPasswordException(Exception originalException, String message)
+class WrongPasswordException extends AuthException {
+  const WrongPasswordException(Exception originalException, String message)
       : super(originalException, message);
 }
 
-class UserNotFoundException extends BackendException {
-  UserNotFoundException(Exception originalException, String message)
+class UserNotFoundException extends AuthException {
+  const UserNotFoundException(Exception originalException, String message)
       : super(originalException, message);
 }
 
-class SignInAbortedException extends BackendException {
-  SignInAbortedException(Exception originalException, String message)
+class SignInAbortedException extends AuthException {
+  const SignInAbortedException(Exception originalException, String message)
       : super(originalException, message);
 }

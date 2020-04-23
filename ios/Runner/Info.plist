@@ -52,6 +52,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>if you want to add a picture to an event, permission is required</string>
+	<key>NSCameraUsageDescription</key>
+	<string>If you want to make a picture for your event, permission is required</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CFBundleURLTypes</key>
