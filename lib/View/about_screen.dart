@@ -18,14 +18,15 @@ class _AboutScreenState extends State<AboutScreen> {
   Map<dynamic, dynamic> _loadedStrings;
   var _result;
 
+  //TODO reading json file takes approx. 220ms maybe 1.instead of json use dart file with constants 2.start loading before the screen is opened
   Future<bool> load() async {
-    // Load the language JSON file from the "lang" folder
     String jsonString = await rootBundle.loadString('assets/res/strings.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
     _loadedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
     });
     return true;
+
   }
 
   void share(BuildContext context, String text) {
