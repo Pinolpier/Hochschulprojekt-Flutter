@@ -14,7 +14,7 @@ void addFriendByEmail(String email) async {
   try {
     String friendId = await getUidFromEmail(email);
     if (friendId != null) {
-      addFriend(await getUidFromEmail(email));
+      addFriend(friendId);
     }
     else {
       throw new FriendNotExistException(
@@ -32,7 +32,7 @@ void addFriendByUsername(String username) async {
   try {
     String friendId = await getUidFromUserName(username);
     if (friendId != null) {
-      addFriend(await getUidFromUserName(username));
+      addFriend(friendId);
     }
     else {
       throw new FriendNotExistException(
