@@ -1,9 +1,8 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:univents/View/homeFeed_screen/feedItemImpl.dart';
 import 'package:univents/View/homeFeed_screen/feedItemUI.dart';
 
-//@author
-//for managing feed
 class Feed {
   //widget list
   static List<Widget> _feed = List<Widget>();
@@ -12,11 +11,8 @@ class Feed {
 
   static List<Widget> get feed => _feed;
 
-  static addNewFeed(String title, DateTime eventStartDate, DateTime eventEndDate, String details, String city, bool privateEvent) {
-    FeedItemImpl newFeed = FeedItemImpl(title, eventStartDate, eventEndDate, details, city, privateEvent);
-    FeedItemUI newFeedUI = FeedItemUI(newFeed);
-    _feed.add(newFeedUI);
-    _feedOrientation.add(newFeedUI);
+  static addNewFeed(String title, Timestamp eventStartDate, Timestamp eventEndDate, String details, String city, bool privateEvent,String lat,String lng,String url) {
+
   }
 
   static removeFeedByIndex(int index) {
@@ -34,8 +30,6 @@ class Feed {
   }
 
   static List<Widget> test(){
-    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
-    addNewFeed('title', DateTime.now(), DateTime.now(), 'details', 'city', false);
     return _feed;
   }
 

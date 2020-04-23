@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
@@ -10,11 +11,12 @@ class Event {
   String _location;
   bool _privateEvent;
   String _latitude, _longitude;
-  List<dynamic> _teilnehmerIDs;
+  List<dynamic> _attendeesIds;
   List<dynamic> _tagsList;
   File image;
   String _imageURL;
 
+  /// constructor for creating a event by a user
   Event(
       this._title,
       this._eventStartDate,
@@ -22,31 +24,40 @@ class Event {
       this._description,
       this._location,
       this._privateEvent,
-      this._teilnehmerIDs,
+      this._attendeesIds,
       this._tagsList,
       this._latitude,
       this._longitude);
 
-  Event.createEvent(
+  /// constructor for creating a event from the database
+  /// from database the event getting a [eventId] and [imageUrl]
+  /// additionally
+  Event.createFrommDB(
       this._title,
-      this._eventStartDate,
-      this._eventEndDate,
+      Timestamp startdate,
+      Timestamp enddate,
       this._description,
       this._location,
       this._privateEvent,
+      this._attendeesIds,
       this._tagsList,
-      this._teilnehmerIDs);
+      this._latitude,
+      this._longitude,
+      this._imageURL){
+    _eventStartDate = startdate.toDate();
+    _eventEndDate = enddate.toDate();
+  }
 
   bool get privateEvent => _privateEvent;
 
-  void addTeilnehmer(String teilnehmerID) {
-    teilnehmerIDs.add(teilnehmerID);
+  void addAttendeesIds(String attendeesIds) {
+    _attendeesIds.add(attendeesIds);
   }
 
-  List<dynamic> get teilnehmerIDs => _teilnehmerIDs;
+  List<dynamic> get attendeesIds => _attendeesIds;
 
-  set teilnehmerIDs(List<String> value) {
-    _teilnehmerIDs = value;
+  set attendeesIds(List<String> value) {
+    _attendeesIds = value;
   }
 
   set privateEvent(bool value) {
