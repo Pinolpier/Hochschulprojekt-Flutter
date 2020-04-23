@@ -9,6 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../Model/constants.dart';
 
+///This class creates an AboutScreen which displays the Privacytext and the Impressumtext (found in assets/res/strings.json)
+///there is a Button to directly send feedback via E-Mail (mailto:-link)
+///also a butto to share a message with the native share menu (text can be changed in assets/res/strings.json)
+
 class AboutScreen extends StatefulWidget {
   @override
   State createState() => _AboutScreenState();
