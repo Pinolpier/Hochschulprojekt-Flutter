@@ -6,16 +6,22 @@ import 'package:univents/View/friendList_screen.dart';
 import 'package:univents/View/login_screen.dart';
 import 'package:univents/View/settings_screen.dart';
 
+/// This class is used to handle to show the correct screen depending on whether a user is logged in or not.
+/// The shown screen changes automatically as a user signs in or out.
+/// If no user is signed In the Login Screen is shown, if one is signed in the HomeScreen is shown except
+/// the logged in user doesn't have a profile yet (e.g. newly registered), then another screen is shown to
+/// make sure that relevant information is added and a consistent database state is kept.
 class ScreenManager extends StatelessWidget {
   Widget build(BuildContext context) {
     final FirebaseUser user = Provider.of<FirebaseUser>(context);
+    //TODO read the comments, for some reason not all TODOs are detected correctly, keep this one until all others are done in this ticket.
     return (user == null) ? LoginScreen() : FutureBuilder<bool>(
       future: existsUserProfile(user.uid),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           return snapshot.data
               ? FriendlistScreen()
-              : SettingsScreen(); //TODO change FriendlistScreen with HomeScreenHandler when exists and SettingsScreen() with createProfileScreen()
+              : SettingsScreen(); // TODO change FriendlistScreen with HomeScreenHandler when exists and SettingsScreen() with createProfileScreen()
         } else if (snapshot.hasError) {
           //TODO error handling here in case async function fails somehow
           return Container(

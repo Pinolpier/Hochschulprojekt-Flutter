@@ -115,6 +115,7 @@ Future<UserProfile> getUserProfile(String uid) async {
   }
 }
 
+/// Use this method to be informed wheter a userProfile exists for the given [uid].
 Future<bool> existsUserProfile(String uid) async {
   if (!await isUserSignedIn()) {
     throw new UserNotSignedInException(null,

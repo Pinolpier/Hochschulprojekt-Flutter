@@ -89,7 +89,9 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  bool isEmailGood(String email) {
+  /// This method checks whether the given parameter [email] of type [String] is a valid e-mail-address using regex.
+  /// The regex is copied from StackOverflow. Returns true only if a valid email address has been passed as argument.
+  bool _isEmailGood(String email) {
     RegExp regExpMail = new RegExp(
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
     return regExpMail.hasMatch(_email);
@@ -133,7 +135,10 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  bool isPasswordGood(String password) {
+  /// This method checks whether a given parameter [password] of type [String] is a secure password. Secure is defined as:
+  /// Contains lower- and uppercase letters and a digit from 0-9 in any random order and has a minimum length of 8
+  /// Returns true only if the password is safe.
+  bool _isPasswordGood(String password) {
     RegExp regExpPassword = new RegExp(
         r"([A-Z]+)([a-z]+)([0-9]+)|([A-Z]+)([0-9]+)([a-z]+)|([a-z]+)([A-Z]+)([0-9]+)|([0-9]+)([A-Z]+)([a-z]+)|([a-z]+)([0-9]+)([A-Z]+)|([0-9]+)([a-z]+)([A-Z]+)");
     return regExpPassword.hasMatch(_password) && _password.length >= 8;
@@ -143,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-          onPressed: () => handleForgotPassword(),
+          onPressed: () => _handleForgotPassword(),
           padding: EdgeInsets.only(right: 0.0),
           child: Text(
             "Forgot Password?",
@@ -152,8 +157,9 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  handleForgotPassword() {
-    if (isEmailGood(_email)) {
+  /// This method uses the [authService.dart] to send a password Reset E-Mail if the email address is valid.
+  _handleForgotPassword() {
+    if (_isEmailGood(_email)) {
       sendPasswordResetEMail(email: _email);
       //TODO show appropriate confirmation.
     } else {
@@ -168,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => handleLogin(),
+        onPressed: () => _handleLogin(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -188,8 +194,9 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  handleLogin() {
-    if (isEmailGood(_email)) {
+  /// Sign a user in if the [_email] is valid.
+  _handleLogin() {
+    if (_isEmailGood(_email)) {
       signInWithEmailAndPassword(_email, _password);
     } else {
       //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
@@ -222,8 +229,9 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// Registers a new user&password combination if [_isPasswordGood] and if [_isEmailGood].
   handleRegistration() {
-    if (isEmailGood(_email) && isPasswordGood(_password)) {
+    if (_isEmailGood(_email) && _isPasswordGood(_password)) {
       registerWithEmailAndPassword(_email, _password);
     } else {
       //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
