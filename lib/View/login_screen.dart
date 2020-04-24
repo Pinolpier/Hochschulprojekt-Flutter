@@ -1,6 +1,7 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/Controller/authService.dart';
 import 'package:univents/Model/constants.dart';
 
 /**
@@ -12,8 +13,8 @@ class LoginScreen extends StatefulWidget {
   State createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   bool _rememberMe = false;
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
@@ -22,26 +23,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
    * this method is responsible for the short logo animation at the start of the app
    */
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _logoAnimationController = new AnimationController(
-        vsync: this,
-        duration: new Duration(milliseconds: 1500)
-    );
+        vsync: this, duration: new Duration(milliseconds: 1500));
     _logoAnimation = new CurvedAnimation(
-        parent: _logoAnimationController,
-        curve: Curves.easeInOutBack
-    );
-    _logoAnimation.addListener(()=> this.setState((){}));
+        parent: _logoAnimationController, curve: Curves.easeInOutBack);
+    _logoAnimation.addListener(() => this.setState(() {}));
     _logoAnimationController.forward();
   }
 
-  Widget _animatedLogoWidget(){
+  Widget _animatedLogoWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Image(
-          image: new AssetImage("assets/eventlogo.png"),  //should be changed to the actual univents logo in assets later
+          image: new AssetImage("assets/eventlogo.png"),
+          //should be changed to the actual univents logo in assets later
           width: _logoAnimation.value * 100,
           height: _logoAnimation.value * 100,
         )
@@ -128,8 +126,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           child: Text(
             "Forgot Password?",
             style: labelStyleConstant,
-          )
-      ),
+          )),
     );
   }
 
@@ -160,59 +157,50 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Widget _appleSignInWidget() {
+    //TODO check for copyright and brandmark usage wheter it is allowed, also regarding Google Sign In Button!
     return Container(
         padding: EdgeInsets.symmetric(vertical: 25.0),
         width: double.infinity,
         child: AppleSignInButton(
-            style: ButtonStyle.black
-        )
-    );
+          style: ButtonStyle.black,
+          cornerRadius: 30.0,
+          onPressed: () async {
+            await appleSignIn();
+          },
+        ));
   }
 
   Widget _googleSignInWidget() {
-    return GestureDetector(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          new Container(
-              width:  50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image:AssetImage("assets/google.jpg"),
-                    fit:BoxFit.cover
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: RaisedButton(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15.0),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          color: Colors.white,
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image(
+                    image: AssetImage("assets/google_logo.png"), height: 18.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    'Sign in with Google',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
-              )
-          ),
-          new Container(
-              width:  50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image:AssetImage("assets/facebook.jpg"),
-                    fit:BoxFit.cover
-                ),
-              )
-          ),
-          new Container(
-              width:  50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image:AssetImage("assets/twitter.webp"),
-                    fit:BoxFit.cover
-                ),
-              )
-          ),
-        ],
-      ),
-    );
+              ]),
+          onPressed: () async {
+            await googleSignIn();
+          },
+        ));
   }
 
   Widget _signUpWidget() {
@@ -245,35 +233,59 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      body: new Container(
-        height: double.infinity,
-        child: SingleChildScrollView(     //fixes pixel overflow error when keyboard is used
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: 40.0,
-            vertical: 120.0,
+    var widgetList = <Widget>[
+      _animatedLogoWidget(),
+      SizedBox(height: 30.0),
+      _emailTextfieldWidget(),
+      SizedBox(height: 20.0),
+      _passwordTextfieldWidget(),
+      _forgotPasswordWidget(),
+      _loginButtonWidget(),
+    ];
+    bool alreadyAdded = false;
+    bool alreadyAddedApple = false;
+    return FutureBuilder<bool>(
+      future: checkAppleSignInAvailability(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data) {
+            if (!alreadyAdded) {
+              widgetList.add(
+                _appleSignInWidget(),
+              );
+              alreadyAddedApple = true;
+            }
+          }
+          if (!alreadyAdded) {
+            widgetList.add(_googleSignInWidget());
+            widgetList.add(SizedBox(height: 20.0));
+            widgetList.add(_signUpWidget());
+            alreadyAdded = true;
+          }
+        } else if (snapshot.hasError) {
+          //TODO add error handling whatever should be done in this case.
+        }
+
+        return Scaffold(
+          backgroundColor: Colors.blueAccent,
+          body: new Container(
+            height: double.infinity,
+            child: SingleChildScrollView(
+              //fixes pixel overflow error when keyboard is used
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: 40.0,
+                vertical: 120.0,
+              ),
+              child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: widgetList
+              ),
+            ),
           ),
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _animatedLogoWidget(),
-              SizedBox(height: 30.0),
-              _emailTextfieldWidget(),
-              SizedBox(height: 20.0),
-              _passwordTextfieldWidget(),
-              _forgotPasswordWidget(),
-              _loginButtonWidget(),
-//                  _googleSignInWidget(),
-              _appleSignInWidget(),
-              SizedBox(height: 20.0),
-              _signUpWidget()
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -12,7 +12,6 @@ class UserProfile {
 
   UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot,
       String uid) {
-    11
     _uid = uid;
     _username = documentSnapshot['username'];
     _email = documentSnapshot['email'];
