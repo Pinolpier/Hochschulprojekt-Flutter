@@ -18,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen>
   bool _rememberMe = false;
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
+  String _email = '';
+  String _password = '';
 
   /**
    * this method is responsible for the short logo animation at the start of the app
@@ -76,6 +78,9 @@ class _LoginScreenState extends State<LoginScreen>
               hintText: 'Enter your Email',
               hintStyle: textStyleConstant,
             ),
+            onChanged: (text) {
+              _email = text;
+            },
           ),
         ),
       ],
@@ -111,6 +116,9 @@ class _LoginScreenState extends State<LoginScreen>
               hintText: 'Enter your Password',
               hintStyle: textStyleConstant,
             ),
+            onChanged: (text) {
+              _password = text;
+            },
           ),
         ),
       ],
@@ -136,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () => handleLogin(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -154,6 +162,21 @@ class _LoginScreenState extends State<LoginScreen>
         ),
       ),
     );
+  }
+
+  handleLogin() {
+    RegExp regExpMail = new RegExp(
+        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+    bool isEmailGood = regExpMail.hasMatch(_email);
+    RegExp regExpPassword = new RegExp(
+        r"([A-Z]+)([a-z]+)([0-9]+)|([A-Z]+)([0-9]+)([a-z]+)|([a-z]+)([A-Z]+)([0-9]+)|([0-9]+)([A-Z]+)([a-z]+)|([a-z]+)([0-9]+)([A-Z]+)|([0-9]+)([a-z]+)([A-Z]+)");
+    bool isPasswordGood = regExpPassword.hasMatch(_password) &&
+        _password.length >= 8;
+    if (isEmailGood && isPasswordGood) {
+      signInWithEmailAndPassword(_email, _password);
+    } else {
+      //TODO Appropriate Error handling on the loginScreen, show appropriate errors.
+    }
   }
 
   Widget _appleSignInWidget() {
