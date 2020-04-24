@@ -18,9 +18,12 @@ environment:
 
 dependencies:
   contacts_service: ^0.3.10
+
   image_picker: ^0.6.5
   permission_handler: ^5.0.0+hotfix.3
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
@@ -67,6 +70,8 @@ flutter:
   assets:
     - assets/
     - assets/res/
+    - language/en.json
+    - language/de.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/event.dart';
 
-//@author mdarscht
+
 class FeedItemUI extends StatelessWidget {
 
   final Event _data;
