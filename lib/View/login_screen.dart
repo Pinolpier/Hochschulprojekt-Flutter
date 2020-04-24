@@ -245,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen>
     bool alreadyAdded = false;
     bool alreadyAddedApple = false;
     child:
-    FutureBuilder<bool>(
+    return FutureBuilder<bool>(
       future: checkAppleSignInAvailability(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
@@ -265,6 +265,9 @@ class _LoginScreenState extends State<LoginScreen>
           }
         } else if (snapshot.hasError) {
           //TODO add error handling whatever should be done in this case.
+        } else {
+          //TODO maybe improve this with loading animation.
+          return Container(width: 0.0, height: 0.0,);
         }
 
         return Scaffold(
