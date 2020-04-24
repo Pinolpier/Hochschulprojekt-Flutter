@@ -244,7 +244,8 @@ class _LoginScreenState extends State<LoginScreen>
     ];
     bool alreadyAdded = false;
     bool alreadyAddedApple = false;
-    return FutureBuilder<bool>(
+    child:
+    FutureBuilder<bool>(
       future: checkAppleSignInAvailability(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
