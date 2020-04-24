@@ -115,6 +115,21 @@ Future<UserProfile> getUserProfile(String uid) async {
   }
 }
 
+Future<bool> existsUserProfile(String uid) async {
+  if (!await isUserSignedIn()) {
+    throw new UserNotSignedInException(null,
+        "A user has to be signed in to be able to update his/her profile! No user is signed in right now!");
+  }
+  try {
+    final snapShot = await firestore.collection(collection).document(uid).get();
+    if (snapShot == null || !snapShot.exists) return false;
+    return true;
+  } on PlatformException catch (platformException) {
+    throw new PermissionDeniedException(platformException,
+        "Cannot retrieve the User profile with uid: $uid, probably because permission is denied.");
+  }
+}
+
 Future<String> getUidFromUserName(String username) async {
   var x = firestore.collectionGroup(collection).reference().where(
       'username', isEqualTo: username); //TODO search is case sensitive.

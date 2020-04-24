@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Model/constants.dart';
 
+//TODO handle exceptions thrown by authService properly by giving feedback to the user!
+
 /**
  * this class creates a loginscreen with different textfields to put in email and username and a few
  * buttons that add functionality like logging in through social media or remember me / forgot password
@@ -87,6 +89,12 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  bool isEmailGood(String email) {
+    RegExp regExpMail = new RegExp(
+        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+    return regExpMail.hasMatch(_email);
+  }
+
   Widget _passwordTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,17 +133,33 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  bool isPasswordGood(String password) {
+    RegExp regExpPassword = new RegExp(
+        r"([A-Z]+)([a-z]+)([0-9]+)|([A-Z]+)([0-9]+)([a-z]+)|([a-z]+)([A-Z]+)([0-9]+)|([0-9]+)([A-Z]+)([a-z]+)|([a-z]+)([0-9]+)([A-Z]+)|([0-9]+)([a-z]+)([A-Z]+)");
+    return regExpPassword.hasMatch(_password) && _password.length >= 8;
+  }
+
   Widget _forgotPasswordWidget() {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-          onPressed: () => print("Forgot password Button Pressed"),
+          onPressed: () => handleForgotPassword(),
           padding: EdgeInsets.only(right: 0.0),
           child: Text(
             "Forgot Password?",
             style: labelStyleConstant,
           )),
     );
+  }
+
+  handleForgotPassword() {
+    if (isEmailGood(_email)) {
+      sendPasswordResetEMail(email: _email);
+      //TODO show appropriate confirmation.
+    } else {
+      print("E-Mail malformed.");
+      //TODO handle bad email address.
+    }
   }
 
   Widget _loginButtonWidget() {
@@ -165,17 +189,44 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   handleLogin() {
-    RegExp regExpMail = new RegExp(
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-    bool isEmailGood = regExpMail.hasMatch(_email);
-    RegExp regExpPassword = new RegExp(
-        r"([A-Z]+)([a-z]+)([0-9]+)|([A-Z]+)([0-9]+)([a-z]+)|([a-z]+)([A-Z]+)([0-9]+)|([0-9]+)([A-Z]+)([a-z]+)|([a-z]+)([0-9]+)([A-Z]+)|([0-9]+)([a-z]+)([A-Z]+)");
-    bool isPasswordGood = regExpPassword.hasMatch(_password) &&
-        _password.length >= 8;
-    if (isEmailGood && isPasswordGood) {
+    if (isEmailGood(_email)) {
       signInWithEmailAndPassword(_email, _password);
     } else {
-      //TODO Appropriate Error handling on the loginScreen, show appropriate errors.
+      //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
+    }
+  }
+
+  Widget _registerButtonWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () => handleRegistration(),
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.white,
+        child: Text(
+          'REGISTER', //TODO internationalize
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
+  }
+
+  handleRegistration() {
+    if (isEmailGood(_email) && isPasswordGood(_password)) {
+      registerWithEmailAndPassword(_email, _password);
+    } else {
+      //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
     }
   }
 
@@ -226,33 +277,33 @@ class _LoginScreenState extends State<LoginScreen>
         ));
   }
 
-  Widget _signUpWidget() {
-    return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'Don\'t have an Account? ',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            TextSpan(
-              text: 'Sign Up',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+//  Widget _signUpWidget() {
+//    return GestureDetector(
+//      onTap: () => print('Sign Up Button Pressed'),
+//      child: RichText(
+//        text: TextSpan(
+//          children: [
+//            TextSpan(
+//              text: 'Don\'t have an Account? ',
+//              style: TextStyle(
+//                color: Colors.white,
+//                fontSize: 18.0,
+//                fontWeight: FontWeight.w400,
+//              ),
+//            ),
+//            TextSpan(
+//              text: 'Sign Up',
+//              style: TextStyle(
+//                color: Colors.white,
+//                fontSize: 18.0,
+//                fontWeight: FontWeight.bold,
+//              ),
+//            ),
+//          ],
+//        ),
+//      ),
+//    );
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +315,7 @@ class _LoginScreenState extends State<LoginScreen>
       _passwordTextfieldWidget(),
       _forgotPasswordWidget(),
       _loginButtonWidget(),
+      _registerButtonWidget(),
     ];
     bool alreadyAdded = false;
     bool alreadyAddedApple = false;
@@ -283,14 +335,17 @@ class _LoginScreenState extends State<LoginScreen>
           if (!alreadyAdded) {
             widgetList.add(_googleSignInWidget());
             widgetList.add(SizedBox(height: 20.0));
-            widgetList.add(_signUpWidget());
+//            widgetList.add(_signUpWidget());
             alreadyAdded = true;
           }
         } else if (snapshot.hasError) {
           //TODO add error handling whatever should be done in this case.
         } else {
           //TODO maybe improve this with loading animation.
-          return Container(width: 0.0, height: 0.0,);
+          return Container(
+            width: 0.0,
+            height: 0.0,
+          );
         }
 
         return Scaffold(
@@ -307,8 +362,7 @@ class _LoginScreenState extends State<LoginScreen>
               child: new Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: widgetList
-              ),
+                  children: widgetList),
             ),
           ),
         );
