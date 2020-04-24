@@ -15,9 +15,8 @@ class LoginScreen extends StatefulWidget {
   State createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
-  bool _rememberMe = false;
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
   String _email = '';
@@ -30,7 +29,9 @@ class _LoginScreenState extends State<LoginScreen>
   void initState() {
     super.initState();
     _logoAnimationController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 1500));
+        vsync: this,
+        duration: new Duration(milliseconds: 5000)
+    );
     _logoAnimation = new CurvedAnimation(
         parent: _logoAnimationController, curve: Curves.easeInOutBack);
     _logoAnimation.addListener(() => this.setState(() {}));
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen>
       children: <Widget>[
         new Image(
           image: new AssetImage("assets/eventlogo.png"),
-          //should be changed to the actual univents logo in assets later
+          // TODO should be changed to the actual univents logo in assets later
           width: _logoAnimation.value * 100,
           height: _logoAnimation.value * 100,
         )
