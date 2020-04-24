@@ -250,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen>
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data) {
-            if (!alreadyAdded) {
+            if (!alreadyAddedApple) {
               widgetList.add(
                 _appleSignInWidget(),
               );

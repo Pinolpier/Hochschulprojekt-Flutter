@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/Controller/authService.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
 import 'package:univents/View/dialogs/DialogHelper.dart';
@@ -75,8 +76,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                         });
                       },
                       selected: friends[index].isSelected,
-                      onTap: () {
+                      onTap: () async {
                         print(friends[index].name + " was pressed");
+                        await signOut();
                       },
                       title: Text(friends[index].name),
                       trailing: (friends[index].isSelected) ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
