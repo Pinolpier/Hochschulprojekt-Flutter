@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Model/constants.dart';
+import 'package:univents/service/app_localizations.dart';
 
 /**
  * this class creates a loginscreen with different textfields to put in email and username and a few
@@ -13,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
 
+  bool _rememberMe = false;
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
 
@@ -34,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     _logoAnimationController.forward();
   }
 
-  //TODO Exceptions werfen, bei Änderunge von unique Feldern im ProfileService!
   Widget _animatedLogoWidget(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 Icons.email,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
+              hintText: AppLocalizations.of(context).translate('enter_email'),
               hintStyle: textStyleConstant,
             ),
           ),
@@ -89,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Password',
+          AppLocalizations.of(context).translate('password'),
           style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
@@ -110,7 +111,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 Icons.lock,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Password',
+              hintText: AppLocalizations.of(context).translate(
+                  'enter_password'),
               hintStyle: textStyleConstant,
             ),
           ),
@@ -127,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           //TODO call method here
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
-          "Forgot Password?",
+          AppLocalizations.of(context).translate('forgot_password'),
           style: labelStyleConstant,
         )
       ),
@@ -213,7 +215,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         text: TextSpan(
           children: [
             TextSpan(
-              text: 'Don\'t have an Account? ',
+              text: AppLocalizations.of(context).translate(
+                  'dont_have_an_account'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -221,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               ),
             ),
             TextSpan(
-              text: 'Sign Up',
+              text: AppLocalizations.of(context).translate('sign_up'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,

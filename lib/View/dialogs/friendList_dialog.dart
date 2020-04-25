@@ -2,27 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
+import 'package:univents/View/dialogs/DialogHelper.dart';
 
-/**
- * this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
- * an option to directly invite friends to events
- */
+/// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
+/// an option to directly invite friends to events and also to add new users to a group
 class FriendslistdialogScreen extends StatefulWidget{
   @override
   _FriendlistdialogScreenState createState() => _FriendlistdialogScreenState();
 }
 
-/**
- * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
- * button at the bottom to create a new message
- */
+/// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
+/// button at the bottom to create a new message
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
 
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
+  bool comeFromCreateEventScreen = true;
   int selectedCount = 0;
+  List<String> selected = [];
 
-  //simple dummie list filled with dummie friend objects to test the list
+  /// simple dummie list filled with dummie friend objects to test the list
   List<FriendslistDummies> friends = [
     FriendslistDummies(name: "Markus Link", profilepic: "mango.png"),
     FriendslistDummies(name: "Markus Häring", profilepic: "mango.png"),
@@ -75,6 +74,14 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         onLongPress: () {
                           setState(() {
                             friends[index].isSelected = !friends[index].isSelected;
+                            if(selected.contains(friends[index].name))
+                            {
+                              selected.removeLast();
+                            }
+                            else {
+                              selected.add(friends[index].name);
+                            }
+                            print(selected.toString());
                           });
                         },
                         selected: friends[index].isSelected,
@@ -86,7 +93,6 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                         leading: GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-
                           },
                           child: CircleAvatar(
                             backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
@@ -96,6 +102,17 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                     ),
                   );
                 }
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                comeFromCreateEventScreen == false ? DialogHelper.showChangeBioDialog(context) : Navigator.pop(context, selected);
+                //TODO: Save selected friends from list "selected" into database and send them an invite/add them to a new group, depending on the context of the actions of the user
+              },
+              child: Icon(Icons.check),
+              backgroundColor: Colors.blueAccent,
             ),
           ),
         ],

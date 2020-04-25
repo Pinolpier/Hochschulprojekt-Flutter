@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/service/app_localizations.dart';
 
 import 'dialogs/DialogHelper.dart';
 
@@ -92,7 +93,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: Center(
                             child: Text(
-                              'Edit Bio',
+                              AppLocalizations.of(context).translate(
+                                  'edit_bio'),
                               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                           ),)
@@ -102,7 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: Center(
                             child: Text(
-                              'Send Friends Request',
+                              AppLocalizations.of(context).translate(
+                                  'send_friends_request'),
                               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                           ),
@@ -119,13 +122,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // set up the buttons
     Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
+      child: Text(AppLocalizations.of(context).translate('cancel')),
       onPressed:  () {
         Navigator.pop(context);
       },
     );
     Widget confirmButton = FlatButton(
-      child: Text("Confirm"),
+      child: Text(AppLocalizations.of(context).translate('confirm')),
       onPressed:  () {
         //contact.emails.forEach((item) {
         //print(item.value);
@@ -138,7 +141,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       //title: Text(contact.displayName),
-      content: Text("Do you really want to send "  " a friends request?"), //contact.displayname
+      content: Text(
+          AppLocalizations.of(context).translate('confirm_friend_request')),
+      //contact.displayname
       actions: [
         cancelButton,
         confirmButton,
