@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/Controller/authService.dart';
 import 'package:univents/Model/FriendslistDummies.dart';
 import 'package:univents/Model/GroupDummies.dart';
 import 'package:univents/View/dialogs/Debouncer.dart';
@@ -87,7 +88,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                         onTap: () {
                         },
                         child: CircleAvatar(
-                          backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}') : AssetImage('assets/${groups[index].profilepic}'),  //Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
+                          backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}') : AssetImage('assets/${groups[index].profilepic}'),  //TODO Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
                         ),
                       ),
                     ),
