@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Model/constants.dart';
+import 'package:univents/service/app_localizations.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
@@ -78,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 Icons.email,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
+              hintText: AppLocalizations.of(context).translate('enter_email'),
               hintStyle: textStyleConstant,
             ),
             onChanged: (text) {
@@ -103,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Password',
+          AppLocalizations.of(context).translate('password'),
           style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
@@ -124,7 +125,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 Icons.lock,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Password',
+              hintText: AppLocalizations.of(context).translate(
+                  'enter_password'),
               hintStyle: textStyleConstant,
             ),
             onChanged: (text) {
@@ -150,11 +152,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       alignment: Alignment.centerRight,
       child: FlatButton(
           onPressed: () => _handleForgotPassword(),
-          padding: EdgeInsets.only(right: 0.0),
-          child: Text(
-            "Forgot Password?",
-            style: labelStyleConstant,
-          )),
+        padding: EdgeInsets.only(right: 0.0),
+        child: Text(
+          AppLocalizations.of(context).translate('forgot_password'),
+          style: labelStyleConstant,
+        )
+      ),
     );
   }
 

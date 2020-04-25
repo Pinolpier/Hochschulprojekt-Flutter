@@ -2,13 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
-/**
- * this debouncer class makes sure that the user has enough time to put in his full search query into the searchbar before
- * the system starts reading it out
- */
-
+/// this debouncer class makes sure that the user has enough time to put in his full search query into the searchbar before
+/// the system starts reading it out
 class Debouncer{
-
   int milliseconds;
   VoidCallback action;
   Timer _timer;
