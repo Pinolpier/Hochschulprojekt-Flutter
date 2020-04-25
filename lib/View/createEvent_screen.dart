@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:univents/Model/constants.dart';
-import 'package:univents/View/dialogs/DialogHelper.dart';
 import 'package:univents/View/dialogs/friendList_dialog.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/dateTimePicker.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -27,7 +27,7 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  DateTime selectedStartDateTime = DateTime.now();
+  DateTime selectedStartDateTime;
   DateTime selectedEndDateTime;
   String selectedStartString = 'not set';
   String selectedEndString = 'not set';
@@ -40,6 +40,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
+  DateTimePicker dtp = new DateTimePicker();
 
   var latLongArray = new List.generate(10, (_) => new List(2));
   List<dynamic> latLongList;
@@ -177,20 +178,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          final selectedDate = await _selectDate(context);
-          if (selectedDate == null) return;
-
-          final selectedTime = await _selectTime(context);
-          if (selectedTime == null) return;
-
+          selectedStartDateTime = await dtp.getDateTime(context);
           setState(() {
-            selectedStartDateTime = DateTime(
-              selectedDate.year,
-              selectedDate.month,
-              selectedDate.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
             print(selectedStartDateTime);
             selectedStartString = selectedStartDateTime.toIso8601String();
 
@@ -225,22 +214,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          final selectedDate = await _selectDate(context);
-          if (selectedDate == null) return;
-
-          final selectedTime = await _selectTime(context);
-          if (selectedTime == null) return;
-
+          selectedEndDateTime = await dtp.getDateTime(context);
           setState(() {
-            selectedEndDateTime = DateTime(
-              selectedDate.year,
-              selectedDate.month,
-              selectedDate.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
             if (selectedStartDateTime == null ||
-                selectedEndDateTime.isBefore(selectedStartDateTime)) {
+                selectedEndDateTime.isBefore(
+                    selectedStartDateTime.add(Duration(minutes: 1)))) {
               errorEndDateTime();
             } else {
               print(selectedEndDateTime);
@@ -419,14 +397,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          final List<String> result = await Navigator.push(context, MaterialPageRoute(
-            builder: (context) => FriendslistdialogScreen(),
-          ));
+          final List<String> result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FriendslistdialogScreen(),
+              ));
           setState(() {
-            for(String s in result)
-              {
-                 attendeeIDs.add(s);
-              }
+            for (String s in result) {
+              attendeeIDs.add(s);
+            }
           });
           //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
           //Friendslist schließen

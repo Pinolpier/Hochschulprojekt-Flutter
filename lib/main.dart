@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:univents/View/createEvent_screen.dart';
 import 'package:univents/View/login_screen.dart';
 import 'package:univents/service/app_localizations.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         }
         return supportedLocales.first;
       },
-      home: LoginScreen(),
+      home: CreateEventScreen(),
     );
   }
 }
