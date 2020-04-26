@@ -13,6 +13,7 @@ class Event {
   String _latitude, _longitude;
   List<dynamic> _attendeesIds;
   List<dynamic> _tagsList;
+  List<dynamic> _ownerIds;
   File image;
   String _imageURL;
 
@@ -43,7 +44,8 @@ class Event {
       this._tagsList,
       this._latitude,
       this._longitude,
-      this._imageURL){
+      this._imageURL,
+      this._ownerIds){
     _eventStartDate = startDate.toDate();
     _eventEndDate = endDate.toDate();
   }
@@ -123,4 +125,12 @@ class Event {
   set latitude(String value) {
     _latitude = value;
   }
+
+  List<dynamic> get ownerIds => _ownerIds;
+
+  set ownerIds(List<dynamic> value) {
+    _ownerIds = value;
+  }
+
+
 }

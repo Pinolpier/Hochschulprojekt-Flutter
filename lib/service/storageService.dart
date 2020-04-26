@@ -10,12 +10,12 @@ Future<String> uploadImage(
         FirebaseStorage.instance.ref().child(collectionID).child(imagename);
     StorageUploadTask uploadTask = ref.putFile(imageFile);
     return await (await uploadTask.onComplete).ref.getDownloadURL();
-  } catch (Excpetion) {
-    print(Excpetion.toString());
+  } catch (Exception) {
+    print(Exception.toString());
   }
 }
 
-/// deletes a Image based on the [String] collectionname and filename
+/// deletes a Image based on the [String] collection_name and filename
 Future deleteImage(String collection, String filename) async {
   await FirebaseStorage.instance.ref().child(collection)
       .child(filename)

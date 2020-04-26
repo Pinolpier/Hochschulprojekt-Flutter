@@ -28,7 +28,7 @@ final String location = 'location';
 final String latitude = 'latitude';
 final String longitude = 'longitude';
 
-Map<String, String> _urlToID = new Map();
+//Filter for database query's
 Timestamp _startDateFilter;
 Timestamp _endDateFilter;
 List<dynamic> _tagsFilter;
@@ -36,7 +36,8 @@ String _friendIdFilter;
 bool _privateEventFilter = false;
 bool _myEventsFilter = false;
 
-
+//map to permanently save the url to the ids
+Map<String, String> _urlToID = new Map();
 
 
 /// uploads the data into the database when creating an [Event]
@@ -113,6 +114,20 @@ void updateData(Event event) async {
   }
 }
 
+/// in order to change an image of an event, the new [image] and the relevant [event] must be transferred
+void updateImage(File image, Event event) async {
+  try {
+    await deleteImage(collection, event.eventID);
+    String url = await uploadImage(collection, image, event.eventID);
+    _urlToID[event.eventID] = url;
+    event.imageURL = url;
+    updateData(event);
+  }
+  on Exception catch (e) {
+    exceptionHandling(e);
+  }
+}
+
 /// adds data to a existing field in the database based
 /// on a [String] with the eventID and a [Map] with the new data
 void updateField(String eventID, Map<dynamic, dynamic> map) {
@@ -151,7 +166,7 @@ Future<Widget> getImage(String eventID) async {
   if (url != null)
     return Image.network(url);
   else
-    return Image();
+    throw new Exception('no Image available');
 }
 
 /// Returns a [Event] based on the [eventID]
@@ -183,7 +198,6 @@ Future<List<Event>> getEventsByStartAndStopDate(
 /// returns a [List] of events based on a [Timestamp] startDate
 Future<List<Event>> _getEventsByStartDate(Timestamp start) async {
   try {
-    String uid = getUidOfCurrentlySignedInUser();
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
@@ -327,17 +341,19 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
         .map((doc) => Event.createFrommDB(
-        doc.data[eventName],
-        doc.data[startDate],
-        doc.data[endDate],
-        doc.data[description],
-        doc.data[location],
-        doc.data[privateEvent],
-        doc.data[attendees],
-        doc.data[tags],
-        doc.data[latitude],
-        doc.data[longitude],
-        doc.data[imageUrl]))
+      doc.data[eventName],
+      doc.data[startDate],
+      doc.data[endDate],
+      doc.data[description],
+      doc.data[location],
+      doc.data[privateEvent],
+      doc.data[attendees],
+      doc.data[tags],
+      doc.data[latitude],
+      doc.data[longitude],
+      doc.data[imageUrl],
+      doc.data[eventOwner],
+    ))
         .toList();
   } else
     print('Keine passenden Events gefunden');
@@ -356,7 +372,8 @@ Event _documentSnapshotToEvent(DocumentSnapshot documentSnapshot) {
       documentSnapshot.data[tags],
       documentSnapshot.data[latitude],
       documentSnapshot.data[longitude],
-      documentSnapshot.data[imageUrl]);
+      documentSnapshot.data[imageUrl],
+      documentSnapshot.data[eventOwner]);
   return event;
 }
 
@@ -373,7 +390,8 @@ Map<String, dynamic> _eventToMap(Event event) {
     tags: event.tagsList,
     imageUrl: event.imageURL,
     latitude: event.latitude,
-    longitude: event.longitude
+    longitude: event.longitude,
+    eventOwner: event.ownerIds
   };
 }
 
@@ -451,7 +469,6 @@ void exceptionHandling(PlatformException e) {
       break;
   }
 }
-
 
 //Filter setter/getter and delete
 set startDateFilter(DateTime value) {
