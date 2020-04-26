@@ -3,11 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:univents/Model/constants.dart';
 import 'package:univents/View/dialogs/friendList_dialog.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/dateTimePicker.dart';
+import 'package:univents/service/utils/dateTimePickerUnivents.dart';
+import 'package:univents/service/utils/imagePickerUnivents.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -40,76 +40,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
-  DateTimePicker dtp = new DateTimePicker();
+  DateTimePickerUnivents dtp = new DateTimePickerUnivents();
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   var latLongArray = new List.generate(10, (_) => new List(2));
   List<dynamic> latLongList;
 
-  Future getImageFromCamera() async {
-    File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
-
-    setState(() {
-      eventImage = pickedImage;
-    });
-  }
-
-  Future getImageFromGallery() async {
-    File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      eventImage = pickedImage;
-    });
-  }
-
-  Future<void> chooseImage() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Upload an Image'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Choose from where you want to upload the iamge'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Camera'),
-              onPressed: () {
-                getImageFromCamera();
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('Gallery'),
-              onPressed: () {
-                getImageFromGallery();
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('Remove'),
-              onPressed: () {
-                setState(() {
-                  eventImage = null;
-                  Navigator.of(context).pop();
-                });
-              },
-            ),
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
@@ -141,35 +77,27 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   Widget _eventImagePlaceholder() {
     return GestureDetector(
-        onTap: () {
-          chooseImage();
+        onTap: () async {
+          File eventImageAsync = await ip.chooseImage(context);
+          setState(() {
+            print(eventImageAsync);
+            eventImage = eventImageAsync;
+          });
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
   Widget _eventImage() {
     return GestureDetector(
-        onTap: () {
-          chooseImage();
-        }, // handle your image tap here
+        onTap: () async {
+          File eventImageAsync = await ip.chooseImage(context);
+          setState(() {
+            print(eventImageAsync);
+            eventImage = eventImageAsync;
+          }); // handle your image tap here
+        },
         child: Image.file(eventImage, height: 150));
   }
-
-  Future<TimeOfDay> _selectTime(BuildContext context) {
-    final now = DateTime.now();
-
-    return showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
-    );
-  }
-
-  Future<DateTime> _selectDate(BuildContext context) => showDatePicker(
-        context: context,
-        initialDate: DateTime.now().add(Duration(seconds: 1)),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-      );
 
   Widget _selectStartDateTimeButtonWidget() {
     return Container(
