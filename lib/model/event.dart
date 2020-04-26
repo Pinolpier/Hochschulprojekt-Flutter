@@ -34,8 +34,8 @@ class Event {
   /// additionally
   Event.createFrommDB(
       this._title,
-      Timestamp startdate,
-      Timestamp enddate,
+      Timestamp startDate,
+      Timestamp endDate,
       this._description,
       this._location,
       this._privateEvent,
@@ -44,8 +44,8 @@ class Event {
       this._latitude,
       this._longitude,
       this._imageURL){
-    _eventStartDate = startdate.toDate();
-    _eventEndDate = enddate.toDate();
+    _eventStartDate = startDate.toDate();
+    _eventEndDate = endDate.toDate();
   }
 
   bool get privateEvent => _privateEvent;

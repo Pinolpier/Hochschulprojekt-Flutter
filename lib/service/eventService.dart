@@ -10,13 +10,34 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
 
 final db = Firestore.instance;
+
+//Collection-Name in database
 final String collection = 'events';
+
+//DataField-names in database
+final String endDate = 'endDate';
+final String startDate = 'startDate';
+final String eventOwner = 'eventOwner';
+final String privateEvent = 'private';
+final String attendees = 'attendeesIds';
+final String description = 'description';
+final String imageUrl = 'imageUrl';
+final String eventName = 'name';
+final String tags = 'tagsList';
+final String location = 'location';
+final String latitude = 'latitude';
+final String longitude = 'longitude';
+
 Map<String, String> _urlToID = new Map();
-Timestamp _startDate;
-Timestamp _endDate;
-List<dynamic> _tags;
-bool _privateEvent = false;
-bool _myEvents = false;
+Timestamp _startDateFilter;
+Timestamp _endDateFilter;
+List<dynamic> _tagsFilter;
+String _friendIdFilter;
+bool _privateEventFilter = false;
+bool _myEventsFilter = false;
+
+
+
 
 /// uploads the data into the database when creating an [Event]
 /// if a [File] is also handed over, it is also uploaded and the
@@ -26,7 +47,7 @@ void createEvent(File image, Event event) async {
   if (image != null) {
     Map<String, dynamic> eventMap;
     String imageURL = await uploadImage(collection, image, eventID);
-    eventMap['imageURL'] = imageURL;
+    eventMap[imageUrl] = imageURL;
     _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
   }
@@ -37,26 +58,32 @@ void createEvent(File image, Event event) async {
 Future<List<Event>> getEvents() async {
   var x;
   String uid = await getUidOfCurrentlySignedInUser();
-  if (_privateEvent) {
+  if (_privateEventFilter) {
     x = db
         .collectionGroup(collection)
         .reference()
-        .where('private', isEqualTo: true)
-        .where('attendeesIds', arrayContains: uid);
+        .where(privateEvent, isEqualTo: true)
+        .where(attendees, arrayContains: uid);
   } else {
     x = db
         .collectionGroup(collection)
         .reference()
-        .where('private', isEqualTo: false);
-    if (_myEvents) {
-      x = x.where('attendeesIds', arrayContains: uid);
+        .where(privateEvent, isEqualTo: false);
+    if (_myEventsFilter) {
+      x = x.where(attendees, arrayContains: uid);
     }
   }
-  if (_startDate != null) {
-    x = x.where('startDate', isGreaterThanOrEqualTo: _startDate);
+  if (_startDateFilter != null) {
+    x = x.where(startDate, isGreaterThanOrEqualTo: _startDateFilter);
   }
-  if (_tags != null) {
+  if (_endDateFilter != null) {
+    x = x.where(endDate, isSmallerThanOrEqualTo: _endDateFilter);
+  }
+  if (_tagsFilter != null) {
     //  x = x.where('tagsList', arrayContains: _tags);
+  }
+  if (_friendIdFilter != null) {
+    // x = x.where(attendees, arrayContains:_friendIdFilter);
   }
   QuerySnapshot querySnapshot = await x.getDocuments();
   return _snapShotToList(querySnapshot);
@@ -118,7 +145,7 @@ Future<Widget> getImage(String eventID) async {
   } else {
     DocumentSnapshot documentSnapshot =
         await db.collection(collection).document(eventID).get();
-    url = documentSnapshot.data['imageUrl'].toString();
+    url = documentSnapshot.data[imageUrl].toString();
     _urlToID[eventID] = url;
   }
   if (url != null)
@@ -144,8 +171,8 @@ Future<List<Event>> getEventsByStartAndStopDate(
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('startDate', isGreaterThanOrEqualTo: start)
-        .where('endDate', isLessThanOrEqualTo: stop)
+        .where(startDate, isGreaterThanOrEqualTo: start)
+        .where(endDate, isLessThanOrEqualTo: stop)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -160,7 +187,7 @@ Future<List<Event>> _getEventsByStartDate(Timestamp start) async {
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('startDate', isLessThanOrEqualTo: start)
+        .where(startDate, isLessThanOrEqualTo: start)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -174,7 +201,7 @@ Future<List<Event>> _getEventsByEndDate(Timestamp stop) async {
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('endDate', isGreaterThanOrEqualTo: stop)
+        .where(endDate, isGreaterThanOrEqualTo: stop)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -190,9 +217,9 @@ Future<List<Event>> getEventsByStartStopdateAndTag(
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('startDate', isLessThanOrEqualTo: start)
-        .where('endDate', isGreaterThanOrEqualTo: stop)
-        .where('tagsList', arrayContainsAny: tags)
+        .where(startDate, isLessThanOrEqualTo: start)
+        .where(endDate, isGreaterThanOrEqualTo: stop)
+        .where(tags, arrayContainsAny: tags)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -208,7 +235,7 @@ Future<List<Event>> getUsersEvents() async {
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('attendeesIds', arrayContains: uid)
+        .where(attendees, arrayContains: uid)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -226,9 +253,9 @@ Future<List<Event>> getEventsByUserAndStartAndStopDate(
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('attendeesIds', arrayContains: uid)
-        .where('startDate', isGreaterThanOrEqualTo: start)
-        .where('endDate', isLessThanOrEqualTo: stop)
+        .where(attendees, arrayContains: uid)
+        .where(startDate, isGreaterThanOrEqualTo: start)
+        .where(endDate, isLessThanOrEqualTo: stop)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -246,8 +273,8 @@ Future<List<Event>> getEventsByUserAndStopDate(
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('attendeesIds', arrayContains: uid)
-        .where('endDate', isLessThanOrEqualTo: stop)
+        .where(attendees, arrayContains: uid)
+        .where(endDate, isLessThanOrEqualTo: stop)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -256,7 +283,7 @@ Future<List<Event>> getEventsByUserAndStopDate(
 }
 
 /// returns a [List] of events based on a
-/// [Timestamp] startdate for the current User
+/// [Timestamp] startDate for the current User
 Future<List<Event>> getEventsByUserAndStartDate(
     Timestamp start, Timestamp stop) async {
   try {
@@ -264,8 +291,8 @@ Future<List<Event>> getEventsByUserAndStartDate(
     String uid = user.uid;
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
-        .where('attendeesIds', arrayContains: uid)
-        .where('startDate', isGreaterThanOrEqualTo: start)
+        .where(attendees, arrayContains: uid)
+        .where(startDate, isGreaterThanOrEqualTo: start)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -280,7 +307,7 @@ Future<List<Event>> getEventsByTags(List<String> tagsList) async {
     QuerySnapshot qShot = await db
         .collectionGroup(collection)
         .reference()
-        .where('tagsList', arrayContainsAny: tagsList)
+        .where(tags, arrayContainsAny: tagsList)
         .getDocuments();
     return addEventIdToObjects(_snapShotToList(qShot), qShot);
   } on PlatformException catch (e) {
@@ -300,17 +327,17 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
         .map((doc) => Event.createFrommDB(
-            doc.data['name'],
-        doc.data['startDate'],
-        doc.data['endDate'],
-            doc.data['description'],
-            doc.data['location'],
-            doc.data['private'],
-        doc.data['attendeesIds'],
-            doc.data['tagsList'],
-            doc.data['latitude'],
-            doc.data['longitude'],
-            doc.data['imageURL']))
+        doc.data[eventName],
+        doc.data[startDate],
+        doc.data[endDate],
+        doc.data[description],
+        doc.data[location],
+        doc.data[privateEvent],
+        doc.data[attendees],
+        doc.data[tags],
+        doc.data[latitude],
+        doc.data[longitude],
+        doc.data[imageUrl]))
         .toList();
   } else
     print('Keine passenden Events gefunden');
@@ -319,34 +346,34 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
 /// Returns a [Event] based on a documentSnapshot
 Event _documentSnapshotToEvent(DocumentSnapshot documentSnapshot) {
   Event event = new Event.createFrommDB(
-      documentSnapshot.data['name'],
-      documentSnapshot.data['startDate'],
-      documentSnapshot.data['endDate'],
-      documentSnapshot.data['description'],
-      documentSnapshot.data['location'],
-      documentSnapshot.data['private'],
-      documentSnapshot.data['attendeesIds'],
-      documentSnapshot.data['tagsList'],
-      documentSnapshot.data['latitude'],
-      documentSnapshot.data['longitude'],
-      documentSnapshot.data['imageURL']);
+      documentSnapshot.data[eventName],
+      documentSnapshot.data[startDate],
+      documentSnapshot.data[endDate],
+      documentSnapshot.data[description],
+      documentSnapshot.data[location],
+      documentSnapshot.data[privateEvent],
+      documentSnapshot.data[attendees],
+      documentSnapshot.data[tags],
+      documentSnapshot.data[latitude],
+      documentSnapshot.data[longitude],
+      documentSnapshot.data[imageUrl]);
   return event;
 }
 
 /// Wrappes a [Event] into a [Map]
 Map<String, dynamic> _eventToMap(Event event) {
   return {
-    'name': event.title,
-    'description': event.description,
-    'location': event.location,
-    'startDate': event.eventStartDate,
-    'endDate': event.eventEndDate,
-    'private': event.privateEvent,
-    'attendeesIds': event.attendeesIds,
-    'tagsList': event.tagsList,
-    'imageUrl': event.imageURL,
-    'latitude': event.latitude,
-    'longitude': event.longitude
+    eventName: event.title,
+    description: event.description,
+    location: event.location,
+    startDate: event.eventStartDate,
+    endDate: event.eventEndDate,
+    privateEvent: event.privateEvent,
+    attendees: event.attendeesIds,
+    tags: event.tagsList,
+    imageUrl: event.imageURL,
+    latitude: event.latitude,
+    longitude: event.longitude
   };
 }
 
@@ -425,46 +452,58 @@ void exceptionHandling(PlatformException e) {
   }
 }
 
-set startDate(DateTime value) {
-  _startDate = Timestamp.fromDate(value);
+
+//Filter setter/getter and delete
+set startDateFilter(DateTime value) {
+  _startDateFilter = Timestamp.fromDate(value);
 }
 
-set endDate(DateTime value) {
-  _endDate = Timestamp.fromDate(value);
+set endDateFilter(DateTime value) {
+  _endDateFilter = Timestamp.fromDate(value);
 }
 
 void deleteEndFilter() {
-  _endDate = null;
+  _endDateFilter = null;
 }
 
 void deleteStartFilter() {
-  _startDate = null;
+  _startDateFilter = null;
 }
 
 void deleteTagFilter() {
-  _tags = null;
+  _tagsFilter = null;
 }
 
-set tags(List<String> value) {
-  _tags = value;
+set tagsFilter(List<String> value) {
+  _tagsFilter = value;
 }
 
-DateTime get startDate => _startDate.toDate();
+DateTime get startDateFilter => _startDateFilter.toDate();
 
-DateTime get endDate => _endDate.toDate();
+DateTime get endDateFilter => _endDateFilter.toDate();
 
-List<String> get tags => _tags;
+List<String> get tagsFilter => _tagsFilter;
 
-set myEvent(bool value) {
-  _myEvents = value;
+set myEventFilter(bool value) {
+  _myEventsFilter = value;
 }
 
-set privateEvent(bool value) {
-  _privateEvent = value;
+set privateEventFilter(bool value) {
+  _privateEventFilter = value;
 }
 
-bool get myEvent => _myEvents;
+bool get myEventFilter => _myEventsFilter;
 
-bool get privateEvent => _privateEvent;
+bool get privateEventFilter => _privateEventFilter;
+
+void set friendIdFilter(String value) {
+  _friendIdFilter = value;
+}
+
+String get friendIdFilter => _friendIdFilter;
+
+void deleteFriendIdFilter() {
+  _friendIdFilter = null;
+}
 
 Map<String, String> get urlToID => _urlToID;
