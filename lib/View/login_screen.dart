@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Model/constants.dart';
+import 'package:univents/View/profile_screen.dart';
 import 'package:univents/service/app_localizations.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
@@ -213,7 +214,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => handleRegistration(),
+        onPressed: () {
+          handleRegistration();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()));
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),

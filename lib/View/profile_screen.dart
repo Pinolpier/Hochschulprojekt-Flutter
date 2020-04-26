@@ -23,16 +23,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String fullName = "First Name Last Name";  //TODO: Fill this with actual name of User from firebase
   String userName = "univentsuser123";       //TODO: Fill this with unique username of User from firebase
   String emailAdress = "test@email.com";     //TODO: Fill this with email adress of User from firebase
-  bool isProfileOwner = true;                  //TODO: set this to true if the user is the profile owner and to false if hes not
+  bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
+  bool createProfile = true;
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white30,
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        title: isProfileOwner == true && createProfile == false ? Text("Your Profile") : isProfileOwner == false && createProfile == false ? Text("Profile of " + userName)
+        : Text("Create your Profile"),
+        centerTitle: true,
+      ),
       body: new Stack(
         children: <Widget>[
           Positioned(
               width: 380.0,
-              top: MediaQuery.of(context).size.height / 5,
+              top: MediaQuery.of(context).size.height / 10,
               left: 20.0,
               child: Column(
                 children: <Widget>[
@@ -49,35 +57,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           boxShadow: [
                             BoxShadow(blurRadius: 7.0, color: Colors.black)
                           ])),
-                  SizedBox(height: 70.0),
-                  Text(fullName,
+                  SizedBox(height: 50.0),
+                  createProfile == false ? Text(fullName,
                     style: TextStyle(
                       color: Colors.white,
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Montserrat'),
+                  ) : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: 300.0,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10.0),
+                            hintText: "First Name",
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Container(
+                        width: 300.0,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10.0),
+                            hintText: "Last Name",
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10.0),
-                  Text(userName,
+                  createProfile == false ? Text(userName,
                     style: TextStyle(
                         fontSize: 17.0,
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Montserrat'),
+                  ) : Container(
+                    width: 300.0,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10.0),
+                        hintText: "Username",
+                      ),
+                    ),
                   ),
                   SizedBox(height: 10.0),
-                  Text(emailAdress,
+                  createProfile == false ? Text(emailAdress,
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Montserrat'),
+                  ) : Text(emailAdress,     //TODO: Set email adress from database here
                     style: TextStyle(
                         fontSize: 17.0,
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Montserrat'),
                   ),
                   SizedBox(height: 20.0),
-                  Text(bioText,
+                  createProfile == false ? Text(bioText,
                     style: TextStyle(
                         fontSize: 17.0,
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Montserrat'),
-                  ),
+                  ) : SizedBox(height: 0.0),
                   SizedBox(height: 25.0),
                   Container(
                       height: 30.0,
@@ -87,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         shadowColor: Colors.grey,
                         color: Colors.black45,
                         elevation: 7.0,
-                        child: isProfileOwner == true ? GestureDetector(
+                        child: isProfileOwner == true && createProfile == false ? GestureDetector(
                           onTap: () {
                             DialogHelper.showChangeBioDialog(context);
                           },
@@ -98,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                           ),)
-                         : isProfileOwner == false ? GestureDetector(
+                         : isProfileOwner == false && createProfile == false ? GestureDetector(
                           onTap: () {
                             showAlertDialog(context);
                           },
@@ -109,7 +153,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                           ),
-                        ) : null
+                        ) : createProfile == true  && isProfileOwner == false ? GestureDetector(
+                          onTap: () {
+
+                          },
+                          child: Center(
+                            child: Text(
+                              ('Confirm'),    //TODO: add Internationalization
+                              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                            ),
+                          ),) : SizedBox(height: 0.0)
                       )),
                 ],
               ))
