@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:univents/Controller/userProfileService.dart';
 import 'package:univents/View/friendList_screen.dart';
 import 'package:univents/View/login_screen.dart';
+import 'package:univents/View/profile_screen.dart';
 import 'package:univents/View/settings_screen.dart';
 
 /// This class is used to handle to show the correct screen depending on whether a user is logged in or not.
@@ -21,7 +22,7 @@ class ScreenManager extends StatelessWidget {
         if (snapshot.hasData) {
           return snapshot.data
               ? FriendlistScreen()
-              : SettingsScreen(); // TODO change FriendlistScreen with HomeScreenHandler when exists and SettingsScreen() with createProfileScreen()
+              : ProfileScreen(); // TODO change FriendlistScreen with HomeScreenHandler when exists and SettingsScreen() with createProfileScreen()
         } else if (snapshot.hasError) {
           //TODO error handling here in case async function fails somehow
           return Container(

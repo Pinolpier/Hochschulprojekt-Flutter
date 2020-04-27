@@ -214,11 +214,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {
-          handleRegistration();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ProfileScreen()));
-        },
+        onPressed: () =>
+          handleRegistration,
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),

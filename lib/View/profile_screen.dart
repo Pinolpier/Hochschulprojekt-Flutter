@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/Controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
 
 import 'dialogs/DialogHelper.dart';
@@ -109,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontSize: 17.0,
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Montserrat'),
-                  ) : Text(emailAdress,     //TODO: Set email adress from database here
+                  ) : Text(getEmailOfCurrentlySignedInUser(),
                     style: TextStyle(
                         fontSize: 17.0,
                         fontStyle: FontStyle.italic,
