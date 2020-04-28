@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/Controller/authService.dart';
+import 'package:univents/Controller/userProfileService.dart';
+import 'package:univents/Model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 
 import 'dialogs/DialogHelper.dart';
@@ -156,7 +158,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ) : createProfile == true  && isProfileOwner == false ? GestureDetector(
                           onTap: () {
-
+                            //UserProfile userProfile = new UserProfile(getUidOfCurrentlySignedInUser(), _username, getEmailOfCurrentlySignedInUser(), _forename, _surname, _biography);
+                            //updateImage(file, userProfile);
                           },
                           child: Center(
                             child: Text(
