@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Controller/userProfileService.dart';
 import 'package:univents/Model/userProfile.dart';
@@ -8,26 +11,105 @@ import 'package:univents/service/app_localizations.dart';
 import 'dialogs/DialogHelper.dart';
 
 class ProfileScreen extends StatefulWidget  {
-  final String UID;
-
-  const ProfileScreen (
-      {
-        Key key, this.UID
-      }
-      )
-      : super(key: key);
 
   @override
   _ProfileScreenState createState() => new _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final _textControllerUsername = TextEditingController();
+  final _textControllerFirstName = TextEditingController();
+  final _textControllerLastname = TextEditingController();
   String bioText = "oops seems like firebase doesnt have any text saved for your bio yet";    //TODO: get bio text from firebase and initialize it to the variable name
-  String fullName = "First Name Last Name";  //TODO: Fill this with actual name of User from firebase
-  String userName = "univentsuser123";       //TODO: Fill this with unique username of User from firebase
-  String emailAdress = "test@email.com";     //TODO: Fill this with email adress of User from firebase
+  String firstName = "First Name";                 //TODO: Fill this with unique username of User from firebase
+  String lastName = "Last Name";                 //TODO: Fill this with unique username of User from firebase
+  String userName = "univentsuser123";          //TODO: Fill this with unique username of User from firebase
+  String emailAdress = "test@email.com";        //TODO: Fill this with email adress of User from firebase
+  File profilepic;
   bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
-  bool createProfile = true;
+  bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
+
+  Future getImageFromCamera() async {
+    File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      profilepic = pickedImage;
+    });
+  }
+
+  Future getImageFromGallery() async {
+    File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      profilepic = pickedImage;
+    });
+  }
+
+  Future<void> chooseImage() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Upload an Image'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Choose from where you want to upload the iamge'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () {
+                getImageFromCamera();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                getImageFromGallery();
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Remove'),
+              onPressed: () {
+                setState(() {
+                  profilepic = null;
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _eventImagePlaceholder() {
+    return GestureDetector(
+        onTap: () {
+          chooseImage();
+        }, // handle your image tap here
+        child: Image.asset('assets/eventlogo.png', height: 150));
+  }
+
+  Widget _eventImage() {
+    return GestureDetector(
+        onTap: () {
+          chooseImage();
+        },
+        child: Image.file(profilepic, height: 150));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +132,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Container(
                       width: 150.0,
                       height: 150.0,
-                      decoration: BoxDecoration(
-                          color: Colors.red,
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg'),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                          boxShadow: [
-                            BoxShadow(blurRadius: 7.0, color: Colors.black)
-                          ])),
+                      child: SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: profilepic == null
+                            ? _eventImagePlaceholder()
+                            : _eventImage(),
+                      )),
                   SizedBox(height: 50.0),
-                  createProfile == false ? Text(fullName,
+                  createProfile == false ? Text(firstName + " " + lastName,
                     style: TextStyle(
                       color: Colors.white,
                         fontSize: 30.0,
@@ -73,6 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         width: 300.0,
                         child: TextField(
+                          controller: _textControllerFirstName,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             hintText: "First Name",
@@ -83,6 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         width: 300.0,
                         child: TextField(
+                          controller: _textControllerLastname,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             hintText: "Last Name",
@@ -100,6 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ) : Container(
                     width: 300.0,
                     child: TextField(
+                      controller: _textControllerUsername,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(10.0),
                         hintText: "Username",
@@ -158,8 +240,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ) : createProfile == true  && isProfileOwner == false ? GestureDetector(
                           onTap: () {
-                            //UserProfile userProfile = new UserProfile(getUidOfCurrentlySignedInUser(), _username, getEmailOfCurrentlySignedInUser(), _forename, _surname, _biography);
-                            //updateImage(file, userProfile);
+                            setState(() {
+                              userName = _textControllerUsername.text;
+                              firstName = _textControllerFirstName.text;
+                              lastName = _textControllerLastname.text;
+                            });
+                            if(userName != null && userName.trim().isNotEmpty) {
+                              UserProfile userProfile = new UserProfile(
+                                  getUidOfCurrentlySignedInUser(), userName,
+                                  getEmailOfCurrentlySignedInUser(), firstName,
+                                  lastName, null);
+                              updateImage(profilepic, userProfile);
+                            }
                           },
                           child: Center(
                             child: Text(
@@ -168,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),) : SizedBox(height: 0.0)
                       )),
-                ],
+                  ],
               ))
         ],
       ),
