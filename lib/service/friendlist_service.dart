@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Controller/userProfileService.dart';
-import 'package:univents/service/eventService.dart';
+import 'package:univents/service/event_service.dart';
 
 //final collectionName for all friends in database
 final String collection = 'friends';
