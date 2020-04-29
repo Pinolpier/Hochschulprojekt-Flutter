@@ -32,13 +32,12 @@ final String longitude = 'longitude';
 Timestamp _startDateFilter;
 Timestamp _endDateFilter;
 List<dynamic> _tagsFilter;
-String _friendIdFilter;
+List<dynamic> _friendIdFilter;
 bool _privateEventFilter = false;
 bool _myEventsFilter = false;
 
 //map to permanently save the url to the ids
 Map<String, String> _urlToID = new Map();
-
 
 /// uploads the data into the database when creating an [Event]
 /// if a [File] is also handed over, it is also uploaded and the
@@ -84,7 +83,7 @@ Future<List<Event>> getEvents() async {
     //  x = x.where('tagsList', arrayContains: _tags);
   }
   if (_friendIdFilter != null) {
-    // x = x.where(attendees, arrayContains:_friendIdFilter);
+    // x = x.where(attendees, arrayContainsany:_friendIdFilter);
   }
   QuerySnapshot querySnapshot = await x.getDocuments();
   return _snapShotToList(querySnapshot);
@@ -122,8 +121,7 @@ void updateImage(File image, Event event) async {
     _urlToID[event.eventID] = url;
     event.imageURL = url;
     updateData(event);
-  }
-  on Exception catch (e) {
+  } on Exception catch (e) {
     exceptionHandling(e);
   }
 }
@@ -513,11 +511,11 @@ bool get myEventFilter => _myEventsFilter;
 
 bool get privateEventFilter => _privateEventFilter;
 
-void set friendIdFilter(String value) {
+void set friendIdFilter(List<dynamic> value) {
   _friendIdFilter = value;
 }
 
-String get friendIdFilter => _friendIdFilter;
+List<dynamic> get friendIdFilter => _friendIdFilter;
 
 void deleteFriendIdFilter() {
   _friendIdFilter = null;
