@@ -43,6 +43,7 @@ Map<String, String> _urlToID = new Map();
 /// if a [File] is also handed over, it is also uploaded and the
 /// url for the file is assigned to the event
 void createEvent(File image, Event event) async {
+  event.ownerIds.add(getUidOfCurrentlySignedInUser());
   String eventID = await _addData(event);
   if (image != null) {
     Map<String, dynamic> eventMap;
