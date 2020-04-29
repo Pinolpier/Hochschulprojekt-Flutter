@@ -11,7 +11,6 @@ void main() {
 }
 
 class UniventsApp extends StatelessWidget {
-
   Widget build(BuildContext context) {
     return StreamProvider<FirebaseUser>.value(
         value: user,
@@ -42,10 +41,10 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: ScreenManager(),));
+          home: ScreenManager(),
+        ));
   }
 }
-
 
 /// --> The following code is the original code from Markus Häring, I tried merging above manually, but to keep a copy I also applied his change and commented it out until we can be sure it works!
 ///// Start of the App where the localization gets initialized
