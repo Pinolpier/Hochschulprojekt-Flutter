@@ -40,8 +40,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
-  DateTimePickerUnivents dtp = new DateTimePickerUnivents();
-  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   var latLongArray = new List.generate(10, (_) => new List(2));
   List<dynamic> latLongList;
@@ -78,7 +76,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await ip.chooseImage(context);
+          File eventImageAsync = await chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
@@ -90,7 +88,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await ip.chooseImage(context);
+          File eventImageAsync = await chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
@@ -106,7 +104,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          selectedStartDateTime = await dtp.getDateTime(context);
+          selectedStartDateTime = await getDateTime(context);
           setState(() {
             print(selectedStartDateTime);
             selectedStartString = selectedStartDateTime.toIso8601String();
@@ -142,7 +140,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          selectedEndDateTime = await dtp.getDateTime(context);
+          selectedEndDateTime = await getDateTime(context);
           setState(() {
             if (selectedStartDateTime == null ||
                 selectedEndDateTime.isBefore(

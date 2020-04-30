@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DateTimePickerUnivents {
-  DateTime selectedDateTime = DateTime.now();
+
+DateTime selectedDateTime = DateTime.now();
 
   Future<TimeOfDay> _selectTime(BuildContext context) {
     final now = DateTime.now();
@@ -19,7 +19,8 @@ class DateTimePickerUnivents {
         lastDate: DateTime(2100),
       );
 
-  Future<DateTime> getDateTime(BuildContext context) async {
+
+Future<DateTime> getDateTime(BuildContext context) async {
     final selectedDate = await _selectDateTime(context);
     if (selectedDate == null) return null;
 
@@ -30,4 +31,4 @@ class DateTimePickerUnivents {
         selectedDate.day, selectedTime.hour, selectedTime.minute);
     return selectedDateTime;
   }
-}
+
