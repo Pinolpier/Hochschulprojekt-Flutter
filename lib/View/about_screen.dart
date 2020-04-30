@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 import 'package:univents/Model/constants.dart';
+import 'package:univents/service/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Model/constants.dart';
@@ -19,20 +17,6 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  Map<dynamic, dynamic> _loadedStrings;
-  var _result;
-
-  //TODO reading json file takes approx. 220ms maybe 1.instead of json use dart file with constants 2.start loading before the screen is opened
-  Future<bool> load() async {
-    String jsonString = await rootBundle.loadString('assets/res/strings.json');
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
-    _loadedStrings = jsonMap.map((key, value) {
-      return MapEntry(key, value.toString());
-    });
-    return true;
-
-  }
-
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
 
@@ -107,67 +91,44 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   @override
-  void initState() {
-    // This is the proper place to make the async calls
-    // This way they only get called once
-
-    // During development, if you change this code,
-    // you will need to do a full restart instead of just a hot reload
-
-    // You can't use async/await here,
-    // We can't mark this method as async because of the @override
-    load().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
-      setState(() {
-        _result = result;
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (_result == null) {
-      return new Container();
-    } else {
-      return Scaffold(
-          backgroundColor: Colors.blueAccent,
-          body: new Container(
-              height: double.infinity,
-              child: SingleChildScrollView(
-                //fixes pixel overflow error when keyboard is used
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 120.0,
-                ),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Privacy',
-                      style: labelStyleConstant,
-                    ),
-                    Text(
-                      _loadedStrings["privacy"],
-                      style: textStyleConstant,
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      'impressum',
-                      style: labelStyleConstant,
-                    ),
-                    Text(
-                      _loadedStrings["impressum"],
-                      style: textStyleConstant,
-                    ),
-                    SizedBox(height: 20.0),
-                    _feedbackButtonWidget(),
-                    _shareButtonWidget(_loadedStrings["shareMessage"]),
-                  ],
-                ),
-              )));
-    }
+    return Scaffold(
+        backgroundColor: Colors.blueAccent,
+        body: new Container(
+            height: double.infinity,
+            child: SingleChildScrollView(
+              //fixes pixel overflow error when keyboard is used
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: 40.0,
+                vertical: 120.0,
+              ),
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Privacy',
+                    style: labelStyleConstant,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).translate("privacy"),
+                    style: textStyleConstant,
+                  ),
+                  SizedBox(height: 20.0),
+                  Text(
+                    'impressum',
+                    style: labelStyleConstant,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).translate("impressum"),
+                    style: textStyleConstant,
+                  ),
+                  SizedBox(height: 20.0),
+                  _feedbackButtonWidget(),
+                  _shareButtonWidget(AppLocalizations.of(context).translate("shareMessage")),
+                ],
+              ),
+            )));
   }
 }
