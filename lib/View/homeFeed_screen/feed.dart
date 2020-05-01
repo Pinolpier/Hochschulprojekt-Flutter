@@ -10,6 +10,7 @@ class Feed {
   ///inits the feed with data from firebase
   static Future<List<Widget>> init() async {
     _feed = List<Widget>(); //create new instance
+
     List<Event> data = await getEvents(); //get data from firebase
     if (_feed.length != data.length) {
       _addEventToFeed(data);

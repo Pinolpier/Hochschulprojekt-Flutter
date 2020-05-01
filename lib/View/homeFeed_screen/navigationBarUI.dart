@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/service/event_service.dart';
-import 'package:univents/service/utils/dateTimePickerUnivents.dart';
+import 'package:univents/View/homeFeed_screen/drop_down_menu.dart';
 
 import 'feed.dart';
 
@@ -56,19 +55,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         body: Container(
           child: Column(
             children: <Widget>[
-              DropdownButton<String>(
-                items: <String>[
-                  'Standard Filter',
-                  'Date Filter',
-                  'Selected Event Filter'
-                ].map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: new Text(value),
-                  );
-                }).toList(),
-                onChanged: _selectedFilter,
-              ),
+              DropDownMenu(),
               Expanded(
                 child: ListView(
                   children: _data, //Feed.feed,
@@ -79,32 +66,6 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         ),
       ),
     );
-  }
-
-  ///controls the filter that are selected
-  void _selectedFilter(String selected) async {
-    switch (selected) {
-      case "Standard Filter":
-        {
-          deleteStartFilter();
-          deleteEndFilter();
-          deleteTagFilter();
-          deleteFriendIdFilter();
-          myEventFilter = false;
-        }
-        break;
-      case "Date Filter":
-        {
-          DateTime _date = await getDateTime(context);
-          startDateFilter = _date;
-        }
-        break;
-      case "Selected Event Filter":
-        {
-          myEventFilter = true;
-        }
-        break;
-    }
   }
 
   ///navigates through selected pages

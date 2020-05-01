@@ -46,8 +46,8 @@ class Event {
       this._longitude,
       this._imageURL,
       this._ownerIds) {
-    _eventStartDate = startDate.toDate();
-    _eventEndDate = endDate.toDate();
+    //_eventStartDate = startDate.toDate();
+    //_eventEndDate = endDate.toDate();
   }
 
   bool get privateEvent => _privateEvent;
