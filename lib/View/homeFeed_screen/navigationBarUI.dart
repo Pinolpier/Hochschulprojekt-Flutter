@@ -9,6 +9,8 @@ class NavigationBarUI extends StatefulWidget {
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
+  List<Widget> _data;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -43,10 +45,17 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           ),
         ),
         body: ListView(
-          children: Feed.test(), //Feed.feed,
+          children: _setTest(), //Feed.feed,
         ),
       ),
     );
+  }
+
+  List<Widget> _setTest() {
+    Feed.init().then((val) => setState(() {
+          _data = val;
+        }));
+    return this._data;
   }
 
   void _navigate(int index) {

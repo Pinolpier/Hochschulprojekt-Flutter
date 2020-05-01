@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/Controller/authService.dart';
-import 'package:univents/Controller/screenManager.dart';
+import 'package:univents/View/homeFeed_screen/homeFeed_screen.dart';
 import 'package:univents/service/app_localizations.dart';
 
 void main() {
@@ -41,7 +41,7 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: ScreenManager(),
+          home: HomeFeedScreenUI(), //todo correct
         ));
   }
 }

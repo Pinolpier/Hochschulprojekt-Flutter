@@ -45,9 +45,9 @@ class Event {
       this._latitude,
       this._longitude,
       this._imageURL,
-      this._ownerIds){
-    _eventStartDate = startDate.toDate();
-    _eventEndDate = endDate.toDate();
+      this._ownerIds) {
+    //todo _eventStartDate = startDate.toDate();
+    //todo _eventEndDate = endDate.toDate();
   }
 
   bool get privateEvent => _privateEvent;
@@ -131,6 +131,4 @@ class Event {
   set ownerIds(List<dynamic> value) {
     _ownerIds = value;
   }
-
-
 }

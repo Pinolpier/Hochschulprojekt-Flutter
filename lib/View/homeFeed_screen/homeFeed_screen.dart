@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:univents/Controller/authService.dart';
 
 import 'navigationBarUI.dart';
 
-class HomeFeedScreenUI extends StatelessWidget{
+class HomeFeedScreenUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    googleSignIn(); //todo: correct
     return MaterialApp(
-        title: 'App',
-        theme: ThemeData(fontFamily: 'Open Sans'),
-        debugShowCheckedModeBanner: false,
-        home: NavigationBarUI(),
+      title: 'App',
+      theme: ThemeData(fontFamily: 'Open Sans'),
+      debugShowCheckedModeBanner: false,
+      home: NavigationBarUI(),
     );
   }
 }
