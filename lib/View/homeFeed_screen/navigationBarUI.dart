@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/View/homeFeed_screen/drop_down_menu.dart';
+import 'package:univents/service/event_service.dart';
+import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 
 import 'feed.dart';
 
@@ -10,10 +11,15 @@ class NavigationBarUI extends StatefulWidget {
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
-  List<Widget> _data = new List<Widget>();
+  ///list of data that can be filtered
+  List<Widget> _data;
+
+  ///selected filter
+  String dropdownValue = 'Standard Filter';
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
+    _data = new List<Widget>();
     Feed.init().then((val) => setState(() {
           _data = val;
         }));
@@ -55,7 +61,25 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         body: Container(
           child: Column(
             children: <Widget>[
-              DropDownMenu(),
+              DropdownButton<String>(
+                value: dropdownValue,
+                underline: Container(
+                  height: 2,
+                  color: Colors.grey,
+                ),
+                onChanged: _selectedFilter,
+                items: <String>[
+                  'Standard Filter',
+                  'Date Filter',
+                  'Selected Event Filter',
+                  'Event of Frieds Filter'
+                ].map<DropdownMenuItem<String>>((String dropdownValue) {
+                  return DropdownMenuItem<String>(
+                    value: dropdownValue,
+                    child: Text(dropdownValue),
+                  );
+                }).toList(),
+              ),
               Expanded(
                 child: ListView(
                   children: _data, //Feed.feed,
@@ -66,6 +90,52 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         ),
       ),
     );
+  }
+
+  ///updates feed with the setted filters
+  void _update() {
+    Feed.init().then((val) => setState(() {
+          _data = val;
+        }));
+  }
+
+  ///controls the filter that are selected
+  void _selectedFilter(String selected) async {
+    setState(() {
+      dropdownValue = selected;
+    });
+    switch (selected) {
+      case "Standard Filter":
+        {
+          deleteStartFilter();
+          deleteEndFilter();
+          deleteTagFilter();
+          deleteFriendIdFilter();
+          myEventFilter = false;
+          _update();
+        }
+        break;
+      case "Date Filter":
+        {
+          DateTime _date = await getDateTime(context);
+          if (_date != null) {
+            startDateFilter = _date;
+            _update();
+          }
+        }
+        break;
+      case "Selected Event Filter":
+        {
+          myEventFilter = true;
+          _update();
+        }
+        break;
+      case "Event of Friends Filter":
+        {
+          //friendIdFilter = ;todo
+        }
+        break;
+    }
   }
 
   ///navigates through selected pages
