@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/service/event_service.dart';
+import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 
 import 'feed.dart';
 
@@ -9,6 +11,15 @@ class NavigationBarUI extends StatefulWidget {
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
+  List<Widget> _data = new List<Widget>();
+
+  /// init data from firebase of Feed class
+  NavigationBarUIControl() {
+    Feed.init().then((val) => setState(() {
+          _data = val;
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -42,13 +53,61 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             ],
           ),
         ),
-        body: ListView(
-          children: Feed.test(), //Feed.feed,
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              DropdownButton<String>(
+                items: <String>[
+                  'Standard Filter',
+                  'Date Filter',
+                  'Selected Event Filter'
+                ].map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: new Text(value),
+                  );
+                }).toList(),
+                onChanged: _selectedFilter,
+              ),
+              Expanded(
+                child: ListView(
+                  children: _data, //Feed.feed,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  ///controls the filter that are selected
+  void _selectedFilter(String selected) async {
+    switch (selected) {
+      case "Standard Filter":
+        {
+          deleteStartFilter();
+          deleteEndFilter();
+          deleteTagFilter();
+          deleteFriendIdFilter();
+          myEventFilter = false;
+        }
+        break;
+      case "Date Filter":
+        {
+          DateTime _date = await getDateTime(context);
+          startDateFilter = _date;
+        }
+        break;
+      case "Selected Event Filter":
+        {
+          myEventFilter = true;
+        }
+        break;
+    }
+  }
+
+  ///navigates through selected pages
   void _navigate(int index) {
     switch (index) {
       case 0:
