@@ -27,6 +27,9 @@ class FeedItemUI extends StatelessWidget {
                   this._data.eventEndDate.toString() +
                   "\n" +
                   this._data.location),
+              onTap: () {
+                print(_data.eventID);
+              },
             ),
             Expanded(
               child: Container(
