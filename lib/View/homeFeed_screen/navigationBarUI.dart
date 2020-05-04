@@ -71,7 +71,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
                 items: <String>[
                   'Standard Filter',
                   'Date Filter',
-                  'Selected Event Filter',
+                  'Selected Events Filter',
                   'Event of Frieds Filter'
                 ].map<DropdownMenuItem<String>>((String dropdownValue) {
                   return DropdownMenuItem<String>(
