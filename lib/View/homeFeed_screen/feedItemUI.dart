@@ -53,6 +53,4 @@ class FeedItemUI extends StatelessWidget {
       ),
     );
   }
-
-  Event get data => data;
 }
