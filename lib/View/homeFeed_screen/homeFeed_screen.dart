@@ -6,7 +6,7 @@ import 'navigationBarUI.dart';
 class HomeFeedScreenUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    signInWithEmailAndPassword("j.oster@gmx.net", "pass1234");
+    googleSignIn();
     return MaterialApp(
       title: 'App',
       theme: ThemeData(fontFamily: 'Open Sans'),

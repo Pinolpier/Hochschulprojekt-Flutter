@@ -97,6 +97,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     Feed.init().then((val) => setState(() {
           _data = val;
         }));
+    print("updated list of events!"); //TODO Filter not refreshing correctly
   }
 
   ///controls the filter that are selected
