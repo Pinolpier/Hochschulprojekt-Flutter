@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/Controller/authService.dart';
 import 'package:univents/Controller/userProfileService.dart';
 import 'package:univents/Model/userProfile.dart';
@@ -29,84 +29,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
   bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
 
-  Future getImageFromCamera() async {
-    File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
-
-    setState(() {
-      profilepic = pickedImage;
-    });
-  }
-
-  Future getImageFromGallery() async {
-    File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      profilepic = pickedImage;
-    });
-  }
-
-  Future<void> chooseImage() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Upload an Image'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Choose from where you want to upload the iamge'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Camera'),
-              onPressed: () {
-                getImageFromCamera();
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('Gallery'),
-              onPressed: () {
-                getImageFromGallery();
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('Remove'),
-              onPressed: () {
-                setState(() {
-                  profilepic = null;
-                  Navigator.of(context).pop();
-                });
-              },
-            ),
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Widget _eventImagePlaceholder() {
     return GestureDetector(
-        onTap: () {
-          chooseImage();
+        onTap: () async {
+          File eventImageAsync = await chooseImage(context);
+          setState(() {
+            print(eventImageAsync);
+            profilepic = eventImageAsync;
+          });
         }, // handle your image tap here
         child: Image.asset('assets/blank_profile.png', height: 150));
   }
 
   Widget _eventImage() {
     return GestureDetector(
-        onTap: () {
-          chooseImage();
+        onTap: () async {
+          File eventImageAsync = await chooseImage(context);
+          setState(() {
+            print(eventImageAsync);
+            profilepic = eventImageAsync;
+          }); // handle your image tap here
         },
         child: Image.file(profilepic, height: 150));
   }
