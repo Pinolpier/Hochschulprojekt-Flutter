@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onTap: () {
           chooseImage();
         }, // handle your image tap here
-        child: Image.asset('assets/eventlogo.png', height: 150));
+        child: Image.asset('assets/blank_profile.png', height: 150));
   }
 
   Widget _eventImage() {
@@ -130,8 +130,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: <Widget>[
                   Container(
-                      width: 150.0,
-                      height: 150.0,
+                    color: Colors.grey,
+                      width: 130.0,
+                      height: 130.0,
                       child: SizedBox(
                         height: 100,
                         width: 100,
@@ -251,6 +252,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   getEmailOfCurrentlySignedInUser(), firstName,
                                   lastName, null);
                               updateImage(profilepic, userProfile);
+                            }
+                            else {
+                              //TODO: show Toast which says "username cant be empty!"
                             }
                           },
                           child: Center(
