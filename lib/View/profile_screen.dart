@@ -259,7 +259,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: Center(
                             child: Text(
-                              ('Confirm'),    //TODO: add Internationalization
+                              AppLocalizations.of(context).translate(
+                                  'confirm'),
                               style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                             ),
                           ),) : SizedBox(height: 0.0)
