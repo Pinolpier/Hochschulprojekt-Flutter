@@ -13,6 +13,7 @@ class Event {
   String _latitude, _longitude;
   List<dynamic> _attendeesIds;
   List<dynamic> _tagsList;
+  List<dynamic> _ownerIds;
   File image;
   String _imageURL;
 
@@ -34,8 +35,8 @@ class Event {
   /// additionally
   Event.createFrommDB(
       this._title,
-      Timestamp startdate,
-      Timestamp enddate,
+      Timestamp startDate,
+      Timestamp endDate,
       this._description,
       this._location,
       this._privateEvent,
@@ -43,9 +44,10 @@ class Event {
       this._tagsList,
       this._latitude,
       this._longitude,
-      this._imageURL){
-    _eventStartDate = startdate.toDate();
-    _eventEndDate = enddate.toDate();
+      this._imageURL,
+      this._ownerIds){
+    _eventStartDate = startDate.toDate();
+    _eventEndDate = endDate.toDate();
   }
 
   bool get privateEvent => _privateEvent;
@@ -123,4 +125,12 @@ class Event {
   set latitude(String value) {
     _latitude = value;
   }
+
+  List<dynamic> get ownerIds => _ownerIds;
+
+  set ownerIds(List<dynamic> value) {
+    _ownerIds = value;
+  }
+
+
 }

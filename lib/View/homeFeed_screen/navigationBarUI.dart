@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/View/homeFeed_screen/feed.dart';
+
+import 'feed.dart';
 
 class NavigationBarUI extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class NavigationBarUI extends StatefulWidget {
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -16,7 +16,11 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xff), //TODO: color definition
-          title: Center(child: Text('Univents',),),
+          title: Center(
+            child: Text(
+              'Univents',
+            ),
+          ),
           bottom: TabBar(
             onTap: _navigate,
             tabs: <Widget>[
@@ -39,7 +43,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           ),
         ),
         body: ListView(
-          children: Feed.test(),//Feed.feed,
+          children: Feed.test(), //Feed.feed,
         ),
       ),
     );
