@@ -7,6 +7,7 @@ import 'package:univents/Controller/authService.dart';
 import 'package:univents/Controller/userProfileService.dart';
 import 'package:univents/Model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'dialogs/DialogHelper.dart';
 
@@ -196,7 +197,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               updateImage(profilepic, userProfile);
                             }
                             else {
-                              //TODO: show Toast which says "username cant be empty!"
+                              Fluttertoast.showToast(
+                                  msg: "username cant be empty!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
                             }
                           },
                           child: Center(
