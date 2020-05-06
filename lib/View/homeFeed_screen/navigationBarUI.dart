@@ -125,7 +125,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           }
         }
         break;
-      case "Selected Event Filter":
+      case "Selected Events Filter":
         {
           myEventFilter = true;
           _update();
@@ -133,7 +133,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         break;
       case "Event of Friends Filter":
         {
-          //friendIdFilter = ;todo
+          //friendIdFilter = ;todo backend
         }
         break;
     }
