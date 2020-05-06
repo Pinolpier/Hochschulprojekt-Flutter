@@ -14,7 +14,7 @@ final String collection = 'profile';
 Map<String, String> uidToUri = {};
 
 ///Use this method to update a [UserProfile]. If it does not exist already it will be created.
-///All field will be overwritten with the values from the parameter [profile].
+///All fields will be overwritten with the values from the parameter [profile].
 ///Only the [FirebaseUser] references by [profile.uid] is allowed to update his own profile.
 Future<bool> updateProfile(UserProfile profile) async {
   //TODO is username unique?
@@ -48,8 +48,10 @@ Future<bool> updateImage(File file, UserProfile profile) async {
       DocumentSnapshot documentSnapshot =
       await firestore.collection(collection).document(profile.uid).get();
       uri = documentSnapshot.data['pictureURI'].toString();
+      //TODO: URI uidToUri.remove(profile.uid); ? braucht man das hier ?
     }
     if (uri != null) deleteFile(
+      //TODO: Bild löschen nochmal überarbeiten, Fehler damals bei Chris 1 Nacht vor Social Media kack präsentation
         collection, uri); //delete the picture if one exists
     if (file !=
         null) { //if a not null picture has been given to the method upload it

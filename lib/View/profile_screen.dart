@@ -183,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ) : createProfile == true  && isProfileOwner == false ? GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             setState(() {
                               userName = _textControllerUsername.text;
                               firstName = _textControllerFirstName.text;
@@ -194,7 +194,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   getUidOfCurrentlySignedInUser(), userName,
                                   getEmailOfCurrentlySignedInUser(), firstName,
                                   lastName, null);
-                              updateImage(profilepic, userProfile);
+                              await updateProfile(userProfile);
+                              await updateImage(profilepic, userProfile);
                             }
                             else {
                               Fluttertoast.showToast(
