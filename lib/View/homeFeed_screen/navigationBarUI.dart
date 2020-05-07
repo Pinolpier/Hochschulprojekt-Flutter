@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/View/homeFeed_screen/feed_filter.dart';
+import 'package:univents/View/homeFeed_screen/feed_filter_values.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 
@@ -15,7 +17,10 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   List<Widget> _data;
 
   ///selected filter
-  String dropdownValue = 'Standard Filter';
+  String dropdownValue;
+
+  ///for language support
+  BuildContext _context;
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
@@ -27,6 +32,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
+    dropdownValue =
+        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context);
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -69,10 +77,14 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
                 ),
                 onChanged: _selectedFilter,
                 items: <String>[
-                  'Standard Filter',
-                  'Date Filter',
-                  'Selected Events Filter',
-                  'Event of Frieds Filter'
+                  FeedFilterValues(FeedFilter.standardFilter)
+                      .convertToString(context),
+                  FeedFilterValues(FeedFilter.dateFilter)
+                      .convertToString(context),
+                  FeedFilterValues(FeedFilter.selectedEventsFilter)
+                      .convertToString(context),
+                  FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+                      .convertToString(context),
                 ].map<DropdownMenuItem<String>>((String dropdownValue) {
                   return DropdownMenuItem<String>(
                     value: dropdownValue,
@@ -97,7 +109,6 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     Feed.init().then((val) => setState(() {
           _data = val;
         }));
-    print("updated list of events!"); //TODO Filter not refreshing correctly
   }
 
   ///controls the filter that are selected
@@ -105,37 +116,30 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     setState(() {
       dropdownValue = selected;
     });
-    switch (selected) {
-      case "Standard Filter":
-        {
-          deleteStartFilter();
-          deleteEndFilter();
-          deleteTagFilter();
-          deleteFriendIdFilter();
-          myEventFilter = false;
-          _update();
-        }
-        break;
-      case "Date Filter":
-        {
-          DateTime _date = await getDateTime(context);
-          if (_date != null) {
-            startDateFilter = _date;
-            _update();
-          }
-        }
-        break;
-      case "Selected Events Filter":
-        {
-          myEventFilter = true;
-          _update();
-        }
-        break;
-      case "Event of Friends Filter":
-        {
-          //friendIdFilter = ;todo backend
-        }
-        break;
+    if (selected ==
+        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context)) {
+      deleteStartFilter();
+      deleteEndFilter();
+      deleteTagFilter();
+      deleteFriendIdFilter();
+      myEventFilter = false;
+      _update();
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.dateFilter).convertToString(context)) {
+      DateTime _date = await getDateTime(context);
+      if (_date != null) {
+        startDateFilter = _date;
+        _update();
+      }
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.selectedEventsFilter)
+            .convertToString(context)) {
+      myEventFilter = true;
+      _update();
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+            .convertToString(context)) {
+      //todo backend
     }
   }
 
