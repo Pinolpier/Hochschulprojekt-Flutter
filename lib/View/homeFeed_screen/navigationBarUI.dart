@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/View/homeFeed_screen/feed_filter.dart';
 import 'package:univents/View/homeFeed_screen/feed_filter_values.dart';
+import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 
@@ -17,7 +18,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   List<Widget> _data;
 
   ///selected filter
-  String dropdownValue;
+  String _dropdownValue;
 
   ///for language support
   BuildContext _context;
@@ -32,9 +33,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
-    dropdownValue =
-        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context);
+    this._context = context;
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -70,7 +69,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           child: Column(
             children: <Widget>[
               DropdownButton<String>(
-                value: dropdownValue,
+                hint: Text(AppLocalizations.of(context).translate("filter")),
+                value: _dropdownValue,
                 underline: Container(
                   height: 2,
                   color: Colors.grey,
@@ -113,9 +113,6 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   ///controls the filter that are selected
   void _selectedFilter(String selected) async {
-    setState(() {
-      dropdownValue = selected;
-    });
     if (selected ==
         FeedFilterValues(FeedFilter.standardFilter).convertToString(_context)) {
       deleteStartFilter();
@@ -141,6 +138,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             .convertToString(context)) {
       //todo backend
     }
+    setState(() {
+      this._dropdownValue = selected;
+    });
   }
 
   ///navigates through selected pages

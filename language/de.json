@@ -20,5 +20,6 @@
   "standard_filter": "Standard Filter",
   "date_filter": "Datumfilter",
   "selected_events_filter": "Deine-Events-Filter",
-  "events_of_friends_filter": "Events-von-Freunden-Filter"
+  "events_of_friends_filter": "Events-von-Freunden-Filter",
+  "filter": "Filter"
 }
