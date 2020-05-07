@@ -1,45 +1,27 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:univents/Model/event.dart';
 import 'package:univents/View/homeFeed_screen/feedItemUI.dart';
+import 'package:univents/service/event_service.dart';
 
 class Feed {
-  //widget list
-  static List<Widget> _feed = List<Widget>();
-  //data list
-  static List<FeedItemUI> _feedOrientation = List<FeedItemUI>();
+  ///widget list
+  static List<Widget> _feed;
 
-  static List<Widget> get feed => _feed;
+  ///inits the feed with data from firebase
+  static Future<List<Widget>> init() async {
+    _feed = List<Widget>(); //create new instance
 
-  static addNewFeed(String title, Timestamp eventStartDate, Timestamp eventEndDate, String details, String city, bool privateEvent,String lat,String lng,String url) {
-
-  }
-
-  static removeFeedByIndex(int index) {
-    _feed.removeAt(index);
-    _feedOrientation.removeAt(index);
-  }
-
-  static removeFeedByTitle(String title) {
-    for (int index = 0; index < _feedOrientation.length; index++) {
-      if (_feedOrientation[index].data.title == title) {
-        _feedOrientation.removeAt(index);
-        _feed.removeAt(index);
-      }
+    List<Event> data = await getEvents(); //get data from firebase
+    if (_feed.length != data.length) {
+      _addEventToFeed(data);
     }
-  }
-
-  static List<Widget> test(){
     return _feed;
   }
 
-  /*
-  void _sort() {}
-  */
-
-  /*
-   void update() {}
-   */
-
-
+  ///adds the data to the FeedItemUI for showing it
+  static void _addEventToFeed(List<Event> eList) {
+    for (Event e in eList) {
+      _feed.add(FeedItemUI(e));
+    }
+  }
 }

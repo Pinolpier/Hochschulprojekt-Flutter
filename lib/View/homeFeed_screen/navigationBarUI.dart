@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/View/homeFeed_screen/feed_filter.dart';
+import 'package:univents/View/homeFeed_screen/feed_filter_values.dart';
+import 'package:univents/service/event_service.dart';
+import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 
 import 'feed.dart';
 
@@ -9,8 +13,28 @@ class NavigationBarUI extends StatefulWidget {
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
+  ///list of data that can be filtered
+  List<Widget> _data;
+
+  ///selected filter
+  String dropdownValue;
+
+  ///for language support
+  BuildContext _context;
+
+  /// init data from firebase of Feed class
+  NavigationBarUIControl() {
+    _data = new List<Widget>();
+    Feed.init().then((val) => setState(() {
+          _data = val;
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
+    _context = context;
+    dropdownValue =
+        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context);
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -42,13 +66,84 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             ],
           ),
         ),
-        body: ListView(
-          children: Feed.test(), //Feed.feed,
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              DropdownButton<String>(
+                value: dropdownValue,
+                underline: Container(
+                  height: 2,
+                  color: Colors.grey,
+                ),
+                onChanged: _selectedFilter,
+                items: <String>[
+                  FeedFilterValues(FeedFilter.standardFilter)
+                      .convertToString(context),
+                  FeedFilterValues(FeedFilter.dateFilter)
+                      .convertToString(context),
+                  FeedFilterValues(FeedFilter.selectedEventsFilter)
+                      .convertToString(context),
+                  FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+                      .convertToString(context),
+                ].map<DropdownMenuItem<String>>((String dropdownValue) {
+                  return DropdownMenuItem<String>(
+                    value: dropdownValue,
+                    child: Text(dropdownValue),
+                  );
+                }).toList(),
+              ),
+              Expanded(
+                child: ListView(
+                  children: _data, //Feed.feed,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  ///updates feed with the setted filters
+  void _update() {
+    Feed.init().then((val) => setState(() {
+          _data = val;
+        }));
+  }
+
+  ///controls the filter that are selected
+  void _selectedFilter(String selected) async {
+    setState(() {
+      dropdownValue = selected;
+    });
+    if (selected ==
+        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context)) {
+      deleteStartFilter();
+      deleteEndFilter();
+      deleteTagFilter();
+      deleteFriendIdFilter();
+      myEventFilter = false;
+      _update();
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.dateFilter).convertToString(context)) {
+      DateTime _date = await getDateTime(context);
+      if (_date != null) {
+        startDateFilter = _date;
+        _update();
+      }
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.selectedEventsFilter)
+            .convertToString(context)) {
+      myEventFilter = true;
+      _update();
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+            .convertToString(context)) {
+      //todo backend
+    }
+  }
+
+  ///navigates through selected pages
   void _navigate(int index) {
     switch (index) {
       case 0:

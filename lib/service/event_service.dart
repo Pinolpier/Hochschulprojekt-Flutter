@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:univents/Controller/authService.dart';
-import 'package:univents/model/event.dart';
+import 'package:univents/Model/event.dart';
 import 'package:univents/service/storageService.dart';
 
 final db = Firestore.instance;
@@ -340,19 +340,19 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
         .map((doc) => Event.createFrommDB(
-      doc.data[eventName],
-      doc.data[startDate],
-      doc.data[endDate],
-      doc.data[description],
-      doc.data[location],
-      doc.data[privateEvent],
-      doc.data[attendees],
-      doc.data[tags],
-      doc.data[latitude],
-      doc.data[longitude],
-      doc.data[imageUrl],
-      doc.data[eventOwner],
-    ))
+              doc.data[eventName],
+              doc.data[startDate],
+              doc.data[endDate],
+              doc.data[description],
+              doc.data[location],
+              doc.data[privateEvent],
+              doc.data[attendees],
+              doc.data[tags],
+              doc.data[latitude],
+              doc.data[longitude],
+              doc.data[imageUrl],
+              doc.data[eventOwner],
+            ))
         .toList();
   } else
     print('Keine passenden Events gefunden');
