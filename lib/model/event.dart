@@ -45,7 +45,7 @@ class Event {
       this._latitude,
       this._longitude,
       this._imageURL,
-      this._ownerIds){
+      this._ownerIds) {
     _eventStartDate = startDate.toDate();
     _eventEndDate = endDate.toDate();
   }
@@ -131,6 +131,4 @@ class Event {
   set ownerIds(List<dynamic> value) {
     _ownerIds = value;
   }
-
-
 }
