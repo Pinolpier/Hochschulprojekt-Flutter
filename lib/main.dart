@@ -42,6 +42,7 @@ class UniventsApp extends StatelessWidget {
             return supportedLocales.first;
           },
           home: NavigationBarUI(),
+
         ));
   }
 }
