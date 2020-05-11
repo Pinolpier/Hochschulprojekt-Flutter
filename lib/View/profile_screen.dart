@@ -25,30 +25,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String firstName = "First Name";                 //TODO: Fill this with unique username of User from firebase
   String lastName = "Last Name";                 //TODO: Fill this with unique username of User from firebase
   String userName = "univentsuser123";          //TODO: Fill this with unique username of User from firebase
-  String emailAdress = "test@email.com";        //TODO: Fill this with email adress of User from firebase
+  String emailAddress = "test@email.com";        //TODO: Fill this with email adress of User from firebase
   File profilepic;
   bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
   bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
 
-  Widget _eventImagePlaceholder() {
+  Widget _profilePicturePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          File profilePicAsync = await chooseImage(context);
           setState(() {
-            print(eventImageAsync);
-            profilepic = eventImageAsync;
+            print(profilePicAsync);
+            profilepic = profilePicAsync;
           });
         }, // handle your image tap here
         child: Image.asset('assets/blank_profile.png', height: 150));
   }
 
-  Widget _eventImage() {
+  Widget _profilePicture() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          File profilePicAsync = await chooseImage(context);
           setState(() {
-            print(eventImageAsync);
-            profilepic = eventImageAsync;
+            print(profilePicAsync);
+            profilepic = profilePicAsync;
           }); // handle your image tap here
         },
         child: Image.file(profilepic, height: 150));
@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.white30,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         title: isProfileOwner == true && createProfile == false ? Text("Your Profile") : isProfileOwner == false && createProfile == false ? Text("Profile of " + userName)
@@ -80,8 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 100,
                         width: 100,
                         child: profilepic == null
-                            ? _eventImagePlaceholder()
-                            : _eventImage(),
+                            ? _profilePicturePlaceholder()
+                            : _profilePicture(),
                       )),
                   SizedBox(height: 50.0),
                   createProfile == false ? Text(firstName + " " + lastName,
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           controller: _textControllerFirstName,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
-                            hintText: "First Name",
+                            hintText: AppLocalizations.of(context).translate('first_name'),
                           ),
                         ),
                       ),
@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           controller: _textControllerLastname,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
-                            hintText: "Last Name",
+                            hintText: AppLocalizations.of(context).translate("last_name"),
                           ),
                         ),
                       ),
@@ -128,12 +128,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: _textControllerUsername,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(10.0),
-                        hintText: "Username",
+                        hintText: AppLocalizations.of(context).translate('username'),
                       ),
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  createProfile == false ? Text(emailAdress,
+                  createProfile == false ? Text(emailAddress,
                     style: TextStyle(
                         fontSize: 17.0,
                         fontStyle: FontStyle.italic,
@@ -199,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                             else {
                               Fluttertoast.showToast(
-                                  msg: "username cant be empty!",
+                                  msg: AppLocalizations.of(context).translate('profile_screen_toast'),
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER,
                                   timeInSecForIosWeb: 1,
