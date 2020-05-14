@@ -28,7 +28,8 @@ Future<bool> updateProfile(UserProfile profile) async {
     } catch (e) {
       //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
       print(
-          'An error has occured while crea ting the profile: $profile, the error is: ${e.toString()}');
+          'An error has occured while crea ting the profile: $profile, the error is: ${e
+              .toString()}');
       return false;
     }
   }
@@ -47,13 +48,13 @@ Future<bool> updateImage(File file, UserProfile profile) async {
     } else {
       //The uri of the picture has to be requested from Firestore
       DocumentSnapshot documentSnapshot =
-          await firestore.collection(collection).document(profile.uid).get();
+      await firestore.collection(collection).document(profile.uid).get();
       uri = documentSnapshot.data['pictureURI'].toString();
       //TODO: URI uidToUri.remove(profile.uid); ? braucht man das hier ?
     }
     if (uri != null)
       deleteFile(
-          //TODO: Bild löschen nochmal überarbeiten, Fehler damals bei Chris 1 Nacht vor Social Media kack präsentation
+        //TODO: Bild löschen nochmal überarbeiten, Fehler damals bei Chris 1 Nacht vor Social Media kack präsentation
           collection,
           uri); //delete the picture if one exists
     if (file != null) {
@@ -69,7 +70,8 @@ Future<bool> updateImage(File file, UserProfile profile) async {
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
         print(
-            'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
+            'An error has occured while updating the profile: $profile, the error is: ${e
+                .toString()}');
         return false;
       }
     } else {
@@ -83,7 +85,8 @@ Future<bool> updateImage(File file, UserProfile profile) async {
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
         print(
-            'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
+            'An error has occured while updating the profile: $profile, the error is: ${e
+                .toString()}');
         return false;
       }
     }
@@ -153,7 +156,8 @@ Future<String> getUidFromUserName(String username) async {
       break;
     default:
       throw new IllegalDatabaseStateException(null,
-          "More than 1 or less than 0 users with username: $username have been returned from database! Length og List is: ${querySnapshot.documents.length}");
+          "More than 1 or less than 0 users with username: $username have been returned from database! Length og List is: ${querySnapshot
+              .documents.length}");
   }
 }
 
@@ -174,7 +178,8 @@ Future<String> getUidFromEmail(String email) async {
       break;
     default:
       throw new IllegalDatabaseStateException(null,
-          "More than 1 or less than 0 users with email adress: $email have been returned from database! Length og List is: ${querySnapshot.documents.length}");
+          "More than 1 or less than 0 users with email adress: $email have been returned from database! Length og List is: ${querySnapshot
+              .documents.length}");
   }
 }
 
@@ -192,7 +197,8 @@ Future<bool> _isOperationAllowed(UserProfile profile) async {
   }
   if (getUidOfCurrentlySignedInUser() != profile.uid) {
     throw new ForeignProfileAccessForbiddenException(null,
-        "Cannot update profile of another than the currently signed in user. Uid of profile that was intended to be updated: ${profile.uid}, uid of currently signed in user: ${getUidOfCurrentlySignedInUser()}");
+        "Cannot update profile of another than the currently signed in user. Uid of profile that was intended to be updated: ${profile
+            .uid}, uid of currently signed in user: ${getUidOfCurrentlySignedInUser()}");
     return false;
   }
   return true;

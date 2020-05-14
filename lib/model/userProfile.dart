@@ -9,8 +9,8 @@ class UserProfile {
   UserProfile(this._uid, this._username, this._email, this._forename,
       this._surname, this._biography);
 
-  UserProfile.fromDocumentSnapshot(
-      Map<String, dynamic> documentSnapshot, String uid) {
+  UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot,
+      String uid) {
     _uid = uid;
     _username = documentSnapshot['username'];
     _email = documentSnapshot['email'];

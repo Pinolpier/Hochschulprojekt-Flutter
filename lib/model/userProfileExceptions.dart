@@ -45,8 +45,8 @@ class PermissionDeniedException extends UserProfileException {
 }
 
 class IllegalDatabaseStateException extends UserProfileException {
-  const IllegalDatabaseStateException(
-      Exception originalException, String message)
+  const IllegalDatabaseStateException(Exception originalException,
+      String message)
       : super(originalException, message);
 }
 

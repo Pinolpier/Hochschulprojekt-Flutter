@@ -58,26 +58,30 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
             Expanded(
               child: ListView.builder(
                 itemCount: _contacts == null ? 0 : _contacts.length,
-                itemBuilder: (context, index) => Container(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 1.0, horizontal: 4.0),
-                    child: Card(
-                      child: ListTile(
-                        onTap: () {
-                          //print(friends[index].name + " was pressed");
-                          showAlertDialog(context, _contacts.elementAt(index));
-                        },
-                        title: Text(_contacts == null
-                            ? 'no contacts selected yet'
-                            : _contacts.elementAt(index).displayName),
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage('assets/mango.png'),
+                itemBuilder: (context, index) =>
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 1.0, horizontal: 4.0),
+                        child: Card(
+                          child: ListTile(
+                            onTap: () {
+                              //print(friends[index].name + " was pressed");
+                              showAlertDialog(
+                                  context, _contacts.elementAt(index));
+                            },
+                            title: Text(_contacts == null
+                                ? 'no contacts selected yet'
+                                : _contacts
+                                .elementAt(index)
+                                .displayName),
+                            leading: CircleAvatar(
+                              backgroundImage: AssetImage('assets/mango.png'),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
               ),
             ),
             Padding(

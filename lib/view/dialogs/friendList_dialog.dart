@@ -72,7 +72,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                         onLongPress: () {
                           setState(() {
                             friends[index].isSelected =
-                                !friends[index].isSelected;
+                            !friends[index].isSelected;
                             if (selected.contains(friends[index].name)) {
                               selected.removeLast();
                             } else {

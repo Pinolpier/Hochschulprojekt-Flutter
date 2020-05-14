@@ -240,6 +240,7 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
 
 /// handles errors by [PlatformException] and returns a [String]
 /// with the Error message
+/// can be used by method caller to translate exception to a simple message
 String exceptionHandling(PlatformException e) {
   switch (e.code) {
     case ('ABORTED'):

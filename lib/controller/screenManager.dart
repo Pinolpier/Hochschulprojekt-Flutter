@@ -18,26 +18,26 @@ class ScreenManager extends StatelessWidget {
     return (user == null)
         ? LoginScreen()
         : FutureBuilder<bool>(
-            future: existsUserProfile(user.uid),
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data
-                    ? FriendlistScreen()
-                    : ProfileScreen(); // TODO change FriendlistScreen with HomeScreenHandler when exists and SettingsScreen() with createProfileScreen()
-              } else if (snapshot.hasError) {
-                //TODO error handling here in case async function fails somehow
-                return Container(
-                  width: 0.0,
-                  height: 0.0,
-                );
-              } else {
-                //TODO Maybe return a loading animation?
-                return Container(
-                  width: 0.0,
-                  height: 0.0,
-                );
-              }
-            },
+      future: existsUserProfile(user.uid),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data
+              ? FriendlistScreen()
+              : ProfileScreen(); // TODO change FriendlistScreen with HomeScreenHandler when exists and SettingsScreen() with createProfileScreen()
+        } else if (snapshot.hasError) {
+          //TODO error handling here in case async function fails somehow
+          return Container(
+            width: 0.0,
+            height: 0.0,
           );
+        } else {
+          //TODO Maybe return a loading animation?
+          return Container(
+            width: 0.0,
+            height: 0.0,
+          );
+        }
+      },
+    );
   }
 }
