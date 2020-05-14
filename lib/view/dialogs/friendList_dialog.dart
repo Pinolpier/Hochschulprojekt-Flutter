@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/Model/FriendslistDummies.dart';
-import 'package:univents/View/dialogs/Debouncer.dart';
-import 'package:univents/View/dialogs/DialogHelper.dart';
+import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/view/dialogs/Debouncer.dart';
+import 'package:univents/view/dialogs/DialogHelper.dart';
 
 /// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
 /// an option to directly invite friends to events and also to add new users to a group
@@ -72,7 +72,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                         onLongPress: () {
                           setState(() {
                             friends[index].isSelected =
-                            !friends[index].isSelected;
+                                !friends[index].isSelected;
                             if (selected.contains(friends[index].name)) {
                               selected.removeLast();
                             } else {

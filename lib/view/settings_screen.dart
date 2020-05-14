@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univents/Model/option_model.dart';
+import 'package:univents/model/option_model.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override

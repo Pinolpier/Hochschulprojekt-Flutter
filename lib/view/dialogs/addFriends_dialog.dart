@@ -2,8 +2,8 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:univents/Model/FriendslistDummies.dart';
-import 'package:univents/View/dialogs/Debouncer.dart';
+import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/view/dialogs/Debouncer.dart';
 
 /// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
 /// here you have the option to search for new friends through username or import local friends from your phone contacts
@@ -58,30 +58,26 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
             Expanded(
               child: ListView.builder(
                 itemCount: _contacts == null ? 0 : _contacts.length,
-                itemBuilder: (context, index) =>
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 1.0, horizontal: 4.0),
-                        child: Card(
-                          child: ListTile(
-                            onTap: () {
-                              //print(friends[index].name + " was pressed");
-                              showAlertDialog(
-                                  context, _contacts.elementAt(index));
-                            },
-                            title: Text(_contacts == null
-                                ? 'no contacts selected yet'
-                                : _contacts
-                                .elementAt(index)
-                                .displayName),
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/mango.png'),
-                            ),
-                          ),
+                itemBuilder: (context, index) => Container(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 1.0, horizontal: 4.0),
+                    child: Card(
+                      child: ListTile(
+                        onTap: () {
+                          //print(friends[index].name + " was pressed");
+                          showAlertDialog(context, _contacts.elementAt(index));
+                        },
+                        title: Text(_contacts == null
+                            ? 'no contacts selected yet'
+                            : _contacts.elementAt(index).displayName),
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/mango.png'),
                         ),
                       ),
                     ),
+                  ),
+                ),
               ),
             ),
             Padding(
