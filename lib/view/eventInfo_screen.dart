@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/View/dialogs/DialogHelper.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/view/dialogs/DialogHelper.dart';
 
 /// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
 /// Furthermore it shows stuff like an event picture, how many people will attend, open or closed and also adds functionality
@@ -38,7 +38,6 @@ class _EventInfoState extends State<EventInfo> {
 
   /// eventpicture
   File eventImage;
-
 
   Widget _eventImagePlaceholder() {
     return GestureDetector(

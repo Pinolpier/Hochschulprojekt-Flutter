@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:univents/Controller/authService.dart';
-import 'package:univents/View/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));
@@ -42,7 +42,6 @@ class UniventsApp extends StatelessWidget {
             return supportedLocales.first;
           },
           home: NavigationBarUI(),
-
         ));
   }
 }

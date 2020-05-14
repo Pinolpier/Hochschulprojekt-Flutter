@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/Model/FriendslistDummies.dart';
-import 'package:univents/View/dialogs/Debouncer.dart';
-import 'package:univents/View/dialogs/DialogHelper.dart';
+import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/view/dialogs/Debouncer.dart';
+import 'package:univents/view/dialogs/DialogHelper.dart';
 
 /// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
 /// an option to directly invite friends to events and also to add new users to a group
-class FriendslistdialogScreen extends StatefulWidget{
+class FriendslistdialogScreen extends StatefulWidget {
   @override
   _FriendlistdialogScreenState createState() => _FriendlistdialogScreenState();
 }
 
 /// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
 /// button at the bottom to create a new message
-class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
-
+class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
   bool comeFromCreateEventScreen = true;
@@ -54,31 +53,29 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
           TextField(
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(10.0),
-                  hintText: "search for a friend"
-              ),
+                  hintText: "search for a friend"),
               onChanged: (string) {
                 //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                 _debouncer.run(() {
                   print(string);
                 });
-              }
-          ),
+              }),
           Expanded(
             child: ListView.builder(
                 itemCount: friends.length,
-                itemBuilder: (context, index){
+                itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 1.0, horizontal: 4.0),
                     child: Card(
                       child: ListTile(
                         onLongPress: () {
                           setState(() {
-                            friends[index].isSelected = !friends[index].isSelected;
-                            if(selected.contains(friends[index].name))
-                            {
+                            friends[index].isSelected =
+                                !friends[index].isSelected;
+                            if (selected.contains(friends[index].name)) {
                               selected.removeLast();
-                            }
-                            else {
+                            } else {
                               selected.add(friends[index].name);
                             }
                             print(selected.toString());
@@ -89,26 +86,29 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen>{
                           print(friends[index].name + " was pressed");
                         },
                         title: Text(friends[index].name),
-                        trailing: (friends[index].isSelected) ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
+                        trailing: (friends[index].isSelected)
+                            ? Icon(Icons.check_box)
+                            : Icon(Icons.check_box_outline_blank),
                         leading: GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                          },
+                          onTap: () {},
                           child: CircleAvatar(
-                            backgroundImage: AssetImage('assets/${friends[index].profilepic}'),
+                            backgroundImage: AssetImage(
+                                'assets/${friends[index].profilepic}'),
                           ),
                         ),
                       ),
                     ),
                   );
-                }
-            ),
+                }),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                comeFromCreateEventScreen == false ? DialogHelper.showChangeBioDialog(context) : Navigator.pop(context, selected);
+                comeFromCreateEventScreen == false
+                    ? DialogHelper.showChangeBioDialog(context)
+                    : Navigator.pop(context, selected);
                 //TODO: Save selected friends from list "selected" into database and send them an invite/add them to a new group, depending on the context of the actions of the user
               },
               child: Icon(Icons.check),

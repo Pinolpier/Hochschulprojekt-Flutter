@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/View/homeFeed_screen/feed_filter.dart';
-import 'package:univents/View/homeFeed_screen/feed_filter_values.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
+import 'package:univents/view/homeFeed_screen/feed_filter.dart';
+import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
 import 'feed.dart';
 

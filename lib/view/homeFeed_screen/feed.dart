@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:univents/Model/event.dart';
-import 'package:univents/View/homeFeed_screen/feedItemUI.dart';
+import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/view/homeFeed_screen/feedItemUI.dart';
 
 class Feed {
   ///widget list
