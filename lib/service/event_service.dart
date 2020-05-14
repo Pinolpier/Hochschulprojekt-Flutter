@@ -162,8 +162,8 @@ Future<Widget> getImage(String eventID) async {
 }
 
 /// returns a [List] of all available events
-/// only for developer-tests awailable!
-/// Don't use vor realse-functions!
+/// only for developer-tests available !
+/// Don't use vor real-functions!
 /// throws [PlatformException] when an error occurs while fetching data
 Future<List<Event>> getAllEvents() async {
   QuerySnapshot qShot = await db.collection(collection).getDocuments();
@@ -212,7 +212,7 @@ Event _documentSnapshotToEvent(DocumentSnapshot documentSnapshot) {
   return event;
 }
 
-/// Wrappes a [Event] into a [Map]
+/// Wraps a [Event] into a [Map]
 Map<String, dynamic> _eventToMap(Event event) {
   return {
     eventName: event.title,
@@ -276,7 +276,7 @@ String exceptionHandling(PlatformException e) {
       return ('Some requested document was not found.');
       break;
     case ('OK'):
-      //The operation completed successfully. FirebaseFirestoreException will never have a status of OK.
+    //The operation completed successfully. Firebase/Firestore Exception will never have a status of OK.
       return ('The operation completed successfully.');
       break;
     case ('OUT_OF_RANGE'):
