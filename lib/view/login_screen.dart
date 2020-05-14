@@ -1,9 +1,8 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/Controller/authService.dart';
-import 'package:univents/Model/constants.dart';
-import 'package:univents/View/profile_screen.dart';
+import 'package:univents/controller/authService.dart';
+import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
@@ -17,8 +16,8 @@ class LoginScreen extends StatefulWidget {
   State createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
   String _email = '';
@@ -31,9 +30,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   void initState() {
     super.initState();
     _logoAnimationController = new AnimationController(
-        vsync: this,
-        duration: new Duration(milliseconds: 5000)
-    );
+        vsync: this, duration: new Duration(milliseconds: 5000));
     _logoAnimation = new CurvedAnimation(
         parent: _logoAnimationController, curve: Curves.easeInOutBack);
     _logoAnimation.addListener(() => this.setState(() {}));
@@ -126,8 +123,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 Icons.lock,
                 color: Colors.white,
               ),
-              hintText: AppLocalizations.of(context).translate(
-                  'enter_password'),
+              hintText:
+                  AppLocalizations.of(context).translate('enter_password'),
               hintStyle: textStyleConstant,
             ),
             onChanged: (text) {
@@ -153,12 +150,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       alignment: Alignment.centerRight,
       child: FlatButton(
           onPressed: () => _handleForgotPassword(),
-        padding: EdgeInsets.only(right: 0.0),
-        child: Text(
-          AppLocalizations.of(context).translate('forgot_password'),
-          style: labelStyleConstant,
-        )
-      ),
+          padding: EdgeInsets.only(right: 0.0),
+          child: Text(
+            AppLocalizations.of(context).translate('forgot_password'),
+            style: labelStyleConstant,
+          )),
     );
   }
 
@@ -214,8 +210,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () =>
-          handleRegistration(),
+        onPressed: () => handleRegistration(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -266,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           elevation: 5.0,
           padding: EdgeInsets.all(15.0),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           color: Colors.white,
           child: Row(
               mainAxisSize: MainAxisSize.min,

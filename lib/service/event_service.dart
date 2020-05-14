@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:univents/Controller/authService.dart';
-import 'package:univents/Model/event.dart';
+import 'package:univents/controller/authService.dart';
+import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
 
 final db = Firestore.instance;

@@ -3,11 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/Model/constants.dart';
-import 'package:univents/View/dialogs/friendList_dialog.dart';
+import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/view/dialogs/friendList_dialog.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -43,7 +43,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   var latLongArray = new List.generate(10, (_) => new List(2));
   List<dynamic> latLongList;
-
 
   Future<void> errorEndDateTime() async {
     return showDialog<void>(

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:univents/Controller/authService.dart';
-import 'package:univents/Controller/userProfileService.dart';
+import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/service/event_service.dart';
 
 //final collectionName for all friends in database
@@ -15,13 +15,11 @@ void addFriendByEmail(String email) async {
     String friendId = await getUidFromEmail(email);
     if (friendId != null) {
       addFriend(friendId);
-    }
-    else {
+    } else {
       throw new FriendNotExistException(
           null, 'no user with this email address found');
     }
-  }
-  on Exception catch (e) {
+  } on Exception catch (e) {
     exceptionHandling(e);
   }
 }
@@ -33,13 +31,11 @@ void addFriendByUsername(String username) async {
     String friendId = await getUidFromUserName(username);
     if (friendId != null) {
       addFriend(friendId);
-    }
-    else {
+    } else {
       throw new FriendNotExistException(
           null, 'No user found with this username');
     }
-    }
-  on Exception catch (e) {
+  } on Exception catch (e) {
     exceptionHandling(e);
   }
 }
@@ -50,7 +46,7 @@ void addFriend(String friendId) async {
     String uid = getUidOfCurrentlySignedInUser();
     String friendID = friendId;
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(collection).document(uid).get();
+        await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
       friendMap[friendsList] = documentSnapshot.data[friendsList];
@@ -69,8 +65,7 @@ void addFriend(String friendId) async {
           merge: true);
       await batch.commit();
     }
-  }
-  on Exception catch (exception) {
+  } on Exception catch (exception) {
     exceptionHandling(exception);
   }
 }
@@ -81,7 +76,7 @@ void removeFriend(String friendId, String groupName) async {
   try {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(collection).document(uid).get();
+        await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
       friendMap[friendsList] = documentSnapshot.data[friendsList];
@@ -114,7 +109,7 @@ Future<Map<String, dynamic>> getFriends() async {
   try {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(collection).document(uid).get();
+        await firebaseInstance.collection(collection).document(uid).get();
     return documentSnapshot.data;
   } on Exception catch (e) {
     exceptionHandling(e);
@@ -126,7 +121,7 @@ void addUserToGroup(String userId, String groupName) async {
   try {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
-    await firebaseInstance.collection(collection).document(uid).get();
+        await firebaseInstance.collection(collection).document(uid).get();
     Map<String, List<dynamic>> friendMap = new Map();
     if (documentSnapshot.exists) {
       friendMap[groupName] = documentSnapshot.data[groupName];
@@ -173,15 +168,15 @@ class FriendsException implements Exception {
 
   String toString() {
     return (_message != null
-        ? _message
-        : "no Message has been provided when this instance of Backend Exception was created.") +
+            ? _message
+            : "no Message has been provided when this instance of Backend Exception was created.") +
         " " +
         (_originalException != null
             ? (_originalException.toString() != null &&
-            _originalException.toString() != ""
-            ? "Originale exception's message was :" +
-            _originalException.toString()
-            : "Original exception had no or an empty message.")
+                    _originalException.toString() != ""
+                ? "Originale exception's message was :" +
+                    _originalException.toString()
+                : "Original exception had no or an empty message.")
             : "no original exception has been provided when this instance of Backend exception was created.");
   }
 }
@@ -192,8 +187,8 @@ class FriendNotExistException extends FriendsException {
 }
 
 class FriendAlreadyInListException extends FriendsException {
-  const FriendAlreadyInListException(Exception originalException,
-      String message)
+  const FriendAlreadyInListException(
+      Exception originalException, String message)
       : super(originalException, message);
 }
 

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:univents/Model/authExceptions.dart';
+import 'package:univents/model/authExceptions.dart';
 
 /// These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -43,38 +43,38 @@ Future<bool> googleSignIn() async {
   //the following code is from this tutorial with slight changes made: https://blog.codemagic.io/firebase-authentication-google-sign-in-using-flutter/
   try {
     final GoogleSignInAccount _googleAccountToSignIn =
-    await _googleSignIn.signIn();
+        await _googleSignIn.signIn();
     if (_googleAccountToSignIn != null) {
       final GoogleSignInAuthentication _googleSignInAuthentication =
-      await _googleAccountToSignIn.authentication;
+          await _googleAccountToSignIn.authentication;
       final AuthCredential _credentials = GoogleAuthProvider.getCredential(
           idToken: _googleSignInAuthentication.idToken,
           accessToken: _googleSignInAuthentication.accessToken);
       try {
         final AuthResult _authResult =
-        await _auth.signInWithCredential(_credentials);
+            await _auth.signInWithCredential(_credentials);
         _user = _authResult.user;
       } on PlatformException catch (platformException) {
         switch (platformException.code) {
           case "ERROR_INVALID_CREDENTIAL":
-          //If the credential data is malformed or has expired.
+            //If the credential data is malformed or has expired.
             break;
           case "ERROR_USER_DISABLED":
-          //If the user has been disabled (for example, in the Firebase console)
+            //If the user has been disabled (for example, in the Firebase console)
             throw new UserDisabledException(
                 platformException,
                 "The userAccount that tried to sign in with Google was disabled. Credentilas were: " +
                     _credentials.toString());
             break;
           case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-          //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
-          // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
+            //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
+            // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
             break;
           case "ERROR_OPERATION_NOT_ALLOWED":
-          //Indicates that Google accounts are not enabled.
+            //Indicates that Google accounts are not enabled.
             break;
           case "ERROR_INVALID_ACTION_CODE":
-          //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
+            //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
             break;
         }
       }
@@ -112,43 +112,42 @@ Future<bool> appleSignIn() async {
       final _credentials = oAuthProvider.getCredential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
           accessToken:
-          String.fromCharCodes(appleIdCredential.authorizationCode));
+              String.fromCharCodes(appleIdCredential.authorizationCode));
       try {
         final authResult = await _auth.signInWithCredential(_credentials);
         _user = authResult.user;
         final updateUser = UserUpdateInfo();
         updateUser.displayName =
-        '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName
-            .familyName}';
+            '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
         await _user.updateProfile(updateUser);
         return true;
       } on PlatformException catch (platformException) {
         switch (platformException.code) {
           case "ERROR_INVALID_CREDENTIAL":
-          //If the credential data is malformed or has expired.
+            //If the credential data is malformed or has expired.
             break;
           case "ERROR_USER_DISABLED":
-          //If the user has been disabled (for example, in the Firebase console)
+            //If the user has been disabled (for example, in the Firebase console)
             throw new UserDisabledException(
                 platformException,
                 "The userAccount that tried to sign in with Apple was disabled. Credentilas were: " +
                     _credentials.toString());
             break;
           case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-          //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
-          // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
+            //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
+            // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
             break;
           case "ERROR_OPERATION_NOT_ALLOWED":
-          //Indicates that Google accounts are not enabled.
+            //Indicates that Google accounts are not enabled.
             break;
           case "ERROR_INVALID_ACTION_CODE":
-          //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
+            //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
             break;
         }
       }
       break;
     case AuthorizationStatus.error:
-    //TODO good exception handling here
+      //TODO good exception handling here
       print("AppleSignIn AuthorizationStatus Error occured: " +
           result.error.toString());
       //Throw an exception here
@@ -171,7 +170,7 @@ Future<bool> appleSignIn() async {
 Future<bool> signInWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.signInWithEmailAndPassword(
-        email: email, password: password))
+            email: email, password: password))
         .user;
   } on PlatformException catch (platformException) {
     switch (platformException.code) {
@@ -200,8 +199,7 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
     print("An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
     print(
-        "SomeWTFthing has happend! Object of type ${fatal
-            .runtimeType} has been thrown. Trying to print it: $fatal");
+        "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
   }
   return _user != null ? true : false;
 }
@@ -215,13 +213,13 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
 Future<bool> registerWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.createUserWithEmailAndPassword(
-        email: email, password: password))
+            email: email, password: password))
         .user;
   } on PlatformException catch (platformException) {
     print(platformException);
     switch (platformException.code) {
       case "ERROR_WEAK_PASSWORD":
-      //at least 6 characters needed
+        //at least 6 characters needed
         break;
       case "ERROR_INVALID_EMAIL":
         throw new NotAnEmailException(platformException,
@@ -236,8 +234,7 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
     print("An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
     print(
-        "SomeWTFthing has happend! Object of type ${fatal
-            .runtimeType} has been thrown. Trying to print it: $fatal");
+        "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
   }
   return _user != null ? true : false;
 }
@@ -251,7 +248,7 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
     await _auth.sendPasswordResetEmail(email: email);
   } on PlatformException catch (platformException) {
     switch (platformException.code) {
-    //TODO correct error handling
+      //TODO correct error handling
       case "ERROR_INVALID_EMAIL":
         throw new NotAnEmailException(platformException,
             "The email ($email) is not an email. This should have been checked by the login screen BEFORE submitting a password reset email request!");
@@ -264,8 +261,7 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
     print("An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
     print(
-        "SomeWTFthing has happend! Object of type ${fatal
-            .runtimeType} has been thrown. Trying to print it: $fatal");
+        "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
   }
 }
 
