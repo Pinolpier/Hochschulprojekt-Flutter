@@ -90,7 +90,9 @@ Future<List<Event>> getEvents() async {
     // x = x.where(attendees, arrayContainsany:_friendIdFilter);
   }
   QuerySnapshot querySnapshot = await x.getDocuments();
-  return _snapShotToList(querySnapshot);
+  List<Event> eventList = _snapShotToList(querySnapshot);
+  addEventIdToObjects(eventList, querySnapshot);
+  return eventList;
 }
 
 /// adds [Event] data to the database
