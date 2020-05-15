@@ -9,7 +9,6 @@ class UserProfile {
   UserProfile(this._uid, this._username, this._email, this._forename,
       this._surname, this._biography);
 
-
   UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot,
       String uid) {
     _uid = uid;
@@ -24,7 +23,7 @@ class UserProfile {
     return 'UserProfile{_uid: $_uid, _username: $_username, _email: $_email, _forename: $_forename, _surname: $_surname, _biography: $_biography}';
   }
 
-  Map <String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'username': _username,
       'email': _email,
@@ -69,5 +68,4 @@ class UserProfile {
   set uid(String value) {
     _uid = value;
   }
-
 }

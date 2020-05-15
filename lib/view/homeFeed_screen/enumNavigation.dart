@@ -1,6 +1,3 @@
 enum Navigation {
-  HOME,
-  MAP,
-  FRIENDS,
-  PROFILE,
+  HOME, MAP, FRIENDS, PROFILE,
 }

@@ -11,7 +11,8 @@ import 'package:univents/service/utils/imagePickerUnivents.dart';
 
 import 'dialogs/DialogHelper.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatefulWidget  {
+
   @override
   _ProfileScreenState createState() => new _ProfileScreenState();
 }
@@ -19,22 +20,15 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _textControllerUsername = TextEditingController();
   final _textControllerFirstName = TextEditingController();
-  final _textControllerLastName = TextEditingController();
-  String bioText =
-      "oops seems like firebase doesnt have any text saved for your bio yet"; //TODO: get bio text from firebase and initialize it to the variable name
-  String firstName =
-      "First Name"; //TODO: Fill this with unique username of User from firebase
-  String lastName =
-      "Last Name"; //TODO: Fill this with unique username of User from firebase
-  String userName =
-      "univentsuser123"; //TODO: Fill this with unique username of User from firebase
-  String emailAddress =
-      "test@email.com"; //TODO: Fill this with email adress of User from firebase
+  final _textControllerLastname = TextEditingController();
+  String bioText = "oops seems like firebase doesnt have any text saved for your bio yet";    //TODO: get bio text from firebase and initialize it to the variable name
+  String firstName = "First Name";                 //TODO: Fill this with unique username of User from firebase
+  String lastName = "Last Name";                 //TODO: Fill this with unique username of User from firebase
+  String userName = "univentsuser123";          //TODO: Fill this with unique username of User from firebase
+  String emailAddress = "test@email.com";        //TODO: Fill this with email adress of User from firebase
   File profilepic;
-  bool isProfileOwner =
-      false; //TODO: set this to true if the user is the profile owner and to false if hes not
-  bool createProfile =
-      true; //TODO: set this to true if the user uses the screen to create his new profile
+  bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
+  bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -66,11 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: isProfileOwner == true && createProfile == false
-            ? Text("Your Profile")
-            : isProfileOwner == false && createProfile == false
-                ? Text("Profile of " + userName)
-                : Text("Create your Profile"),
+        title: isProfileOwner == true && createProfile == false ? Text("Your Profile") : isProfileOwner == false && createProfile == false ? Text("Profile of " + userName)
+        : Text("Create your Profile"),
         centerTitle: true,
       ),
       body: new Stack(
@@ -82,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: <Widget>[
                   Container(
-                      color: Colors.grey,
+                    color: Colors.grey,
                       width: 130.0,
                       height: 130.0,
                       child: SizedBox(
@@ -93,184 +84,140 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             : _profilePicture(),
                       )),
                   SizedBox(height: 50.0),
-                  createProfile == false
-                      ? Text(
-                          firstName + " " + lastName,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Montserrat'),
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              width: 300.0,
-                              child: TextField(
-                                controller: _textControllerFirstName,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(10.0),
-                                  hintText: AppLocalizations.of(context)
-                                      .translate('first_name'),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10.0),
-                            Container(
-                              width: 300.0,
-                              child: TextField(
-                                controller: _textControllerLastName,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(10.0),
-                                  hintText: AppLocalizations.of(context)
-                                      .translate("last_name"),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                  SizedBox(height: 10.0),
-                  createProfile == false
-                      ? Text(
-                          userName,
-                          style: TextStyle(
-                              fontSize: 17.0,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Montserrat'),
-                        )
-                      : Container(
-                          width: 300.0,
-                          child: TextField(
-                            controller: _textControllerUsername,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              hintText: AppLocalizations.of(context)
-                                  .translate('username'),
-                            ),
+                  createProfile == false ? Text(firstName + " " + lastName,
+                    style: TextStyle(
+                      color: Colors.white,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat'),
+                  ) : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: 300.0,
+                        child: TextField(
+                          controller: _textControllerFirstName,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10.0),
+                            hintText: AppLocalizations.of(context).translate('first_name'),
                           ),
                         ),
-                  SizedBox(height: 10.0),
-                  createProfile == false
-                      ? Text(
-                          emailAddress,
-                          style: TextStyle(
-                              fontSize: 17.0,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Montserrat'),
-                        )
-                      : Text(
-                          getEmailOfCurrentlySignedInUser(),
-                          style: TextStyle(
-                              fontSize: 17.0,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Montserrat'),
+                      ),
+                      SizedBox(height: 10.0),
+                      Container(
+                        width: 300.0,
+                        child: TextField(
+                          controller: _textControllerLastname,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10.0),
+                            hintText: AppLocalizations.of(context).translate("last_name"),
+                          ),
                         ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.0),
+                  createProfile == false ? Text(userName,
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Montserrat'),
+                  ) : Container(
+                    width: 300.0,
+                    child: TextField(
+                      controller: _textControllerUsername,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10.0),
+                        hintText: AppLocalizations.of(context).translate('username'),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  createProfile == false ? Text(emailAddress,
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Montserrat'),
+                  ) : Text(getEmailOfCurrentlySignedInUser(),
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Montserrat'),
+                  ),
                   SizedBox(height: 20.0),
-                  createProfile == false
-                      ? Text(
-                          bioText,
-                          style: TextStyle(
-                              fontSize: 17.0,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Montserrat'),
-                        )
-                      : SizedBox(height: 0.0),
+                  createProfile == false ? Text(bioText,
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Montserrat'),
+                  ) : SizedBox(height: 0.0),
                   SizedBox(height: 25.0),
                   Container(
                       height: 30.0,
-                      width: isProfileOwner == true
-                          ? 95.0
-                          : isProfileOwner == false ? 150.0 : null,
+                      width: isProfileOwner == true ? 95.0 : isProfileOwner == false ? 150.0 : null,
                       child: Material(
-                          borderRadius: BorderRadius.circular(20.0),
-                          shadowColor: Colors.grey,
-                          color: Colors.black45,
-                          elevation: 7.0,
-                          child: isProfileOwner == true &&
-                                  createProfile == false
-                              ? GestureDetector(
-                                  onTap: () {
-                                    DialogHelper.showChangeBioDialog(context);
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('edit_bio'),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Montserrat'),
-                                    ),
-                                  ),
-                                )
-                              : isProfileOwner == false &&
-                                      createProfile == false
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        showAlertDialog(context);
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)
-                                              .translate(
-                                                  'send_friends_request'),
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Montserrat'),
-                                        ),
-                                      ),
-                                    )
-                                  : createProfile == true &&
-                                          isProfileOwner == false
-                                      ? GestureDetector(
-                                          onTap: () async {
-                                            setState(() {
-                                              userName =
-                                                  _textControllerUsername.text;
-                                              firstName =
-                                                  _textControllerFirstName.text;
-                                              lastName =
-                                                  _textControllerLastName.text;
-                                            });
-                                            if (userName != null &&
-                                                userName.trim().isNotEmpty) {
-                                              UserProfile userProfile = new UserProfile(
-                                                  getUidOfCurrentlySignedInUser(),
-                                                  userName,
-                                                  getEmailOfCurrentlySignedInUser(),
-                                                  firstName,
-                                                  lastName,
-                                                  null);
-                                              await updateProfile(userProfile);
-                                              await updateImage(
-                                                  profilepic, userProfile);
-                                            } else {
-                                              Fluttertoast.showToast(
-                                                  msg: AppLocalizations.of(
-                                                          context)
-                                                      .translate(
-                                                          'profile_screen_toast'),
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.CENTER,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0);
-                                            }
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              AppLocalizations.of(context)
-                                                  .translate('confirm'),
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: 'Montserrat'),
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(height: 0.0))),
-                ],
+                        borderRadius: BorderRadius.circular(20.0),
+                        shadowColor: Colors.grey,
+                        color: Colors.black45,
+                        elevation: 7.0,
+                        child: isProfileOwner == true && createProfile == false ? GestureDetector(
+                          onTap: () {
+                            DialogHelper.showChangeBioDialog(context);
+                          },
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context).translate(
+                                  'edit_bio'),
+                              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                            ),
+                          ),)
+                         : isProfileOwner == false && createProfile == false ? GestureDetector(
+                          onTap: () {
+                            showAlertDialog(context);
+                          },
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context).translate(
+                                  'send_friends_request'),
+                              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                            ),
+                          ),
+                        ) : createProfile == true  && isProfileOwner == false ? GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              userName = _textControllerUsername.text;
+                              firstName = _textControllerFirstName.text;
+                              lastName = _textControllerLastname.text;
+                            });
+                            if(userName != null && userName.trim().isNotEmpty) {
+                              UserProfile userProfile = new UserProfile(
+                                  getUidOfCurrentlySignedInUser(), userName,
+                                  getEmailOfCurrentlySignedInUser(), firstName,
+                                  lastName, null);
+                              await updateProfile(userProfile);
+                              await updateImage(profilepic, userProfile);
+                            }
+                            else {
+                              Fluttertoast.showToast(
+                                  msg: AppLocalizations.of(context).translate('profile_screen_toast'),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context).translate(
+                                  'confirm'),
+                              style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                            ),
+                          ),) : SizedBox(height: 0.0)
+                      )),
+                  ],
               ))
         ],
       ),
@@ -278,16 +225,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   showAlertDialog(BuildContext context) {
+
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text(AppLocalizations.of(context).translate('cancel')),
-      onPressed: () {
+      onPressed:  () {
         Navigator.pop(context);
       },
     );
     Widget confirmButton = FlatButton(
       child: Text(AppLocalizations.of(context).translate('confirm')),
-      onPressed: () {
+      onPressed:  () {
         //contact.emails.forEach((item) {
         //print(item.value);
         // });

@@ -45,6 +45,9 @@ dependencies:
   #The following dependency enables us to use Firebase Cloud Storage
   firebase_storage: ^3.1.5
 
+  #The following dependency enables us to use Firebase Cloud functions
+  cloud_functions: ^0.4.2+3
+
   #The following dependency enables us to use the native share window
   share: ^0.6.4
 

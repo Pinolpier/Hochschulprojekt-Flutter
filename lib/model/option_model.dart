@@ -23,7 +23,8 @@ final options = [
   Option(
     icon: Icon(Icons.contacts, size: 40.0),
     title: 'Invite Friends',
-    subtitle: 'if you enjoy using our app please consider inviting your friends through this option',
+    subtitle:
+    'if you enjoy using our app please consider inviting your friends through this option',
   ),
   Option(
     icon: Icon(Icons.star, size: 40.0),
@@ -33,7 +34,8 @@ final options = [
   Option(
     icon: Icon(Icons.developer_mode, size: 40.0),
     title: 'Feedback',
-    subtitle: 'give us feedback on our app or report bugs here to help us improve further in the future',
+    subtitle:
+    'give us feedback on our app or report bugs here to help us improve further in the future',
   ),
   Option(
     icon: Icon(Icons.dvr, size: 40.0),

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:univents/controller/authService.dart';
@@ -42,11 +41,13 @@ Map<String, String> _urlToID = new Map();
 /// uploads the data into the database when creating an [Event]
 /// if a [File] is also handed over, it is also uploaded and the
 /// url for the file is assigned to the event
+/// throws [PlatformException] when an Error occurs while storing
+/// a Event in the database
 void createEvent(File image, Event event) async {
   event.ownerIds.add(getUidOfCurrentlySignedInUser());
   String eventID = await _addData(event);
   if (image != null) {
-    Map<String, dynamic> eventMap;
+    Map<String, dynamic> eventMap = new Map();
     String imageURL = await uploadImage(collection, image, eventID);
     eventMap[imageUrl] = imageURL;
     _urlToID[eventID] = imageURL;
@@ -56,6 +57,8 @@ void createEvent(File image, Event event) async {
 
 /// fetches a [List] of events from the database and checks
 /// which filters are set
+/// throws [PlatformException] when an error occurs while Fetching data
+/// from Database
 Future<List<Event>> getEvents() async {
   var x;
   String uid = await getUidOfCurrentlySignedInUser();
@@ -87,71 +90,63 @@ Future<List<Event>> getEvents() async {
     // x = x.where(attendees, arrayContainsany:_friendIdFilter);
   }
   QuerySnapshot querySnapshot = await x.getDocuments();
-  return _snapShotToList(querySnapshot);
+  List<Event> eventList = _snapShotToList(querySnapshot);
+  addEventIdToObjects(eventList, querySnapshot);
+  return eventList;
 }
 
 /// adds [Event] data to the database
+/// throws [PlatformException] when an Error occurs while
+/// updating Data in Database
 Future<String> _addData(Event event) async {
-  try {
     DocumentReference documentReference =
         await db.collection(collection).add(_eventToMap(event));
     return documentReference.documentID;
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
 }
 
 /// updates an event in the database based on an [Event]
+/// throws [PlatformException] when Error occurs while updating Data
 void updateData(Event event) async {
-  try {
     if (event.eventID != null)
       db
           .collection(collection)
           .document(event.eventID)
           .updateData(_eventToMap(event));
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
 }
 
 /// in order to change an image of an event, the new [image] and the relevant [event] must be transferred
+/// throws [PlatformException] when an Error occurs while
+/// updating Image from Database
 void updateImage(File image, Event event) async {
-  try {
     await deleteImage(collection, event.eventID);
     String url = await uploadImage(collection, image, event.eventID);
     _urlToID[event.eventID] = url;
     event.imageURL = url;
     updateData(event);
-  } on Exception catch (e) {
-    exceptionHandling(e);
-  }
 }
 
 /// adds data to a existing field in the database based
 /// on a [String] with the eventID and a [Map] with the new data
+/// throws [PlatformException] when an Error occurs while
+/// updating Event from Database
 void updateField(String eventID, Map<dynamic, dynamic> map) {
-  try {
     db.collection(collection).document(eventID).updateData(map);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
 }
 
 /// deletes an event in the database based on an [Event]
+/// throws [PlatformException] when an Error occurs while
+/// deleting Event from Database
 deleteEvent(Event event) async {
   if (event.eventID != null) {
-    try {
       if (event.imageURL != null) {
         deleteImage(event.eventID, collection);
       }
       db.collection(collection).document(event.eventID).delete();
-    } on PlatformException catch (e) {
-      exceptionHandling(e);
-    }
   }
 }
 
 /// Returns a [Widget] with a image based on an [String] eventID
+/// throws [PlatformException] when an Error occurs while Fetching imageURL
 Future<Widget> getImage(String eventID) async {
   String url;
   if (_urlToID.containsKey(eventID)) {
@@ -168,174 +163,17 @@ Future<Widget> getImage(String eventID) async {
     throw new Exception('no Image available');
 }
 
-/// Returns a [Event] based on the [eventID]
-Future<Event> _getEventByID(String eventID) async {
-  DocumentSnapshot documentSnapshot =
-      await db.collection(collection).document(eventID).get();
-  Event event = _documentSnapshotToEvent(documentSnapshot);
-  event.eventID = documentSnapshot.documentID;
-  return event;
-}
-
-/// returns a [List] of events based on a [Timestamp]
-/// start and [Timestamp] stopDate
-Future<List<Event>> getEventsByStartAndStopDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(startDate, isGreaterThanOrEqualTo: start)
-        .where(endDate, isLessThanOrEqualTo: stop)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a [Timestamp] startDate
-Future<List<Event>> _getEventsByStartDate(Timestamp start) async {
-  try {
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(startDate, isLessThanOrEqualTo: start)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a [Timestamp] endDate
-Future<List<Event>> _getEventsByEndDate(Timestamp stop) async {
-  try {
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(endDate, isGreaterThanOrEqualTo: stop)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on [Timestamp] startDate ,
-/// [Timestamp] stopDate and a [List] of Strings including the tags
-Future<List<Event>> getEventsByStartStopdateAndTag(
-    Timestamp start, Timestamp stop, List<String> tags) async {
-  try {
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(startDate, isLessThanOrEqualTo: start)
-        .where(endDate, isGreaterThanOrEqualTo: stop)
-        .where(tags, arrayContainsAny: tags)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a [Timestamp] startDate
-Future<List<Event>> getUsersEvents() async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(attendees, arrayContains: uid)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a [Timestamp]
-/// start and [Timestamp] stopDate for the current User
-Future<List<Event>> getEventsByUserAndStartAndStopDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(attendees, arrayContains: uid)
-        .where(startDate, isGreaterThanOrEqualTo: start)
-        .where(endDate, isLessThanOrEqualTo: stop)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a
-/// [Timestamp] stopDate for the current User
-Future<List<Event>> getEventsByUserAndStopDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(attendees, arrayContains: uid)
-        .where(endDate, isLessThanOrEqualTo: stop)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a
-/// [Timestamp] startDate for the current User
-Future<List<Event>> getEventsByUserAndStartDate(
-    Timestamp start, Timestamp stop) async {
-  try {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .where(attendees, arrayContains: uid)
-        .where(startDate, isGreaterThanOrEqualTo: start)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
-/// returns a [List] of events based on a
-/// [List] with tags
-Future<List<Event>> getEventsByTags(List<String> tagsList) async {
-  try {
-    QuerySnapshot qShot = await db
-        .collectionGroup(collection)
-        .reference()
-        .where(tags, arrayContainsAny: tagsList)
-        .getDocuments();
-    return addEventIdToObjects(_snapShotToList(qShot), qShot);
-  } on PlatformException catch (e) {
-    exceptionHandling(e);
-  }
-}
-
 /// returns a [List] of all available events
+/// only for developer-tests available !
+/// Don't use vor real-functions!
+/// throws [PlatformException] when an error occurs while fetching data
 Future<List<Event>> getAllEvents() async {
   QuerySnapshot qShot = await db.collection(collection).getDocuments();
   return addEventIdToObjects(_snapShotToList(qShot), qShot);
 }
 
 /// returns a [List] of events that was created based
-/// on a [QuerySnapshot]
+/// on a [QuerySnapshot] returns nothing when no Event was found
 List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
@@ -376,7 +214,7 @@ Event _documentSnapshotToEvent(DocumentSnapshot documentSnapshot) {
   return event;
 }
 
-/// Wrappes a [Event] into a [Map]
+/// Wraps a [Event] into a [Map]
 Map<String, dynamic> _eventToMap(Event event) {
   return {
     eventName: event.title,
@@ -402,69 +240,71 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
   return eventList;
 }
 
-/// handles errors by [PlatformException]
-void exceptionHandling(PlatformException e) {
+/// handles errors by [PlatformException] and returns a [String]
+/// with the Error message
+/// can be used by method caller to translate exception to a simple message
+String exceptionHandling(PlatformException e) {
   switch (e.code) {
     case ('ABORTED'):
-      print(
+      return (
           'The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.');
       break;
     case ('ALREADY_EXISTS'):
-      print('Some document that we attempted to create already exists.');
+      return ('Some document that we attempted to create already exists.');
       break;
     case ('CANCELLED'):
-      print('The operation was cancelled (typically by the caller).');
+      return ('The operation was cancelled (typically by the caller).');
       break;
     case ('DATA_LOSS'):
-      print('Unrecoverable data loss or corruption.');
+      return ('Unrecoverable data loss or corruption.');
       break;
     case ('DEADLINE_EXCEEDED'):
-      print(
+      return (
           'Deadline expired before operation could complete. For operations that change the state of the system, this error may be returned even if the operation has completed successfully. For example, a successful response from a server could have been delayed long enough for the deadline to expire.');
       break;
     case ('FAILED_PRECONDITION'):
-      print(
+      return (
           'Operation was rejected because the system is not in a state required for the operations execution.');
       break;
     case ('INTERNAL'):
-      print(
+      return (
           'Internal errors. Means some invariants expected by underlying system has been broken. If you see one of these errors, something is very broken.');
       break;
     case ('INVALID_ARGUMENT'):
-      print(
+      return (
           'Client specified an invalid argument. Note that this differs from FAILED_PRECONDITION. INVALID_ARGUMENT indicates arguments that are problematic regardless of the state of the system (e.g., an invalid field name).');
       break;
     case ('NOT_FOUND'):
-      print('Some requested document was not found.');
+      return ('Some requested document was not found.');
       break;
     case ('OK'):
-      //The operation completed successfully. FirebaseFirestoreException will never have a status of OK.
-      print('The operation completed successfully.');
+    //The operation completed successfully. Firebase/Firestore Exception will never have a status of OK.
+      return ('The operation completed successfully.');
       break;
     case ('OUT_OF_RANGE'):
-      print('Operation was attempted past the valid range.');
+      return ('Operation was attempted past the valid range.');
       break;
     case ('PERMISSION_DENIED'):
-      print(
+      return (
           'The caller does not have permission to execute the specified operation.');
       break;
     case ('RESOURCE_EXHAUSTED'):
-      print(
+      return (
           'Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.');
       break;
     case ('UNAUTHENTICATED'):
-      print(
+      return (
           'The request does not have valid authentication credentials for the operation.');
       break;
     case ('UNAVAILABLE'):
-      print(
+      return (
           'The service is currently unavailable. This is a most likely a transient condition and may be corrected by retrying with a backoff.');
       break;
     case ('UNIMPLEMENTED'):
-      print('Operation is not implemented or not supported/enabled.');
+      return ('Operation is not implemented or not supported/enabled.');
       break;
     case ('UNKNOWN'):
-      print('Unknown error or an error from a different error domain.');
+      return ('Unknown error or an error from a different error domain.');
       break;
   }
 }

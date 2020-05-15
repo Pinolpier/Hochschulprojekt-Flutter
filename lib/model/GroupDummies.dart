@@ -1,12 +1,10 @@
 /// dummie class to test the listview
-class GroupDummies{
+class GroupDummies {
   String name;
   String profilepic;
   bool isSelected = false;
 
-  GroupDummies({
-    this.name, this.profilepic
-  });
+  GroupDummies({this.name, this.profilepic});
 
   String getName() {
     return name;
