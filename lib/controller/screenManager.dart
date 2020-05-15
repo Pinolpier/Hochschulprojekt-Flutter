@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:univents/Controller/userProfileService.dart';
-import 'package:univents/View/friendList_screen.dart';
-import 'package:univents/View/login_screen.dart';
-import 'package:univents/View/profile_screen.dart';
+import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/view/friendList_screen.dart';
+import 'package:univents/view/login_screen.dart';
+import 'package:univents/view/profile_screen.dart';
 
 /// This class is used to handle to show the correct screen depending on whether a user is logged in or not.
 /// The shown screen changes automatically as a user signs in or out.

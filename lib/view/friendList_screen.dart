@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/Model/FriendslistDummies.dart';
-import 'package:univents/Model/GroupDummies.dart';
-import 'package:univents/View/dialogs/Debouncer.dart';
-import 'package:univents/View/dialogs/DialogHelper.dart';
+import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/model/GroupDummies.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/view/dialogs/Debouncer.dart';
+import 'package:univents/view/dialogs/DialogHelper.dart';
 
 class FriendlistScreen extends StatefulWidget{
   @override
