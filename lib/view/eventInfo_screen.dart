@@ -98,8 +98,6 @@ class _EventInfoState extends State<EventInfo> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
       isEventOpen = !widget.event.privateEvent;
@@ -108,7 +106,6 @@ class _EventInfoState extends State<EventInfo> {
       eventName = widget.event.title;
       eventLocation = widget.event.location;
       eventText = widget.event.description;
-      eventImage = null;
 
       return Scaffold(
         body: Stack(
@@ -144,7 +141,7 @@ class _EventInfoState extends State<EventInfo> {
                               SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: _result == null ?  CircularProgressIndicator() : eventimagewidget != null ? eventimagewidget : eventImage == null ? _eventImagePlaceholder() : _eventImage(), //TODO not working correctly
+                                child: _result == null ?  CircularProgressIndicator() : eventimagewidget != null ? eventimagewidget : eventImage == null ? _eventImagePlaceholder() : _eventImage(),
                               ),
                               SizedBox(
                                 width: 16,
@@ -199,8 +196,7 @@ class _EventInfoState extends State<EventInfo> {
                               Column(
                                 children: <Widget>[
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
                                       GestureDetector(
                                           onTap: () {
@@ -240,8 +236,7 @@ class _EventInfoState extends State<EventInfo> {
                               Column(
                                 children: <Widget>[
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(
                                         Icons.favorite,
@@ -269,11 +264,20 @@ class _EventInfoState extends State<EventInfo> {
                                   )
                                 ],
                               ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        Container(
+                          padding: EdgeInsets.all(32),
+                          color: Colors.blue,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
                               Column(
                                 children: <Widget>[
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(
                                         Icons.calendar_today,
@@ -355,10 +359,7 @@ class _EventInfoState extends State<EventInfo> {
                               ),
                               //for list of clients
                               Container(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 64,
+                                width: MediaQuery.of(context).size.width - 64,
                                 height: 80,
                                 child: ListView.builder(
                                   itemBuilder: (context, index) {
