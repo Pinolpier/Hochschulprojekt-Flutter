@@ -69,15 +69,19 @@ class _EventInfoState extends State<EventInfo> {
             eventImage = eventImageAsync;
           }); // handle your image tap here
         },
-        child: Image.network(widget.event.eventID, height: 150));
+        child: Image.file(eventImage, height: 150));
   }
 
   Future<bool> loadAsyncData() async {
     await signInWithEmailAndPassword("j.oster@gmx.net", "pass1234");
-    try {
-      eventimagewidget = await getImage(widget.event.eventID);
-    } on Exception catch (e) {
-      print(e);
+    if (widget.event.imageURL != null) {
+      try {
+        eventimagewidget = await getImage(widget.event.eventID);
+      } on Exception catch (e) {
+        print(e);
+      }
+    } else {
+      eventimagewidget = null;
     }
     return true;
   }
@@ -140,7 +144,7 @@ class _EventInfoState extends State<EventInfo> {
                               SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: _result == null ?  CircularProgressIndicator() : eventimagewidget,
+                                child: _result == null ?  CircularProgressIndicator() : eventimagewidget != null ? eventimagewidget : eventImage == null ? _eventImagePlaceholder() : _eventImage(), //TODO not working correctly
                               ),
                               SizedBox(
                                 width: 16,
