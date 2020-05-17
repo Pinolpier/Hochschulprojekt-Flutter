@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/map_screen.dart';
 
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));
@@ -41,7 +42,7 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: NavigationBarUI(),
+          home: MapScreen(),
         ));
   }
 }

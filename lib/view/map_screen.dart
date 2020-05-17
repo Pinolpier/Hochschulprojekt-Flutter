@@ -57,6 +57,8 @@ class _MapScreenState extends State<MapScreen> {
                     MaterialPageRoute(
                       builder: (context) => new EventInfo(e),
                     ));
+                print(e.eventID);
+                print(e.imageURL);
               },
               child: Icon(
                 Icons.location_on,

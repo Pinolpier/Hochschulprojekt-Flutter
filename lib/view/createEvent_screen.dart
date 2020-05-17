@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
@@ -391,7 +392,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               widget.tappedPoint[0],
               widget.tappedPoint[1]);
 
-          createEvent(eventImage, event);
+          try {
+            createEvent(eventImage, event);
+          } on PlatformException catch (e) {
+            exceptionHandling(e);
+          }
 
           Navigator.pop(context);
         },

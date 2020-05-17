@@ -13,7 +13,7 @@ class Event {
   String _latitude, _longitude;
   List<dynamic> _attendeesIds;
   List<dynamic> _tagsList;
-  List<dynamic> _ownerIds;
+  List<dynamic> _ownerIds = new List();
   File image;
   String _imageURL;
 
