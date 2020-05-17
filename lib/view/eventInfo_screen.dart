@@ -2,13 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/model/event.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
+import 'package:univents/service/utils/imagePickerUnivents.dart';
 
 /// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
 /// Furthermore it shows stuff like an event picture, how many people will attend, open or closed and also adds functionality
 /// so that the user can change the event picture and set the event to private or open
 class EventInfo extends StatefulWidget {
+  final Event event;
+  EventInfo(this.event, {Key key}) : super(key : key);
+
   @override
   _EventInfoState createState() => _EventInfoState();
 }
@@ -17,11 +21,10 @@ class _EventInfoState extends State<EventInfo> {
   DateTime now = new DateTime.fromMicrosecondsSinceEpoch(
       new DateTime.now().millisecondsSinceEpoch);
 
-  /// if the event is open for everyone or private
   bool isEventOpen = true;
 
   /// how many people promised to attend
-  String eventAttendeesCount = "400";
+  int eventAttendeesCount = 400;
 
   /// the date on which the event holds place
   String eventDate = "24.04";
@@ -33,11 +36,10 @@ class _EventInfoState extends State<EventInfo> {
   String eventLocation = 'Hochschule Heilbronn';
 
   /// description of the event (set by event creator)
-  String eventText =
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
-
+  String eventText = 'Lorem Ipsum';
   /// eventpicture
   File eventImage;
+
 
   Widget _eventImagePlaceholder() {
     return GestureDetector(
@@ -65,6 +67,14 @@ class _EventInfoState extends State<EventInfo> {
 
   @override
   Widget build(BuildContext context) {
+    isEventOpen = !widget.event.privateEvent;
+    eventAttendeesCount = widget.event.attendeesIds.length;
+    eventDate = widget.event.eventStartDate.toIso8601String();
+    eventName = widget.event.title;
+    eventLocation = widget.event.location;
+    eventText = widget.event.description;
+    eventImage = widget.event.image;
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -163,29 +173,29 @@ class _EventInfoState extends State<EventInfo> {
                                         },
                                         child: isEventOpen == true
                                             ? Icon(
-                                                Icons.lock_open,
-                                                color: Colors.white,
-                                                size: 30,
-                                              )
+                                          Icons.lock_open,
+                                          color: Colors.white,
+                                          size: 30,
+                                        )
                                             : isEventOpen == false
-                                                ? Icon(
-                                                    Icons.lock,
-                                                    color: Colors.white,
-                                                    size: 30,
-                                                  )
-                                                : null),
+                                            ? Icon(
+                                          Icons.lock,
+                                          color: Colors.white,
+                                          size: 30,
+                                        )
+                                            : null),
                                     SizedBox(width: 4.0),
                                     isEventOpen == true
                                         ? Text("open",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 24))
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 24))
                                         : Text("closed",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 24))
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 24))
                                   ],
                                 ),
                               ],
@@ -204,7 +214,7 @@ class _EventInfoState extends State<EventInfo> {
                                       width: 4,
                                     ),
                                     Text(
-                                      eventAttendeesCount,
+                                      eventAttendeesCount.toString(),
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
@@ -327,7 +337,7 @@ class _EventInfoState extends State<EventInfo> {
                                     ),
                                   );
                                 },
-                                itemCount: int.parse(eventAttendeesCount),
+                                itemCount: eventAttendeesCount,
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
                               ),
