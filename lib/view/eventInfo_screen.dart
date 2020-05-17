@@ -44,6 +44,7 @@ class _EventInfoState extends State<EventInfo> {
   /// eventpicture
   File eventImage;
 
+  ///eventPicture from Firebase (if available)
   Widget eventimagewidget;
 
   bool _result;
