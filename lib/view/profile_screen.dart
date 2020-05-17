@@ -27,8 +27,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName = "univentsuser123";          //TODO: Fill this with unique username of User from firebase
   String emailAddress = "test@email.com";        //TODO: Fill this with email adress of User from firebase
   File profilepic;
-  bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
-  bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
+  bool isProfileOwner = true;                  //TODO: set this to true if the user is the profile owner and to false if hes not
+  bool createProfile = false;                    //TODO: set this to true if the user uses the screen to create his new profile
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -58,12 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: isProfileOwner == true && createProfile == false ? Text("Your Profile") : isProfileOwner == false && createProfile == false ? Text("Profile of " + userName)
-        : Text("Create your Profile"),
-        centerTitle: true,
-      ),
       body: new Stack(
         children: <Widget>[
           Positioned(
