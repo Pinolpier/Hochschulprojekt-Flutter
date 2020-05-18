@@ -13,6 +13,7 @@
   "last_name" : "Last Name",
   "profile_screen_toast" : "username cant be empty!",
   "cancel": "cancel",
+  "accept": "accept",
   "confirm_friend_request": "Do you really want to send a Friend Request to:",
   "your_friendsList": "your friendsList",
   "your_groups": "Your Groups",
