@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/FriendslistDummies.dart';
@@ -5,6 +6,10 @@ import 'package:univents/model/GroupDummies.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
+
+import '../controller/authService.dart';
+import '../model/event.dart';
+import '../service/event_service.dart';
 
 class FriendlistScreen extends StatefulWidget{
   @override
@@ -76,7 +81,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
                   child: Card(
                     child: ListTile(
-                      onTap: () {
+                      onTap: (){
                         setState(() {
                           isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
                         });

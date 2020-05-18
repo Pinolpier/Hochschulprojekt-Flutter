@@ -7,11 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
-
-final db = Firestore.instance;
+import 'package:geo_firestore/geo_firestore.dart';
 
 //Collection-Name in database
 final String collection = 'events';
+
+//initialize Firestore and GeoFirestore
+final db = Firestore.instance;
+final GeoFirestore geoFirestore = GeoFirestore(db.collection(collection));
+
 
 //DataField-names in database
 final String endDate = 'endDate';
@@ -45,7 +49,14 @@ Map<String, String> _urlToID = new Map();
 /// a Event in the database
 void createEvent(File image, Event event) async {
   event.ownerIds.add(getUidOfCurrentlySignedInUser());
+  double latitude = double.parse(event.latitude);
+  double longitude = double.parse(event.longitude);
+  GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+  //event.location_to_geopoint = geoPoint;
   String eventID = await _addData(event);
+
+  //TODO hier zu GeoPoint parsen oder direkt im Event ?
+  geoFirestore.setLocation(eventID, GeoPoint(latitude,longitude));
   if (image != null) {
     Map<String, dynamic> eventMap = new Map();
     String imageURL = await uploadImage(collection, image, eventID);
@@ -92,6 +103,22 @@ Future<List<Event>> getEvents() async {
   QuerySnapshot querySnapshot = await x.getDocuments();
   List<Event> eventList = _snapShotToList(querySnapshot);
   addEventIdToObjects(eventList, querySnapshot);
+  return eventList;
+}
+
+/// fetches a [List] of events from the database by [geoLocation] and [radius]
+/// [List] may be empty if no Event was found
+/// throws [PlatformException] when an error occurs while Fetching data
+/// from Database
+Future<List<Event>> getEventNearLocation(GeoPoint geoLocation, double radius)async{
+  final List<DocumentSnapshot> documentList = await geoFirestore.getAtLocation(geoLocation, radius);
+  print(documentList.length);
+  List<Event> eventList= new List();
+  for(int x=0;x<documentList.length;x++){
+    Event event = _documentSnapshotToEvent(documentList[x]);
+    event.eventID= documentList[x].documentID;
+    eventList.add(event);
+  }
   return eventList;
 }
 
