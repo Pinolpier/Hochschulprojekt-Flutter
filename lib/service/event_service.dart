@@ -261,11 +261,12 @@ void updateData(Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
+  if (event.imageURL != null)
     await deleteImage(collection, event.eventID);
-    String url = await uploadImage(collection, image, event.eventID);
-    _urlToID[event.eventID] = url;
-    event.imageURL = url;
-    updateData(event);
+  String url = await uploadImage(collection, image, event.eventID);
+  _urlToID[event.eventID] = url;
+  event.imageURL = url;
+  updateData(event);
 }
 
 /// adds data to a existing field in the database based
