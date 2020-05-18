@@ -20,7 +20,7 @@ class _MapScreenState extends State<MapScreen> {
     return FlutterMap(
       options: MapOptions(
           center: LatLng(49.140530, 9.210270),
-          zoom: 12.5,
+          zoom: 8.0,
           onLongPress: (LatLng latlng) {
             Navigator.push(
                 context,

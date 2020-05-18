@@ -56,6 +56,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
+            updateImage(eventImage, widget.event);
           });
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
@@ -68,9 +69,26 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
+            updateImage(eventImage, widget.event);
           }); // handle your image tap here
         },
         child: Image.file(eventImage, height: 150));
+  }
+
+  Widget _eventImageFromDatabase() {
+    return GestureDetector(
+        onTap: () async {
+          File eventImageAsync = await chooseImage(context);
+          setState(() {
+            print(eventImageAsync);
+            if (eventImageAsync != null) {
+              eventImage = eventImageAsync;
+              eventimagewidget = null;
+              updateImage(eventImage, widget.event);
+            }
+          }); // handle your image tap here
+        },
+        child: eventimagewidget != null ? eventimagewidget : eventImage == null ? Image.asset('assets/eventImagePlaceholder.png', height: 150) : Image.file(eventImage, height: 150.0,));
   }
 
   Future<bool> loadAsyncData() async {
@@ -112,7 +130,7 @@ class _EventInfoState extends State<EventInfo> {
         body: Stack(
           children: <Widget>[
             SizedBox.expand(
-              child: _result == null ?  CircularProgressIndicator() : eventimagewidget,
+              child: _result == null ?  CircularProgressIndicator() : _eventImageFromDatabase() != null ? _eventImageFromDatabase() : eventImage == null ? _eventImagePlaceholder() : _eventImage(),
                 //fit: BoxFit.cover, > //TODO Bild richtig formatieren
             ),
             DraggableScrollableSheet(
@@ -142,7 +160,7 @@ class _EventInfoState extends State<EventInfo> {
                               SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: _result == null ?  CircularProgressIndicator() : eventimagewidget != null ? eventimagewidget : eventImage == null ? _eventImagePlaceholder() : _eventImage(),
+                                child: _result == null ?  CircularProgressIndicator() : _eventImageFromDatabase() != null ? _eventImageFromDatabase() : eventImage == null ? _eventImagePlaceholder() : _eventImage(),
                               ),
                               SizedBox(
                                 width: 16,
