@@ -21,13 +21,13 @@ class ErrorDialogCreator extends StatelessWidget {
       backgroundColor: Colors.white,
       actions: <Widget>[
         isHighPrio == false ? FlatButton(
-          child: Text("cancel"),
+          child: Text("cancel"),      //TODO: Add Internationalization
           onPressed: () {
             Navigator.pop(context);
           },
         ) : null,
         FlatButton(
-          child: Text("accept"),
+          child: Text("accept"),     //TODO: Add Internationalization
           onPressed: () {
             //TODO: Was genau soll nach dem Akzeptieren passieren?
           },
