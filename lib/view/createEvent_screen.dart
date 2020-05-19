@@ -7,6 +7,7 @@ import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
@@ -106,7 +107,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           selectedStartDateTime = await getDateTime(context);
           setState(() {
             print(selectedStartDateTime);
-            selectedStartString = selectedStartDateTime.toIso8601String();
+            selectedStartString =
+                format_date_time(context, selectedStartDateTime);
 
             ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
             selectedEndDateTime = null;
@@ -147,7 +149,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               errorEndDateTime();
             } else {
               print(selectedEndDateTime);
-              selectedEndString = selectedEndDateTime.toIso8601String();
+              selectedEndString =
+                  format_date_time(context, selectedEndDateTime);
             }
           });
         },
