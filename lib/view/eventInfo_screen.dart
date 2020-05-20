@@ -57,14 +57,10 @@ class _EventInfoState extends State<EventInfo> {
     return GestureDetector(
         onTap: () async {
           eventimagewidget = null;
-            eventImageAsync = await ip.chooseImage(context);
+          eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            if (eventImageAsync != null) {
-              eventImage = eventImageAsync;
-            } else {
-              eventImage = null;
-            }
+            eventImage = eventImageAsync;
             updateImage(eventImage, widget.event);
           }); // handle your image tap here
         }, // handle your image tap here
@@ -78,11 +74,7 @@ class _EventInfoState extends State<EventInfo> {
           eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            if (eventImageAsync != null) {
-              eventImage = eventImageAsync;
-            } else {
-              eventImage = null;
-            }
+            eventImage = eventImageAsync;
             updateImage(eventImage, widget.event);
           }); // handle your image tap here
         },
@@ -96,11 +88,7 @@ class _EventInfoState extends State<EventInfo> {
           eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            if (eventImageAsync != null) {
-              eventImage = eventImageAsync;
-            } else {
-              eventImage = null;
-            }
+            eventImage = eventImageAsync;
             updateImage(eventImage, widget.event);
           }); // handle your image tap here
         },
