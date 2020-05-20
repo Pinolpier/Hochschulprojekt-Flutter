@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
+
+import 'file:///D:/eoao_backup_unsorted_backup/eoao/eoao_study/study_ai/4.SE/AI_10_Labor_fuer_SW_Projekte_und_Project_Skills/aib_labswp_2020_ss_univents/lib/service/log.dart';
 
 import 'feed.dart';
 
@@ -136,6 +137,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     } else if (selected ==
         FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
             .convertToString(context)) {
+      Log().info(causingClass: 'someClass', method: "someMethod");
       //todo backend
     }
     setState(() {
