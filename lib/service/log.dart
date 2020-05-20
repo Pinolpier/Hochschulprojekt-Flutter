@@ -3,15 +3,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+///this class saves logs into a .txt file
+///per log a line
+///DateTime: [logType]: causing class, method, action
 class Log {
+  ///file to save all logs
   var _file;
+
+  ///path to file
   var _pathToFile;
 
+  ///singleton configuration
   static final Log _instance = Log._internal();
   factory Log() => _instance;
-
   Log._internal();
 
+  ///initializes the file and path to file
   Future<File> _init() async {
     if (_file == null) {
       _pathToFile = await getApplicationDocumentsDirectory();
@@ -20,10 +27,12 @@ class Log {
     return _file;
   }
 
+  ///cleans the content of the file
   void cleanFile() async {
     file.writeAsStringSync('-- start --');
   }
 
+  ///info log
   void info(
       {@required String causingClass,
       @required String method,
@@ -36,6 +45,7 @@ class Log {
     _log(information);
   }
 
+  ///warn log
   void warn(
       {@required String causingClass,
       @required String method,
@@ -48,6 +58,7 @@ class Log {
     _log(information);
   }
 
+  ///error log
   void error(
       {@required String causingClass,
       @required String method,
@@ -60,6 +71,7 @@ class Log {
     _log(information);
   }
 
+  ///concats the data of log to a string
   String _concat(
       {@required String type,
       @required String causingClass,
@@ -72,6 +84,7 @@ class Log {
             ' : [$type]: class: $causingClass, method: $method';
   }
 
+  ///saving the data into the log file
   void _log(String information) async {
     this._file = await _init();
     String previous = '';
