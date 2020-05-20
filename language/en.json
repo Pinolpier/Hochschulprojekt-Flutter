@@ -1,4 +1,5 @@
 {
+  "localization": "en",
   "forgot_password": "Forgot Password?",
   "enter_password": "Enter your Password",
   "password": "Password",
@@ -25,5 +26,6 @@
   "date_filter": "Date Filter",
   "selected_events_filter": "Selected Events Filter",
   "events_of_friends_filter": "Events of Friends Filter",
-  "filter": "Filter"
+  "filter": "Filter",
+  "dateFormat": "yyyy-MM-dd HH:mm"
 }
