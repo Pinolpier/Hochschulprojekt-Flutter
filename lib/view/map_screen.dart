@@ -10,10 +10,10 @@ import 'package:user_location/user_location.dart';
 
 class MapScreen extends StatefulWidget {
   @override
-  State createState() => _MapScreenState();
+  State createState() => MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class MapScreenState extends State<MapScreen> {
   List<Marker> _markerList = new List();
   var _result;
   MapController mapController = new MapController();
@@ -30,7 +30,8 @@ class _MapScreenState extends State<MapScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => new CreateEventScreen(convertLatLngToString(latlng)),
+                  builder: (context) => new CreateEventScreen(convertLatLngToString(latlng), this),
+                  //TODO Darf man das: MapsScreenState übergeben, indem man den State auf Public setzt
                 ));
           }),
       layers: [
@@ -67,14 +68,12 @@ class _MapScreenState extends State<MapScreen> {
         point: LatLng(double.parse(e.latitude), double.parse(e.longitude)),
         builder: (ctx) => Container(
             child: GestureDetector(
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => new EventInfo(e),
                     ));
-                print(e.eventID);
-                print(e.imageURL);
               },
               child: Icon(
                 Icons.location_on,

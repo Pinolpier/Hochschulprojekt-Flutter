@@ -9,6 +9,7 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/view/map_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -24,7 +25,8 @@ import 'package:univents/service/utils/imagePickerUnivents.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final List<String> tappedPoint;
-  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
+  final MapScreenState mapscreen;
+  CreateEventScreen(this.tappedPoint, this.mapscreen, {Key key}) : super(key : key);
 
   @override
   State createState() => _CreateEventScreenState();
@@ -398,8 +400,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           } on PlatformException catch (e) {
             exceptionHandling(e);
           }
+          widget.mapscreen.build(context);
+          //TODO not working
           Navigator.pop(context);
-          dispose();
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -418,11 +421,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
