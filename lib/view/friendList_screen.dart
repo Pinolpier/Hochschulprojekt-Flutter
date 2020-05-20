@@ -115,7 +115,8 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
                 child: FloatingActionButton(
                   onPressed: () {
-                    DialogHelper.showAddFriendsDialog(context);
+                    //showAddFriendsDialog(context);
+                    showErrorDialog(context, "Test1", "test2", true);
                   },
                   child: Icon(Icons.group_add),
                   backgroundColor: Colors.blueAccent,
@@ -127,7 +128,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showFriendsDialog(context);
+                showFriendsDialog(context);
               },
               child: Icon(Icons.add),
               backgroundColor: Colors.blueAccent,

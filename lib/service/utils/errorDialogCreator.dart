@@ -14,22 +14,15 @@ class ErrorDialogCreator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return AlertDialog(
       title: Text(titleText),
       content: Text(bodyText),
       backgroundColor: Colors.white,
       actions: <Widget>[
-        isHighPrio == false ? FlatButton(
-          child: Text("cancel"),      //TODO: Add Internationalization
+        FlatButton(
+          child: Text("Ok"),
           onPressed: () {
             Navigator.pop(context);
-          },
-        ) : null,
-        FlatButton(
-          child: Text("accept"),     //TODO: Add Internationalization
-          onPressed: () {
-            //TODO: Was genau soll nach dem Akzeptieren passieren?
           },
         )
       ]
