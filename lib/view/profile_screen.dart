@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/userProfile.dart';
@@ -199,6 +200,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                             else {
                               show_short_toast(AppLocalizations.of(context).translate('profile_screen_toast'));
+                              Fluttertoast.showToast(
+                                  msg: AppLocalizations.of(context).translate(
+                                      'profile_screen_toast'),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
                             }
                           },
                           child: Center(
