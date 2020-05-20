@@ -29,11 +29,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File profilepic;
   bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
   bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File profilePicAsync = await chooseImage(context);
+          File profilePicAsync = await ip.chooseImage(context);
           setState(() {
             print(profilePicAsync);
             profilepic = profilePicAsync;
@@ -45,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _profilePicture() {
     return GestureDetector(
         onTap: () async {
-          File profilePicAsync = await chooseImage(context);
+          File profilePicAsync = await ip.chooseImage(context);
           setState(() {
             print(profilePicAsync);
             profilepic = profilePicAsync;

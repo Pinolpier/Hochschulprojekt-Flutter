@@ -44,6 +44,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
@@ -76,7 +77,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          File eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
@@ -88,7 +89,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          File eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
@@ -397,8 +398,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           } on PlatformException catch (e) {
             exceptionHandling(e);
           }
-
           Navigator.pop(context);
+          dispose();
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -417,6 +418,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

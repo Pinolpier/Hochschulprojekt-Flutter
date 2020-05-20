@@ -44,20 +44,29 @@ class _EventInfoState extends State<EventInfo> {
   /// eventpicture
   File eventImage;
 
+  File eventImageAsync;
+
   ///eventPicture from Firebase (if available)
   Widget eventimagewidget;
 
   bool _result;
 
+  ImagePickerUnivents ip = new ImagePickerUnivents();
+
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          eventimagewidget = null;
+            eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            eventImage = eventImageAsync;
+            if (eventImageAsync != null) {
+              eventImage = eventImageAsync;
+            } else {
+              eventImage = null;
+            }
             updateImage(eventImage, widget.event);
-          });
+          }); // handle your image tap here
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
@@ -65,10 +74,15 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          eventimagewidget = null;
+          eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            eventImage = eventImageAsync;
+            if (eventImageAsync != null) {
+              eventImage = eventImageAsync;
+            } else {
+              eventImage = null;
+            }
             updateImage(eventImage, widget.event);
           }); // handle your image tap here
         },
@@ -78,14 +92,16 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImageFromDatabase() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          eventimagewidget = null;
+          eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             if (eventImageAsync != null) {
               eventImage = eventImageAsync;
-              eventimagewidget = null;
-              updateImage(eventImage, widget.event);
+            } else {
+              eventImage = null;
             }
+            updateImage(eventImage, widget.event);
           }); // handle your image tap here
         },
         child: eventimagewidget != null ? eventimagewidget : eventImage == null ? Image.asset('assets/eventImagePlaceholder.png', height: 150) : Image.file(eventImage, height: 150.0,));
