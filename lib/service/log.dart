@@ -5,11 +5,24 @@ import 'package:path_provider/path_provider.dart';
 
 class Log {
   var _file;
+  var _pathToFile;
 
   static final Log _instance = Log._internal();
   factory Log() => _instance;
 
   Log._internal();
+
+  Future<File> _init() async {
+    if (_file == null) {
+      _pathToFile = await getApplicationDocumentsDirectory();
+      _file = File(_pathToFile.path + '/log.txt');
+    }
+    return _file;
+  }
+
+  void cleanFile() async {
+    file.writeAsStringSync('-- start --');
+  }
 
   void info(
       {@required String causingClass,
@@ -20,14 +33,7 @@ class Log {
         causingClass: causingClass,
         method: method,
         action: action);
-    this._file = await _init();
-    this._file.writeAsString('$information\n');
-    try {
-      String logs = await _file.readAsString();
-      print(logs);
-    } catch (e) {
-      print('error');
-    }
+    _log(information);
   }
 
   void warn(
@@ -39,14 +45,7 @@ class Log {
         causingClass: causingClass,
         method: method,
         action: action);
-    this._file = await _init();
-    this._file.writeAsString(information);
-    try {
-      String logs = await _file.readAsString();
-      print(logs);
-    } catch (e) {
-      print('error');
-    }
+    _log(information);
   }
 
   void error(
@@ -58,14 +57,7 @@ class Log {
         causingClass: causingClass,
         method: method,
         action: action);
-    this._file = await _init();
-    this._file.writeAsString(information);
-    try {
-      String logs = await _file.readAsString();
-      print(logs);
-    } catch (e) {
-      print('error');
-    }
+    _log(information);
   }
 
   String _concat(
@@ -80,11 +72,19 @@ class Log {
             ' : [$type]: class: $causingClass, method: $method';
   }
 
-  Future<File> _init() async {
-    if (_file == null) {
-      final dir = await getApplicationDocumentsDirectory();
-      _file = File(dir.path + '/log.txt');
+  void _log(String information) async {
+    this._file = await _init();
+    String previous = '';
+    try {
+      previous = await _file.readAsString();
+      print(previous);
+      this._file.writeAsString('$previous\n$information');
+    } catch (e) {
+      print('file is empty');
     }
-    return _file;
   }
+
+  File get file => this._file;
+
+  set file(File file) => this._file;
 }

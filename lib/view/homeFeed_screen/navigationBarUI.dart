@@ -134,6 +134,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             .convertToString(context)) {
       myEventFilter = true;
       _update();
+      await Log().cleanFile();
     } else if (selected ==
         FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
             .convertToString(context)) {
