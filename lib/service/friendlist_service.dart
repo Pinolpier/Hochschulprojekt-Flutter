@@ -94,10 +94,10 @@ void removeFriend(String friendId, String groupName) async {
         await batch.commit();
       } else {
         throw new FriendNotExistException(
-            null, 'the friend you are looking for does not exist');
+            null, 'the friend with uid $friendId you are looking for does not exist');
       }
     } else {
-      throw new GroupNotExistException(null, 'the group does not exist');
+      throw new GroupNotExistException(null, 'the group $groupName does not exist');
     }
   } on Exception catch (e) {
     exceptionHandling(e);
