@@ -131,7 +131,6 @@ class _EventInfoState extends State<EventInfo> {
           children: <Widget>[
             SizedBox.expand(
               child: _result == null ?  CircularProgressIndicator() : _eventImageFromDatabase() != null ? _eventImageFromDatabase() : eventImage == null ? _eventImagePlaceholder() : _eventImage(),
-                //fit: BoxFit.cover, > //TODO Bild richtig formatieren
             ),
             DraggableScrollableSheet(
               minChildSize: 0.1,

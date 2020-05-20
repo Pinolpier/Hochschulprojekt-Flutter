@@ -6,6 +6,7 @@ import 'package:univents/model/event.dart';
 import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:user_location/user_location.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -15,12 +16,16 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   List<Marker> _markerList = new List();
   var _result;
+  MapController mapController = new MapController();
 
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
           center: LatLng(49.140530, 9.210270),
           zoom: 8.0,
+          plugins: [
+            UserLocationPlugin(),
+          ],
           onLongPress: (LatLng latlng) {
             Navigator.push(
                 context,
@@ -41,7 +46,18 @@ class _MapScreenState extends State<MapScreen> {
         MarkerLayerOptions(
           markers: _markerList,
         ),
+        UserLocationOptions(
+          context: context,
+          mapController: mapController,
+          markers: _markerList,
+          updateMapLocationOnPositionChange: false,
+          onLocationUpdate: (LatLng pos) {
+            print(convertLatLngToString(pos));
+          },
+          showMoveToCurrentLocationFloatingActionButton: true,
+        ),
       ],
+      mapController: mapController,
     );
   }
 
@@ -107,7 +123,7 @@ class _MapScreenState extends State<MapScreen> {
       return CircularProgressIndicator();
     } else {
       // Do something with the `_result`s here
-      return Container(child: _flutterMap(context));
+      return Scaffold(body: _flutterMap(context));
     }
   }
 
@@ -117,13 +133,11 @@ class _MapScreenState extends State<MapScreen> {
     List<String> pointList2 = new List();
     List<String> pointList3 = new List();
     pointList1 = point.split(",");
-    print(pointList1);
     pointList2 = pointList1[0].split(":");
     pointList3 = pointList1[1].split(":");
     pointList1 = new List();
     pointList1.add(pointList2[1]);
     pointList1.add(pointList3[1].substring(0, pointList3[1].length - 1));
-    print(pointList1);
     return pointList1;
   }
 }
