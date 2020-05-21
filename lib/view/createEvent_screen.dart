@@ -9,6 +9,7 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 import 'package:univents/view/map_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
@@ -399,7 +400,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           } on PlatformException catch (e) {
             exceptionHandling(e);
           }
-          Navigator.pop(context); //TODO Map wird nicht aktualisiert nach dem erstellen des Events, warten auf Code von Christian Henrich
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => NavigationBarUI()),
+                (Route<dynamic> route) => false,
+          );
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
