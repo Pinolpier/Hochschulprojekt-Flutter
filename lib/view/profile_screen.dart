@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
@@ -27,8 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName = "univentsuser123";          //TODO: Fill this with unique username of User from firebase
   String emailAddress = "test@email.com";        //TODO: Fill this with email adress of User from firebase
   File profilepic;
-  bool isProfileOwner = false;                  //TODO: set this to true if the user is the profile owner and to false if hes not
-  bool createProfile = true;                    //TODO: set this to true if the user uses the screen to create his new profile
+  bool isProfileOwner = true;                  //TODO: set this to true if the user is the profile owner and to false if hes not
+  bool createProfile = false;                    //TODO: set this to true if the user uses the screen to create his new profile
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -59,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: primaryColor,
         title: isProfileOwner == true && createProfile == false ? Text("Your Profile") : isProfileOwner == false && createProfile == false ? Text("Profile of " + userName)
         : Text("Create your Profile"),
         centerTitle: true,
@@ -158,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Material(
                         borderRadius: BorderRadius.circular(20.0),
                         shadowColor: Colors.grey,
-                        color: Colors.black45,
+                        color: primaryColor,
                         elevation: 7.0,
                         child: isProfileOwner == true && createProfile == false ? GestureDetector(
                           onTap: () {

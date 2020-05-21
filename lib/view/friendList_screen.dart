@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/GroupDummies.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
@@ -38,7 +39,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: primaryColor,
         title: isFriendsScreen == true ? Text(
             AppLocalizations.of(context).translate('your_friendsList')) : Text(
             AppLocalizations.of(context).translate('your_groups')),
@@ -107,7 +108,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                     });
                   },
                   child: Icon(Icons.group),
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: primaryColor,
                 ),
               ),
               Padding(
@@ -117,7 +118,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                     DialogHelper.showAddFriendsDialog(context);
                   },
                   child: Icon(Icons.group_add),
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: primaryColor,
                 ),
               ),
             ],
@@ -129,7 +130,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                 DialogHelper.showFriendsDialog(context);
               },
               child: Icon(Icons.add),
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: primaryColor,
             ),
           ),
         ],

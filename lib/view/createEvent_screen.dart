@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
@@ -123,7 +124,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Text(
           'select startDateTime',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -162,7 +163,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Text(
           'select endDateTime',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -346,7 +347,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Text(
           'addFriends',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -409,7 +410,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Text(
           'CREATE',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -423,7 +424,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: primaryColor,
       body: new Container(
         height: double.infinity,
         child: SingleChildScrollView(

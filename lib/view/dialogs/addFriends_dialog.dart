@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 
 /// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
@@ -39,7 +40,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: primaryColor,
           title: Text("Add new Friends"),
           centerTitle: true,
         ),
@@ -90,7 +91,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
                   }
                 },
                 child: Icon(Icons.contacts),
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: primaryColor,
               ),
             ),
           ],

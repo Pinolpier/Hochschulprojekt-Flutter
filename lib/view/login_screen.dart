@@ -2,6 +2,7 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
@@ -184,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen>
         child: Text(
           'LOGIN',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -219,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen>
         child: Text(
           'REGISTER', //TODO internationalize
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -275,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen>
                     'Sign in with Google',
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.grey,
+                      color: textButtonDarkBlue,
                     ),
                   ),
                 ),

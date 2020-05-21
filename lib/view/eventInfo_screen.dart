@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
@@ -124,15 +125,6 @@ class _EventInfoState extends State<EventInfo> {
                                 ],
                               ),
                             ),
-                            GestureDetector(
-                                onTap: () {
-                                  print("event share button got pressed");
-                                },
-                                child: Icon(
-                                  Icons.share,
-                                  color: Colors.blue,
-                                  size: 40,
-                                ))
                           ],
                         ),
                       ),
@@ -146,7 +138,7 @@ class _EventInfoState extends State<EventInfo> {
                       ),
                       Container(
                         padding: EdgeInsets.all(32),
-                        color: Colors.blue,
+                        color: primaryColor,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -344,7 +336,7 @@ class _EventInfoState extends State<EventInfo> {
                                   DialogHelper.showFriendsDialog(context);
                                 },
                                 child: Icon(Icons.group_add),
-                                backgroundColor: Colors.blueAccent,
+                                backgroundColor: primaryColor,
                               ),
                             )
                           ],

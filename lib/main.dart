@@ -4,7 +4,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/view/about_screen.dart';
+import 'package:univents/view/eventInfo_screen.dart';
+import 'package:univents/view/friendList_screen.dart';
 import 'package:univents/view/login_screen.dart';
+import 'package:univents/view/profile_screen.dart';
+import 'package:univents/view/settings_screen.dart';
 
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));
@@ -41,7 +46,7 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: LoginScreen(),
+          home: AboutScreen(),
         ));
   }
 }

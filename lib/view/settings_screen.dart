@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/option_model.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -10,7 +11,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[200],
       body: ListView.builder(
         itemCount: options.length + 2,
         itemBuilder: (BuildContext context, int index) {
@@ -25,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             width: double.infinity,
             height: 70.0,
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: primaryColor,
               borderRadius: BorderRadius.circular(5.0),
             ),
             child: ListTile(
@@ -46,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
       ),
       bottomSheet: Container(
-          color: Colors.black45,
+          color: Colors.white,
           padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 140.0),
           width: double.infinity,
           child: RaisedButton(

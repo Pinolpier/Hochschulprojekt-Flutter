@@ -13,7 +13,7 @@ class FeedItemUI extends StatelessWidget {
     return Card(
       child: Container(
         height: (MediaQuery.of(context).size.height * 1 / 2),
-        color: Colors.white, //TODO: get color from color class
+        color: Colors.white,
         child: Column(
           children: <Widget>[
             ListTile(
