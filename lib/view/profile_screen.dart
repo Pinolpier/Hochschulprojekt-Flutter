@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/screenManager.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
@@ -126,14 +127,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     else {
       return new Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
-          title: isProfileOwner == true && createProfile == false ? Text(
-              "Your Profile") : isProfileOwner == false &&
-              createProfile == false ? Text("Profile of " + userName)
-              : Text("Create your Profile"),
-          centerTitle: true,
-        ),
         body: new Stack(
           children: <Widget>[
             Positioned(
@@ -290,10 +283,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       null,
                                       null);
                                   await updateProfile(userProfile);
-                                  await updateImage(profilepic, userProfile);
+                                  await updateProfilePicture(profilepic, userProfile);
 
                                   //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
-
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ScreenManager()),
+                                        (Route<dynamic> route) => false,
+                                  );
                                 }
                                 else {
                                   show_toast(
