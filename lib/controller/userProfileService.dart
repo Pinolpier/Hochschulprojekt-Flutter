@@ -65,7 +65,7 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
 
 /// Use this method to change a user's profile picture. The parameter [file] should be the new file to upload as the [profile]'s profile picture.
 /// The user is referenced by [profile.uid] and the parameter [file] may be null to delete the (existing) profile picture.
-Future<bool> updateImage(File file, UserProfile profile) async {
+Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
     String uri = '';
     if (uidToUri.containsKey(profile.uid)) {
