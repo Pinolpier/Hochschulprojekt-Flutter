@@ -39,6 +39,8 @@ dependencies:
   apple_sign_in: ^0.1.0
   fluttertoast: ^4.0.1
 
+  path_provider: ^1.6.8
+
   #The following dependency supports state changes of the login screen to HomeScreen on changes of the logged in user, but has to be implemented later on
   provider: ^4.0.5
 
