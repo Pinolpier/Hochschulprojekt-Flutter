@@ -427,7 +427,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    signInWithEmailAndPassword("j.oster@gmx.net", "pass1234");
     return Scaffold(
       backgroundColor: Colors.blueAccent,
       body: new Container(

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
@@ -122,7 +121,6 @@ class _EventInfoState extends State<EventInfo> {
   }
 
   Future<bool> loadAsyncData() async {
-    await signInWithEmailAndPassword("j.oster@gmx.net", "pass1234");
     if (widget.event.imageURL != null) {
       try {
         eventimagewidget = await getImage(widget.event.eventID);
@@ -303,6 +301,22 @@ class _EventInfoState extends State<EventInfo> {
                                         onTap: () {
                                           setState(() {
                                             isEventOpen = !isEventOpen;
+                                            Event e = new Event(
+                                                widget.event.title,
+                                                widget.event.eventStartDate,
+                                                widget.event.eventEndDate,
+                                                widget.event.description,
+                                                widget.event.location,
+                                                isEventOpen,
+                                                widget.event.attendeesIds,
+                                                widget.event.tagsList,
+                                                widget.event.latitude,
+                                                widget.event.longitude);
+                                            try {
+                                              updateData(e);
+                                            } on Exception catch (e){
+                                              //TODO Errorhandling
+                                            }
                                           });
                                         },
                                         child: isEventOpen == true
