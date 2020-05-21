@@ -23,7 +23,7 @@ class ScreenManager extends StatelessWidget {
         if (snapshot.hasData) {
           return snapshot.data
               ? FriendlistScreen() //TODO HomeScreenHandler here, because existsUserProfile returned true
-              : ProfileScreen(); // TODO change FriendlistScreen with HomeScreenHandler when exists and this line with createProfileScreen()
+              : ProfileScreen.create(); // TODO change FriendlistScreen with HomeScreenHandler when exists and this line with createProfileScreen()
         } else if (snapshot.hasError) {
           //TODO error handling here in case async function fails somehow
           return Container(
