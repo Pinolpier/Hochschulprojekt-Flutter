@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File profilePicAsync = await chooseImage(context);
+          File profilePicAsync = await ip.chooseImage(context);
           setState(() {
             print(profilePicAsync);
             profilepic = profilePicAsync;
@@ -67,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _profilePicture() {
     return GestureDetector(
         onTap: () async {
-          File profilePicAsync = await chooseImage(context);
+          File profilePicAsync = await ip.chooseImage(context);
           setState(() {
             print(profilePicAsync);
             profilepic = profilePicAsync;

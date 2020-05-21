@@ -125,7 +125,7 @@ Future<Widget> getProfilePicture(String uid) async {
   } else {
     DocumentSnapshot documentSnapshot =
     await firestore.collection(collection).document(uid).get();
-    uri = documentSnapshot.data['pictureURI'].toString();
+    uri = documentSnapshot.data['profilePicture'].toString();
   }
   if (uri != null && (uri.trim() != "")) return Image.network(uri);
   return null;
