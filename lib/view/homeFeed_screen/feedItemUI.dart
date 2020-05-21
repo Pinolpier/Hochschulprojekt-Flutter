@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/utils/utils.dart';
 
 class FeedItemUI extends StatelessWidget {
   final Event _data;
@@ -22,9 +23,10 @@ class FeedItemUI extends StatelessWidget {
                 ),
               ),
               title: Text(this._data.title),
-              subtitle: Text(this._data.eventStartDate.toString() +
-                  "\n - \n" +
-                  this._data.eventEndDate.toString() +
+              subtitle: Text(
+                  format_date_time(context, this._data.eventStartDate) +
+                      "\n - \n" +
+                      format_date_time(context, this._data.eventEndDate) +
                   "\n" +
                   this._data.location),
               onTap: () {
