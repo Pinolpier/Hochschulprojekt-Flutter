@@ -198,7 +198,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               await updateImage(profilepic, userProfile);
                             }
                             else {
-                              show_short_toast(AppLocalizations.of(context).translate('profile_screen_toast'));
+                              show_toast(AppLocalizations.of(context).translate(
+                                  'profile_screen_toast'));
                             }
                           },
                           child: Center(
