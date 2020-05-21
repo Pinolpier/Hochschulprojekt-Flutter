@@ -112,7 +112,7 @@ class Log {
       this._file = await this._file.writeAsString('$previous\n$information');
       print('$previous\n$information');
     } catch (e) {
-      this._file = await this._file.writeAsString('$information');
+      this._file = await this._file.writeAsString('-- start --\n$information');
       print('$information');
     }
   }
