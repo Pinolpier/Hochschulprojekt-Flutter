@@ -120,7 +120,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhite,
         child: Text(
           'select startDateTime',
           style: TextStyle(
@@ -159,7 +159,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhite,
         child: Text(
           'select endDateTime',
           style: TextStyle(
@@ -191,7 +191,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             controller: eventNameController,
             keyboardType: TextInputType.text,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhite,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -199,7 +199,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.create,
-                color: Colors.white,
+                color: univentsWhite,
               ),
               hintText: 'Enter the event name',
               hintStyle: textStyleConstant,
@@ -227,7 +227,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             controller: eventLocationController,
             keyboardType: TextInputType.text,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhite,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -235,7 +235,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.add_location,
-                color: Colors.white,
+                color: univentsWhite,
               ),
               hintText: 'Enter the location of the event',
               hintStyle: textStyleConstant,
@@ -264,7 +264,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             keyboardType: TextInputType.multiline,
             maxLines: null,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhite,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -272,7 +272,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.comment,
-                color: Colors.white,
+                color: univentsWhite,
               ),
               hintText: 'Enter the event details',
               hintStyle: textStyleConstant,
@@ -300,7 +300,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             keyboardType: TextInputType.text,
             maxLines: null,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhite,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -308,7 +308,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.add,
-                color: Colors.white,
+                color: univentsWhite,
               ),
               hintText: 'Tags, seperated by comma',
               hintStyle: textStyleConstant,
@@ -343,7 +343,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhite,
         child: Text(
           'addFriends',
           style: TextStyle(
@@ -406,7 +406,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhite,
         child: Text(
           'CREATE',
           style: TextStyle(

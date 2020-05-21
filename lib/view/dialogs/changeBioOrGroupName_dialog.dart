@@ -21,7 +21,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: univentsLightGrey,
         appBar: AppBar(
           backgroundColor: primaryColor,
           title: isBioScreen == true
@@ -47,7 +47,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
               padding: const EdgeInsets.only(left: 265, top: 10),
               child: FloatingActionButton(
                 shape: RoundedRectangleBorder(),
-                backgroundColor: Colors.grey[200],
+                backgroundColor: univentsLightGrey,
                 onPressed: () {
                   setState(() {
                     newText = _textController.text;

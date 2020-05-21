@@ -11,7 +11,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: univentsLightGrey,
       body: ListView.builder(
         itemCount: options.length + 2,
         itemBuilder: (BuildContext context, int index) {
@@ -33,7 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: options[index - 1].icon,
               title: Text(
                 options[index - 1].title,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: univentsBlack),
               ),
               subtitle: Text(
                 options[index - 1].subtitle,
@@ -47,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
       ),
       bottomSheet: Container(
-          color: Colors.white,
+          color: univentsWhite,
           padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 140.0),
           width: double.infinity,
           child: RaisedButton(
@@ -57,13 +57,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0),
             ),
-            color: Colors.white,
+            color: univentsWhite,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   'LOGOUT',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: univentsBlack),
                 ),
                 Icon(Icons.exit_to_app)
               ],

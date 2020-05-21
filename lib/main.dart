@@ -46,7 +46,7 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: AboutScreen(),
+          home: EventInfo(),
         ));
   }
 }

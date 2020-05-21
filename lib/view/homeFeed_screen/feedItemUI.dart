@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/utils.dart';
 
@@ -13,7 +14,7 @@ class FeedItemUI extends StatelessWidget {
     return Card(
       child: Container(
         height: (MediaQuery.of(context).size.height * 1 / 2),
-        color: Colors.white,
+        color: univentsWhite,
         child: Column(
           children: <Widget>[
             ListTile(

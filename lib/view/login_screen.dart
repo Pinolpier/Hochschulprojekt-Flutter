@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: TextField(
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhite,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen>
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.white,
+                color: univentsWhite,
               ),
               hintText: AppLocalizations.of(context).translate('enter_email'),
               hintStyle: textStyleConstant,
@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: TextField(
             obscureText: true,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhite,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen>
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white,
+                color: univentsWhite,
               ),
               hintText:
                   AppLocalizations.of(context).translate('enter_password'),
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhite,
         child: Text(
           'LOGIN',
           style: TextStyle(
@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhite,
         child: Text(
           'REGISTER', //TODO internationalize
           style: TextStyle(
@@ -263,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen>
           padding: EdgeInsets.all(15.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          color: Colors.white,
+          color: univentsWhite,
           child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen>
 //            TextSpan(
 //              text: 'Don\'t have an Account? ',
 //              style: TextStyle(
-//                color: Colors.white,
+//                color: univentsWhite,
 //                fontSize: 18.0,
 //                fontWeight: FontWeight.w400,
 //              ),
@@ -304,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen>
 //            TextSpan(
 //              text: 'Sign Up',
 //              style: TextStyle(
-//                color: Colors.white,
+//                color: univentsWhite,
 //                fontSize: 18.0,
 //                fontWeight: FontWeight.bold,
 //              ),
@@ -359,7 +359,7 @@ class _LoginScreenState extends State<LoginScreen>
         }
 
         return Scaffold(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: primaryColor,
           body: new Container(
             height: double.infinity,
             child: SingleChildScrollView(
