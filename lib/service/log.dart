@@ -32,7 +32,11 @@ class Log {
     file.writeAsStringSync('-- start --');
   }
 
-  ///info log
+  /// info log
+  /// params:
+  /// - (String) [causingClass]
+  ///   - (String) [method]
+  ///   - (String) [action] (optional)
   void info(
       {@required String causingClass,
       @required String method,
@@ -45,7 +49,11 @@ class Log {
     _log(information);
   }
 
-  ///warn log
+  /// warn log
+  /// params:
+  /// - (String) [causingClass]
+  ///   - (String) [method]
+  ///   - (String) [action] (optional)
   void warn(
       {@required String causingClass,
       @required String method,
@@ -58,7 +66,11 @@ class Log {
     _log(information);
   }
 
-  ///error log
+  /// error log
+  /// params:
+  /// - (String) [causingClass]
+  ///   - (String) [method]
+  ///   - (String) [action] (optional)
   void error(
       {@required String causingClass,
       @required String method,
@@ -71,7 +83,12 @@ class Log {
     _log(information);
   }
 
-  ///concats the data of log to a string
+  /// concats the data of log to a string
+  /// params:
+  ///   - (String) [type]
+  ///   - (String) [causingClass]
+  ///   - (String) [method]
+  ///   - (String) [action] (optional)
   String _concat(
       {@required String type,
       @required String causingClass,
@@ -84,16 +101,19 @@ class Log {
             ' : [$type]: class: $causingClass, method: $method';
   }
 
-  ///saving the data into the log file
+  /// saving the data into the log file
+  /// params:
+  ///   - (String) [information]
   void _log(String information) async {
     this._file = await _init();
     String previous = '';
     try {
-      previous = await _file.readAsString();
-      print(previous);
-      this._file.writeAsString('$previous\n$information');
+      previous = await this._file.readAsString();
+      this._file = await this._file.writeAsString('$previous\n$information');
+      print('$previous\n$information');
     } catch (e) {
-      print('file is empty');
+      this._file = await this._file.writeAsString('$information');
+      print('$information');
     }
   }
 
