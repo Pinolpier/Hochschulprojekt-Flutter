@@ -97,8 +97,7 @@ class Log {
   }
 
   /// saving the data into the log file
-  /// params:
-  ///   - (String) [information]
+  /// based on (String) [information]
   void _log(String information) async {
     this._file = await _init();
     String previous = '';
