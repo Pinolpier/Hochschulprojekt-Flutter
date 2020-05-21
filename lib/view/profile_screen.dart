@@ -194,9 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               UserProfile userProfile = new UserProfile(
                                   getUidOfCurrentlySignedInUser(), userName,
                                   getEmailOfCurrentlySignedInUser(), firstName,
-                                  lastName, null);
+                                  lastName, null, null);
                               await updateProfile(userProfile);
-                              await updateImage(profilepic, userProfile);
+                              await updateProfilePicture(profilepic, userProfile);
                             }
                             else {
                               Fluttertoast.showToast(
