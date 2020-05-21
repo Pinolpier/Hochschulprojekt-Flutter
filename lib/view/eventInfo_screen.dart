@@ -143,7 +143,7 @@ class _EventInfoState extends State<EventInfo> {
           Widget pp = await getProfilePicture('6KxpQ832rsNI9O8IWf3O1JALvOt1');
           if (pp != null) {
             print(index);
-            profilePictureList.add(Expanded(child: Container(child: await getProfilePicture('6KxpQ832rsNI9O8IWf3O1JALvOt1'))));
+            profilePictureList.add(Expanded(child: ClipOval(child: Image.asset('assets/blank_profile.png'))));
             index++;
           } else {
             profilePictureList.add(ClipOval(child: Image.asset('assets/blank_profile.png')));
