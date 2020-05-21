@@ -18,7 +18,7 @@ class Log {
   factory Log() => _instance;
   Log._internal();
 
-  ///initializes the file and path to file
+  /// initializes the file and path to file
   Future<File> _init() async {
     if (_file == null) {
       _pathToFile = await getApplicationDocumentsDirectory();
@@ -27,7 +27,7 @@ class Log {
     return _file;
   }
 
-  ///cleans the content of the file
+  /// cleans the content of the file
   void cleanFile() async {
     file.writeAsStringSync('-- start --');
   }
