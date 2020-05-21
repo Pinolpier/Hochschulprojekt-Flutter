@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/event_service.dart';
-import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
@@ -133,11 +132,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             .convertToString(context)) {
       myEventFilter = true;
       _update();
-      await Log().cleanFile();
     } else if (selected ==
         FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
             .convertToString(context)) {
-      Log().info(causingClass: 'someClass', method: "someMethod");
       //todo backend
     }
     setState(() {
