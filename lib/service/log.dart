@@ -34,7 +34,7 @@ class Log {
 
   /// info log
   /// params:
-  /// - (String) [causingClass]
+  ///   - (String) [causingClass]
   ///   - (String) [method]
   ///   - (String) [action] (optional)
   void info(
@@ -51,7 +51,7 @@ class Log {
 
   /// warn log
   /// params:
-  /// - (String) [causingClass]
+  ///   - (String) [causingClass]
   ///   - (String) [method]
   ///   - (String) [action] (optional)
   void warn(
@@ -68,7 +68,7 @@ class Log {
 
   /// error log
   /// params:
-  /// - (String) [causingClass]
+  ///   - (String) [causingClass]
   ///   - (String) [method]
   ///   - (String) [action] (optional)
   void error(
