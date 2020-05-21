@@ -201,6 +201,12 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
     print(
         "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
   }
+  if (!_user.isEmailVerified) {
+    _user.sendEmailVerification(); //TODO usability ? chris fragen
+    signOut();
+    throw new UserEmailNotVerified(null,
+        "Email is not verified"); //TODO internationalisierung für Toast ?!
+  }
   return _user != null ? true : false;
 }
 
@@ -215,6 +221,7 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
     _user = (await _auth.createUserWithEmailAndPassword(
             email: email, password: password))
         .user;
+    _user.sendEmailVerification();
   } on PlatformException catch (platformException) {
     print(platformException);
     switch (platformException.code) {
@@ -235,6 +242,11 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
   } catch (fatal) {
     print(
         "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
+  }
+  if (!_user.isEmailVerified) {
+    signOut();
+    throw new UserEmailNotVerified(null,
+        "Email is not verified"); //TODO internationalisierung für Toast ?!
   }
   return _user != null ? true : false;
 }
@@ -301,7 +313,7 @@ void signOut() async {
   await _googleSignIn.signOut();
 
   _user = null;
-  print("SignOut done!");
+  print("SignOut done!"); //TODO change to LOG
 }
 
 /// auth stream to be registered of user changes, should probably only be used to display the correct screen (Login vs. App)

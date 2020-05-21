@@ -175,7 +175,9 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () async {},
+        onPressed: () async {
+          await _handleLogin();
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -196,9 +198,9 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   /// Sign a user in if the [_email] is valid.
-  _handleLogin() {
+  _handleLogin() async {
     if (_isEmailGood(_email)) {
-      signInWithEmailAndPassword(_email, _password);
+      await signInWithEmailAndPassword(_email, _password);
     } else {
       //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
     }
@@ -210,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => handleRegistration(),
+        onPressed: () async => await handleRegistration(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -231,10 +233,13 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   /// Registers a new user&password combination if [_isPasswordGood] and if [_isEmailGood].
-  handleRegistration() {
+  handleRegistration() async {
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
-      registerWithEmailAndPassword(_email, _password);
+      await registerWithEmailAndPassword(_email, _password);
     } else {
+      print(_isEmailGood(_email));
+      print(_isPasswordGood(_password));
+      print("passwort fehler");
       //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
     }
   }

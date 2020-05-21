@@ -23,6 +23,11 @@ class AuthException implements Exception {
   }
 }
 
+class UserEmailNotVerified extends AuthException {
+  const UserEmailNotVerified(Exception originalException, String message)
+      : super(originalException, message);
+}
+
 class UserDisabledException extends AuthException {
   const UserDisabledException(Exception originalException, String message)
       : super(originalException, message);
