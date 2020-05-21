@@ -151,8 +151,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 100,
                           width: 100,
                           child: _result == null ? CircularProgressIndicator()
-                          : profilePicFromDatabase != null ? profilePicFromDatabase
-                          : profilepic == null
+                              : profilePicFromDatabase != null ? profilePicFromDatabase
+                              : profilepic == null
                               ? _profilePicturePlaceholder()
                               : _profilePicture(),
                         )),
