@@ -148,7 +148,7 @@ void addUserToGroup(String userId, String groupName) async {
 /// creates a new Group by a [userId] and a [groupName]
 void createGroupFriend(List<String> userId, String groupName) async {
   try {
-    String uid = await getUidOfCurrentlySignedInUser();
+    String uid = getUidOfCurrentlySignedInUser();
     Map<String, List<String>> groupMap = new Map();
     groupMap[groupName] = userId;
     WriteBatch writeBatch = firebaseInstance.batch();

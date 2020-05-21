@@ -508,7 +508,7 @@ class _EventInfoState extends State<EventInfo> {
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
                                 onPressed: () {
-                                  DialogHelper.showFriendsDialog(context);
+                                  showFriendsDialog(context);
                                 },
                                 child: Icon(Icons.group_add),
                                 backgroundColor: Colors.blueAccent,

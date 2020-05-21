@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/GroupDummies.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/utils/errorDialogCreator.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
@@ -78,7 +79,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                     child: ListTile(
                       onTap: () {
                         setState(() {
-                          isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
+                          isFriendsScreen == true ? print(friends[index]
+                              .name + " was pressed") : isFriendsScreen =
+                          true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
                         });
                       },
                       title: isFriendsScreen == true ? Text(friends[index].name) : Text(groups[index].name),
@@ -114,7 +117,8 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
                 child: FloatingActionButton(
                   onPressed: () {
-                    DialogHelper.showAddFriendsDialog(context);
+                    //showAddFriendsDialog(context);
+                    showErrorDialog(context, "Test1", "test2", true);
                   },
                   child: Icon(Icons.group_add),
                   backgroundColor: Colors.blueAccent,
@@ -126,7 +130,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
             padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
             child: FloatingActionButton(
               onPressed: () {
-                DialogHelper.showFriendsDialog(context);
+                showFriendsDialog(context);
               },
               child: Icon(Icons.add),
               backgroundColor: Colors.blueAccent,

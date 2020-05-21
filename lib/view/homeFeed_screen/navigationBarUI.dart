@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/event_service.dart';

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/screenManager.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
-import 'package:univents/view/map_screen.dart';
 
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));
@@ -30,7 +29,7 @@ class UniventsApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
           ],
           localeResolutionCallback: (locale, supportedLocales) {
-            //ToDo This is just a workaround -> on IOS we don't get the locale at the first millisecond so when the locale is null we first take english as favorite language
+            //ToDo This is just a workaround -> on IOS we don't get the locale at the first millisecond so when the locale is null we first take english as favorite languages
             if (locale == null) {
               return supportedLocales.first;
             }
@@ -42,7 +41,7 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: MapScreen(),
+          home: ScreenManager(),
         ));
   }
 }

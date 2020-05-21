@@ -4,14 +4,21 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/storageService.dart';
 
-final db = Firestore.instance;
+import '../controller/authService.dart';
+
 
 //Collection-Name in database
 final String collection = 'events';
+
+//initialize Firestore and GeoFirestore
+final db = Firestore.instance;
+final GeoFirestore geoFirestore = GeoFirestore(db.collection(collection));
+
 
 //DataField-names in database
 final String endDate = 'endDate';
@@ -23,7 +30,7 @@ final String description = 'description';
 final String imageUrl = 'imageUrl';
 final String eventName = 'name';
 final String tags = 'tagsList';
-final String location = 'location';
+final String location = 'locationText';
 final String latitude = 'latitude';
 final String longitude = 'longitude';
 
@@ -32,8 +39,8 @@ Timestamp _startDateFilter;
 Timestamp _endDateFilter;
 List<dynamic> _tagsFilter;
 List<dynamic> _friendIdFilter;
-bool _privateEventFilter = false;
-bool _myEventsFilter = false;
+bool _privateEventFilter;
+bool _myEventsFilter;
 
 //map to permanently save the url to the ids
 Map<String, String> _urlToID = new Map();
@@ -44,8 +51,17 @@ Map<String, String> _urlToID = new Map();
 /// throws [PlatformException] when an Error occurs while storing
 /// a Event in the database
 void createEvent(File image, Event event) async {
-  event.ownerIds.add(getUidOfCurrentlySignedInUser());
+  String uid = getUidOfCurrentlySignedInUser();
+  event.ownerIds.add(uid);
+  event.addAttendeesIds(uid);
+
   String eventID = await _addData(event);
+
+  //TODO hier zu GeoPoint parsen oder direkt im Event ?
+  double latitude = double.parse(event.latitude);
+  double longitude = double.parse(event.longitude);
+  geoFirestore.setLocation(eventID, GeoPoint(latitude,longitude));
+
   if (image != null) {
     Map<String, dynamic> eventMap = new Map();
     String imageURL = await uploadImage(collection, image, eventID);
@@ -95,6 +111,132 @@ Future<List<Event>> getEvents() async {
   return eventList;
 }
 
+/// fetches a [List] of events from the database by [geoLocation] and [radius]
+/// [List] may be empty if no Event was found
+/// throws [PlatformException] when an error occurs while Fetching data
+/// from Database
+Future<List<Event>> getEventNearLocation(GeoPoint geoLocation, double radius)async{
+  final List<DocumentSnapshot> documentList = await geoFirestore.getAtLocation(geoLocation, radius);
+  List<Event> eventList= new List();
+  for(int x=0;x<documentList.length;x++){
+    Event event = _documentSnapshotToEvent(documentList[x]);
+    event.eventID= documentList[x].documentID;
+    eventList.add(event);
+  }
+  return eventList;
+}
+
+/// fetches a [List] of events from the database by [geoLocation],[radius]
+/// and [filters]
+/// [List] may be empty if no Event was found
+/// throws [PlatformException] when an error occurs while Fetching data
+/// from Database
+Future<List<Event>> get_events_near_location_and_filters(GeoPoint geo_location,
+    double radius) async {
+  List<DocumentSnapshot> documentList = await geoFirestore.getAtLocation(
+      geo_location, radius);
+  for (int j = 0; j < documentList.length; j++) {
+    bool remove = true;
+    if (documentList[j].data[privateEvent] == true) {
+      List<dynamic> attendesList = documentList[j].data[attendees];
+      List<dynamic> ownerList = documentList[j].data[eventOwner];
+      if (attendesList != null &&
+          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+          ownerList != null &&
+              ownerList.contains(getUidOfCurrentlySignedInUser())) {
+        remove = false;
+      }
+      if (remove) {
+        documentList.removeAt(j);
+        j--;
+      }
+    }
+  }
+  if (_privateEventFilter != null) {
+    documentList.removeWhere((DocumentSnapshot documentSnapshot) =>
+    (documentSnapshot.data[privateEvent] != privateEventFilter));
+  }
+  if (myEventFilter != null) {
+    for (int j = 0; j < documentList.length; j++) {
+      bool remove = true;
+      List<dynamic> attendesList = documentList[j].data[attendees];
+      List<dynamic> ownerList = documentList[j].data[eventOwner];
+      if (attendesList != null &&
+          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+          ownerList != null &&
+              ownerList.contains(getUidOfCurrentlySignedInUser())) {
+        remove = false;
+      }
+      if (remove) {
+        documentList.removeAt(j);
+        j--;
+      }
+    }
+  }
+  if (friendIdFilter != null) {
+    for (int j = 0; j < documentList.length; j++) {
+      bool remove = true;
+      List<dynamic> attendesList = documentList[j].data[attendees];
+      List<dynamic> ownerList = documentList[j].data[eventOwner];
+      for (int i = 0; i < friendIdFilter.length; i++) {
+        if (attendesList != null && attendesList.contains(friendIdFilter[i]) ||
+            ownerList != null && ownerList.contains(friendIdFilter[i])) {
+          remove = false;
+        }
+      }
+      if (remove) {
+        documentList.removeAt(j);
+        j--;
+      }
+    }
+  }
+
+  if (_startDateFilter != null) {
+    for (int i = 0; i < documentList.length; i++) {
+      Timestamp startdate = documentList[i].data[startDate];
+      if (startdate.toDate().isBefore(startDateFilter)) {
+        documentList.removeAt(i);
+        i--;
+      }
+    }
+  }
+
+  if (_endDateFilter != null) {
+    for (int i = 0; i < documentList.length; i++) {
+      Timestamp enddate = documentList[i].data[endDate];
+      if (enddate.toDate().isAfter(endDateFilter)) {
+        documentList.removeAt(i);
+        i--;
+      }
+    }
+  }
+
+  if (tagsFilter != null && tagsFilter.length > 0) {
+    for (int x = 0; x < documentList.length; x++) {
+      bool dontRemove = true;
+      List<dynamic> tagsList = documentList[x].data[tags];
+      if (tagsList != null) {
+        for (int i = 0; i < tagsFilter.length; i++) {
+          if (tagsList.contains(tagsFilter[i])) {
+            dontRemove = false;
+          }
+        }
+      }
+      if (dontRemove) {
+        documentList.removeAt(x);
+        x--;
+      }
+    }
+  }
+  List<Event> eventList = new List();
+  for (int x = 0; x < documentList.length; x++) {
+    Event event = _documentSnapshotToEvent(documentList[x]);
+    event.eventID = documentList[x].documentID;
+    eventList.add(event);
+  }
+  return eventList;
+}
+
 /// adds [Event] data to the database
 /// throws [PlatformException] when an Error occurs while
 /// updating Data in Database
@@ -118,13 +260,12 @@ void updateData(Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null) {
+  if (event.imageURL != null)
     await deleteImage(collection, event.eventID);
-  }
-    String url = await uploadImage(collection, image, event.eventID);
-    _urlToID[event.eventID] = url;
-    event.imageURL = url;
-    updateData(event);
+  String url = await uploadImage(collection, image, event.eventID);
+  _urlToID[event.eventID] = url;
+  event.imageURL = url;
+  updateData(event);
 }
 
 /// adds data to a existing field in the database based
@@ -159,10 +300,10 @@ Future<Widget> getImage(String eventID) async {
     url = documentSnapshot.data[imageUrl].toString();
     _urlToID[eventID] = url;
   }
-  if (url != null)
+  if (url != null && url.isNotEmpty)
     return Image.network(url);
   else
-    throw new Exception('no Image available');
+    return null;
 }
 
 /// returns a [List] of all available events
@@ -196,6 +337,7 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
         .toList();
   } else
     print('Keine passenden Events gefunden');
+  //TODO Toast message
 }
 
 /// Returns a [Event] based on a documentSnapshot
@@ -362,6 +504,14 @@ List<dynamic> get friendIdFilter => _friendIdFilter;
 
 void deleteFriendIdFilter() {
   _friendIdFilter = null;
+}
+
+void deletePrivateEventFilter() {
+  privateEventFilter = null;
+}
+
+void deleteMyEventFilter() {
+  _myEventsFilter = null;
 }
 
 Map<String, String> get urlToID => _urlToID;

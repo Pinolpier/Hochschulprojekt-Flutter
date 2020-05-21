@@ -8,11 +8,11 @@ class Event {
   DateTime _eventStartDate;
   DateTime _eventEndDate;
   String _description;
-  String _location;
+  dynamic _location;
   bool _privateEvent;
   String _latitude, _longitude;
-  List<dynamic> _attendeesIds;
-  List<dynamic> _tagsList;
+  List<dynamic> _attendeesIds = new List();
+  List<dynamic> _tagsList = new List();
   List<dynamic> _ownerIds = new List();
   File image;
   String _imageURL;
@@ -102,9 +102,13 @@ class Event {
     _imageURL = value;
   }
 
-  String get location => _location;
+  dynamic get location => _location;
 
   set location(String value) {
+    _location = value;
+  }
+
+  set location_to_geopoint(GeoPoint value){
     _location = value;
   }
 
@@ -120,7 +124,7 @@ class Event {
     _longitude = value;
   }
 
-  String get latitude => _latitude;
+  get latitude => _latitude;
 
   set latitude(String value) {
     _latitude = value;

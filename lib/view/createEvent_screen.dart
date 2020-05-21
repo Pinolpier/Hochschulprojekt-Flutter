@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,8 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/utils.dart';
+import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 import 'package:univents/view/map_screen.dart';
 
@@ -110,7 +114,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           selectedStartDateTime = await getDateTime(context);
           setState(() {
             print(selectedStartDateTime);
-            selectedStartString = selectedStartDateTime.toIso8601String();
+            selectedStartString =
+                format_date_time(context, selectedStartDateTime);
 
             ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
             selectedEndDateTime = null;
@@ -151,7 +156,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               errorEndDateTime();
             } else {
               print(selectedEndDateTime);
-              selectedEndString = selectedEndDateTime.toIso8601String();
+              selectedEndString =
+                  format_date_time(context, selectedEndDateTime);
             }
           });
         },
