@@ -103,7 +103,7 @@ class Log {
     String previous = '';
     try {
       previous = await this._file.readAsString();
-      this._file = await this._file.writeAsString('$previous\n$information');
+      this._file = await this._file.writeAsString('$information');
       print('$previous\n$information');
     } catch (e) {
       this._file = await this._file.writeAsString('-- start --\n$information');
