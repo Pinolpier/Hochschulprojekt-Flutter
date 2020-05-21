@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/view/friendList_screen.dart';
+import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 import 'package:univents/view/login_screen.dart';
 import 'package:univents/view/profile_screen.dart';
 
@@ -22,7 +23,7 @@ class ScreenManager extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           return snapshot.data
-              ? FriendlistScreen() //TODO HomeScreenHandler here, because existsUserProfile returned true
+              ? NavigationBarUI() //TODO HomeScreenHandler here, because existsUserProfile returned true
               : ProfileScreen.create(); // TODO change FriendlistScreen with HomeScreenHandler when exists and this line with createProfileScreen()
         } else if (snapshot.hasError) {
           //TODO error handling here in case async function fails somehow

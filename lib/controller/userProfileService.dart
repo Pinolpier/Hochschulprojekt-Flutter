@@ -78,7 +78,7 @@ Future<bool> updateImage(File file, UserProfile profile) async {
       await firestore.collection(collection).document(profile.uid).get();
       uri = documentSnapshot.data['profilePicture'].toString();
     }
-    if (uri != null)
+    if (uri != null && uri.trim() != "")
       deleteImage(collection, uri); //delete the picture if one exists
     if (file != null) {
       //if a not null picture has been given to the method upload it

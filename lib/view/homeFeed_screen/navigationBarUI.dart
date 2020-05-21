@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/view/friendList_screen.dart';
 import 'package:univents/view/homeFeed_screen/feed.dart';
 import 'package:univents/view/profile_screen.dart';
@@ -173,7 +174,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 3:
           {
-            _thisWidget = ProfileScreen();
+            _thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
             print(index);
           }
           break;

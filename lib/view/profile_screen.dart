@@ -8,6 +8,7 @@ import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
+import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 
 import 'dialogs/DialogHelper.dart';
 
@@ -75,25 +76,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> loadAsyncData() async {
-    await signInWithEmailAndPassword("j.oster@gmx.net", "pass1234");
-    try {
-      this.isProfileOwner = (UID == getUidOfCurrentlySignedInUser());
+    if(createProfile == false) {
+      try {
+        this.isProfileOwner = (UID == getUidOfCurrentlySignedInUser());
 
-      UserProfile userProfile = await getUserProfile(UID);
-      this.emailAddress = userProfile.email;
-      this.firstName = userProfile.forename;
-      this.lastName = userProfile.surname;
-      this.userName = userProfile.username;
+        UserProfile userProfile = await getUserProfile(UID);
+        this.emailAddress = userProfile.email;
+        this.firstName = userProfile.forename;
+        this.lastName = userProfile.surname;
+        this.userName = userProfile.username;
 
-      this.profilePicFromDatabase = await getProfilePicture(UID);
-      if(userProfile.biography != null) {
-        this.bioText = userProfile.biography;
+        this.profilePicFromDatabase = await getProfilePicture(UID);
+        if (userProfile.biography != null) {
+          this.bioText = userProfile.biography;
+        }
+        print('got all userdata!');
+      } on Exception catch (e) {
+        print(e);
       }
-      print('got all userdata!');
-    } on Exception catch (e) {
-      print(e);
+      return true;
     }
-    return true;
   }
 
   @override
@@ -118,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_result == null) {
+    if(_result == null && createProfile == false) {
       return CircularProgressIndicator();
     }
     else {
@@ -150,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: SizedBox(
                           height: 100,
                           width: 100,
-                          child: _result == null ? CircularProgressIndicator()
+                          child: _result == null && createProfile == false ? CircularProgressIndicator()
                               : profilePicFromDatabase != null ? profilePicFromDatabase
                               : profilepic == null
                               ? _profilePicturePlaceholder()
@@ -236,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                         height: 30.0,
                         width: isProfileOwner == true ? 95.0 : isProfileOwner ==
-                            false ? 150.0 : null,
+                            false ? 150.0 : createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: Colors.grey,
@@ -268,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       fontFamily: 'Montserrat'),
                                 ),
                               ),
-                            ) : createProfile == true && isProfileOwner == false
+                            ) : createProfile == true
                                 ? GestureDetector(
                               onTap: () async {
                                 setState(() {
@@ -289,6 +291,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       null);
                                   await updateProfile(userProfile);
                                   await updateImage(profilepic, userProfile);
+
+                                  //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
+
                                 }
                                 else {
                                   show_toast(
