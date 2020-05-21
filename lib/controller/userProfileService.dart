@@ -190,7 +190,7 @@ Future<String> getUidFromUserName(String username) async {
   var x = firestore
       .collectionGroup(collection)
       .reference()
-      .where('username', isEqualTo: username);
+      .where('username', isEqualTo: username.toLowerCase());
   QuerySnapshot querySnapshot = await x.getDocuments();
   switch (querySnapshot.documents.length) {
     case 0:

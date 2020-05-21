@@ -47,7 +47,7 @@ class UserProfile {
   /// returns a [Map] to store this instance in the [Firestore] database
   Map<String, dynamic> toMap() {
     return {
-      'username': _username,
+      'username': _username.toLowerCase(),
       'email': _email.toLowerCase(),
       'forename': _forename,
       'surname': _surname,
