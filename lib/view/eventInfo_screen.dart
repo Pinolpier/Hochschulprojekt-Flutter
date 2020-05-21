@@ -84,7 +84,7 @@ class _EventInfoState extends State<EventInfo> {
                 child: Container(
                   constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height),
-                  color: univentsWhite,
+                  color: univentsWhiteBackground,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -111,14 +111,14 @@ class _EventInfoState extends State<EventInfo> {
                                   Text(
                                     eventName,
                                     style: TextStyle(
-                                        color: univentsBlack,
+                                        color: univentsBlackText,
                                         fontSize: 36,
                                         fontWeight: FontWeight.w700),
                                   ),
                                   Text(
                                     eventLocation,
                                     style: TextStyle(
-                                        color: univentsGrey,
+                                        color: univentsGreyText,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400),
                                   ),
@@ -156,13 +156,13 @@ class _EventInfoState extends State<EventInfo> {
                                         child: isEventOpen == true
                                             ? Icon(
                                                 Icons.lock_open,
-                                                color: univentsWhite,
+                                                color: univentsWhiteBackground,
                                                 size: 30,
                                               )
                                             : isEventOpen == false
                                                 ? Icon(
                                                     Icons.lock,
-                                                    color: univentsWhite,
+                                                    color: univentsWhiteBackground,
                                                     size: 30,
                                                   )
                                                 : null),
@@ -170,12 +170,12 @@ class _EventInfoState extends State<EventInfo> {
                                     isEventOpen == true
                                         ? Text("open",
                                             style: TextStyle(
-                                                color: univentsWhite,
+                                                color: univentsWhiteText,
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 24))
                                         : Text("closed",
                                             style: TextStyle(
-                                                color: univentsWhite,
+                                                color: univentsWhiteText,
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 24))
                                   ],
@@ -189,7 +189,7 @@ class _EventInfoState extends State<EventInfo> {
                                   children: <Widget>[
                                     Icon(
                                       Icons.favorite,
-                                      color: univentsWhite,
+                                      color: univentsWhiteBackground,
                                       size: 30,
                                     ),
                                     SizedBox(
@@ -198,7 +198,7 @@ class _EventInfoState extends State<EventInfo> {
                                     Text(
                                       eventAttendeesCount,
                                       style: TextStyle(
-                                          color: univentsWhite,
+                                          color: univentsWhiteText,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 24),
                                     )
@@ -207,7 +207,7 @@ class _EventInfoState extends State<EventInfo> {
                                 Text(
                                   "Attendees",
                                   style: TextStyle(
-                                      color: univentsWhite,
+                                      color: univentsWhiteText,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15),
                                 )
@@ -220,7 +220,7 @@ class _EventInfoState extends State<EventInfo> {
                                   children: <Widget>[
                                     Icon(
                                       Icons.calendar_today,
-                                      color: univentsWhite,
+                                      color: univentsWhiteBackground,
                                       size: 30,
                                     ),
                                     SizedBox(
@@ -229,7 +229,7 @@ class _EventInfoState extends State<EventInfo> {
                                     Text(
                                       eventDate,
                                       style: TextStyle(
-                                          color: univentsWhite,
+                                          color: univentsWhiteText,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 24),
                                     )
@@ -238,7 +238,7 @@ class _EventInfoState extends State<EventInfo> {
                                 Text(
                                   "Startdate",
                                   style: TextStyle(
-                                      color: univentsWhite,
+                                      color: univentsWhiteText,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15),
                                 )
@@ -260,7 +260,7 @@ class _EventInfoState extends State<EventInfo> {
                             Text(
                               "Description",
                               style: TextStyle(
-                                  color: univentsBlack,
+                                  color: univentsBlackText,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18),
                             ),
@@ -287,7 +287,7 @@ class _EventInfoState extends State<EventInfo> {
                             Text(
                               "Attendees",
                               style: TextStyle(
-                                  color: univentsBlack,
+                                  color: univentsBlackText,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18),
                             ),

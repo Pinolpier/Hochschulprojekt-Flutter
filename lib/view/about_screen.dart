@@ -38,7 +38,7 @@ class _AboutScreenState extends State<AboutScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: univentsWhite,
+        color: univentsWhiteBackground,
         child: Text(
           'feedback',
           style: TextStyle(
@@ -74,7 +74,7 @@ class _AboutScreenState extends State<AboutScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: univentsWhite,
+        color: univentsWhiteBackground,
         child: Text(
           'share',
           style: TextStyle(

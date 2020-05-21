@@ -39,7 +39,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: univentsWhite,
+          backgroundColor: univentsWhiteBackground,
           title: Center(
             child: Text(
               'Univents',
@@ -74,7 +74,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
                 value: _dropdownValue,
                 underline: Container(
                   height: 2,
-                  color: univentsGrey,
+                  color: univentsGreyBackgorund,
                 ),
                 onChanged: _selectedFilter,
                 items: <String>[

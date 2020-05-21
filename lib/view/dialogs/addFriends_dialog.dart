@@ -38,7 +38,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Scaffold(
-        backgroundColor: univentsLightGrey,
+        backgroundColor: univentsLightGreyBackground,
         appBar: AppBar(
           backgroundColor: primaryColor,
           title: Text("Add new Friends"),

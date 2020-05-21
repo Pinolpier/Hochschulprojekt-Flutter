@@ -37,7 +37,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: univentsLightGrey,
+      backgroundColor: univentsLightGreyBackground,
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: isFriendsScreen == true ? Text(

@@ -43,7 +43,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: univentsLightGrey,
+      backgroundColor: univentsLightGreyBackground,
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: Text("Your Friendslist"),

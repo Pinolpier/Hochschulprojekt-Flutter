@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/about_screen.dart';
+import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:univents/view/friendList_screen.dart';
 import 'package:univents/view/login_screen.dart';
@@ -46,7 +47,7 @@ class UniventsApp extends StatelessWidget {
             }
             return supportedLocales.first;
           },
-          home: EventInfo(),
+          home: SettingsScreen(),
         ));
   }
 }

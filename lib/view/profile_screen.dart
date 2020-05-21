@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: univentsWhite,
+      backgroundColor: univentsWhiteBackground,
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: isProfileOwner == true && createProfile == false ? Text("Your Profile") : isProfileOwner == false && createProfile == false ? Text("Profile of " + userName)
@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    color: univentsGrey,
+                    color: univentsLightGreyBackground,
                       width: 130.0,
                       height: 130.0,
                       child: SizedBox(
@@ -87,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 50.0),
                   createProfile == false ? Text(firstName + " " + lastName,
                     style: TextStyle(
-                      color: univentsWhite,
+                      color: univentsBlackText,
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Montserrat'),
@@ -158,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: isProfileOwner == true ? 95.0 : isProfileOwner == false ? 150.0 : null,
                       child: Material(
                         borderRadius: BorderRadius.circular(20.0),
-                        shadowColor: univentsGrey,
+                        shadowColor: univentsGreyBackgorund,
                         color: primaryColor,
                         elevation: 7.0,
                         child: isProfileOwner == true && createProfile == false ? GestureDetector(
@@ -169,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(
                               AppLocalizations.of(context).translate(
                                   'edit_bio'),
-                              style: TextStyle(color: univentsWhite, fontFamily: 'Montserrat'),
+                              style: TextStyle(color: univentsWhiteText, fontFamily: 'Montserrat'),
                             ),
                           ),)
                          : isProfileOwner == false && createProfile == false ? GestureDetector(
@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(
                               AppLocalizations.of(context).translate(
                                   'send_friends_request'),
-                              style: TextStyle(color: univentsWhite, fontFamily: 'Montserrat'),
+                              style: TextStyle(color: univentsWhiteText, fontFamily: 'Montserrat'),
                             ),
                           ),
                         ) : createProfile == true  && isProfileOwner == false ? GestureDetector(
@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(
                               AppLocalizations.of(context).translate(
                                   'confirm'),
-                              style: TextStyle(color: univentsWhite, fontFamily: 'Montserrat'),
+                              style: TextStyle(color: univentsWhiteText, fontFamily: 'Montserrat'),
                             ),
                           ),) : SizedBox(height: 0.0)
                       )),
