@@ -25,8 +25,7 @@ import 'package:univents/view/map_screen.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final List<String> tappedPoint;
-  final MapScreenState mapscreen;
-  CreateEventScreen(this.tappedPoint, this.mapscreen, {Key key}) : super(key : key);
+  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
 
   @override
   State createState() => _CreateEventScreenState();
@@ -400,9 +399,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           } on PlatformException catch (e) {
             exceptionHandling(e);
           }
-          widget.mapscreen.build(context);
-          //TODO not working
-          Navigator.pop(context);
+          Navigator.pop(context); //TODO Map wird nicht aktualisiert nach dem erstellen des Events, warten auf Code von Christian Henrich
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(

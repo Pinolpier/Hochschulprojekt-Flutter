@@ -10,10 +10,10 @@ import 'package:user_location/user_location.dart';
 
 class MapScreen extends StatefulWidget {
   @override
-  State createState() => MapScreenState();
+  State createState() => _MapScreenState();
 }
 
-class MapScreenState extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen> {
   List<Marker> _markerList = new List();
   var _result;
   MapController mapController = new MapController();
@@ -30,8 +30,7 @@ class MapScreenState extends State<MapScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => new CreateEventScreen(convertLatLngToString(latlng), this),
-                  //TODO Darf man das: MapsScreenState übergeben, indem man den State auf Public setzt
+                  builder: (context) => new CreateEventScreen(convertLatLngToString(latlng)),
                 ));
           }),
       layers: [
@@ -62,6 +61,8 @@ class MapScreenState extends State<MapScreen> {
     );
   }
 
+
+  /// Gets all Events from the Database, creates a Marker for each and sets an onClickListener to open the eventInfo of the respective Event
   void getMarkerList(List list) {
     for (Event e in list) {
       _markerList.add(new Marker(
@@ -126,6 +127,7 @@ class MapScreenState extends State<MapScreen> {
     }
   }
 
+  ///Converts LatLng to List<String> with index 0 = latitude, index 1 = longitude
   List<String> convertLatLngToString(LatLng latLng) {
     String point = latLng.toString();
     List<String> pointList1 = new List();
