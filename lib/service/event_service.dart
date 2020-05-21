@@ -117,7 +117,6 @@ Future<List<Event>> getEvents() async {
 /// from Database
 Future<List<Event>> getEventNearLocation(GeoPoint geoLocation, double radius)async{
   final List<DocumentSnapshot> documentList = await geoFirestore.getAtLocation(geoLocation, radius);
-  print(documentList.length);
   List<Event> eventList= new List();
   for(int x=0;x<documentList.length;x++){
     Event event = _documentSnapshotToEvent(documentList[x]);
@@ -338,6 +337,7 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
         .toList();
   } else
     print('Keine passenden Events gefunden');
+  //TODO Toast message
 }
 
 /// Returns a [Event] based on a documentSnapshot
