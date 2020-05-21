@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/service/app_localizations.dart';
 
 class ErrorDialogCreator extends StatelessWidget {
   ErrorDialogCreator(String title, String body, bool prio) {
