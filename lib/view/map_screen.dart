@@ -3,9 +3,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/event_service.dart';
 import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
-import 'package:univents/service/event_service.dart';
 import 'package:user_location/user_location.dart';
 
 class MapScreen extends StatefulWidget {
@@ -30,7 +30,8 @@ class _MapScreenState extends State<MapScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => new CreateEventScreen(convertLatLngToString(latlng)),
+                  builder: (context) =>
+                      new CreateEventScreen(convertLatLngToString(latlng)),
                 ));
           }),
       layers: [
@@ -39,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
               "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
           additionalOptions: {
             'accessToken':
-            'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
+                'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
             'id': 'mapbox.streets',
           },
         ),
@@ -61,7 +62,6 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-
   /// Gets all Events from the Database, creates a Marker for each and sets an onClickListener to open the eventInfo of the respective Event
   void getMarkerList(List list) {
     for (Event e in list) {
@@ -69,18 +69,18 @@ class _MapScreenState extends State<MapScreen> {
         point: LatLng(double.parse(e.latitude), double.parse(e.longitude)),
         builder: (ctx) => Container(
             child: GestureDetector(
-              onTap: () async {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => new EventInfo(e),
-                    ));
-              },
-              child: Icon(
-                Icons.location_on,
-                color: Colors.red,
-              ),
-            )),
+          onTap: () async {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new EventInfo(e),
+                ));
+          },
+          child: Icon(
+            Icons.location_on,
+            color: Colors.red,
+          ),
+        )),
       ));
     }
   }

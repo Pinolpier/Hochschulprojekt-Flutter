@@ -137,16 +137,21 @@ class _EventInfoState extends State<EventInfo> {
     print(attendees);
     try {
       int index = 0;
-      for(String uid in attendees) {
+      for (String uid in attendees) {
         print(uid);
-        if (index < 5 && index < attendees.length) {
-          Widget pp = await getProfilePicture('6KxpQ832rsNI9O8IWf3O1JALvOt1');
+        //TODO maybe don't load all profilepictures
+        if (index < attendees.length) {
+          Widget pp = await getProfilePicture(
+              '6KxpQ832rsNI9O8IWf3O1JALvOt1'); //TODO change to UID after FriendList is connected to database
           if (pp != null) {
             print(index);
-            profilePictureList.add(Expanded(child: ClipOval(child: Image.asset('assets/blank_profile.png'))));
+            profilePictureList.add(ClipOval(
+                child: await getProfilePicture(
+                    '6KxpQ832rsNI9O8IWf3O1JALvOt1'))); //TODO change to pp after FirendsList is connected to database
             index++;
           } else {
-            profilePictureList.add(ClipOval(child: Image.asset('assets/blank_profile.png')));
+            profilePictureList
+                .add(ClipOval(child: Image.asset('assets/blank_profile.png')));
             index++;
           }
         } else {
@@ -250,11 +255,22 @@ class _EventInfoState extends State<EventInfo> {
                                 onTap: () {
                                   share(
                                       context,
-                                      'Eventtitel: ' + widget.event.title + '\n' +
-                                          'Eventort: ' + widget.event.location + '\n' +
-                                          'Eventinfo: ' + widget.event.description + '\n' +
-                                          'Start: ' + widget.event.eventStartDate.toString() + '\n' +
-                                          'Ende: ' + widget.event.eventEndDate.toString() + '\n');
+                                      'Eventtitel: ' +
+                                          widget.event.title +
+                                          '\n' +
+                                          'Eventort: ' +
+                                          widget.event.location +
+                                          '\n' +
+                                          'Eventinfo: ' +
+                                          widget.event.description +
+                                          '\n' +
+                                          'Start: ' +
+                                          widget.event.eventStartDate
+                                              .toString() +
+                                          '\n' +
+                                          'Ende: ' +
+                                          widget.event.eventEndDate.toString() +
+                                          '\n');
                                 },
                                 child: Icon(
                                   Icons.share,
@@ -458,9 +474,9 @@ class _EventInfoState extends State<EventInfo> {
                                       width: 80,
                                       height: 80,
                                       margin: EdgeInsets.only(right: 8),
-                                      child: Row(
-                                        children: _result == null ? new List() : profilePictureList,
-                                      ),
+                                      child: _result == null
+                                          ? null
+                                          : profilePictureList[index],
                                     ),
                                   );
                                 },
