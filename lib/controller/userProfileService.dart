@@ -149,7 +149,7 @@ Future<UserProfile> getUserProfile(String uid) async {
       if (userProfile.emailVisibility == PRIVATE ||
           (userProfile.emailVisibility == FRIENDS &&
               !friends.contains(getUidOfCurrentlySignedInUser()))) {
-        userProfile.email = null;
+        userProfile.setEmail(null);
       }
       if (userProfile.nameVisibility == PRIVATE ||
           (userProfile.nameVisibility == FRIENDS &&
