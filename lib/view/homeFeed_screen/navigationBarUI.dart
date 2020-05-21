@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/view/friendList_screen.dart';

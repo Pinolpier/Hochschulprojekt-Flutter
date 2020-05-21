@@ -39,17 +39,23 @@ dependencies:
   apple_sign_in: ^0.1.0
   fluttertoast: ^4.0.1
 
+  path_provider: ^1.6.8
+
   #The following dependency supports state changes of the login screen to HomeScreen on changes of the logged in user, but has to be implemented later on
   provider: ^4.0.5
 
   #The following dependency enables us to use Firebase Cloud Firestore as database.
-  cloud_firestore: ^0.13.5
+  #Version 0.12.2 is needed for geo_firestore
+  cloud_firestore: ^0.12.2
 
   #The following dependency enables us to use Firebase Cloud Storage
   firebase_storage: ^3.1.5
 
   #The following dependency enables us to use Firebase Cloud functions
   cloud_functions: ^0.4.2+3
+
+  #The following dependency enables us to search for Geopoints in Firestore
+  geo_firestore: ^0.0.1
 
   #The following dependency enables us to use the native share window
   share: ^0.6.4
