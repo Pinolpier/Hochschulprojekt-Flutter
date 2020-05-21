@@ -78,7 +78,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                     child: ListTile(
                       onTap: () {
                         setState(() {
-                          isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
+                          isFriendsScreen == true ? print(friends[index]
+                              .name + " was pressed") : isFriendsScreen =
+                          true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
                         });
                       },
                       title: isFriendsScreen == true ? Text(friends[index].name) : Text(groups[index].name),
