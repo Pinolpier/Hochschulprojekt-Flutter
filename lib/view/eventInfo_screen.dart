@@ -53,9 +53,9 @@ class _EventInfoState extends State<EventInfo> {
 
   bool _result;
 
-  List<String> attendees;
+  List<dynamic> attendees;
 
-  List<Widget> profilePictureList;
+  List<Widget> profilePictureList = new List();
 
   ImagePickerUnivents ip = new ImagePickerUnivents();
 
@@ -132,14 +132,23 @@ class _EventInfoState extends State<EventInfo> {
     } else {
       eventimagewidget = null;
     }
+
     attendees = widget.event.attendeesIds;
+    print(attendees);
     try {
       int index = 0;
       for(String uid in attendees) {
-        if (index < 5) {
-          Widget pp = await getProfilePicture(uid);
-          profilePictureList.add(ClipOval(child: pp,));
-          index++;
+        print(uid);
+        if (index < 5 && index < attendees.length) {
+          Widget pp = await getProfilePicture('6KxpQ832rsNI9O8IWf3O1JALvOt1');
+          if (pp != null) {
+            print(index);
+            profilePictureList.add(Expanded(child: Container(child: await getProfilePicture('6KxpQ832rsNI9O8IWf3O1JALvOt1'))));
+            index++;
+          } else {
+            profilePictureList.add(ClipOval(child: Image.asset('assets/blank_profile.png')));
+            index++;
+          }
         } else {
           break;
         }
@@ -450,7 +459,7 @@ class _EventInfoState extends State<EventInfo> {
                                       height: 80,
                                       margin: EdgeInsets.only(right: 8),
                                       child: Row(
-                                        children: profilePictureList,
+                                        children: _result == null ? new List() : profilePictureList,
                                       ),
                                     ),
                                   );
