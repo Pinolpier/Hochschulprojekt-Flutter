@@ -161,7 +161,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 1:
           {
-            //TODO: Map einbinden wenn joster fertig ist
+            //_thisWidget = MapScreen();  //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
             print(index);
           }
           break;
