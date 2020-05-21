@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
@@ -52,8 +53,13 @@ class _EventInfoState extends State<EventInfo> {
 
   bool _result;
 
+  List<String> attendees;
+
+  List<Widget> profilePictureList;
+
   ImagePickerUnivents ip = new ImagePickerUnivents();
 
+  /// gets displayed if no eventImage is specified or eventImage is deleted
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
@@ -68,6 +74,7 @@ class _EventInfoState extends State<EventInfo> {
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
+  ///gets displaced if eventImage gets changed
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
@@ -82,6 +89,7 @@ class _EventInfoState extends State<EventInfo> {
         child: Image.file(eventImage, height: 150));
   }
 
+  ///gets displayed if Event has an eventImage in Database
   Widget _eventImageFromDatabase() {
     return GestureDetector(
         onTap: () async {
@@ -103,6 +111,7 @@ class _EventInfoState extends State<EventInfo> {
                   ));
   }
 
+  ///adds share functionality to share event
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
 
@@ -118,10 +127,25 @@ class _EventInfoState extends State<EventInfo> {
       try {
         eventimagewidget = await getImage(widget.event.eventID);
       } on Exception catch (e) {
-        print(e);
+        //TODO handle exception here
       }
     } else {
       eventimagewidget = null;
+    }
+    attendees = widget.event.attendeesIds;
+    try {
+      int index = 0;
+      for(String uid in attendees) {
+        if (index < 5) {
+          Widget pp = await getProfilePicture(uid);
+          profilePictureList.add(ClipOval(child: pp,));
+          index++;
+        } else {
+          break;
+        }
+      }
+    } on Exception catch (e) {
+      //TODO handle exception here
     }
     return true;
   }
@@ -425,11 +449,8 @@ class _EventInfoState extends State<EventInfo> {
                                       width: 80,
                                       height: 80,
                                       margin: EdgeInsets.only(right: 8),
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          "https://www.beautycastnetwork.com/images/banner-profile_pic.jpg",
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: Row(
+                                        children: profilePictureList,
                                       ),
                                     ),
                                   );
