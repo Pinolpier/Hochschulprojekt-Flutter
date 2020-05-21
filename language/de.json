@@ -27,5 +27,9 @@
   "selected_events_filter": "Deine-Events-Filter",
   "events_of_friends_filter": "Events-von-Freunden-Filter",
   "filter": "Filter",
-  "dateFormat": "yyyy-MM-dd HH:mm"
+  "dateFormat": "yyyy-MM-dd HH:mm",
+  "loginscreen_forgot_password_send": "E-mail zum zurücksetzen des passwortes wurde gesendet an: ",
+  "loginscreen_bad_email": "Email-Adresse ungültig",
+  "loginscreen_bad_password": "Passwort muss mindestens einen groß- und Kleinbuchstaben sowie eine Zahl enthalten und aus mindestens 8 Zeichen bestehen ",
+  "unknown_Exception": "Unbekannter Fehler"
 }
