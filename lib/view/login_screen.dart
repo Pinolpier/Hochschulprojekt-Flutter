@@ -176,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () async {},
+        onPressed: () => _handleLogin(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
