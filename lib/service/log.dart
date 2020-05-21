@@ -33,10 +33,9 @@ class Log {
   }
 
   /// info log
-  /// params:
-  ///   - (String) [causingClass]
-  ///   - (String) [method]
-  ///   - (String) [action] (optional)
+  /// writes and prints an info log with the information from
+  /// (String) [causingClass], (String) [method],
+  /// (String) [action] (optional)
   void info(
       {@required String causingClass,
       @required String method,
@@ -50,10 +49,9 @@ class Log {
   }
 
   /// warn log
-  /// params:
-  ///   - (String) [causingClass]
-  ///   - (String) [method]
-  ///   - (String) [action] (optional)
+  /// writes and prints an warning log with the information from
+  /// (String) [causingClass], (String) [method],
+  /// (String) [action] (optional)
   void warn(
       {@required String causingClass,
       @required String method,
@@ -67,10 +65,9 @@ class Log {
   }
 
   /// error log
-  /// params:
-  ///   - (String) [causingClass]
-  ///   - (String) [method]
-  ///   - (String) [action] (optional)
+  /// writes and prints an error log with the information from
+  /// (String) [causingClass], (String) [method],
+  /// (String) [action] (optional)
   void error(
       {@required String causingClass,
       @required String method,
@@ -83,12 +80,10 @@ class Log {
     _log(information);
   }
 
-  /// concats the data of log to a string
-  /// params:
-  ///   - (String) [type]
-  ///   - (String) [causingClass]
-  ///   - (String) [method]
-  ///   - (String) [action] (optional)
+  /// concat's the data of log to a string
+  /// creates a big String based on (String) [type],
+  /// (String) [causingClass], (String) [method]
+  ///  and (String) [action] (optional)
   String _concat(
       {@required String type,
       @required String causingClass,
