@@ -54,9 +54,8 @@ Future<bool> updateProfile(UserProfile profile) async {
 
 Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   String uid = getUidOfCurrentlySignedInUser();
-  UserProfile profile = await getUserProfile(uid);
-  String uri = (await firestore.collection(collection).document(uid).get()).data['pictureURI'];
-  if (uri != null) {
+  String uri = await getProfilePictureUri(uid);
+  if (uri != null && uri != "null" && uri.isNotEmpty) {
     deleteImage(collection, uri); //delete the picture if one exists
   }
   firestore.collection(collection).document(uid).delete();
