@@ -313,8 +313,9 @@ Future<List<Event>> getAllEvents() async {
   QuerySnapshot qShot = await db.collection(collection).getDocuments();
   List<Event> eventList = new List();
   eventList = _snapShotToList(qShot);
-  eventList = await filterEvents(eventList);
-  return addEventIdToObjects(eventList, qShot);
+  addEventIdToObjects(eventList, qShot);
+  eventList = filterEvents(eventList);
+  return eventList;
 }
 
 List<Event> filterEvents(List<Event> eventList) {
