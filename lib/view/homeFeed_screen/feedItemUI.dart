@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/utils.dart';
 
-class FeedItemUI extends StatelessWidget {
+//'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
+class FeedItemUI extends StatefulWidget {
   final Event _data;
 
   FeedItemUI(this._data);
+
+  @override
+  State<StatefulWidget> createState() => FeedItemUIState(this._data);
+}
+
+class FeedItemUIState extends State<FeedItemUI> {
+  final Event _data;
+
+  FeedItemUIState(this._data);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +29,7 @@ class FeedItemUI extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
-                ),
+                child: profilePicture(),
               ),
               title: Text(this._data.title),
               subtitle: Text(
@@ -68,5 +77,15 @@ class FeedItemUI extends StatelessWidget {
             format_date_time(context, this._data.eventEndDate) +
             "\n" +
             this._data.location;
+  }
+
+  Image profilePicture() {
+    Image _profilePicture;
+    getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
+          _profilePicture = value;
+        }));
+    return _profilePicture != null
+        ? _profilePicture
+        : Image.asset('assets/blank_profile.png');
   }
 }
