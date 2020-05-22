@@ -336,11 +336,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           final List<String> result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FriendslistdialogScreen(),
+                builder: (context) => FriendslistdialogScreen.create(),
               ));
           setState(() {
             for (String s in result) {
               attendeeIDs.add(s);
+              print(s);
             }
           });
           //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)

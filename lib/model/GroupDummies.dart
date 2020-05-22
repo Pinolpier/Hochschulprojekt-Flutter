@@ -5,8 +5,4 @@ class GroupDummies {
   bool isSelected = false;
 
   GroupDummies({this.name, this.profilepic});
-
-  String getName() {
-    return name;
-  }
 }

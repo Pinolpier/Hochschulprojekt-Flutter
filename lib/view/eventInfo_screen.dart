@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
 import 'package:share/share.dart';
 import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
 /// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
@@ -141,12 +142,11 @@ class _EventInfoState extends State<EventInfo> {
         //TODO maybe don't load all profilepictures
         if (index < attendees.length) {
           Widget pp = await getProfilePicture(
-              '6KxpQ832rsNI9O8IWf3O1JALvOt1'); //TODO change to UID after FriendList is connected to database
+              uid);
           if (pp != null) {
             print(index);
             profilePictureList.add(ClipOval(
-                child: await getProfilePicture(
-                    '6KxpQ832rsNI9O8IWf3O1JALvOt1'))); //TODO change to pp after FirendsList is connected to database
+                child: await getProfilePicture(uid)));
             index++;
           } else {
             profilePictureList
@@ -179,7 +179,8 @@ class _EventInfoState extends State<EventInfo> {
   Widget build(BuildContext context) {
     isEventOpen = !widget.event.privateEvent;
     eventAttendeesCount = widget.event.attendeesIds.length;
-    eventDate = widget.event.eventStartDate.toIso8601String();
+    eventDate = format_date_time(context, widget.event.eventStartDate);
+    //widget.event.eventStartDate.toIso8601String();
     eventName = widget.event.title;
     eventLocation = widget.event.location;
     eventText = widget.event.description;
@@ -302,19 +303,9 @@ class _EventInfoState extends State<EventInfo> {
                                         onTap: () {
                                           setState(() {
                                             isEventOpen = !isEventOpen;
-                                            Event e = new Event(
-                                                widget.event.title,
-                                                widget.event.eventStartDate,
-                                                widget.event.eventEndDate,
-                                                widget.event.description,
-                                                widget.event.location,
-                                                isEventOpen,
-                                                widget.event.attendeesIds,
-                                                widget.event.tagsList,
-                                                widget.event.latitude,
-                                                widget.event.longitude);
+                                            widget.event.privateEvent = isEventOpen;
                                             try {
-                                              updateData(e);
+                                              updateData(widget.event);
                                             } on Exception catch (e){
                                               //TODO Errorhandling
                                             }
@@ -329,7 +320,8 @@ class _EventInfoState extends State<EventInfo> {
                                             : isEventOpen == false
                                                 ? Icon(
                                                     Icons.lock,
-                                                    color: univentsWhiteBackground,
+                                                    color:
+                                                        univentsWhiteBackground,
                                                     size: 30,
                                                   )
                                                 : null),
@@ -388,7 +380,7 @@ class _EventInfoState extends State<EventInfo> {
                       ),
                       Container(
                         padding: EdgeInsets.all(32),
-                        color: Colors.blue,
+                        color: primaryColor,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -508,7 +500,7 @@ class _EventInfoState extends State<EventInfo> {
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
                                 onPressed: () {
-                                  showFriendsDialog(context);
+                                  showFriendsDialogEvent(context, widget.event);
                                 },
                                 child: Icon(Icons.group_add),
                                 backgroundColor: primaryColor,

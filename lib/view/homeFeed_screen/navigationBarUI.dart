@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/controller/authService.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/view/friendList_screen.dart';
@@ -36,9 +36,17 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   NavigationBarUIControl() {
     _data = new List<Widget>();
     Feed.init().then((val) => setState(() {
-      _data = val;
-      _initState(0);
-    }));
+          _data = val;
+          _initState(0);
+        }));
+  }
+
+  ///updates feed with the setted filters
+  void _update() {
+    Feed.init().then((val) => setState(() {
+          this._data = val;
+          _initState(0);
+        }));
   }
 
   @override
@@ -48,7 +56,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: univentsWhiteBackground,
+          backgroundColor: primaryColor,
           title: Center(
             child: Text(
               'Univents',
@@ -80,45 +88,6 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     );
   }
 
-  ///updates feed with the setted filters
-  void _update() {
-    Feed.init().then((val) => setState(() {
-      _data = val;
-    }));
-  }
-
-  ///controls the filter that are selected
-  void _selectedFilter(String selected) async {
-    if (selected ==
-        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context)) {
-      deleteStartFilter();
-      deleteEndFilter();
-      deleteTagFilter();
-      deleteFriendIdFilter();
-      myEventFilter = false;
-      _update();
-    } else if (selected ==
-        FeedFilterValues(FeedFilter.dateFilter).convertToString(context)) {
-      DateTime _date = await getDateTime(context);
-      if (_date != null) {
-        startDateFilter = _date;
-        _update();
-      }
-    } else if (selected ==
-        FeedFilterValues(FeedFilter.selectedEventsFilter)
-            .convertToString(context)) {
-      myEventFilter = true;
-      _update();
-    } else if (selected ==
-        FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
-            .convertToString(context)) {
-      //todo backend
-    }
-    setState(() {
-      this._dropdownValue = selected;
-    });
-  }
-
   void _initState(int index) {
     setState(() {
       switch (index) {
@@ -128,8 +97,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
               child: Column(
                 children: <Widget>[
                   DropdownButton<String>(
-                    hint: Text(AppLocalizations.of(context).translate("filter")),
-                    value: _dropdownValue,
+                    hint:
+                        Text(AppLocalizations.of(context).translate("filter")),
+                    value: this._dropdownValue,
                     underline: Container(
                       height: 2,
                       color: Colors.grey,
@@ -153,63 +123,68 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
                   ),
                   Expanded(
                     child: ListView(
-                      children: _data, //Feed.feed,
+                      children: _data,
                     ),
                   ),
                 ],
               ),
             );
-            print(index);
           }
           break;
         case 1:
           {
-            _thisWidget =
-                MapScreen(); //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
-            print(index);
+            _thisWidget = MapScreen();
           }
           break;
         case 2:
           {
             _thisWidget = FriendlistScreen();
-            print(index);
           }
           break;
         case 3:
           {
             _thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
-            print(index);
           }
           break;
         case 4:
           {
             _thisWidget = SettingsScreen();
-            print(index);
           }
           break;
       }
     });
   }
 
-/*
-  Route _toHome() {
-    print('navigate to home');
+  ///controls the filter that are selected
+  void _selectedFilter(String selected) async {
+    if (selected ==
+        FeedFilterValues(FeedFilter.standardFilter).convertToString(_context)) {
+      deleteStartFilter();
+      deleteEndFilter();
+      deleteTagFilter();
+      deleteFriendIdFilter();
+      myEventFilter = false;
+      _update();
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.dateFilter).convertToString(context)) {
+      DateTime _date = await getDateTime(context);
+      if (_date != null) {
+        startDateFilter = _date;
+        _update();
+      }
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.selectedEventsFilter)
+            .convertToString(context)) {
+      myEventFilter = true;
+      //todo: need to set up ui for tags
+      _update();
+    } else if (selected ==
+        FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+            .convertToString(context)) {
+      //todo: model
+    }
+    setState(() {
+      this._dropdownValue = selected;
+    });
   }
-
-  Route _toMap() {
-    print('navigate to map');
-  }
-
-  Route _toFiends() {
-    print('navigate to friends');
-  }
-
-  Route _toProfile() {
-    print('navigate to profile');
-  }
-
-  Route _toSettings() {
-    print('navigate to settings');
-  }
-*/
 }
