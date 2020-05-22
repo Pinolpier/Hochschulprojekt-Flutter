@@ -51,6 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       "oops, seems like firebase doesn't have any text saved for your bio yet!";
   Widget profilePicFromDatabase;
   File profilepic;
+  File profilepicasync;
   bool isProfileOwner;
   bool createProfile = false;
   ImagePickerUnivents ip = new ImagePickerUnivents();
@@ -59,25 +60,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File profilePicAsync = await ip.chooseImage(context);
+          profilePicFromDatabase = null;
+          profilepicasync = await ip.chooseImage(context);
           setState(() {
-            print(profilePicAsync);
-            profilepic = profilePicAsync;
-          });
+            print(profilepicasync);
+            profilepic = profilepicasync;
+            updateProfilePicture(profilepic, userProfile);
+          }); // handle your image tap here
         }, // handle your image tap here
-        child: Image.asset('assets/blank_profile.png', height: 150));
+        child: Image.asset('assets/blank_profile.png'));
   }
 
+  ///gets displaced if eventImage gets changed
   Widget _profilePicture() {
     return GestureDetector(
         onTap: () async {
-          File profilePicAsync = await ip.chooseImage(context);
+          profilePicFromDatabase = null;
+          profilepicasync = await ip.chooseImage(context);
           setState(() {
-            print(profilePicAsync);
-            profilepic = profilePicAsync;
+            print(profilepicasync);
+            profilepic = profilepicasync;
+            updateProfilePicture(profilepic, userProfile);
           }); // handle your image tap here
         },
-        child: Image.file(profilepic, height: 150));
+        child: Image.file(profilepic));
+  }
+
+  ///gets displayed if Event has an eventImage in Database
+  Widget _profilePicFromDatabase() {
+    return GestureDetector(
+        onTap: () async {
+          profilePicFromDatabase = null;
+          profilepicasync = await ip.chooseImage(context);
+          setState(() {
+            print(profilepicasync);
+            profilepic = profilepicasync;
+            updateProfilePicture(profilepic, userProfile);
+          }); // handle your image tap here
+        },
+        child: profilePicFromDatabase != null
+            ? profilePicFromDatabase
+            : profilepic == null
+                ? Image.asset('assets/blank_profile.png')
+                : Image.file(profilepic));
   }
 
   Future<bool> loadAsyncData() async {
@@ -86,12 +111,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         this.isProfileOwner = (UID == getUidOfCurrentlySignedInUser());
 
         userProfile = await getUserProfile(UID);
-        userProfile.email == null ? this.emailAddress = '' : this.emailAddress = userProfile.email;
-        userProfile.forename == null ? this.firstName = '' : this.firstName = userProfile.forename;
-        userProfile.surname == null ? this.lastName = '' : this.lastName = userProfile.surname;
+        userProfile.email == null
+            ? this.emailAddress = ''
+            : this.emailAddress = userProfile.email;
+        userProfile.forename == null
+            ? this.firstName = ''
+            : this.firstName = userProfile.forename;
+        userProfile.surname == null
+            ? this.lastName = ''
+            : this.lastName = userProfile.surname;
         this.userName = userProfile.username;
 
         this.profilePicFromDatabase = await getProfilePicture(UID);
+        print(profilePicFromDatabase);
         if (userProfile.biography != null) {
           this.bioText = userProfile.biography;
         }
@@ -145,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: SizedBox(
                           height: 100,
                           width: 100,
-                          child: _result == null && createProfile == false
+                          child: _result == null
                               ? CircularProgressIndicator()
                               : profilePicFromDatabase != null
                                   ? profilePicFromDatabase
@@ -259,18 +291,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: primaryColor,
                             elevation: 7.0,
                             child: isProfileOwner == true &&
-                                createProfile == false ? GestureDetector(
-                              onTap: () {
-                                showChangeBioDialog(context, userProfile);
-                              },
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context).translate(
-                                      'edit_bio'),
-                                  style: TextStyle(color: univentsWhiteText,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                              ),)
+                                    createProfile == false
+                                ? GestureDetector(
+                                    onTap: () {
+                                      showChangeBioDialog(context, userProfile);
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('edit_bio'),
+                                        style: TextStyle(
+                                            color: univentsWhiteText,
+                                            fontFamily: 'Montserrat'),
+                                      ),
+                                    ),
+                                  )
                                 : isProfileOwner == false &&
                                         createProfile == false
                                     ? GestureDetector(

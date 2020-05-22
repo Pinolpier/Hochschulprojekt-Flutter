@@ -54,9 +54,8 @@ Future<bool> updateProfile(UserProfile profile) async {
 
 Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   String uid = getUidOfCurrentlySignedInUser();
-  UserProfile profile = await getUserProfile(uid);
-  String uri = (await firestore.collection(collection).document(uid).get()).data['pictureURI'];
-  if (uri != null) {
+  String uri = await getProfilePictureUri(uid);
+  if (uri != null && uri != "null" && uri.isNotEmpty) {
     deleteImage(collection, uri); //delete the picture if one exists
   }
   firestore.collection(collection).document(uid).delete();
@@ -67,19 +66,9 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
 /// The user is referenced by [profile.uid] and the parameter [file] may be null to delete the (existing) profile picture.
 Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
-    String uri = '';
-    if (uidToUri.containsKey(profile.uid)) {
-      //The uri of the picture is known
-      uri = uidToUri[profile.uid];
-      uidToUri.remove(profile.uid);
-    } else {
-      //The uri of the picture has to be requested from Firestore
-      DocumentSnapshot documentSnapshot =
-      await firestore.collection(collection).document(profile.uid).get();
-      uri = documentSnapshot.data['profilePicture'].toString();
-    }
+    String uri = await getProfilePictureUri(profile.uid);
     if (uri != null && uri.isNotEmpty && uri != "null")
-      deleteImage(collection, uri); //delete the picture if one exists
+      deleteImage(collection, profile.uid); //delete the picture if one exists
     if (file != null) {
       //if a not null picture has been given to the method upload it
       uidToUri[profile.uid] = await uploadFile(collection, file, profile.uid);
@@ -104,6 +93,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
             .collection(collection)
             .document(profile.uid)
             .updateData({'profilePicture': null});
+        uidToUri.remove(profile.uid);
         return true;
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
@@ -120,7 +110,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
 /// Use this method to retrieve an [Image] ([Widget]) with the profile picture of the [FirebaseUser] that is referenced by [uid]
 Future<Widget> getProfilePicture(String uid) async {
   String uri = await getProfilePictureUri(uid);
-  if (uri != null && (uri.trim() != "")) return Image.network(uri);
+  if (uri != null && uri.isNotEmpty && uri != "null") return Image.network(uri);
   return null;
 }
 

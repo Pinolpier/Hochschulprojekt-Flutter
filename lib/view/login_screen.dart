@@ -83,6 +83,7 @@ class _LoginScreenState extends State<LoginScreen>
               hintStyle: textStyleConstant,
             ),
             onChanged: (text) {
+              text = text.trim();
               _email = text;
             },
           ),
