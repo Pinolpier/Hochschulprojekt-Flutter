@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/controller/authService.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/view/friendList_screen.dart';
@@ -36,9 +36,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   NavigationBarUIControl() {
     _data = new List<Widget>();
     Feed.init().then((val) => setState(() {
-      _data = val;
-      _initState(0);
-    }));
+          _data = val;
+          _initState(0);
+        }));
   }
 
   @override
@@ -48,7 +48,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: univentsWhiteBackground,
+          backgroundColor: primaryColor,
           title: Center(
             child: Text(
               'Univents',
@@ -83,8 +83,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   ///updates feed with the setted filters
   void _update() {
     Feed.init().then((val) => setState(() {
-      _data = val;
-    }));
+          _data = val;
+        }));
   }
 
   ///controls the filter that are selected
@@ -128,7 +128,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
               child: Column(
                 children: <Widget>[
                   DropdownButton<String>(
-                    hint: Text(AppLocalizations.of(context).translate("filter")),
+                    hint:
+                        Text(AppLocalizations.of(context).translate("filter")),
                     value: _dropdownValue,
                     underline: Container(
                       height: 2,

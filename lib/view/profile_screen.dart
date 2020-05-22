@@ -47,7 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String lastName;
   String userName;
   String emailAddress;
-  String bioText = "oops, seems like firebase doesn't have any text saved for your bio yet!";
+  String bioText =
+      "oops, seems like firebase doesn't have any text saved for your bio yet!";
   Widget profilePicFromDatabase;
   File profilepic;
   bool isProfileOwner;
@@ -123,20 +124,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_result == null && createProfile == false) {
+    if (_result == null && createProfile == false) {
       return CircularProgressIndicator();
-    }
-    else {
+    } else {
       return new Scaffold(
-        backgroundColor: primaryColor,
+        backgroundColor: univentsWhiteBackground,
         body: new Stack(
           children: <Widget>[
             Positioned(
                 width: 380.0,
-                top: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 10,
+                top: MediaQuery.of(context).size.height / 10,
                 left: 20.0,
                 child: Column(
                   children: <Widget>[
@@ -150,49 +147,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: _result == null && createProfile == false
                               ? CircularProgressIndicator()
                               : profilePicFromDatabase != null
-                              ? profilePicFromDatabase
-                              : profilepic == null
-                              ? _profilePicturePlaceholder()
-                              : _profilePicture(),
+                                  ? profilePicFromDatabase
+                                  : profilepic == null
+                                      ? _profilePicturePlaceholder()
+                                      : _profilePicture(),
                         )),
                     SizedBox(height: 50.0),
-                    createProfile == false && firstName != null &&
-                        lastName != null ? Text(firstName + " " + lastName,
-                      style: TextStyle(
-                          color: univentsBlackText,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Montserrat'),
-                    ) : createProfile == false && firstName == null &&
-                        lastName == null ? null
-                        : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: 300.0,
-                          child: TextField(
-                            controller: _textControllerFirstName,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              hintText: AppLocalizations.of(context).translate(
-                                  'first_name'),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.0),
-                        Container(
-                          width: 300.0,
-                          child: TextField(
-                            controller: _textControllerLastname,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              hintText: AppLocalizations.of(context).translate(
-                                  "last_name"),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    createProfile == false &&
+                            firstName != null &&
+                            lastName != null
+                        ? Text(
+                            firstName + " " + lastName,
+                            style: TextStyle(
+                                color: univentsBlackText,
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat'),
+                          )
+                        : createProfile == false &&
+                                firstName == null &&
+                                lastName == null
+                            ? null
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    width: 300.0,
+                                    child: TextField(
+                                      controller: _textControllerFirstName,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(10.0),
+                                        hintText: AppLocalizations.of(context)
+                                            .translate('first_name'),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  Container(
+                                    width: 300.0,
+                                    child: TextField(
+                                      controller: _textControllerLastname,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(10.0),
+                                        hintText: AppLocalizations.of(context)
+                                            .translate("last_name"),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                     SizedBox(height: 10.0),
                     createProfile == false
                         ? Text(
@@ -244,88 +247,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
-                        width: isProfileOwner == true ? 95.0 : isProfileOwner ==
-                            false ? 150.0 : createProfile == true
-                            ? 100.0
-                            : null,
+                        width: isProfileOwner == true
+                            ? 95.0
+                            : isProfileOwner == false
+                                ? 150.0
+                                : createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: univentsGreyBackgorund,
                             color: primaryColor,
                             elevation: 7.0,
                             child: isProfileOwner == true &&
-                                createProfile == false ? GestureDetector(
-                              onTap: () {
-                                showChangeBioDialog(context);
-                              },
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context).translate(
-                                      'edit_bio'),
-                                  style: TextStyle(color: univentsWhiteText,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                              ),)
-                                : isProfileOwner == false &&
-                                createProfile == false ? GestureDetector(
-                              onTap: () {
-                                showAlertDialog(context);
-                              },
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context).translate(
-                                      'send_friends_request'),
-                                  style: TextStyle(color: univentsWhiteText,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                              ),
-                            ) : createProfile == true
+                                    createProfile == false
                                 ? GestureDetector(
-                              onTap: () async {
-                                setState(() {
-                                  userName = _textControllerUsername.text;
-                                  firstName = _textControllerFirstName.text;
-                                  lastName = _textControllerLastname.text;
-                                });
-                                if (userName != null && userName
-                                    .trim()
-                                    .isNotEmpty) {
-                                  UserProfile userProfile = new UserProfile(
-                                      getUidOfCurrentlySignedInUser(),
-                                      userName,
-                                      getEmailOfCurrentlySignedInUser(),
-                                      firstName,
-                                      lastName,
-                                      null,
-                                      null);
-                                  await updateProfile(userProfile);
-                                  await updateProfilePicture(
-                                      profilepic, userProfile);
+                                    onTap: () {
+                                      showChangeBioDialog(context);
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('edit_bio'),
+                                        style: TextStyle(
+                                            color: univentsWhiteText,
+                                            fontFamily: 'Montserrat'),
+                                      ),
+                                    ),
+                                  )
+                                : isProfileOwner == false &&
+                                        createProfile == false
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          showAlertDialog(context);
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)
+                                                .translate(
+                                                    'send_friends_request'),
+                                            style: TextStyle(
+                                                color: univentsWhiteText,
+                                                fontFamily: 'Montserrat'),
+                                          ),
+                                        ),
+                                      )
+                                    : createProfile == true
+                                        ? GestureDetector(
+                                            onTap: () async {
+                                              setState(() {
+                                                userName =
+                                                    _textControllerUsername
+                                                        .text;
+                                                firstName =
+                                                    _textControllerFirstName
+                                                        .text;
+                                                lastName =
+                                                    _textControllerLastname
+                                                        .text;
+                                              });
+                                              if (userName != null &&
+                                                  userName.trim().isNotEmpty) {
+                                                UserProfile userProfile =
+                                                    new UserProfile(
+                                                        getUidOfCurrentlySignedInUser(),
+                                                        userName,
+                                                        getEmailOfCurrentlySignedInUser(),
+                                                        firstName,
+                                                        lastName,
+                                                        null,
+                                                        null);
+                                                await updateProfile(
+                                                    userProfile);
+                                                await updateProfilePicture(
+                                                    profilepic, userProfile);
 
-                                  //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ScreenManager()),
-                                        (Route<dynamic> route) => false,
-                                  );
-                                }
-                                else {
-                                  show_toast(
-                                      AppLocalizations.of(context).translate(
-                                          'profile_screen_toast'));
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context).translate(
-                                      'confirm'),
-                                  style: TextStyle(color: univentsWhiteText,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                              ),)
-                                : SizedBox(height: 0.0)
-                        )),
+                                                //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
+                                                Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ScreenManager()),
+                                                  (Route<dynamic> route) =>
+                                                      false,
+                                                );
+                                              } else {
+                                                show_toast(AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'profile_screen_toast'));
+                                              }
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)
+                                                    .translate('confirm'),
+                                                style: TextStyle(
+                                                    color: univentsWhiteText,
+                                                    fontFamily: 'Montserrat'),
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(height: 0.0))),
                   ],
                 ))
           ],
