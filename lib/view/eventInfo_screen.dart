@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
+import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/model/event.dart';
+import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
@@ -9,6 +13,10 @@ import 'package:univents/view/dialogs/DialogHelper.dart';
 /// Furthermore it shows stuff like an event picture, how many people will attend, open or closed and also adds functionality
 /// so that the user can change the event picture and set the event to private or open
 class EventInfo extends StatefulWidget {
+  final Event event;
+
+  EventInfo(this.event, {Key key}) : super(key: key);
+
   @override
   _EventInfoState createState() => _EventInfoState();
 }
@@ -17,11 +25,10 @@ class _EventInfoState extends State<EventInfo> {
   DateTime now = new DateTime.fromMicrosecondsSinceEpoch(
       new DateTime.now().millisecondsSinceEpoch);
 
-  /// if the event is open for everyone or private
   bool isEventOpen = true;
 
   /// how many people promised to attend
-  String eventAttendeesCount = "400";
+  int eventAttendeesCount = 400;
 
   /// the date on which the event holds place
   String eventDate = "24.04";
@@ -33,46 +40,160 @@ class _EventInfoState extends State<EventInfo> {
   String eventLocation = 'Hochschule Heilbronn';
 
   /// description of the event (set by event creator)
-  String eventText =
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
+  String eventText = 'Lorem Ipsum';
 
   /// eventpicture
   File eventImage;
 
+  File eventImageAsync;
+
+  ///eventPicture from Firebase (if available)
+  Widget eventimagewidget;
+
+  bool _result;
+
+  List<dynamic> attendees;
+
+  List<Widget> profilePictureList = new List();
+
+  ImagePickerUnivents ip = new ImagePickerUnivents();
+
+  /// gets displayed if no eventImage is specified or eventImage is deleted
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          eventimagewidget = null;
+          eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
-          });
+            updateImage(eventImage, widget.event);
+          }); // handle your image tap here
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
+  ///gets displaced if eventImage gets changed
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          eventimagewidget = null;
+          eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
+            updateImage(eventImage, widget.event);
           }); // handle your image tap here
         },
         child: Image.file(eventImage, height: 150));
   }
 
+  ///gets displayed if Event has an eventImage in Database
+  Widget _eventImageFromDatabase() {
+    return GestureDetector(
+        onTap: () async {
+          eventimagewidget = null;
+          eventImageAsync = await ip.chooseImage(context);
+          setState(() {
+            print(eventImageAsync);
+            eventImage = eventImageAsync;
+            updateImage(eventImage, widget.event);
+          }); // handle your image tap here
+        },
+        child: eventimagewidget != null
+            ? eventimagewidget
+            : eventImage == null
+                ? Image.asset('assets/eventImagePlaceholder.png', height: 150)
+                : Image.file(
+                    eventImage,
+                    height: 150.0,
+                  ));
+  }
+
+  ///adds share functionality to share event
+  void share(BuildContext context, String text) {
+    final RenderBox box = context.findRenderObject(); //fix for iPad
+
+    Share.share(
+      text,
+      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    );
+  }
+
+  Future<bool> loadAsyncData() async {
+    if (widget.event.imageURL != null) {
+      try {
+        eventimagewidget = await getImage(widget.event.eventID);
+      } on Exception catch (e) {
+        //TODO handle exception here
+      }
+    } else {
+      eventimagewidget = null;
+    }
+
+    attendees = widget.event.attendeesIds;
+    print(attendees);
+    try {
+      int index = 0;
+      for (String uid in attendees) {
+        print(uid);
+        //TODO maybe don't load all profilepictures
+        if (index < attendees.length) {
+          Widget pp = await getProfilePicture(
+              '6KxpQ832rsNI9O8IWf3O1JALvOt1'); //TODO change to UID after FriendList is connected to database
+          if (pp != null) {
+            print(index);
+            profilePictureList.add(ClipOval(
+                child: await getProfilePicture(
+                    '6KxpQ832rsNI9O8IWf3O1JALvOt1'))); //TODO change to pp after FirendsList is connected to database
+            index++;
+          } else {
+            profilePictureList
+                .add(ClipOval(child: Image.asset('assets/blank_profile.png')));
+            index++;
+          }
+        } else {
+          break;
+        }
+      }
+    } on Exception catch (e) {
+      //TODO handle exception here
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    loadAsyncData().then((result) {
+      // If we need to rebuild the widget with the resulting data,
+      // make sure to use `setState`
+      setState(() {
+        _result = result;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    isEventOpen = !widget.event.privateEvent;
+    eventAttendeesCount = widget.event.attendeesIds.length;
+    eventDate = widget.event.eventStartDate.toIso8601String();
+    eventName = widget.event.title;
+    eventLocation = widget.event.location;
+    eventText = widget.event.description;
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
           SizedBox.expand(
-            child: Image.asset(
-              "assets/loginbackground.jpg",
-              fit: BoxFit.cover,
-            ),
+            child: _result == null
+                ? CircularProgressIndicator()
+                : _eventImageFromDatabase() != null
+                    ? _eventImageFromDatabase()
+                    : eventImage == null
+                        ? _eventImagePlaceholder()
+                        : _eventImage(),
           ),
           DraggableScrollableSheet(
             minChildSize: 0.1,
@@ -96,9 +217,13 @@ class _EventInfoState extends State<EventInfo> {
                             SizedBox(
                               height: 100,
                               width: 100,
-                              child: eventImage == null
-                                  ? _eventImagePlaceholder()
-                                  : _eventImage(),
+                              child: _result == null
+                                  ? CircularProgressIndicator()
+                                  : _eventImageFromDatabase() != null
+                                      ? _eventImageFromDatabase()
+                                      : eventImage == null
+                                          ? _eventImagePlaceholder()
+                                          : _eventImage(),
                             ),
                             SizedBox(
                               width: 16,
@@ -126,7 +251,24 @@ class _EventInfoState extends State<EventInfo> {
                             ),
                             GestureDetector(
                                 onTap: () {
-                                  print("event share button got pressed");
+                                  share(
+                                      context,
+                                      'Eventtitel: ' +
+                                          widget.event.title +
+                                          '\n' +
+                                          'Eventort: ' +
+                                          widget.event.location +
+                                          '\n' +
+                                          'Eventinfo: ' +
+                                          widget.event.description +
+                                          '\n' +
+                                          'Start: ' +
+                                          widget.event.eventStartDate
+                                              .toString() +
+                                          '\n' +
+                                          'Ende: ' +
+                                          widget.event.eventEndDate.toString() +
+                                          '\n');
                                 },
                                 child: Icon(
                                   Icons.share,
@@ -159,6 +301,22 @@ class _EventInfoState extends State<EventInfo> {
                                         onTap: () {
                                           setState(() {
                                             isEventOpen = !isEventOpen;
+                                            Event e = new Event(
+                                                widget.event.title,
+                                                widget.event.eventStartDate,
+                                                widget.event.eventEndDate,
+                                                widget.event.description,
+                                                widget.event.location,
+                                                isEventOpen,
+                                                widget.event.attendeesIds,
+                                                widget.event.tagsList,
+                                                widget.event.latitude,
+                                                widget.event.longitude);
+                                            try {
+                                              updateData(e);
+                                            } on Exception catch (e){
+                                              //TODO Errorhandling
+                                            }
                                           });
                                         },
                                         child: isEventOpen == true
@@ -204,7 +362,7 @@ class _EventInfoState extends State<EventInfo> {
                                       width: 4,
                                     ),
                                     Text(
-                                      eventAttendeesCount,
+                                      eventAttendeesCount.toString(),
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
@@ -221,6 +379,18 @@ class _EventInfoState extends State<EventInfo> {
                                 )
                               ],
                             ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(32),
+                        color: Colors.blue,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
                             Column(
                               children: <Widget>[
                                 Row(
@@ -318,16 +488,13 @@ class _EventInfoState extends State<EventInfo> {
                                       width: 80,
                                       height: 80,
                                       margin: EdgeInsets.only(right: 8),
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          "https://www.beautycastnetwork.com/images/banner-profile_pic.jpg",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                      child: _result == null
+                                          ? null
+                                          : profilePictureList[index],
                                     ),
                                   );
                                 },
-                                itemCount: int.parse(eventAttendeesCount),
+                                itemCount: eventAttendeesCount,
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
                               ),
@@ -341,7 +508,7 @@ class _EventInfoState extends State<EventInfo> {
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
                                 onPressed: () {
-                                  DialogHelper.showFriendsDialog(context);
+                                  showFriendsDialog(context);
                                 },
                                 child: Icon(Icons.group_add),
                                 backgroundColor: Colors.blueAccent,

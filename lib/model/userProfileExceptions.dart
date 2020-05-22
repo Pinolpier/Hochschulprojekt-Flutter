@@ -54,3 +54,8 @@ class NoUserProfileFoundException extends UserProfileException {
   const NoUserProfileFoundException(Exception originalException, String message)
       : super(originalException, message);
 }
+
+class UniqueConstraintViolatedException extends UserProfileException {
+  const UniqueConstraintViolatedException(Exception originalException, String message)
+      : super(originalException, message);
+}

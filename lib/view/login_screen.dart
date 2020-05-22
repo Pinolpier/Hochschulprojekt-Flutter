@@ -42,8 +42,7 @@ class _LoginScreenState extends State<LoginScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Image(
-          image: new AssetImage("assets/eventlogo.png"),
-          // TODO should be changed to the actual univents logo in assets later
+          image: new AssetImage("assets/univentslogo.png"),
           width: _logoAnimation.value * 100,
           height: _logoAnimation.value * 100,
         )
@@ -175,9 +174,7 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () async {
-          await _handleLogin();
-        },
+        onPressed: () => _handleLogin(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -198,9 +195,9 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   /// Sign a user in if the [_email] is valid.
-  _handleLogin() async {
+  _handleLogin() {
     if (_isEmailGood(_email)) {
-      await signInWithEmailAndPassword(_email, _password);
+      signInWithEmailAndPassword(_email, _password);
     } else {
       //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
     }
@@ -212,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen>
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () async => await handleRegistration(),
+        onPressed: () => handleRegistration(),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -233,13 +230,10 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   /// Registers a new user&password combination if [_isPasswordGood] and if [_isEmailGood].
-  handleRegistration() async {
+  handleRegistration() {
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
-      await registerWithEmailAndPassword(_email, _password);
+      registerWithEmailAndPassword(_email, _password);
     } else {
-      print(_isEmailGood(_email));
-      print(_isPasswordGood(_password));
-      print("passwort fehler");
       //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
     }
   }

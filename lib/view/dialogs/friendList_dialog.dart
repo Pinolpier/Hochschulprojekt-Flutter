@@ -107,7 +107,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
             child: FloatingActionButton(
               onPressed: () {
                 comeFromCreateEventScreen == false
-                    ? DialogHelper.showChangeBioDialog(context)
+                    ? showChangeBioDialog(context)
                     : Navigator.pop(context, selected);
                 //TODO: Save selected friends from list "selected" into database and send them an invite/add them to a new group, depending on the context of the actions of the user
               },

@@ -29,7 +29,7 @@ class UniventsApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
           ],
           localeResolutionCallback: (locale, supportedLocales) {
-            //ToDo This is just a workaround -> on IOS we don't get the locale at the first millisecond so when the locale is null we first take english as favorite language
+            //ToDo This is just a workaround -> on IOS we don't get the locale at the first millisecond so when the locale is null we first take english as favorite languages
             if (locale == null) {
               return supportedLocales.first;
             }
