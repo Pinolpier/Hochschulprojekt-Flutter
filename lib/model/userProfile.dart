@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:univents/controller/userProfileService.dart';
 
 /// spoken values for the different privacy options
 final int PRIVATE = 1;
@@ -45,7 +46,8 @@ class UserProfile {
   }
 
   /// returns a [Map] to store this instance in the [Firestore] database
-  Map<String, dynamic> toMap() {
+  Future<Map<String, dynamic>> toMap() async {
+    String pictureURI = await getProfilePictureUri(uid);
     return {
       'username': _username.toLowerCase(),
       'email': _email.toLowerCase(),
@@ -53,6 +55,7 @@ class UserProfile {
       'surname': _surname,
       'biography': _biography,
       'tags':_tags,
+      'profilePicture': pictureURI,
       'emailVisibility':_emailVisibility,
       'tagsVisibility':_tagsVisibility,
       'nameVisibility':_nameVisibility

@@ -39,7 +39,7 @@ Future<bool> updateProfile(UserProfile profile) async {
       await firestore
           .collection(collection)
           .document(profile.uid)
-          .setData(profile.toMap());
+          .setData(await profile.toMap());
       return true;
     } catch (e) {
       //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
@@ -119,6 +119,15 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
 
 /// Use this method to retrieve an [Image] ([Widget]) with the profile picture of the [FirebaseUser] that is referenced by [uid]
 Future<Widget> getProfilePicture(String uid) async {
+  String uri = await getProfilePictureUri(uid);
+  if (uri != null && (uri.trim() != "")) return Image.network(uri);
+  return null;
+}
+
+/// This method should probably only be used internally, but still it's ot private because it may be needed elsewhere
+///
+/// Handles caching profilePicture URIs and retrieving them for a profile identified by [uid].
+Future<String> getProfilePictureUri(String uid) async {
   String uri = '';
   if (uidToUri.containsKey(uid)) {
     uri = uidToUri[uid];
@@ -127,8 +136,8 @@ Future<Widget> getProfilePicture(String uid) async {
     await firestore.collection(collection).document(uid).get();
     uri = documentSnapshot.data['profilePicture'].toString();
   }
-  if (uri != null && (uri.trim() != "")) return Image.network(uri);
-  return null;
+  uidToUri.putIfAbsent(uid, () => uri);
+  return uri;
 }
 
 /// Use this method to retrieve a [UserProfile] referenced by a [uid].
