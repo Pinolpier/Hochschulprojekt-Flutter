@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
+import 'package:univents/service/app_localizations.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
@@ -46,7 +48,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xff), //TODO: color definition
+          backgroundColor: univentsWhiteBackground,
           title: Center(
             child: Text(
               'Univents',
@@ -188,4 +190,26 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       }
     });
   }
+
+/*
+  Route _toHome() {
+    print('navigate to home');
+  }
+
+  Route _toMap() {
+    print('navigate to map');
+  }
+
+  Route _toFiends() {
+    print('navigate to friends');
+  }
+
+  Route _toProfile() {
+    print('navigate to profile');
+  }
+
+  Route _toSettings() {
+    print('navigate to settings');
+  }
+*/
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
 
 /// this is used as a dialog that opens when you press the "change bio" button on the profile screen while your logged in as the profile owner on your own profile
 /// it gives you the option to input a new bio in the textfield and confirm it through the button at the right so your new bio text gets displayed
@@ -20,9 +21,9 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: univentsLightGreyBackground,
         appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: primaryColor,
           title: isBioScreen == true
               ? Text("Change your Bio")
               : Text("Creating a new Group"),
@@ -46,7 +47,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
               padding: const EdgeInsets.only(left: 265, top: 10),
               child: FloatingActionButton(
                 shape: RoundedRectangleBorder(),
-                backgroundColor: Colors.grey[200],
+                backgroundColor: univentsLightGreyBackground,
                 onPressed: () {
                   setState(() {
                     newText = _textController.text;
@@ -59,7 +60,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
                     return count++ == 2;
                   });
                 },
-                child: Icon(Icons.check, color: Colors.black45),
+                child: Icon(Icons.check, color: univentsBlackText2),
               ),
             )
           ],

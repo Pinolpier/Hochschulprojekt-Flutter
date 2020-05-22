@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,11 +38,11 @@ class _AboutScreenState extends State<AboutScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteBackground,
         child: Text(
           'feedback',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -73,11 +74,11 @@ class _AboutScreenState extends State<AboutScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteBackground,
         child: Text(
           'share',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -91,7 +92,7 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: primaryColor,
         body: new Container(
             height: double.infinity,
             child: SingleChildScrollView(
