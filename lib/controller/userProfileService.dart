@@ -68,7 +68,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
     String uri = await getProfilePictureUri(profile.uid);
     if (uri != null && uri.isNotEmpty && uri != "null")
-      deleteImage(collection, uri); //delete the picture if one exists
+      deleteImage(collection, profile.uid); //delete the picture if one exists
     if (file != null) {
       //if a not null picture has been given to the method upload it
       uidToUri[profile.uid] = await uploadFile(collection, file, profile.uid);
