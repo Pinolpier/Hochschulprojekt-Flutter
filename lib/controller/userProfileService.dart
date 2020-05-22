@@ -119,7 +119,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
 /// Use this method to retrieve an [Image] ([Widget]) with the profile picture of the [FirebaseUser] that is referenced by [uid]
 Future<Widget> getProfilePicture(String uid) async {
   String uri = await getProfilePictureUri(uid);
-  if (uri != null && (uri.trim() != "")) return Image.network(uri);
+  if (uri != null && uri.isNotEmpty && uri != "null") return Image.network(uri);
   return null;
 }
 

@@ -117,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         this.userName = userProfile.username;
 
         this.profilePicFromDatabase = await getProfilePicture(UID);
+        print(profilePicFromDatabase);
         if (userProfile.biography != null) {
           this.bioText = userProfile.biography;
         }
