@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
 import 'package:share/share.dart';
 import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
 /// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
@@ -179,7 +180,8 @@ class _EventInfoState extends State<EventInfo> {
   Widget build(BuildContext context) {
     isEventOpen = !widget.event.privateEvent;
     eventAttendeesCount = widget.event.attendeesIds.length;
-    eventDate = widget.event.eventStartDate.toIso8601String();
+    eventDate = format_date_time(context, widget.event.eventStartDate);
+    //widget.event.eventStartDate.toIso8601String();
     eventName = widget.event.title;
     eventLocation = widget.event.location;
     eventText = widget.event.description;
@@ -315,7 +317,7 @@ class _EventInfoState extends State<EventInfo> {
                                                 widget.event.longitude);
                                             try {
                                               updateData(e);
-                                            } on Exception catch (e){
+                                            } on Exception catch (e) {
                                               //TODO Errorhandling
                                             }
                                           });
@@ -329,7 +331,8 @@ class _EventInfoState extends State<EventInfo> {
                                             : isEventOpen == false
                                                 ? Icon(
                                                     Icons.lock,
-                                                    color: univentsWhiteBackground,
+                                                    color:
+                                                        univentsWhiteBackground,
                                                     size: 30,
                                                   )
                                                 : null),

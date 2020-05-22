@@ -3,6 +3,7 @@ import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/utils.dart';
+import 'package:univents/view/eventInfo_screen.dart';
 
 //'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
 class FeedItemUI extends StatefulWidget {
@@ -35,8 +36,11 @@ class FeedItemUIState extends State<FeedItemUI> {
               subtitle: Text(
                 _getInformation(context),
               ),
-              onTap: () {
-                print(_data.eventID);
+              onTap: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new EventInfo(this._data)));
               },
             ),
             Expanded(
