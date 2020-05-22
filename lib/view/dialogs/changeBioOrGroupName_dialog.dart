@@ -1,13 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
+import 'package:univents/model/userProfile.dart';
 
 /// this is used as a dialog that opens when you press the "change bio" button on the profile screen while your logged in as the profile owner on your own profile
 /// it gives you the option to input a new bio in the textfield and confirm it through the button at the right so your new bio text gets displayed
 /// it is also used in the friendList_screen when you create a new group to set a name for that group
 class ChangeBioDialog extends StatefulWidget {
+  UserProfile userProfile;
+  bool create = false;
+
+  ChangeBioDialog(UserProfile userProfile) {this.userProfile = userProfile;}
+
+  ChangeBioDialog.create() {create = true;}
+
   @override
-  _ChangeBioDialogState createState() => _ChangeBioDialogState();
+  _ChangeBioDialogState createState() => create == true ? _ChangeBioDialogState.create() : _ChangeBioDialogState(userProfile);
 }
 
 class _ChangeBioDialogState extends State<ChangeBioDialog> {
@@ -16,6 +26,14 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
       ""; //TODO: fill this with the bio text from the database of the user
   bool isBioScreen =
       false; //TODO: set this to true if the user used this dialog to change his profile bio, change to false if he uses it for a new group name in the friendslist
+  UserProfile userProfile;
+
+  _ChangeBioDialogState.create() {}
+
+  _ChangeBioDialogState(UserProfile userProfile) {
+    isBioScreen = true;
+    this.userProfile = userProfile;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +69,15 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
                 onPressed: () {
                   setState(() {
                     newText = _textController.text;
-                    //TODO: Save this new biotext/group name in firebase
+                    if (isBioScreen == true) {
+                      userProfile.biography = newText;
+                      updateProfile(userProfile);
+                    }
                   });
 
                   // Navigator pop twice so user gets send back to group screen
                   int count = 0;
-                  Navigator.popUntil(context, (route) {
-                    return count++ == 2;
-                  });
+                  isBioScreen == false ? Navigator.popUntil(context, (route) {return count++ == 2;}) : Navigator.pop(context);
                 },
                 child: Icon(Icons.check, color: univentsBlackText2),
               ),

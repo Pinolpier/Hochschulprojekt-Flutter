@@ -157,10 +157,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
               child: FloatingActionButton(
                 onPressed: () {
                   comeFromCreateEventScreen == false
-                      ? showChangeBioDialog(context)
-                      : event == null ? Navigator.pop(context, selected) :
-                        doStuff();
-                       updateData(event);
+                      ? showChangeGroup(context)
+                      : event == null ? Navigator.pop(context, selected) : doStuff();
                 },
                 child: Icon(Icons.check),
                 backgroundColor: primaryColor,
@@ -172,8 +170,15 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     }
   }
   void doStuff() {
-    for (String s in selected) {
-      event.attendeesIds.add(s);
+    for (String a in selected) {
+      List<String> newAttendees = new List();
+      for(String s in event.attendeesIds) {
+        newAttendees.add(s);
+      }
+      newAttendees.add(a);
+      event.attendeesIds = newAttendees;
     }
+    updateData(event);
+    Navigator.pop(context);
   }
 }

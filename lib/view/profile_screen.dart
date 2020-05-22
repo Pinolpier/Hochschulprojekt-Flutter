@@ -53,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isProfileOwner;
   bool createProfile = false;
   ImagePickerUnivents ip = new ImagePickerUnivents();
+  UserProfile userProfile;
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -83,10 +84,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       try {
         this.isProfileOwner = (UID == getUidOfCurrentlySignedInUser());
 
-        UserProfile userProfile = await getUserProfile(UID);
-        this.emailAddress = userProfile.email;
-        this.firstName = userProfile.forename;
-        this.lastName = userProfile.surname;
+        userProfile = await getUserProfile(UID);
+        userProfile.email == null ? this.emailAddress = '' : this.emailAddress = userProfile.email;
+        userProfile.forename == null ? this.firstName = '' : this.firstName = userProfile.forename;
+        userProfile.surname == null ? this.lastName = '' : this.lastName = userProfile.surname;
         this.userName = userProfile.username;
 
         this.profilePicFromDatabase = await getProfilePicture(UID);
@@ -256,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: isProfileOwner == true &&
                                 createProfile == false ? GestureDetector(
                               onTap: () {
-                                showChangeBioDialog(context);
+                                showChangeBioDialog(context, userProfile);
                               },
                               child: Center(
                                 child: Text(

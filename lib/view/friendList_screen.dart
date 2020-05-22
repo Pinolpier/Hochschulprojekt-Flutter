@@ -9,6 +9,7 @@ import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
+import 'package:univents/view/profile_screen.dart';
 
 class FriendlistScreen extends StatefulWidget {
   @override
@@ -95,8 +96,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                             onTap: () {
                               setState(() {
                                 isFriendsScreen == true
-                                    ? print(
-                                    friends[index].name + " was pressed")
+                                    ? showProfileScreen(context, friends[index].uid)
                                     : isFriendsScreen =
                                 true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
                               });
