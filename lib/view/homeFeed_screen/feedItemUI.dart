@@ -45,9 +45,7 @@ class FeedItemUIState extends State<FeedItemUI> {
                   image: DecorationImage(
                     image: _data.imageURL != null
                         ? NetworkImage(_data.imageURL)
-                        : NetworkImage(
-                            'https://images.eventpeppers.com/sites/default/files/imagecache/lightbox-xs/content/18-05/disco-feiern-abends.jpg',
-                          ),
+                        : Image.asset('assets/eventImagePlaceholder.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
