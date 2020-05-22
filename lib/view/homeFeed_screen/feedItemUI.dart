@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
@@ -35,10 +34,11 @@ class FeedItemUI extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(
-                      //TODO: provide generic image from "createEvent"
-                      'https://images.eventpeppers.com/sites/default/files/imagecache/lightbox-xs/content/18-05/disco-feiern-abends.jpg',
-                    ),
+                    image: _data.imageURL != null
+                        ? NetworkImage(_data.imageURL)
+                        : NetworkImage(
+                            'https://images.eventpeppers.com/sites/default/files/imagecache/lightbox-xs/content/18-05/disco-feiern-abends.jpg',
+                          ),
                     fit: BoxFit.cover,
                   ),
                 ),
