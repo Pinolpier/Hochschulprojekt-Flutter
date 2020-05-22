@@ -41,6 +41,14 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         }));
   }
 
+  ///updates feed with the setted filters
+  void _update() {
+    Feed.init().then((val) => setState(() {
+          this._data = val;
+          _initState(0);
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     this._context = context;
@@ -80,11 +88,72 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     );
   }
 
-  ///updates feed with the setted filters
-  void _update() {
-    Feed.init().then((val) => setState(() {
-          _data = val;
-        }));
+  void _initState(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+          {
+            _thisWidget = Container(
+              child: Column(
+                children: <Widget>[
+                  DropdownButton<String>(
+                    hint:
+                        Text(AppLocalizations.of(context).translate("filter")),
+                    value: this._dropdownValue,
+                    underline: Container(
+                      height: 2,
+                      color: Colors.grey,
+                    ),
+                    onChanged: _selectedFilter,
+                    items: <String>[
+                      FeedFilterValues(FeedFilter.standardFilter)
+                          .convertToString(context),
+                      FeedFilterValues(FeedFilter.dateFilter)
+                          .convertToString(context),
+                      FeedFilterValues(FeedFilter.selectedEventsFilter)
+                          .convertToString(context),
+                      FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+                          .convertToString(context),
+                    ].map<DropdownMenuItem<String>>((String dropdownValue) {
+                      return DropdownMenuItem<String>(
+                        value: dropdownValue,
+                        child: Text(dropdownValue),
+                      );
+                    }).toList(),
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: _data,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          break;
+        case 1:
+          {
+            _thisWidget =
+                MapScreen(); //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
+          }
+          break;
+        case 2:
+          {
+            _thisWidget = FriendlistScreen();
+          }
+          break;
+        case 3:
+          {
+            _thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
+          }
+          break;
+        case 4:
+          {
+            _thisWidget = SettingsScreen();
+          }
+          break;
+      }
+    });
   }
 
   ///controls the filter that are selected
@@ -117,79 +186,6 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     }
     setState(() {
       this._dropdownValue = selected;
-    });
-  }
-
-  void _initState(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          {
-            _thisWidget = Container(
-              child: Column(
-                children: <Widget>[
-                  DropdownButton<String>(
-                    hint:
-                        Text(AppLocalizations.of(context).translate("filter")),
-                    value: _dropdownValue,
-                    underline: Container(
-                      height: 2,
-                      color: Colors.grey,
-                    ),
-                    onChanged: _selectedFilter,
-                    items: <String>[
-                      FeedFilterValues(FeedFilter.standardFilter)
-                          .convertToString(context),
-                      FeedFilterValues(FeedFilter.dateFilter)
-                          .convertToString(context),
-                      FeedFilterValues(FeedFilter.selectedEventsFilter)
-                          .convertToString(context),
-                      FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
-                          .convertToString(context),
-                    ].map<DropdownMenuItem<String>>((String dropdownValue) {
-                      return DropdownMenuItem<String>(
-                        value: dropdownValue,
-                        child: Text(dropdownValue),
-                      );
-                    }).toList(),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      children: _data, //Feed.feed,
-                    ),
-                  ),
-                ],
-              ),
-            );
-            print(index);
-          }
-          break;
-        case 1:
-          {
-            _thisWidget =
-                MapScreen(); //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
-            print(index);
-          }
-          break;
-        case 2:
-          {
-            _thisWidget = FriendlistScreen();
-            print(index);
-          }
-          break;
-        case 3:
-          {
-            _thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
-            print(index);
-          }
-          break;
-        case 4:
-          {
-            _thisWidget = SettingsScreen();
-            print(index);
-          }
-          break;
-      }
     });
   }
 }

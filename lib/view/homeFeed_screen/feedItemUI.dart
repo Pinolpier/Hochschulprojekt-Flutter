@@ -45,7 +45,7 @@ class FeedItemUIState extends State<FeedItemUI> {
                   image: DecorationImage(
                     image: _data.imageURL != null
                         ? NetworkImage(_data.imageURL)
-                        : Image.asset('assets/eventImagePlaceholder.png'),
+                        : Image.asset('assets/eventImagePlaceholder.png').image,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -77,8 +77,8 @@ class FeedItemUIState extends State<FeedItemUI> {
             this._data.location;
   }
 
-  Image profilePicture() {
-    Image _profilePicture;
+  Widget profilePicture() {
+    Widget _profilePicture;
     getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
           _profilePicture = value;
         }));
