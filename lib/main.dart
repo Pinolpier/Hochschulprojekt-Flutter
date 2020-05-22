@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/screenManager.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/view/login_screen.dart';
 
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));

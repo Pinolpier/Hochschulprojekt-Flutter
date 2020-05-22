@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/screenManager.dart';
 import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
@@ -51,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File profilepic;
   bool isProfileOwner;
   bool createProfile = false;
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -121,12 +123,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_result == null && createProfile == false) {
+    if (_result == null && createProfile == false) {
       return CircularProgressIndicator();
     }
     else {
       return new Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: univentsWhiteBackground,
         body: new Stack(
           children: <Widget>[
             Positioned(
@@ -139,14 +141,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                        color: Colors.grey,
+                        color: univentsLightGreyBackground,
                         width: 130.0,
                         height: 130.0,
                         child: SizedBox(
                           height: 100,
                           width: 100,
-                          child: _result == null && createProfile == false ? CircularProgressIndicator()
-                              : profilePicFromDatabase != null ? profilePicFromDatabase
+                          child: _result == null && createProfile == false
+                              ? CircularProgressIndicator()
+                              : profilePicFromDatabase != null
+                              ? profilePicFromDatabase
                               : profilepic == null
                               ? _profilePicturePlaceholder()
                               : _profilePicture(),
@@ -155,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     createProfile == false && firstName != null &&
                         lastName != null ? Text(firstName + " " + lastName,
                       style: TextStyle(
-                          color: Colors.white,
+                          color: univentsBlackText,
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Montserrat'),
@@ -231,22 +235,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                         height: 30.0,
                         width: isProfileOwner == true ? 95.0 : isProfileOwner ==
-                            false ? 150.0 : createProfile == true ? 100.0 : null,
+                            false ? 150.0 : createProfile == true
+                            ? 100.0
+                            : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
-                            shadowColor: Colors.grey,
-                            color: Colors.black45,
+                            shadowColor: univentsGreyBackgorund,
+                            color: primaryColor,
                             elevation: 7.0,
                             child: isProfileOwner == true &&
                                 createProfile == false ? GestureDetector(
                               onTap: () {
-                                DialogHelper.showChangeBioDialog(context);
+                                showChangeBioDialog(context);
                               },
                               child: Center(
                                 child: Text(
                                   AppLocalizations.of(context).translate(
                                       'edit_bio'),
-                                  style: TextStyle(color: Colors.white,
+                                  style: TextStyle(color: univentsWhiteText,
                                       fontFamily: 'Montserrat'),
                                 ),
                               ),)
@@ -259,7 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Text(
                                   AppLocalizations.of(context).translate(
                                       'send_friends_request'),
-                                  style: TextStyle(color: Colors.white,
+                                  style: TextStyle(color: univentsWhiteText,
                                       fontFamily: 'Montserrat'),
                                 ),
                               ),
@@ -283,12 +289,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       null,
                                       null);
                                   await updateProfile(userProfile);
-                                  await updateProfilePicture(profilepic, userProfile);
+                                  await updateProfilePicture(
+                                      profilepic, userProfile);
 
                                   //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
                                   Navigator.pushAndRemoveUntil(
                                     context,
-                                    MaterialPageRoute(builder: (context) => ScreenManager()),
+                                    MaterialPageRoute(
+                                        builder: (context) => ScreenManager()),
                                         (Route<dynamic> route) => false,
                                   );
                                 }
@@ -302,7 +310,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Text(
                                   AppLocalizations.of(context).translate(
                                       'confirm'),
-                                  style: TextStyle(color: Colors.white,
+                                  style: TextStyle(color: univentsWhiteText,
                                       fontFamily: 'Montserrat'),
                                 ),
                               ),)

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
@@ -42,9 +43,9 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: univentsLightGreyBackground,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: primaryColor,
         title: Text("Your Friendslist"),
         centerTitle: true,
       ),
@@ -112,7 +113,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                 //TODO: Save selected friends from list "selected" into database and send them an invite/add them to a new group, depending on the context of the actions of the user
               },
               child: Icon(Icons.check),
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: primaryColor,
             ),
           ),
         ],

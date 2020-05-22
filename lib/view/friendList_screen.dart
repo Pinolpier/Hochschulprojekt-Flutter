@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/GroupDummies.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/errorDialogCreator.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
@@ -38,7 +39,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
   Widget build(BuildContext context) {
     return Card(
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: univentsLightGreyBackground,
         body: Column(
           children: <Widget>[
             TextField(
@@ -94,7 +95,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                       });
                     },
                     child: Icon(Icons.group),
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: primaryColor,
                   ),
                 ),
                 Padding(
@@ -102,9 +103,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   child: FloatingActionButton(
                     onPressed: () {
                       showAddFriendsDialog(context);
-                    //showErrorDialog(context, "Test1", "test2", true);},
-                    child: Icon(Icons.group_add),
-                    backgroundColor: Colors.blueAccent,
+                      },
+                      child: Icon(Icons.group_add),
+                      backgroundColor:primaryColor,
                   ),
                 ),
               ],
@@ -116,7 +117,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   showFriendsDialog(context);
                 },
                 child: Icon(Icons.add),
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: primaryColor,
               ),
             ),
           ],

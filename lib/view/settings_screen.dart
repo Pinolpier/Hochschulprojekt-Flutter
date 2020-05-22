@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:univents/controller/authService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/option_model.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -11,7 +13,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Card(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: univentsLightGreyBackground,
         body: ListView.builder(
           itemCount: options.length + 2,
           itemBuilder: (BuildContext context, int index) {
@@ -26,18 +28,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: double.infinity,
               height: 70.0,
               decoration: BoxDecoration(
-                color: Colors.grey,
+                color: univentsWhiteBackground,
                 borderRadius: BorderRadius.circular(5.0),
               ),
               child: ListTile(
                 leading: options[index - 1].icon,
                 title: Text(
                   options[index - 1].title,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: univentsBlackText),
                 ),
                 subtitle: Text(
                   options[index - 1].subtitle,
-                  style: TextStyle(color: Colors.black45),
+                  style: TextStyle(color: univentsBlackText2),
                 ),
                 onTap: () {
                   print('pressed');
@@ -47,23 +49,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           },
         ),
         bottomSheet: Container(
-            color: Colors.black45,
+            color: univentsWhiteBackground,
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 140.0),
             width: double.infinity,
             child: RaisedButton(
               elevation: 5.0,
-              onPressed: () => print('Logout was pressed'),
+              onPressed: () => signOut(),
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color: Colors.white,
+              color: univentsWhiteBackground,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
                     'LOGOUT',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: univentsBlackText),
                   ),
                   Icon(Icons.exit_to_app)
                 ],

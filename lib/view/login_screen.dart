@@ -2,6 +2,7 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: TextField(
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen>
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.white,
+                color: univentsWhiteText,
               ),
               hintText: AppLocalizations.of(context).translate('enter_email'),
               hintStyle: textStyleConstant,
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: TextField(
             obscureText: true,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen>
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white,
+                color: univentsWhiteText,
               ),
               hintText:
                   AppLocalizations.of(context).translate('enter_password'),
@@ -179,11 +180,11 @@ class _LoginScreenState extends State<LoginScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteBackground,
         child: Text(
           'LOGIN',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -214,11 +215,11 @@ class _LoginScreenState extends State<LoginScreen>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteBackground,
         child: Text(
           'REGISTER', //TODO internationalize
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -261,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen>
           padding: EdgeInsets.all(15.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          color: Colors.white,
+          color: univentsWhiteBackground,
           child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -274,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen>
                     'Sign in with Google',
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.grey,
+                      color: textButtonDarkBlue,
                     ),
                   ),
                 ),
@@ -357,7 +358,7 @@ class _LoginScreenState extends State<LoginScreen>
         }
 
         return Scaffold(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: primaryColor,
           body: new Container(
             height: double.infinity,
             child: SingleChildScrollView(

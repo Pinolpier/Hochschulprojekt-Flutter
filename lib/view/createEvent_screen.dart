@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/model/colors.dart';
 import 'package:flutter/services.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/constants.dart';
@@ -126,11 +127,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteBackground,
         child: Text(
           'select startDateTime',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -165,11 +166,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteBackground,
         child: Text(
           'select endDateTime',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -197,7 +198,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             controller: eventNameController,
             keyboardType: TextInputType.text,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -205,7 +206,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.create,
-                color: Colors.white,
+                color: univentsWhiteBackground,
               ),
               hintText: 'Enter the event name',
               hintStyle: textStyleConstant,
@@ -233,7 +234,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             controller: eventLocationController,
             keyboardType: TextInputType.text,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -241,7 +242,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.add_location,
-                color: Colors.white,
+                color: univentsWhiteBackground,
               ),
               hintText: 'Enter the location of the event',
               hintStyle: textStyleConstant,
@@ -270,7 +271,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             keyboardType: TextInputType.multiline,
             maxLines: null,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -278,7 +279,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.comment,
-                color: Colors.white,
+                color: univentsWhiteBackground,
               ),
               hintText: 'Enter the event details',
               hintStyle: textStyleConstant,
@@ -306,7 +307,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             keyboardType: TextInputType.text,
             maxLines: null,
             style: TextStyle(
-              color: Colors.white,
+              color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -314,7 +315,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.add,
-                color: Colors.white,
+                color: univentsWhiteBackground,
               ),
               hintText: 'Tags, seperated by comma',
               hintStyle: textStyleConstant,
@@ -349,11 +350,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteText,
         child: Text(
           'addFriends',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -416,11 +417,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.white,
+        color: univentsWhiteText,
         child: Text(
           'CREATE',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: textButtonDarkBlue,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -434,7 +435,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: primaryColor,
       body: new Container(
         height: double.infinity,
         child: SingleChildScrollView(
