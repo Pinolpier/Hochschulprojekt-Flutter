@@ -25,13 +25,14 @@ class FriendslistdialogScreen extends StatefulWidget {
   }
 
   @override
-  _FriendlistdialogScreenState createState() => create ? _FriendlistdialogScreenState.create() : _FriendlistdialogScreenState(event);
+  _FriendlistdialogScreenState createState() => create
+      ? _FriendlistdialogScreenState.create()
+      : _FriendlistdialogScreenState(event);
 }
 
 /// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
 /// button at the bottom to create a new message
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
-
   _FriendlistdialogScreenState(Event event) {
     this.event = event;
   }
@@ -45,8 +46,6 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   List<String> selected = List();
   List<FriendslistDummies> friends = new List();
   Event event;
-
-
 
   void longPress() {
     setState(() {
@@ -68,8 +67,13 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
         UserProfile up = await getUserProfile(s);
         print(up.toString());
         print(await getProfilePicture(s));
+        Widget profilePicture = await getProfilePicture(s);
         friends.add(FriendslistDummies(
-            uid: s, name: up.username, profilepic: await getProfilePicture(s)));
+            uid: s,
+            name: up.username,
+            profilepic: profilePicture == null
+                ? Image.asset('assets/blank_profile.png')
+                : profilePicture));
       }
     } else {
       friends = new List();
@@ -126,7 +130,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                           onLongPress: () {
                             setState(() {
                               friends[index].isSelected =
-                              !friends[index].isSelected;
+                                  !friends[index].isSelected;
                               if (selected.contains(friends[index].uid)) {
                                 selected.removeLast();
                               } else {
@@ -158,7 +162,9 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                 onPressed: () {
                   comeFromCreateEventScreen == false
                       ? showChangeGroup(context)
-                      : event == null ? Navigator.pop(context, selected) : doStuff();
+                      : event == null
+                          ? Navigator.pop(context, selected)
+                          : doStuff();
                 },
                 child: Icon(Icons.check),
                 backgroundColor: primaryColor,
@@ -169,10 +175,11 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
       );
     }
   }
+
   void doStuff() {
     for (String a in selected) {
       List<String> newAttendees = new List();
-      for(String s in event.attendeesIds) {
+      for (String s in event.attendeesIds) {
         newAttendees.add(s);
       }
       newAttendees.add(a);
