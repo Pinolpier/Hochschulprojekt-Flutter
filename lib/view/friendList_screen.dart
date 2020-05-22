@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/GroupDummies.dart';
 import 'package:univents/model/colors.dart';
+import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
+import 'package:univents/view/profile_screen.dart';
 
 class FriendlistScreen extends StatefulWidget {
   @override
@@ -19,108 +23,138 @@ class FriendlistScreen extends StatefulWidget {
 class _FriendlistScreenState extends State<FriendlistScreen> {
   final _debouncer = new Debouncer(500);
   bool isFriendsScreen = true;
+  List<GroupDummies> groups = new List();
+  List<FriendslistDummies> friends = new List();
 
-  //simple dummie list filled with dummie friend objects to test the list
-  List<FriendslistDummies> friends = [
-    FriendslistDummies(name: "Markus Link", profilepic: "mango.png"),
-    FriendslistDummies(name: "Markus Häring", profilepic: "mango.png"),
-    FriendslistDummies(name: "Jan Oster", profilepic: "mango.png"),
-    FriendslistDummies(name: "Mathias Darscht", profilepic: "mango.png"),
-    FriendslistDummies(name: "Christian Henrich", profilepic: "mango.png"),
-  ];
+  var _result;
 
-  List<GroupDummies> groups = [
-    GroupDummies(name: "GROUP1", profilepic: "mango.png")
-  ];
+  Future<bool> loadAsyncData() async {
+    Map<String, dynamic> friendsMap = await getFriends();
+    if(friendsMap != null && friendsMap.containsKey('friends')) {
+      List<dynamic> friend = friendsMap['friends'];
+      for(String s in friend) {
+        UserProfile up = await getUserProfile(s);
+        print(up.toString());
+        print(await getProfilePicture(s));
+        friends.add(FriendslistDummies(uid: s, name: up.username, profilepic: await getProfilePicture(s)));
+      }
+    } else {
+      friends = new List();
+    }
+
+    return true;
+  }
+
+  @override
+  void initState() {
+    loadAsyncData().then((result) {
+      // If we need to rebuild the widget with the resulting data,
+      // make sure to use `setState`
+      setState(() {
+        _result = result;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Scaffold(
-        backgroundColor: univentsLightGreyBackground,
-        body: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10.0),
-                hintText: isFriendsScreen == true ? AppLocalizations.of(context)
-                    .translate('search_for_friend') : AppLocalizations.of(context)
-                    .translate('search_for_group'),
+    if (_result == null) {
+      return CircularProgressIndicator();
+    } else {
+      return Card(
+        child: Scaffold(
+          backgroundColor: univentsLightGreyBackground,
+          body: Column(
+            children: <Widget>[
+              TextField(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(10.0),
+                    hintText: isFriendsScreen == true ? AppLocalizations.of(
+                        context)
+                        .translate('search_for_friend') : AppLocalizations.of(
+                        context)
+                        .translate('search_for_group'),
+                  ),
+                  onChanged: (string) {
+                    //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
+                    _debouncer.run(() {
+                      print(string);
+                    });
+                  }
               ),
-              onChanged: (string) {
-                //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
-                _debouncer.run(() {
-                  print(string);
-                });
-              }
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: isFriendsScreen == true ? friends.length : groups.length,
-                itemBuilder: (context, index){
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
-                    child: Card(
-                      child: ListTile(
-                        onTap: () {
-                          setState(() {
-                            isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
-                          });
-                        },
-                        title: isFriendsScreen == true ? Text(friends[index].name) : Text(groups[index].name),
-                        leading: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                          },
-                          child: CircleAvatar(
-                            backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}') : AssetImage('assets/${groups[index].profilepic}'),  //TODO Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
+              Expanded(
+                child: ListView.builder(
+                    itemCount: isFriendsScreen == true ? friends.length : groups
+                        .length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 1.0, horizontal: 6.0),
+                        child: Card(
+                          child: ListTile(
+                            onTap: () {
+                              setState(() {
+                                isFriendsScreen == true
+                                    ? showProfileScreen(context, friends[index].uid)
+                                    : isFriendsScreen =
+                                true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
+                              });
+                            },
+                            title: isFriendsScreen == true ? Text(
+                                friends[index].name) : Text(groups[index].name),
+                            leading: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {},
+                              child: isFriendsScreen == true ? friends[index].profilepic : CircleAvatar(backgroundImage: AssetImage('assets/${groups[index].profilepic}'), //TODO Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                }
-              ),
-            ),
-            isFriendsScreen == true ? Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        isFriendsScreen = false;
-                      });
-                    },
-                    child: Icon(Icons.group),
-                    backgroundColor: primaryColor,
-                  ),
+                      );
+                    }
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      showAddFriendsDialog(context);
+              ),
+              isFriendsScreen == true ? Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        setState(() {
+                          isFriendsScreen = false;
+                        });
+                      },
+                      child: Icon(Icons.group),
+                      backgroundColor: primaryColor,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        showAddFriendsDialog(context);
                       },
                       child: Icon(Icons.group_add),
-                      backgroundColor:primaryColor,
+                      backgroundColor: primaryColor,
+                    ),
                   ),
+                ],
+              )
+                  : Padding(
+                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    showFriendsDialog(context);
+                  },
+                  child: Icon(Icons.add),
+                  backgroundColor: primaryColor,
                 ),
-              ],
-            )
-            : Padding(
-              padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  showFriendsDialog(context);
-                },
-                child: Icon(Icons.add),
-                backgroundColor: primaryColor,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }

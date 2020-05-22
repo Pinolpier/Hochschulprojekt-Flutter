@@ -40,7 +40,7 @@ class FeedItemUIState extends State<FeedItemUI> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => new EventInfo(this._data)));
+                        builder: (context) => new EventInfo(_data)));
               },
             ),
             Expanded(
