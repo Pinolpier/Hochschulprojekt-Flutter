@@ -4,11 +4,10 @@ import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/GroupDummies.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/service/utils/errorDialogCreator.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
-class FriendlistScreen extends StatefulWidget{
+class FriendlistScreen extends StatefulWidget {
   @override
   _FriendlistScreenState createState() => _FriendlistScreenState();
 }
@@ -17,8 +16,7 @@ class FriendlistScreen extends StatefulWidget{
  * this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
  * button at the bottom to add new friends, also used to display groups depending on the bool [isFriendsScreen] to avoid code duplication!
  */
-class _FriendlistScreenState extends State<FriendlistScreen>{
-
+class _FriendlistScreenState extends State<FriendlistScreen> {
   final _debouncer = new Debouncer(500);
   bool isFriendsScreen = true;
 
@@ -33,7 +31,7 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
 
   List<GroupDummies> groups = [
     GroupDummies(name: "GROUP1", profilepic: "mango.png")
-    ];
+  ];
 
   @override
   Widget build(BuildContext context) {

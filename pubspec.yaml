@@ -57,6 +57,7 @@ dependencies:
 
   #The following dependency enables us to search for Geopoints in Firestore
   geo_firestore: ^0.0.1
+  geolocator: ^5.3.1
 
   #The following dependency enables us to use the native share window
   share: ^0.6.4

@@ -25,11 +25,8 @@ class FeedItemUI extends StatelessWidget {
               ),
               title: Text(this._data.title),
               subtitle: Text(
-                  format_date_time(context, this._data.eventStartDate) +
-                      "\n - \n" +
-                      format_date_time(context, this._data.eventEndDate) +
-                  "\n" +
-                  this._data.location),
+                _getInformation(context),
+              ),
               onTap: () {
                 print(_data.eventID);
               },
@@ -58,5 +55,18 @@ class FeedItemUI extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getInformation(BuildContext context) {
+    return _data.location == null
+        ? format_date_time(context, this._data.eventStartDate) +
+            "\n - \n" +
+            format_date_time(context, this._data.eventEndDate) +
+            "\n"
+        : format_date_time(context, this._data.eventStartDate) +
+            "\n - \n" +
+            format_date_time(context, this._data.eventEndDate) +
+            "\n" +
+            this._data.location;
   }
 }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/controller/authService.dart';
-import 'package:univents/view/friendList_screen.dart';
-import 'package:univents/view/homeFeed_screen/feed.dart';
-import 'package:univents/view/profile_screen.dart';
-import 'package:univents/view/settings_screen.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
+import 'package:univents/view/friendList_screen.dart';
+import 'package:univents/view/homeFeed_screen/feed.dart';
+import 'package:univents/view/map_screen.dart';
+import 'package:univents/view/profile_screen.dart';
+import 'package:univents/view/settings_screen.dart';
 
 import '../../service/app_localizations.dart';
 import 'feed.dart';
@@ -163,7 +164,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 1:
           {
-            //_thisWidget = MapScreen();  //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
+            _thisWidget =
+                MapScreen(); //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
             print(index);
           }
           break;

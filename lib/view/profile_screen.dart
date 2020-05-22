@@ -10,11 +10,10 @@ import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 
 import 'dialogs/DialogHelper.dart';
 
-class ProfileScreen extends StatefulWidget  {
+class ProfileScreen extends StatefulWidget {
   String UID;
   bool create = false;
 
@@ -27,7 +26,8 @@ class ProfileScreen extends StatefulWidget  {
   }
 
   @override
-  _ProfileScreenState createState() => create ? _ProfileScreenState.create() : new _ProfileScreenState(UID);
+  _ProfileScreenState createState() =>
+      create ? _ProfileScreenState.create() : new _ProfileScreenState(UID);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> loadAsyncData() async {
-    if(createProfile == false) {
+    if (createProfile == false) {
       try {
         this.isProfileOwner = (UID == getUidOfCurrentlySignedInUser());
 
@@ -123,12 +123,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_result == null && createProfile == false) {
+    if(_result == null && createProfile == false) {
       return CircularProgressIndicator();
     }
     else {
       return new Scaffold(
-        backgroundColor: univentsWhiteBackground,
+        backgroundColor: primaryColor,
         body: new Stack(
           children: <Widget>[
             Positioned(
@@ -194,43 +194,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     SizedBox(height: 10.0),
-                    createProfile == false ? Text(userName,
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Montserrat'),
-                    ) : Container(
-                      width: 300.0,
-                      child: TextField(
-                        controller: _textControllerUsername,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10.0),
-                          hintText: AppLocalizations.of(context).translate(
-                              'username'),
-                        ),
-                      ),
-                    ),
+                    createProfile == false
+                        ? Text(
+                            userName,
+                            style: TextStyle(
+                                fontSize: 17.0,
+                                fontStyle: FontStyle.italic,
+                                fontFamily: 'Montserrat'),
+                          )
+                        : Container(
+                            width: 300.0,
+                            child: TextField(
+                              controller: _textControllerUsername,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10.0),
+                                hintText: AppLocalizations.of(context)
+                                    .translate('username'),
+                              ),
+                            ),
+                          ),
                     SizedBox(height: 10.0),
-                    createProfile == false && emailAddress != null ? Text(
-                      emailAddress,
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Montserrat'),
-                    ) : createProfile == false && emailAddress == null ? null
-                        : Text(getEmailOfCurrentlySignedInUser(),
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Montserrat'),
-                    ),
+                    createProfile == false && emailAddress != null
+                        ? Text(
+                            emailAddress,
+                            style: TextStyle(
+                                fontSize: 17.0,
+                                fontStyle: FontStyle.italic,
+                                fontFamily: 'Montserrat'),
+                          )
+                        : createProfile == false && emailAddress == null
+                            ? null
+                            : Text(
+                                getEmailOfCurrentlySignedInUser(),
+                                style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontStyle: FontStyle.italic,
+                                    fontFamily: 'Montserrat'),
+                              ),
                     SizedBox(height: 20.0),
-                    createProfile == false ? Text(bioText,
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Montserrat'),
-                    ) : SizedBox(height: 0.0),
+                    createProfile == false
+                        ? Text(
+                            bioText,
+                            style: TextStyle(
+                                fontSize: 17.0,
+                                fontStyle: FontStyle.italic,
+                                fontFamily: 'Montserrat'),
+                          )
+                        : SizedBox(height: 0.0),
                     SizedBox(height: 25.0),
                     Container(
                         height: 30.0,
@@ -325,17 +335,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   showAlertDialog(BuildContext context) {
-
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text(AppLocalizations.of(context).translate('cancel')),
-      onPressed:  () {
+      onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget confirmButton = FlatButton(
       child: Text(AppLocalizations.of(context).translate('confirm')),
-      onPressed:  () {
+      onPressed: () {
         //contact.emails.forEach((item) {
         //print(item.value);
         // });

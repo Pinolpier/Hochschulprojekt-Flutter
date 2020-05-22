@@ -307,12 +307,115 @@ Future<Widget> getImage(String eventID) async {
 }
 
 /// returns a [List] of all available events
-/// only for developer-tests available !
-/// Don't use vor real-functions!
+/// then filters based on the set filters
 /// throws [PlatformException] when an error occurs while fetching data
 Future<List<Event>> getAllEvents() async {
   QuerySnapshot qShot = await db.collection(collection).getDocuments();
-  return addEventIdToObjects(_snapShotToList(qShot), qShot);
+  List<Event> eventList = new List();
+  eventList = _snapShotToList(qShot);
+  addEventIdToObjects(eventList, qShot);
+  eventList = filterEvents(eventList);
+  return eventList;
+}
+
+/// filters a [List] with [Events] based on the set filters
+/// and returns the updated [List]
+List<Event> filterEvents(List<Event> eventList) {
+  for (int j = 0; j < eventList.length; j++) {
+    bool remove = true;
+    if (eventList[j].privateEvent == true) {
+      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> ownerList = eventList[j].ownerIds;
+      if (attendesList != null &&
+          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+          ownerList != null &&
+              ownerList.contains(getUidOfCurrentlySignedInUser())) {
+        remove = false;
+      }
+      if (remove) {
+        eventList.removeAt(j);
+        j--;
+      }
+    }
+  }
+  if (_privateEventFilter != null) {
+    eventList.removeWhere((Event event) =>
+    event.privateEvent != privateEventFilter);
+  }
+  if (myEventFilter != null) {
+    for (int j = 0; j < eventList.length; j++) {
+      bool remove = true;
+      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> ownerList = eventList[j].ownerIds;
+      if (attendesList != null &&
+          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+          ownerList != null &&
+              ownerList.contains(getUidOfCurrentlySignedInUser())) {
+        remove = false;
+      }
+      if (remove) {
+        eventList.removeAt(j);
+        j--;
+      }
+    }
+  }
+  if (friendIdFilter != null) {
+    for (int j = 0; j < eventList.length; j++) {
+      bool remove = true;
+      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> ownerList = eventList[j].ownerIds;
+      for (int i = 0; i < friendIdFilter.length; i++) {
+        if (attendesList != null && attendesList.contains(friendIdFilter[i]) ||
+            ownerList != null && ownerList.contains(friendIdFilter[i])) {
+          remove = false;
+        }
+      }
+      if (remove) {
+        eventList.removeAt(j);
+        j--;
+      }
+    }
+  }
+
+  if (_startDateFilter != null) {
+    for (int i = 0; i < eventList.length; i++) {
+      Timestamp startdate = Timestamp.fromDate(eventList[i].eventStartDate);
+      if (startdate.toDate().isBefore(startDateFilter)) {
+        eventList.removeAt(i);
+        i--;
+      }
+    }
+  }
+
+  if (_endDateFilter != null) {
+    for (int i = 0; i < eventList.length; i++) {
+      Timestamp enddate = Timestamp.fromDate(eventList[i].eventEndDate);
+      if (enddate.toDate().isAfter(endDateFilter)) {
+        eventList.removeAt(i);
+        i--;
+      }
+    }
+  }
+
+  if (tagsFilter != null && tagsFilter.length > 0) {
+    for (int x = 0; x < eventList.length; x++) {
+      bool dontRemove = true;
+      List<dynamic> tagsList = eventList[x].tagsList;
+      if (tagsList != null) {
+        for (int i = 0; i < tagsFilter.length; i++) {
+          if (tagsList.contains(tagsFilter[i])) {
+            dontRemove = false;
+          }
+        }
+      }
+      if (dontRemove) {
+        eventList.removeAt(x);
+        x--;
+      }
+    }
+  }
+
+  return eventList;
 }
 
 /// returns a [List] of events that was created based

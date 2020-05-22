@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:univents/controller/authService.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
@@ -14,6 +16,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  LatLng pos;
   List<Marker> _markerList = new List();
   var _result;
   MapController mapController = new MapController();
@@ -31,7 +34,7 @@ class _MapScreenState extends State<MapScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      new CreateEventScreen(convertLatLngToString(latlng)),
+                  new CreateEventScreen(convertLatLngToString(latlng)),
                 ));
           }),
       layers: [
@@ -40,7 +43,7 @@ class _MapScreenState extends State<MapScreen> {
               "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
           additionalOptions: {
             'accessToken':
-                'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
+            'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
             'id': 'mapbox.streets',
           },
         ),
@@ -53,7 +56,7 @@ class _MapScreenState extends State<MapScreen> {
           markers: _markerList,
           updateMapLocationOnPositionChange: false,
           onLocationUpdate: (LatLng pos) {
-            print(convertLatLngToString(pos));
+            this.pos = pos;
           },
           showMoveToCurrentLocationFloatingActionButton: true,
         ),
@@ -69,29 +72,31 @@ class _MapScreenState extends State<MapScreen> {
         point: LatLng(double.parse(e.latitude), double.parse(e.longitude)),
         builder: (ctx) => Container(
             child: GestureDetector(
-          onTap: () async {
-            await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => new EventInfo(e),
-                ));
-          },
-          child: Icon(
-            Icons.location_on,
-            color: Colors.red,
-          ),
-        )),
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => new EventInfo(e),
+                    ));
+              },
+              child: Icon(
+                Icons.location_on,
+                color: Colors.red,
+              ),
+            )),
       ));
     }
   }
 
   Future<bool> loadAsyncData() async {
-    await signInWithEmailAndPassword("j.oster@gmx.net", "pass1234");
     try {
-      getMarkerList(await getEvents());
+      Position position = await Geolocator().getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
+      getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
       print('got all events');
     } on Exception catch (e) {
-      print(e);
+      show_toast(e.toString());
     }
     return true;
   }

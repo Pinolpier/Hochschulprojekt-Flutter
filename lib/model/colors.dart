@@ -9,4 +9,3 @@ final univentsBlackText2 = Colors.black45;
 final univentsGreyText = Colors.grey;
 final univentsGreyBackgorund = Colors.grey;
 final univentsLightGreyBackground = Colors.grey[200];
-

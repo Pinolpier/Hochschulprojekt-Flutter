@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
+import 'package:univents/model/authExceptions.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/utils/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
@@ -162,10 +164,12 @@ class _LoginScreenState extends State<LoginScreen>
   _handleForgotPassword() {
     if (_isEmailGood(_email)) {
       sendPasswordResetEMail(email: _email);
-      //TODO show appropriate confirmation.
+      show_toast(AppLocalizations.of(context)
+              .translate('loginscreen_forgot_password_send') +
+          _email);
     } else {
-      print("E-Mail malformed.");
-      //TODO handle bad email address.
+      show_toast(AppLocalizations.of(context).translate(
+          'loginscreen_bad_email')); //TODO maybe change to little red warning text under email field ?
     }
   }
 
@@ -198,9 +202,15 @@ class _LoginScreenState extends State<LoginScreen>
   /// Sign a user in if the [_email] is valid.
   _handleLogin() {
     if (_isEmailGood(_email)) {
-      signInWithEmailAndPassword(_email, _password);
+      try {
+        signInWithEmailAndPassword(_email, _password);
+      }
+      on AuthException catch (e) {
+        show_toast(e.toString());
+      }
     } else {
-      //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
+      show_toast(AppLocalizations.of(context).translate(
+          'loginscreen_bad_email')); //TODO little red warning under email field ?!
     }
   }
 
@@ -233,9 +243,25 @@ class _LoginScreenState extends State<LoginScreen>
   /// Registers a new user&password combination if [_isPasswordGood] and if [_isEmailGood].
   handleRegistration() {
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
-      registerWithEmailAndPassword(_email, _password);
-    } else {
-      //TODO Appropriate Error handling on the loginScreen for bad emails and passwords
+      try {
+        registerWithEmailAndPassword(_email, _password);
+      }
+      on AuthException catch (e) {
+        show_toast(e.toString());
+      }
+    } else { //TODO maybe better with red text under the fields ?
+      if (!_isEmailGood(_email)) {
+        show_toast(
+            AppLocalizations.of(context).translate('loginscreen_bad_email'));
+      }
+      else if (!_isPasswordGood(_password)) {
+        show_toast(AppLocalizations.of(context).translate(
+            'loginscreen_bad_password')); //TODO red text or Dialog ?
+      }
+      else {
+        show_toast(AppLocalizations.of(context).translate(
+            'unknown_Exception')); //Should never be reached
+      }
     }
   }
 
