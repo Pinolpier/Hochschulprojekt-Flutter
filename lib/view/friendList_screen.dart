@@ -4,6 +4,7 @@ import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/GroupDummies.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/utils/errorDialogCreator.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
@@ -36,104 +37,91 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: univentsLightGreyBackground,
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        title: isFriendsScreen == true ? Text(
-            AppLocalizations.of(context).translate('your_friendsList')) : Text(
-            AppLocalizations.of(context).translate('your_groups')),
-        leading: isFriendsScreen == true ? null : new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () {
-              setState(() {
-                isFriendsScreen = true;
-              });
-            },
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(10.0),
-              hintText: isFriendsScreen == true ? AppLocalizations.of(context)
-                  .translate('search_for_friend') : AppLocalizations.of(context)
-                  .translate('search_for_group'),
+    return Card(
+      child: Scaffold(
+        backgroundColor: univentsLightGreyBackground,
+        body: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10.0),
+                hintText: isFriendsScreen == true ? AppLocalizations.of(context)
+                    .translate('search_for_friend') : AppLocalizations.of(context)
+                    .translate('search_for_group'),
+              ),
+              onChanged: (string) {
+                //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
+                _debouncer.run(() {
+                  print(string);
+                });
+              }
             ),
-            onChanged: (string) {
-              //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
-              _debouncer.run(() {
-                print(string);
-              });
-            }
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: isFriendsScreen == true ? friends.length : groups.length,
-              itemBuilder: (context, index){
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
-                  child: Card(
-                    child: ListTile(
-                      onTap: () {
-                        setState(() {
-                          isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
-                        });
-                      },
-                      title: isFriendsScreen == true ? Text(friends[index].name) : Text(groups[index].name),
-                      leading: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
+            Expanded(
+              child: ListView.builder(
+                itemCount: isFriendsScreen == true ? friends.length : groups.length,
+                itemBuilder: (context, index){
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
+                    child: Card(
+                      child: ListTile(
                         onTap: () {
+                          setState(() {
+                            isFriendsScreen == true ? print(friends[index].name + " was pressed"): isFriendsScreen = true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
+                          });
                         },
-                        child: CircleAvatar(
-                          backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}') : AssetImage('assets/${groups[index].profilepic}'),  //TODO Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
+                        title: isFriendsScreen == true ? Text(friends[index].name) : Text(groups[index].name),
+                        leading: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: isFriendsScreen == true ? AssetImage('assets/${friends[index].profilepic}') : AssetImage('assets/${groups[index].profilepic}'),  //TODO Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
+                          ),
                         ),
                       ),
                     ),
+                  );
+                }
+              ),
+            ),
+            isFriendsScreen == true ? Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        isFriendsScreen = false;
+                      });
+                    },
+                    child: Icon(Icons.group),
+                    backgroundColor: primaryColor,
                   ),
-                );
-              }
-            ),
-          ),
-          isFriendsScreen == true ? Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      isFriendsScreen = false;
-                    });
-                  },
-                  child: Icon(Icons.group),
-                  backgroundColor: primaryColor,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    DialogHelper.showAddFriendsDialog(context);
-                  },
-                  child: Icon(Icons.group_add),
-                  backgroundColor: primaryColor,
+                Padding(
+                  padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      showAddFriendsDialog(context);
+                    //showErrorDialog(context, "Test1", "test2", true);},
+                    child: Icon(Icons.group_add),
+                    backgroundColor: primaryColor,
+                  ),
                 ),
+              ],
+            )
+            : Padding(
+              padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  showFriendsDialog(context);
+                },
+                child: Icon(Icons.add),
+                backgroundColor: primaryColor,
               ),
-            ],
-          )
-          : Padding(
-            padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                DialogHelper.showFriendsDialog(context);
-              },
-              child: Icon(Icons.add),
-              backgroundColor: primaryColor,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

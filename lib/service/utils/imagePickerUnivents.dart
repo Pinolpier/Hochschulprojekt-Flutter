@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-
-File _image;
+class ImagePickerUnivents {
+  File _image;
 
   Future<File> getImageFromCamera() async {
     File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -65,4 +65,4 @@ File _image;
     );
     return _image;
   }
-
+}

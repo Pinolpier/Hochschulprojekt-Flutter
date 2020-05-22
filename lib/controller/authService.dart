@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/authExceptions.dart';
+import 'package:univents/model/userProfile.dart';
 
 /// These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -201,6 +203,12 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
     print(
         "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
   }
+  if (!_user.isEmailVerified) {
+    _user.sendEmailVerification(); //TODO usability ? chris fragen
+    signOut();
+    throw new UserEmailNotVerified(null,
+        "Email is not verified"); //TODO internationalisierung für Toast ?!
+  }
   return _user != null ? true : false;
 }
 
@@ -215,6 +223,7 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
     _user = (await _auth.createUserWithEmailAndPassword(
             email: email, password: password))
         .user;
+    _user.sendEmailVerification();
   } on PlatformException catch (platformException) {
     print(platformException);
     switch (platformException.code) {
@@ -236,7 +245,28 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
     print(
         "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
   }
+  if (!_user.isEmailVerified) {
+    signOut();
+    throw new UserEmailNotVerified(null,
+        "Email is not verified"); //TODO internationalisierung für Toast ?!
+  }
   return _user != null ? true : false;
+}
+
+/// use this method to change the email of the currently signed in user!
+///
+/// You should check [newEmail] for correct format (meaning that the string truly represents an email) before calling this method!
+/// The [password] is required to reauthenticate the user before operating such sensitive stuff.
+Future<void> changeEmailAddress(String newEmail, String password) async {
+  await _user.reauthenticateWithCredential(EmailAuthProvider.getCredential(email: getEmailOfCurrentlySignedInUser(), password: password));
+  await _user.updateEmail(newEmail);
+  UserProfile toUpdate = await (getUserProfile(getUidOfCurrentlySignedInUser()));
+  await updateProfile(toUpdate.setEmail(newEmail));
+}
+
+/// used to delete an account. Only the [userProfileService.deleteProfileOfCurrentlySignedInUser] should call this method!
+Future<void> deleteAccount() async {
+  await _user.delete(); // TODO handle different errors that could occur!
 }
 
 /// Call this method so Firebase can send an email for password reset.
@@ -301,7 +331,7 @@ void signOut() async {
   await _googleSignIn.signOut();
 
   _user = null;
-  print("SignOut done!");
+  print("SignOut done!"); //TODO change to LOG
 }
 
 /// auth stream to be registered of user changes, should probably only be used to display the correct screen (Login vs. App)

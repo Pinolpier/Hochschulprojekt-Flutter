@@ -1,13 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/controller/authService.dart';
+import 'package:univents/view/friendList_screen.dart';
+import 'package:univents/view/homeFeed_screen/feed.dart';
+import 'package:univents/view/profile_screen.dart';
+import 'package:univents/view/settings_screen.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
-import 'package:univents/view/homeFeed_screen/feed_filter.dart';
-import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
+import '../../service/app_localizations.dart';
 import 'feed.dart';
+import 'feed_filter.dart';
+import 'feed_filter_values.dart';
 
 class NavigationBarUI extends StatefulWidget {
   @override
@@ -15,6 +20,8 @@ class NavigationBarUI extends StatefulWidget {
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
+  Widget _thisWidget;
+
   ///list of data that can be filtered
   List<Widget> _data;
 
@@ -28,8 +35,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   NavigationBarUIControl() {
     _data = new List<Widget>();
     Feed.init().then((val) => setState(() {
-          _data = val;
-        }));
+      _data = val;
+      _initState(0);
+    }));
   }
 
   @override
@@ -46,7 +54,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             ),
           ),
           bottom: TabBar(
-            onTap: _navigate,
+            onTap: _initState,
             tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.home),
@@ -66,41 +74,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             ],
           ),
         ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              DropdownButton<String>(
-                hint: Text(AppLocalizations.of(context).translate("filter")),
-                value: _dropdownValue,
-                underline: Container(
-                  height: 2,
-                  color: univentsGreyBackgorund,
-                ),
-                onChanged: _selectedFilter,
-                items: <String>[
-                  FeedFilterValues(FeedFilter.standardFilter)
-                      .convertToString(context),
-                  FeedFilterValues(FeedFilter.dateFilter)
-                      .convertToString(context),
-                  FeedFilterValues(FeedFilter.selectedEventsFilter)
-                      .convertToString(context),
-                  FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
-                      .convertToString(context),
-                ].map<DropdownMenuItem<String>>((String dropdownValue) {
-                  return DropdownMenuItem<String>(
-                    value: dropdownValue,
-                    child: Text(dropdownValue),
-                  );
-                }).toList(),
-              ),
-              Expanded(
-                child: ListView(
-                  children: _data, //Feed.feed,
-                ),
-              ),
-            ],
-          ),
-        ),
+        body: _thisWidget,
       ),
     );
   }
@@ -108,8 +82,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   ///updates feed with the setted filters
   void _update() {
     Feed.init().then((val) => setState(() {
-          _data = val;
-        }));
+      _data = val;
+    }));
   }
 
   ///controls the filter that are selected
@@ -144,40 +118,75 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     });
   }
 
-  ///navigates through selected pages
-  void _navigate(int index) {
-    switch (index) {
-      case 0:
-        {
-          //_toHome(); TODO
-          print(index);
-        }
-        break;
-      case 1:
-        {
-          //_toMap(); TODO
-          print(index);
-        }
-        break;
-      case 2:
-        {
-          //_toFiends(); TODO
-          print(index);
-        }
-        break;
-      case 3:
-        {
-          //_toProfile(); TODO
-          print(index);
-        }
-        break;
-      case 4:
-        {
-          //_toSettings();
-          print(index);
-        }
-        break;
-    }
+  void _initState(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+          {
+            _thisWidget = Container(
+              child: Column(
+                children: <Widget>[
+                  DropdownButton<String>(
+                    hint: Text(AppLocalizations.of(context).translate("filter")),
+                    value: _dropdownValue,
+                    underline: Container(
+                      height: 2,
+                      color: Colors.grey,
+                    ),
+                    onChanged: _selectedFilter,
+                    items: <String>[
+                      FeedFilterValues(FeedFilter.standardFilter)
+                          .convertToString(context),
+                      FeedFilterValues(FeedFilter.dateFilter)
+                          .convertToString(context),
+                      FeedFilterValues(FeedFilter.selectedEventsFilter)
+                          .convertToString(context),
+                      FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
+                          .convertToString(context),
+                    ].map<DropdownMenuItem<String>>((String dropdownValue) {
+                      return DropdownMenuItem<String>(
+                        value: dropdownValue,
+                        child: Text(dropdownValue),
+                      );
+                    }).toList(),
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: _data, //Feed.feed,
+                    ),
+                  ),
+                ],
+              ),
+            );
+            print(index);
+          }
+          break;
+        case 1:
+          {
+            //_thisWidget = MapScreen();  //TODO: Map einbinden(Zeile auskommentieren wenn map in delevop gemerged wurde)
+            print(index);
+          }
+          break;
+        case 2:
+          {
+            _thisWidget = FriendlistScreen();
+            print(index);
+          }
+          break;
+        case 3:
+          {
+            _thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
+            print(index);
+          }
+          break;
+        case 4:
+          {
+            _thisWidget = SettingsScreen();
+            print(index);
+          }
+          break;
+      }
+    });
   }
 
 /*

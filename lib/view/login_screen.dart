@@ -43,8 +43,7 @@ class _LoginScreenState extends State<LoginScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Image(
-          image: new AssetImage("assets/eventlogo.png"),
-          // TODO should be changed to the actual univents logo in assets later
+          image: new AssetImage("assets/univentslogo.png"),
           width: _logoAnimation.value * 100,
           height: _logoAnimation.value * 100,
         )

@@ -4,12 +4,18 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
+import 'package:flutter/services.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/model/constants.dart';
+import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/event_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
+import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/map_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -24,6 +30,9 @@ import 'package:univents/view/dialogs/friendList_dialog.dart';
 /// -Event CREATE (button)
 
 class CreateEventScreen extends StatefulWidget {
+  final List<String> tappedPoint;
+  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
+
   @override
   State createState() => _CreateEventScreenState();
 }
@@ -39,12 +48,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
   TextEditingController eventDescriptionController =
-      new TextEditingController();
+  new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
-
-  var latLongArray = new List.generate(10, (_) => new List(2));
-  List<dynamic> latLongList;
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
@@ -77,7 +84,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          File eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
@@ -89,7 +96,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await chooseImage(context);
+          File eventImageAsync = await ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
             eventImage = eventImageAsync;
@@ -378,15 +385,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {
+        onPressed: () async {
           tagsList = eventTagsController.text.split(", ");
           print(tagsList);
-
           print(attendeeIDs);
-
-          getLatLong();
-          print(latLongList[0]);
-          print(latLongList[1]);
 
           Event event = new Event(
               eventNameController.text,
@@ -397,10 +399,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               isPrivate,
               attendeeIDs,
               tagsList,
-              latLongList[0],
-              latLongList[1]);
+              widget.tappedPoint[0],
+              widget.tappedPoint[1]);
 
-          //TODO -> Auskommentiert wegen Errormessages: createEvent(eventImage, event);
+          try {
+            createEvent(eventImage, event);
+          } on PlatformException catch (e) {
+            exceptionHandling(e);
+          }
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => NavigationBarUI()),
+                (Route<dynamic> route) => false,
+          );
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -472,85 +483,5 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
-  }
-
-  void getLatLong() {
-    latLongArray[0] = ['49.142413', '9.219539'];
-    latLongArray[1] = ['49.139957', '9.246418'];
-    latLongArray[2] = ['49.133698', '9.268036'];
-    latLongArray[3] = ['49.160640', '9.221719'];
-    latLongArray[4] = ['49.163503', '9.201642'];
-    latLongArray[5] = ['49.159195', '9.196814'];
-    latLongArray[6] = ['49.151414', '9.190218'];
-    latLongArray[7] = ['49.145704', '9.188501']; //Friedhof
-    latLongArray[8] = ['49.140341', '9.185237'];
-    latLongArray[9] = ['49.132612', '9.179011'];
-
-    Random rnd = new Random();
-    int i = rnd.nextInt(10);
-    latLongList = new List();
-
-    switch (i) {
-      case 0:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 1:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 2:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 3:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 4:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 5:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 6:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 7:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 8:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-      case 9:
-        {
-          latLongList.add(latLongArray[i][0]);
-          latLongList.add(latLongArray[i][1]);
-          break;
-        }
-    }
   }
 }

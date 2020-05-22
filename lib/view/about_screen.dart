@@ -125,8 +125,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                   SizedBox(height: 20.0),
                   _feedbackButtonWidget(),
-                  _shareButtonWidget(
-                      AppLocalizations.of(context).translate("shareMessage")),
+                  _shareButtonWidget(AppLocalizations.of(context).translate("shareMessage")),
                 ],
               ),
             )));
