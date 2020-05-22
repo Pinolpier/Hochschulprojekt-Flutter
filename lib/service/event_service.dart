@@ -318,6 +318,8 @@ Future<List<Event>> getAllEvents() async {
   return eventList;
 }
 
+/// filters a [List] with [Events] based on the set filters
+/// and returns the updated [List]
 List<Event> filterEvents(List<Event> eventList) {
   for (int j = 0; j < eventList.length; j++) {
     bool remove = true;
