@@ -36,7 +36,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
         UserProfile up = await getUserProfile(s);
         print(up.toString());
         print(await getProfilePicture(s));
-        friends.add(FriendslistDummies(uid: s, name: up.username, profilepic: await getProfilePicture(s)));
+        Widget profilePicture = await getProfilePicture(s);
+        friends.add(FriendslistDummies(uid: s, name: up.username, profilepic: profilePicture == null ? Image.asset('assets/blank_profile.png') : profilePicture));
       }
     } else {
       friends = new List();
