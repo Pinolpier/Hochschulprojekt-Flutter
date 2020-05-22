@@ -48,7 +48,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: univentsWhiteBackground,
+          backgroundColor: primaryColor,
           title: Center(
             child: Text(
               'Univents',

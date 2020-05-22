@@ -52,7 +52,10 @@ void addFriend(String friendId) async {
       friendMap[friendsList] = documentSnapshot.data[friendsList];
     }
     List<dynamic> friendList = new List();
-    if (friendMap[friendsList] != null) friendList = friendMap[friendsList];
+    if (friendMap[friendsList] != null) {
+      for (dynamic d in friendMap[friendsList])
+        friendList.add(d);
+    }
     if (friendList.contains(friendID)) {
       throw new FriendAlreadyInListException(
           null, 'The friend is already on the list');

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/utils.dart';
+import 'package:univents/view/eventInfo_screen.dart';
 
 class FeedItemUI extends StatelessWidget {
   final Event _data;
@@ -27,8 +28,11 @@ class FeedItemUI extends StatelessWidget {
               subtitle: Text(
                 _getInformation(context),
               ),
-              onTap: () {
-                print(_data.eventID);
+              onTap: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new EventInfo(_data)));
               },
             ),
             Expanded(

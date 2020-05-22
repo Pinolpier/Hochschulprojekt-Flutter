@@ -141,12 +141,11 @@ class _EventInfoState extends State<EventInfo> {
         //TODO maybe don't load all profilepictures
         if (index < attendees.length) {
           Widget pp = await getProfilePicture(
-              '6KxpQ832rsNI9O8IWf3O1JALvOt1'); //TODO change to UID after FriendList is connected to database
+              uid);
           if (pp != null) {
             print(index);
             profilePictureList.add(ClipOval(
-                child: await getProfilePicture(
-                    '6KxpQ832rsNI9O8IWf3O1JALvOt1'))); //TODO change to pp after FirendsList is connected to database
+                child: await getProfilePicture(uid)));
             index++;
           } else {
             profilePictureList
@@ -302,19 +301,9 @@ class _EventInfoState extends State<EventInfo> {
                                         onTap: () {
                                           setState(() {
                                             isEventOpen = !isEventOpen;
-                                            Event e = new Event(
-                                                widget.event.title,
-                                                widget.event.eventStartDate,
-                                                widget.event.eventEndDate,
-                                                widget.event.description,
-                                                widget.event.location,
-                                                isEventOpen,
-                                                widget.event.attendeesIds,
-                                                widget.event.tagsList,
-                                                widget.event.latitude,
-                                                widget.event.longitude);
+                                            widget.event.privateEvent = isEventOpen;
                                             try {
-                                              updateData(e);
+                                              updateData(widget.event);
                                             } on Exception catch (e){
                                               //TODO Errorhandling
                                             }
@@ -388,7 +377,7 @@ class _EventInfoState extends State<EventInfo> {
                       ),
                       Container(
                         padding: EdgeInsets.all(32),
-                        color: Colors.blue,
+                        color: primaryColor,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[

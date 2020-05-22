@@ -2,8 +2,11 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/colors.dart';
+import 'package:univents/model/userProfile.dart';
+import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 
 /// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
@@ -20,9 +23,8 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
   PermissionStatus _permissionStatus = PermissionStatus.undetermined;
 
   //simple dummie list filled with dummie friend objects to test the list
-  List<FriendslistDummies> friends = [
-    FriendslistDummies(name: "Markus Link", profilepic: "mango.png"),
-  ];
+  List<FriendslistDummies> friends = new List();
+  String query;
 
   /// request permissions to use contacts from phone
   Future<void> requestPermission(Permission permission) async {
@@ -53,7 +55,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
                 onChanged: (string) {
                   //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                   _debouncer.run(() {
-                    print(string);
+                    query = string;
                   });
                 }),
             Expanded(
@@ -91,6 +93,16 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
                   }
                 },
                 child: Icon(Icons.contacts),
+                backgroundColor: primaryColor,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 260, bottom: 10.0),
+              child: FloatingActionButton(
+                onPressed: () async {
+                  addFriendByUsername(query);
+                },
+                child: Icon(Icons.check_box),
                 backgroundColor: primaryColor,
               ),
             ),

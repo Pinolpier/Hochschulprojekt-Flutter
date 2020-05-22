@@ -1,12 +1,11 @@
+import 'package:flutter/cupertino.dart';
+
 /// dummie class to test the listview
 class FriendslistDummies {
+  String uid;
   String name;
-  String profilepic;
+  Widget profilepic;
   bool isSelected = false;
 
-  FriendslistDummies({this.name, this.profilepic});
-
-  String getName() {
-    return name;
-  }
+  FriendslistDummies({this.uid, this.name, this.profilepic});
 }

@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     else {
       return new Scaffold(
-        backgroundColor: primaryColor,
+        backgroundColor: univentsWhiteBackground,
         body: new Stack(
           children: <Widget>[
             Positioned(
