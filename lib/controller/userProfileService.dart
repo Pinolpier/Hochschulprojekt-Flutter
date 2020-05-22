@@ -66,17 +66,7 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
 /// The user is referenced by [profile.uid] and the parameter [file] may be null to delete the (existing) profile picture.
 Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
-    String uri = '';
-    if (uidToUri.containsKey(profile.uid)) {
-      //The uri of the picture is known
-      uri = uidToUri[profile.uid];
-      uidToUri.remove(profile.uid);
-    } else {
-      //The uri of the picture has to be requested from Firestore
-      DocumentSnapshot documentSnapshot =
-      await firestore.collection(collection).document(profile.uid).get();
-      uri = documentSnapshot.data['profilePicture'].toString();
-    }
+    String uri = await getProfilePictureUri(profile.uid);
     if (uri != null && uri.isNotEmpty && uri != "null")
       deleteImage(collection, uri); //delete the picture if one exists
     if (file != null) {
