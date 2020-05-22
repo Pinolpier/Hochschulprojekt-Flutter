@@ -108,11 +108,12 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         FeedFilterValues(FeedFilter.selectedEventsFilter)
             .convertToString(context)) {
       myEventFilter = true;
+      //todo: need to set up ui for tags
       _update();
     } else if (selected ==
         FeedFilterValues(FeedFilter.eventsOfFriendsFilter)
             .convertToString(context)) {
-      //todo backend
+      //todo: model
     }
     setState(() {
       this._dropdownValue = selected;
@@ -191,26 +192,4 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       }
     });
   }
-
-/*
-  Route _toHome() {
-    print('navigate to home');
-  }
-
-  Route _toMap() {
-    print('navigate to map');
-  }
-
-  Route _toFiends() {
-    print('navigate to friends');
-  }
-
-  Route _toProfile() {
-    print('navigate to profile');
-  }
-
-  Route _toSettings() {
-    print('navigate to settings');
-  }
-*/
 }
