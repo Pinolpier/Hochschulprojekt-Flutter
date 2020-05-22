@@ -9,7 +9,6 @@ import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 
 import 'dialogs/DialogHelper.dart';
 
