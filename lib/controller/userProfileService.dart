@@ -93,6 +93,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
             .collection(collection)
             .document(profile.uid)
             .updateData({'profilePicture': null});
+        uidToUri.remove(profile.uid);
         return true;
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
