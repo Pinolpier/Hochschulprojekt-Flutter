@@ -51,6 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File profilepic;
   bool isProfileOwner;
   bool createProfile = false;
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -240,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: isProfileOwner == true &&
                                 createProfile == false ? GestureDetector(
                               onTap: () {
-                                DialogHelper.showChangeBioDialog(context);
+                                showChangeBioDialog(context);
                               },
                               child: Center(
                                 child: Text(
