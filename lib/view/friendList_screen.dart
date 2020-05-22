@@ -103,9 +103,9 @@ class _FriendlistScreenState extends State<FriendlistScreen>{
                   child: FloatingActionButton(
                     onPressed: () {
                       showAddFriendsDialog(context);
-                    //showErrorDialog(context, "Test1", "test2", true);},
-                    child: Icon(Icons.group_add),
-                    backgroundColor: primaryColor,
+                      },
+                      child: Icon(Icons.group_add),
+                      backgroundColor:primaryColor,
                   ),
                 ),
               ],

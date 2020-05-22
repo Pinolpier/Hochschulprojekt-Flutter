@@ -52,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File profilepic;
   bool isProfileOwner;
   bool createProfile = false;
+  ImagePickerUnivents ip = new ImagePickerUnivents();
 
   Widget _profilePicturePlaceholder() {
     return GestureDetector(
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_result == null && createProfile == false) {
+    if (_result == null && createProfile == false) {
       return CircularProgressIndicator();
     }
     else {
@@ -146,8 +147,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: SizedBox(
                           height: 100,
                           width: 100,
-                          child: _result == null && createProfile == false ? CircularProgressIndicator()
-                              : profilePicFromDatabase != null ? profilePicFromDatabase
+                          child: _result == null && createProfile == false
+                              ? CircularProgressIndicator()
+                              : profilePicFromDatabase != null
+                              ? profilePicFromDatabase
                               : profilepic == null
                               ? _profilePicturePlaceholder()
                               : _profilePicture(),
@@ -232,7 +235,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                         height: 30.0,
                         width: isProfileOwner == true ? 95.0 : isProfileOwner ==
-                            false ? 150.0 : createProfile == true ? 100.0 : null,
+                            false ? 150.0 : createProfile == true
+                            ? 100.0
+                            : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: univentsGreyBackgorund,
@@ -241,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: isProfileOwner == true &&
                                 createProfile == false ? GestureDetector(
                               onTap: () {
-                                DialogHelper.showChangeBioDialog(context);
+                                showChangeBioDialog(context);
                               },
                               child: Center(
                                 child: Text(
@@ -284,12 +289,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       null,
                                       null);
                                   await updateProfile(userProfile);
-                                  await updateProfilePicture(profilepic, userProfile);
+                                  await updateProfilePicture(
+                                      profilepic, userProfile);
 
                                   //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
                                   Navigator.pushAndRemoveUntil(
                                     context,
-                                    MaterialPageRoute(builder: (context) => ScreenManager()),
+                                    MaterialPageRoute(
+                                        builder: (context) => ScreenManager()),
                                         (Route<dynamic> route) => false,
                                   );
                                 }
@@ -310,10 +317,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : SizedBox(height: 0.0)
                         )),
                   ],
-              ))
-        ],
-      ),
-    );
+                ))
+          ],
+        ),
+      );
+    }
   }
 
   showAlertDialog(BuildContext context) {
