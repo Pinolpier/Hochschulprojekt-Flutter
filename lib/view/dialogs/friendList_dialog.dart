@@ -159,11 +159,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                   comeFromCreateEventScreen == false
                       ? showChangeBioDialog(context)
                       : event == null ? Navigator.pop(context, selected) :
-                  for (String s in selected) {
-                    event.attendeesIds.add(s);
-                  }
-                  updateData(event);
-                  //TODO not working ?
+                        doStuff();
+                       updateData(event);
                 },
                 child: Icon(Icons.check),
                 backgroundColor: primaryColor,
@@ -172,6 +169,11 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
           ],
         ),
       );
+    }
+  }
+  void doStuff() {
+    for (String s in selected) {
+      event.attendeesIds.add(s);
     }
   }
 }
