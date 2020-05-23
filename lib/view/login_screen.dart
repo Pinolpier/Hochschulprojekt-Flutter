@@ -25,14 +25,12 @@ class _LoginScreenState extends State<LoginScreen>
   Animation<double> _logoAnimation;
   String _email = '';
   String _password = '';
-  bool isUserAlreadySignedIn = true;
 
   /**
    * this method is responsible for the short logo animation at the start of the app
    */
   @override
   void initState() {
-    if (getUidOfCurrentlySignedInUser() != null) {
       super.initState();
       _logoAnimationController = new AnimationController(
           vsync: this, duration: new Duration(milliseconds: 5000));
@@ -40,9 +38,6 @@ class _LoginScreenState extends State<LoginScreen>
           parent: _logoAnimationController, curve: Curves.easeInOutBack);
       _logoAnimation.addListener(() => this.setState(() {}));
       _logoAnimationController.forward();
-    } else {
-      isUserAlreadySignedIn = true;
-    }
   }
 
   Widget _animatedLogoWidget() {
@@ -345,7 +340,6 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (isUserAlreadySignedIn == false) {
       var widgetList = <Widget>[
         _animatedLogoWidget(),
         SizedBox(height: 30.0),
@@ -407,8 +401,5 @@ class _LoginScreenState extends State<LoginScreen>
           );
         },
       );
-    } else {
-      return CircularProgressIndicator();
-    }
   }
 }
