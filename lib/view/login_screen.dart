@@ -2,8 +2,8 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
-import 'package:univents/model/colors.dart';
 import 'package:univents/model/authExceptions.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/utils/toast.dart';
@@ -25,19 +25,24 @@ class _LoginScreenState extends State<LoginScreen>
   Animation<double> _logoAnimation;
   String _email = '';
   String _password = '';
+  bool isUserAlreadySignedIn = true;
 
   /**
    * this method is responsible for the short logo animation at the start of the app
    */
   @override
   void initState() {
-    super.initState();
-    _logoAnimationController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 5000));
-    _logoAnimation = new CurvedAnimation(
-        parent: _logoAnimationController, curve: Curves.easeInOutBack);
-    _logoAnimation.addListener(() => this.setState(() {}));
-    _logoAnimationController.forward();
+    if (getUidOfCurrentlySignedInUser() != null) {
+      super.initState();
+      _logoAnimationController = new AnimationController(
+          vsync: this, duration: new Duration(milliseconds: 5000));
+      _logoAnimation = new CurvedAnimation(
+          parent: _logoAnimationController, curve: Curves.easeInOutBack);
+      _logoAnimation.addListener(() => this.setState(() {}));
+      _logoAnimationController.forward();
+    } else {
+      isUserAlreadySignedIn = true;
+    }
   }
 
   Widget _animatedLogoWidget() {
@@ -205,8 +210,7 @@ class _LoginScreenState extends State<LoginScreen>
     if (_isEmailGood(_email)) {
       try {
         signInWithEmailAndPassword(_email, _password);
-      }
-      on AuthException catch (e) {
+      } on AuthException catch (e) {
         show_toast(e.toString());
       }
     } else {
@@ -246,22 +250,20 @@ class _LoginScreenState extends State<LoginScreen>
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
       try {
         registerWithEmailAndPassword(_email, _password);
-      }
-      on AuthException catch (e) {
+      } on AuthException catch (e) {
         show_toast(e.toString());
       }
-    } else { //TODO maybe better with red text under the fields ?
+    } else {
+      //TODO maybe better with red text under the fields ?
       if (!_isEmailGood(_email)) {
         show_toast(
             AppLocalizations.of(context).translate('loginscreen_bad_email'));
-      }
-      else if (!_isPasswordGood(_password)) {
-        show_toast(AppLocalizations.of(context).translate(
-            'loginscreen_bad_password')); //TODO red text or Dialog ?
-      }
-      else {
-        show_toast(AppLocalizations.of(context).translate(
-            'unknown_Exception')); //Should never be reached
+      } else if (!_isPasswordGood(_password)) {
+        show_toast(AppLocalizations.of(context)
+            .translate('loginscreen_bad_password')); //TODO red text or Dialog ?
+      } else {
+        show_toast(AppLocalizations.of(context)
+            .translate('unknown_Exception')); //Should never be reached
       }
     }
   }
@@ -343,66 +345,70 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    var widgetList = <Widget>[
-      _animatedLogoWidget(),
-      SizedBox(height: 30.0),
-      _emailTextfieldWidget(),
-      SizedBox(height: 20.0),
-      _passwordTextfieldWidget(),
-      _forgotPasswordWidget(),
-      _loginButtonWidget(),
-      _registerButtonWidget(),
-    ];
-    bool alreadyAdded = false;
-    bool alreadyAddedApple = false;
-    child:
-    return FutureBuilder<bool>(
-      future: checkAppleSignInAvailability(),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data) {
-            if (!alreadyAddedApple) {
-              widgetList.add(
-                _appleSignInWidget(),
-              );
-              alreadyAddedApple = true;
+    if (isUserAlreadySignedIn == false) {
+      var widgetList = <Widget>[
+        _animatedLogoWidget(),
+        SizedBox(height: 30.0),
+        _emailTextfieldWidget(),
+        SizedBox(height: 20.0),
+        _passwordTextfieldWidget(),
+        _forgotPasswordWidget(),
+        _loginButtonWidget(),
+        _registerButtonWidget(),
+      ];
+      bool alreadyAdded = false;
+      bool alreadyAddedApple = false;
+      child:
+      return FutureBuilder<bool>(
+        future: checkAppleSignInAvailability(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data) {
+              if (!alreadyAddedApple) {
+                widgetList.add(
+                  _appleSignInWidget(),
+                );
+                alreadyAddedApple = true;
+              }
             }
-          }
-          if (!alreadyAdded) {
-            widgetList.add(_googleSignInWidget());
-            widgetList.add(SizedBox(height: 20.0));
+            if (!alreadyAdded) {
+              widgetList.add(_googleSignInWidget());
+              widgetList.add(SizedBox(height: 20.0));
 //            widgetList.add(_signUpWidget());
-            alreadyAdded = true;
+              alreadyAdded = true;
+            }
+          } else if (snapshot.hasError) {
+            //TODO add error handling whatever should be done in this case.
+          } else {
+            //TODO maybe improve this with loading animation.
+            return Container(
+              width: 0.0,
+              height: 0.0,
+            );
           }
-        } else if (snapshot.hasError) {
-          //TODO add error handling whatever should be done in this case.
-        } else {
-          //TODO maybe improve this with loading animation.
-          return Container(
-            width: 0.0,
-            height: 0.0,
-          );
-        }
 
-        return Scaffold(
-          backgroundColor: primaryColor,
-          body: new Container(
-            height: double.infinity,
-            child: SingleChildScrollView(
-              //fixes pixel overflow error when keyboard is used
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: 40.0,
-                vertical: 120.0,
+          return Scaffold(
+            backgroundColor: primaryColor,
+            body: new Container(
+              height: double.infinity,
+              child: SingleChildScrollView(
+                //fixes pixel overflow error when keyboard is used
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 120.0,
+                ),
+                child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: widgetList),
               ),
-              child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: widgetList),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 }

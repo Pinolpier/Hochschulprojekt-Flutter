@@ -131,8 +131,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } on Exception catch (e) {
         print(e);
       }
-      return true;
+    } else {
+      profilePicFromDatabase = null;
     }
+    return true;
   }
 
   @override
@@ -157,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_result == null && createProfile == false) {
+    if (_result == null) {
       return CircularProgressIndicator();
     } else {
       return new Scaffold(

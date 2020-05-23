@@ -206,7 +206,7 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
   if (!_user.isEmailVerified) {
     _user.sendEmailVerification(); //TODO usability ? chris fragen
     signOut();
-//    throw new UserEmailNotVerified(null,
+//    throw new UserEmailNotVerified(null,  //TODO einkommentieren sobald Fehlerbehandlung steht
 //        "Email is not verified"); //TODO internationalisierung für Toast ?!
   }
   return _user != null ? true : false;
