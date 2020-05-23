@@ -124,7 +124,7 @@ Future<String> getProfilePictureUri(String uid) async {
   } else {
     DocumentSnapshot documentSnapshot =
     await firestore.collection(collection).document(uid).get();
-    uri = documentSnapshot.data['profilePicture'].toString();
+    if (documentSnapshot != null && documentSnapshot.exists) uri = documentSnapshot.data['profilePicture'].toString();
   }
   uidToUri.putIfAbsent(uid, () => uri);
   return uri;
