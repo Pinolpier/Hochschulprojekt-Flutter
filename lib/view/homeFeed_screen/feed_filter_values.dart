@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:univents/service/app_localizations.dart';
 
 import 'feed_filter.dart';
@@ -15,27 +15,27 @@ class FeedFilterValues {
   String convertToString(BuildContext context) {
     String _filter;
     switch (this._filterValue) {
-      case FeedFilter.standardFilter:
-        {
-          _filter = AppLocalizations.of(context).translate("standard_filter");
-        }
+      case FeedFilter.noFilter:
+        _filter = AppLocalizations.of(context).translate('no_filter');
         break;
-      case FeedFilter.dateFilter:
-        {
-          _filter = AppLocalizations.of(context).translate("date_filter");
-        }
+      case FeedFilter.startDateFilter:
+        _filter = AppLocalizations.of(context).translate('start_date_filter');
         break;
-      case FeedFilter.selectedEventsFilter:
-        {
-          _filter =
-              AppLocalizations.of(context).translate("selected_events_filter");
-        }
+      case FeedFilter.endDateFilter:
+        _filter = AppLocalizations.of(context).translate('end_date_filter');
         break;
-      case FeedFilter.eventsOfFriendsFilter:
-        {
-          _filter = AppLocalizations.of(context)
-              .translate("events_of_friends_filter");
-        }
+      case FeedFilter.tagsFilter:
+        _filter = AppLocalizations.of(context).translate('tags_filter');
+        break;
+      case FeedFilter.myEventFilter:
+        _filter = AppLocalizations.of(context).translate('my_event_filter');
+        break;
+      case FeedFilter.privateEventFilter:
+        _filter =
+            AppLocalizations.of(context).translate('private_event_filter');
+        break;
+      case FeedFilter.friendsFilter:
+        _filter = AppLocalizations.of(context).translate('friends_filter');
         break;
     }
     return _filter;
