@@ -34,13 +34,13 @@ class FilterSidebarState extends State<FilterSidebar> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 30,
+            height: MediaQuery.of(context).size.height * 1 / 10,
           ),
           ListTile(
             title: Text(
               AppLocalizations.of(context).translate('feed_filter'),
               style: TextStyle(
-                fontSize: 20,
+                fontSize: MediaQuery.of(context).size.height * 1 / 28,
                 color: univentsWhiteText,
               ),
             ),

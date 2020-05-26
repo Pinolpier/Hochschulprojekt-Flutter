@@ -39,7 +39,9 @@ class FilterTileState extends State<FilterTile> {
     return ListTile(
       title: Text(
         FeedFilterValues(_filter).convertToString(context),
-        style: TextStyle(fontSize: 15, color: univentsWhiteText),
+        style: TextStyle(
+            fontSize: MediaQuery.of(context).size.height * 1 / 46,
+            color: univentsWhiteText),
       ),
       trailing: _icon,
       onTap: () {

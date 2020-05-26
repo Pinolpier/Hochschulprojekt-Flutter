@@ -57,6 +57,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           centerTitle: true,
           title: Text(
             _appBarTitle,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 1 / 35,
+            ),
           ),
           leading: this._state == 0
               ? Builder(
