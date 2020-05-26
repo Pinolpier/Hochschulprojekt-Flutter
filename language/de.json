@@ -28,12 +28,16 @@
   "loginscreen_bad_email": "Email-Adresse ungültig",
   "loginscreen_bad_password": "Passwort muss mindestens einen groß- und Kleinbuchstaben sowie eine Zahl enthalten und aus mindestens 8 Zeichen bestehen ",
   "unknown_Exception": "Unbekannter Fehler",
-  "no_filter": "Kein Filter",
   "start_date_filter": "Startdatum",
   "end_date_filter": "Enddatum",
   "tags_filter": "Tags",
   "my_event_filter": "Meine Events",
   "private_event_filter": "Private Events",
   "friends_filter": "Events von Freunden",
-  "feed_filter": "Feed Filter"
+  "feed_filter": "Feed Filter",
+  "home_screen": "Home",
+  "map_screen": "Karte",
+  "friends_screen": "Freunde",
+  "profile_screen": "Profil",
+  "settings_screen": "Einstellungen"
 }

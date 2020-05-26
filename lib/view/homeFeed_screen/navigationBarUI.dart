@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
+import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/friendList_screen.dart';
 import 'package:univents/view/homeFeed_screen/feed.dart';
 import 'package:univents/view/map_screen.dart';
@@ -18,13 +19,14 @@ class NavigationBarUI extends StatefulWidget {
 class NavigationBarUIControl extends State<NavigationBarUI> {
   Widget _thisWidget;
 
-  ///list of data that can be filtered
+  /// list of data that can be filtered
   List<Widget> _data;
 
-  ///state of pages as index for displaying the filter sidebar
+  /// state of pages as index for displaying the filter sidebar
   int _state = 0;
 
-  String _appBarTitle = 'Home';
+  /// dynamic app bar title (changes if screen changes)
+  String _appBarTitle;
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
@@ -46,6 +48,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   @override
   Widget build(BuildContext context) {
+    this._appBarTitle = AppLocalizations.of(context).translate('home_screen');
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -96,6 +99,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     );
   }
 
+  /// navigation over screen cards based on
+  /// (int) [index]
   void _initState(int index) {
     setState(() {
       this._state = index;
@@ -105,31 +110,36 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             this._thisWidget = ListView(
               children: _update(),
             );
-            this._appBarTitle = 'Home';
+            this._appBarTitle =
+                AppLocalizations.of(context).translate('home_screen');
           }
           break;
         case 1:
           {
             this._thisWidget = MapScreen();
-            this._appBarTitle = 'Map';
+            this._appBarTitle =
+                AppLocalizations.of(context).translate('map_screen');
           }
           break;
         case 2:
           {
             this._thisWidget = FriendlistScreen();
-            this._appBarTitle = 'Friends';
+            this._appBarTitle =
+                AppLocalizations.of(context).translate('friends_screen');
           }
           break;
         case 3:
           {
             this._thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
-            this._appBarTitle = 'Profile';
+            this._appBarTitle =
+                AppLocalizations.of(context).translate('profile_screen');
           }
           break;
         case 4:
           {
             this._thisWidget = SettingsScreen();
-            this._appBarTitle = 'Settings';
+            this._appBarTitle =
+                AppLocalizations.of(context).translate('settings_screen');
           }
           break;
       }

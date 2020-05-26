@@ -6,7 +6,9 @@ import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
 import 'feed_filter.dart';
 
+/// this class implements the UI for setting filters
 class FilterTile extends StatefulWidget {
+  /// this filter
   final FeedFilter _filter;
 
   FilterTile(this._filter);
@@ -16,16 +18,19 @@ class FilterTile extends StatefulWidget {
 }
 
 class FilterTileState extends State<FilterTile> {
+  /// this filter
   FeedFilter _filter;
+
+  /// icon for checking if filter is selected
   Icon _icon;
+
+  /// state of selection
   bool _isSelected;
 
   FilterTileState(this._filter) {
-    this._icon = _filter != FeedFilter.noFilter
-        ? Icon(
-            Icons.add,
-          )
-        : null;
+    this._icon = Icon(
+      Icons.add,
+    );
     _isSelected = false;
   }
 
@@ -45,21 +50,13 @@ class FilterTileState extends State<FilterTile> {
 
   bool get isSelected => this._isSelected;
 
+  /// this method checks the filter
+  /// case of date filter we need a (BuildContext)[context]
+  /// for setting up a date picker
   void _changeSection(BuildContext context) async {
     switch (this._filter) {
-      case FeedFilter.noFilter:
-        deleteStartFilter();
-        deleteEndFilter();
-        deleteTagFilter();
-        myEventFilter = false;
-        deleteTagFilter();
-        deleteFriendIdFilter();
-        deletePrivateEventFilter();
-        deleteMyEventFilter();
-        _setIsSelected();
-        break;
       case FeedFilter.startDateFilter:
-        if (isSelected) {
+        if (this._isSelected) {
           deleteStartFilter();
           _setIsSelected();
         } else {
@@ -71,7 +68,7 @@ class FilterTileState extends State<FilterTile> {
         }
         break;
       case FeedFilter.endDateFilter:
-        if (isSelected) {
+        if (this._isSelected) {
           deleteEndFilter();
           _setIsSelected();
         } else {
@@ -100,26 +97,26 @@ class FilterTileState extends State<FilterTile> {
         }
         break;
       case FeedFilter.friendsFilter:
+        //todo: implement
         break;
     }
   }
 
+  /// changes the state of this class
+  /// if this tile is selected
+  /// change the icon and the state
   void _setIsSelected() {
     setState(() {
       if (this._isSelected) {
-        this._icon = _filter != FeedFilter.noFilter
-            ? Icon(
-                Icons.add,
-              )
-            : null;
+        this._icon = Icon(
+          Icons.add,
+        );
         this._isSelected = false;
       } else {
-        this._icon = _filter != FeedFilter.noFilter
-            ? Icon(
-                Icons.check,
-                color: univentsCheckColor,
-              )
-            : null;
+        this._icon = Icon(
+          Icons.check,
+          color: univentsCheckColor,
+        );
         this._isSelected = true;
       }
     });

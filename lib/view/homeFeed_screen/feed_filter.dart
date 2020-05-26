@@ -1,5 +1,4 @@
 enum FeedFilter {
-  noFilter,
   startDateFilter,
   endDateFilter,
   tagsFilter,
