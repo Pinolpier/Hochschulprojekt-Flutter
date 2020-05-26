@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
@@ -33,8 +34,31 @@ class FeedItemUIState extends State<FeedItemUI> {
                 child: profilePicture(),
               ),
               title: Text(this._data.title),
-              subtitle: Text(
-                _getInformation(context),
+              subtitle: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.calendar_today,
+                        size: MediaQuery.of(context).size.height * 1 / 50,
+                      ),
+                      Text('  ' +
+                          feed_format_date_time(
+                              context, this._data.eventStartDate) +
+                          '  -  ' +
+                          feed_format_date_time(
+                              context, this._data.eventEndDate)),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 1 / 60,
+                      ),
+                      Icon(
+                        Icons.location_on,
+                        size: MediaQuery.of(context).size.height * 1 / 50,
+                      ),
+                      Text(' ' + _getLocation(context))
+                    ],
+                  ),
+                ],
               ),
               onTap: () async {
                 Navigator.push(
@@ -68,17 +92,17 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
-  String _getInformation(BuildContext context) {
-    return _data.location == null
-        ? format_date_time(context, this._data.eventStartDate) +
-            "\n - \n" +
-            format_date_time(context, this._data.eventEndDate) +
-            "\n"
-        : format_date_time(context, this._data.eventStartDate) +
-            "\n - \n" +
-            format_date_time(context, this._data.eventEndDate) +
-            "\n" +
-            this._data.location;
+  /* todo: choosing format
+  String _getDateInformation(String date) {
+    date = date.substring(0, date.length - 10) +
+        ' |' +
+        date.substring(date.length - 6, date.length);
+    return date;
+  }
+  */
+
+  String _getLocation(BuildContext context) {
+    return this._data.location;
   }
 
   Widget profilePicture() {

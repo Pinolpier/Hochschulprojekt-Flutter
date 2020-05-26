@@ -10,3 +10,9 @@ String format_date_time(BuildContext context, DateTime date) {
       .add_jm()
       .format(date);
 }
+
+String feed_format_date_time(BuildContext context, DateTime date) {
+  return DateFormat.MEd(AppLocalizations.of(context).translate('localization'))
+      .add_jm()
+      .format(date);
+}

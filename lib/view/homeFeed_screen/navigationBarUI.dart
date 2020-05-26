@@ -37,18 +37,17 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         }));
   }
 
-  ///updates feed with the setted filters
+  ///updates feed with the set filters
   List<Widget> _update() {
     Feed.init().then((val) => setState(() {
           this._data = val;
-          _initState(0);
+          _initState(_state);
         }));
     return this._data;
   }
 
   @override
   Widget build(BuildContext context) {
-    this._appBarTitle = AppLocalizations.of(context).translate('home_screen');
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -56,7 +55,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           backgroundColor: primaryColor,
           centerTitle: true,
           title: Text(
-            _appBarTitle,
+            this._appBarTitle,
             style: TextStyle(
               fontSize: MediaQuery.of(context).size.height * 1 / 35,
             ),
