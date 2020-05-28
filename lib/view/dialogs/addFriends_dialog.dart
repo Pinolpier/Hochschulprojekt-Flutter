@@ -5,6 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 
@@ -35,6 +36,9 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
       });
     } on Exception catch (e) {
       show_toast(e.toString());
+      Log().error(causingClass: 'addFriends_dialog',
+          method: 'requestPermission',
+          action: e.toString());
     }
   }
 
@@ -176,6 +180,9 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
           contacts = (await ContactsService.getContacts()).toList();
         } on Exception catch (e) {
           show_toast(e.toString());
+          Log().error(causingClass: 'addFriends_dialog',
+              method: 'showContactsImportDialog',
+              action: e.toString());
         }
         setState(() {
           _contacts = contacts;

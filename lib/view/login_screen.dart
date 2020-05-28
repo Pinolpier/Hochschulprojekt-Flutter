@@ -6,6 +6,7 @@ import 'package:univents/model/authExceptions.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
@@ -272,7 +273,14 @@ class _LoginScreenState extends State<LoginScreen>
           style: ButtonStyle.black,
           cornerRadius: 30.0,
           onPressed: () async {
-            await appleSignIn();
+            try {
+              await appleSignIn();
+            } on Exception catch (e) {
+              show_toast(e.toString());
+              Log().error(causingClass: 'Loginscreen',
+                  method: 'applesigninWIdget',
+                  action: e.toString());
+            }
           },
         ));
   }
@@ -305,7 +313,14 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               ]),
           onPressed: () async {
-            await googleSignIn();
+            try {
+              await googleSignIn();
+            } on Exception catch (e) {
+              show_toast(e.toString());
+              Log().error(causingClass: 'Loginscreen',
+                  method: 'googleSigninWIdget',
+                  action: e.toString());
+            }
           },
         ));
   }

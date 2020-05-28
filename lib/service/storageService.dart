@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:univents/service/log.dart';
+import 'package:univents/service/utils/toast.dart';
 
 /// This Method uploads a [File] to Firebase Storage
 Future<String> uploadImage(
@@ -11,7 +13,10 @@ Future<String> uploadImage(
     StorageUploadTask uploadTask = ref.putFile(imageFile);
     return await (await uploadTask.onComplete).ref.getDownloadURL();
   } catch (Exception) {
-    print(Exception.toString());
+    show_toast(Exception.toString());
+    Log().error(causingClass: 'storageService',
+        method: 'uploadImage',
+        action: Exception.toString());
   }
 }
 

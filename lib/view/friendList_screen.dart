@@ -7,6 +7,7 @@ import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
@@ -55,6 +56,9 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                   'assets/blank_profile.png') : profilePicture));
         } on Exception catch (e) {
           show_toast(e.toString());
+          Log().error(causingClass: 'friendList_Screen',
+              method: 'loadAsyncData',
+              action: e.toString());
         }
       }
     } else {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/homeFeed_screen/feedItemUI.dart';
 
@@ -19,6 +20,7 @@ class Feed {
       }
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
+      Log().error(causingClass: 'feed', method: 'init', action: e.toString());
     }
     return _feed;
   }

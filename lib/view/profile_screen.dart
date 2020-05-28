@@ -7,6 +7,7 @@ import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/loading_screen.dart';
@@ -350,10 +351,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         lastName,
                                                         null,
                                                         null);
-                                                await updateProfile(
-                                                    userProfile);
-                                                await updateProfilePicture(
-                                                    profilepic, userProfile);
+                                                try {
+                                                  await updateProfile(
+                                                      userProfile);
+                                                  await updateProfilePicture(
+                                                      profilepic, userProfile);
+                                                } on Exception catch (e) {
+                                                  show_toast(e.toString());
+                                                  Log().error(
+                                                      causingClass: 'profile_screen',
+                                                      method: 'updateProfil',
+                                                      action: e.toString());
+                                                }
 
                                                 //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
                                                 Navigator.pushAndRemoveUntil(

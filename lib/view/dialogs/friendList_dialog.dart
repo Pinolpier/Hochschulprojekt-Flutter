@@ -7,6 +7,7 @@ import 'package:univents/model/event.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
@@ -70,6 +71,9 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
       friendsMap = await getFriends();
     } on Exception catch (e) {
       show_toast(e.toString());
+      Log().error(causingClass: 'friendList_dialog',
+          method: 'loadAsyncData',
+          action: e.toString());
     }
     if (friendsMap != null && friendsMap.containsKey('friends')) {
       List<dynamic> friend = friendsMap['friends'];
@@ -88,6 +92,10 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
         }
       } on Exception catch (e) {
         show_toast(e.toString());
+        Log().error(causingClass: 'friendList_dialog',
+            method: 'loadAsyncData',
+            action: e.toString());
+
       }
     } else {
       friends = new List();
