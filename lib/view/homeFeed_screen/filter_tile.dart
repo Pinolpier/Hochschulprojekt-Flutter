@@ -31,7 +31,7 @@ class FilterTileState extends State<FilterTile> {
     this._icon = Icon(
       Icons.add,
     );
-    _isSelected = false;
+    _isSelected = _startState();
   }
 
   @override
@@ -51,6 +51,71 @@ class FilterTileState extends State<FilterTile> {
   }
 
   bool get isSelected => this._isSelected;
+
+  bool _startState() {
+    bool _startState;
+    switch (this._filter) {
+      case FeedFilter.startDateFilter:
+        try {
+          if (startDateFilter != null) {
+            _startState = true;
+          }
+        } catch (e) {
+          _startState = false;
+        }
+        break;
+      case FeedFilter.endDateFilter:
+        try {
+          if (endDateFilter != null) {
+            _startState = true;
+          }
+        } catch (e) {
+          _startState = false;
+        }
+        break;
+      case FeedFilter.tagsFilter:
+        try {
+          if (tagsFilter != null) {
+            _startState = true;
+          }
+        } catch (e) {
+          _startState = false;
+        }
+        break;
+      case FeedFilter.myEventFilter:
+        try {
+          if (myEventFilter != null && myEventFilter) {
+            _startState = true;
+          } else {
+            _startState = false;
+          }
+        } catch (e) {
+          _startState = false;
+        }
+        break;
+      case FeedFilter.privateEventFilter:
+        try {
+          if (privateEventFilter != null && privateEventFilter) {
+            _startState = true;
+          } else {
+            _startState = false;
+          }
+        } catch (e) {
+          _startState = false;
+        }
+        break;
+      case FeedFilter.friendsFilter:
+        try {
+          if (friendIdFilter != null) {
+            _startState = true;
+          }
+        } catch (e) {
+          _startState = false;
+        }
+        break;
+    }
+    return _startState;
+  }
 
   /// this method checks the filter
   /// case of date filter we need a (BuildContext)[context]
