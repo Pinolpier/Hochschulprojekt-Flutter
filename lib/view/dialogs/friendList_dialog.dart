@@ -37,15 +37,19 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     this.event = event;
   }
 
-  _FriendlistdialogScreenState.create() {}
+  _FriendlistdialogScreenState.create() {
+    comeFromCreateEventScreen = false;
+  }
 
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
   bool comeFromCreateEventScreen = true;
   int selectedCount = 0;
   List<String> selected = List();
+  Map<String, dynamic> friendsInGroup = new Map();
   List<FriendslistDummies> friends = new List();
   Event event;
+  String groupname;
 
   void longPress() {
     setState(() {
@@ -111,11 +115,12 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
             TextField(
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(10.0),
-                    hintText: "search for a friend"),
+                    hintText: comeFromCreateEventScreen == true ? "search for a friend" : "Enter a group name"),
                 onChanged: (string) {
                   //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                   _debouncer.run(() {
                     print(string);
+                    groupname = string;
                   });
                 }),
             Expanded(
@@ -161,9 +166,9 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
               child: FloatingActionButton(
                 onPressed: () {
                   comeFromCreateEventScreen == false
-                      ? showChangeGroup(context)
+                      ? doStuff2()
                       : event == null
-                          ? Navigator.pop(context, selected)
+                          ? Navigator.pop(context, friendsInGroup)
                           : doStuff();
                 },
                 child: Icon(Icons.check),
@@ -187,5 +192,10 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     }
     updateData(event);
     Navigator.pop(context);
+  }
+
+  void doStuff2() {
+    friendsInGroup[groupname] = selected;
+    Navigator.pop(context,friendsInGroup);
   }
 }

@@ -9,6 +9,7 @@ import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
+import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/profile_screen.dart';
 
 class FriendlistScreen extends StatefulWidget {
@@ -25,7 +26,9 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
   bool isFriendsScreen = true;
   List<GroupDummies> groups = new List();
   List<FriendslistDummies> friends = new List();
-  Map<String, dynamic> friendsMap;
+  Map<String, dynamic> friendsMap = new Map();
+  Map<String, dynamic> profileMap = new Map();
+  Map<String, dynamic> profilePicMap = new Map();
 
   var _result;
 
@@ -39,6 +42,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
       for(String s in friend) {
         UserProfile up = await getUserProfile(s);
         Widget profilePicture = await getProfilePicture(s);
+        profileMap[s] = up;
+        profilePicMap[s] = profilePicture;
         friends.add(FriendslistDummies(uid: s, name: up.username, profilepic: profilePicture == null ? Image.asset('assets/blank_profile.png') : profilePicture));
       }
     } else {
@@ -151,6 +156,18 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                   child: FloatingActionButton(
                     onPressed: () {
                       setState(() {
+                        friends.clear();
+                        if (friendsMap != null && friendsMap.containsKey('friends')) {
+                          List<dynamic> friend = friendsMap['friends'];
+                          for (String s in friend) {
+                            UserProfile userProfile = profileMap[s];
+                            Widget profilepic = profilePicMap[s];
+                            friends.add(FriendslistDummies(uid: s,
+                                name: userProfile.username,
+                                profilepic: profilepic == null ? Image.asset(
+                                    'assets/blank_profile.png') : profilepic));
+                          }
+                        }
                         isFriendsScreen = true;
                       });
                     },
@@ -161,8 +178,11 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                 Padding(
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
                 child: FloatingActionButton(
-                    onPressed: () {
-                      showFriendsDialog(context);
+                  heroTag: "btn1",
+                    onPressed: () async {
+                      final Map<String, dynamic> result = await Navigator.push(context, MaterialPageRoute(builder: (context) => FriendslistdialogScreen.create()));
+                      String groupname = result.keys.elementAt(0);
+                      createGroupFriend(result[groupname], groupname);
                     },
                     child: Icon(Icons.add),
                     backgroundColor: primaryColor,
@@ -177,15 +197,16 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
   }
 
   void doStuff(String groupname) async {
+    friends.clear();
     if (friendsMap != null && friendsMap.containsKey(groupname)) {
       List<dynamic> friend = friendsMap[groupname];
       for (String s in friend) {
-        UserProfile up = await getUserProfile(s);
-        Widget profilePicture = await getProfilePicture(s);
+        UserProfile userProfile = profileMap[s];
+        Widget profilepic = profilePicMap[s];
         friends.add(FriendslistDummies(uid: s,
-            name: up.username,
-            profilepic: profilePicture == null ? Image.asset(
-                'assets/blank_profile.png') : profilePicture));
+            name: userProfile.username,
+            profilepic: profilepic == null ? Image.asset(
+                'assets/blank_profile.png') : profilepic));
       }
     }
   }
