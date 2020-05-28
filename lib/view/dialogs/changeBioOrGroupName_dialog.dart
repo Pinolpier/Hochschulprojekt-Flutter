@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 
+//TODO: change to only Bio bc Groupname moved to another screen
 /// this is used as a dialog that opens when you press the "change bio" button on the profile screen while your logged in as the profile owner on your own profile
 /// it gives you the option to input a new bio in the textfield and confirm it through the button at the right so your new bio text gets displayed
 /// it is also used in the friendList_screen when you create a new group to set a name for that group

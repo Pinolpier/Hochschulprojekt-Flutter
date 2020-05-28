@@ -7,10 +7,10 @@ import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
-import 'package:univents/view/profile_screen.dart';
 
 class FriendlistScreen extends StatefulWidget {
   @override
@@ -33,18 +33,29 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
   var _result;
 
   Future<bool> loadAsyncData() async {
-    friendsMap = await getFriends();
+    try {
+      friendsMap = await getFriends();
+    } on Exception catch (e) {
+      show_toast(e.toString());
+    }
     for(String s in friendsMap.keys) {
       groups.add(GroupDummies(name: s, profilepic: "mango.png"));
     }
     if(friendsMap != null && friendsMap.containsKey('friends')) {
       List<dynamic> friend = friendsMap['friends'];
       for(String s in friend) {
-        UserProfile up = await getUserProfile(s);
-        Widget profilePicture = await getProfilePicture(s);
-        profileMap[s] = up;
-        profilePicMap[s] = profilePicture;
-        friends.add(FriendslistDummies(uid: s, name: up.username, profilepic: profilePicture == null ? Image.asset('assets/blank_profile.png') : profilePicture));
+        try {
+          UserProfile up = await getUserProfile(s);
+          Widget profilePicture = await getProfilePicture(s);
+          profileMap[s] = up;
+          profilePicMap[s] = profilePicture;
+          friends.add(FriendslistDummies(uid: s,
+              name: up.username,
+              profilepic: profilePicture == null ? Image.asset(
+                  'assets/blank_profile.png') : profilePicture));
+        } on Exception catch (e) {
+          show_toast(e.toString());
+        }
       }
     } else {
       friends = new List();
@@ -105,7 +116,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                               setState(() {
                                 isFriendsScreen == true
                                     ? showProfileScreen(context, friends[index].uid)
-                                    : doStuff(groups[index].name);
+                                    : fillGroupWithFriends(groups[index].name);
                                 isFriendsScreen = true;
                               });
                             },
@@ -180,9 +191,16 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                 child: FloatingActionButton(
                   heroTag: "btn1",
                     onPressed: () async {
-                      final Map<String, dynamic> result = await Navigator.push(context, MaterialPageRoute(builder: (context) => FriendslistdialogScreen.create()));
-                      String groupname = result.keys.elementAt(0);
-                      createGroupFriend(result[groupname], groupname);
+                      try {
+                        final Map<String, dynamic> result = await Navigator
+                            .push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                FriendslistdialogScreen.create()));
+                        String groupname = result.keys.elementAt(0);
+                        createGroupFriend(result[groupname], groupname);
+                      } on Exception catch (e) {
+                        show_toast(e.toString());
+                      }
                     },
                     child: Icon(Icons.add),
                     backgroundColor: primaryColor,
@@ -196,7 +214,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
     }
   }
 
-  void doStuff(String groupname) async {
+  void fillGroupWithFriends(String groupname) async {
     friends.clear();
     if (friendsMap != null && friendsMap.containsKey(groupname)) {
       List<dynamic> friend = friendsMap[groupname];

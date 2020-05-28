@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/homeFeed_screen/feedItemUI.dart';
 
 class Feed {
@@ -11,9 +12,13 @@ class Feed {
   static Future<List<Widget>> init() async {
     _feed = List<Widget>(); //create new instance
 
-    List<Event> data = await getAllEvents(); //get data from firebase
-    if (_feed.length != data.length) {
-      _addEventToFeed(data);
+    try {
+      List<Event> data = await getAllEvents(); //get data from firebase
+      if (_feed.length != data.length) {
+        _addEventToFeed(data);
+      }
+    } on Exception catch (e) {
+      show_toast(exceptionHandling(e));
     }
     return _feed;
   }

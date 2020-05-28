@@ -96,7 +96,7 @@ class _MapScreenState extends State<MapScreen> {
       getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
       print('got all events');
     } on Exception catch (e) {
-      show_toast(e.toString());
+      show_toast(exceptionHandling(e));
     }
     return true;
   }

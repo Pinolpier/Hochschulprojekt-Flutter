@@ -554,6 +554,7 @@ String exceptionHandling(PlatformException e) {
       return ('Unknown error or an error from a different error domain.');
       break;
   }
+  return e.message;
 }
 
 //Filter setter/getter and delete
