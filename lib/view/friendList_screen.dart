@@ -25,17 +25,19 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
   bool isFriendsScreen = true;
   List<GroupDummies> groups = new List();
   List<FriendslistDummies> friends = new List();
+  Map<String, dynamic> friendsMap;
 
   var _result;
 
   Future<bool> loadAsyncData() async {
-    Map<String, dynamic> friendsMap = await getFriends();
+    friendsMap = await getFriends();
+    for(String s in friendsMap.keys) {
+      groups.add(GroupDummies(name: s, profilepic: "mango.png"));
+    }
     if(friendsMap != null && friendsMap.containsKey('friends')) {
       List<dynamic> friend = friendsMap['friends'];
       for(String s in friend) {
         UserProfile up = await getUserProfile(s);
-        print(up.toString());
-        print(await getProfilePicture(s));
         Widget profilePicture = await getProfilePicture(s);
         friends.add(FriendslistDummies(uid: s, name: up.username, profilepic: profilePicture == null ? Image.asset('assets/blank_profile.png') : profilePicture));
       }
@@ -98,8 +100,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                               setState(() {
                                 isFriendsScreen == true
                                     ? showProfileScreen(context, friends[index].uid)
-                                    : isFriendsScreen =
-                                true; //Beim Auswählen einer Gruppe öffnet sich der eigene FriendsList_Screen (wir noch geändert sobald Backend steht)
+                                    : doStuff(groups[index].name);
+                                isFriendsScreen = true;
                               });
                             },
                             title: isFriendsScreen == true ? Text(
@@ -142,20 +144,49 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                   ),
                 ],
               )
-                  : Padding(
+                  : Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        isFriendsScreen = true;
+                      });
+                    },
+                    child: Icon(Icons.group),
+                    backgroundColor: primaryColor,
+                  ),
+                ),
+                Padding(
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
                 child: FloatingActionButton(
-                  onPressed: () {
-                    showFriendsDialog(context);
-                  },
-                  child: Icon(Icons.add),
-                  backgroundColor: primaryColor,
+                    onPressed: () {
+                      showFriendsDialog(context);
+                    },
+                    child: Icon(Icons.add),
+                    backgroundColor: primaryColor,
                 ),
-              ),
+              ),]
+                  ),
             ],
           ),
         ),
       );
+    }
+  }
+
+  void doStuff(String groupname) async {
+    if (friendsMap != null && friendsMap.containsKey(groupname)) {
+      List<dynamic> friend = friendsMap[groupname];
+      for (String s in friend) {
+        UserProfile up = await getUserProfile(s);
+        Widget profilePicture = await getProfilePicture(s);
+        friends.add(FriendslistDummies(uid: s,
+            name: up.username,
+            profilepic: profilePicture == null ? Image.asset(
+                'assets/blank_profile.png') : profilePicture));
+      }
     }
   }
 }
