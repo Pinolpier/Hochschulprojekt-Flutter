@@ -92,15 +92,6 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
-  /* todo: choosing format
-  String _getDateInformation(String date) {
-    date = date.substring(0, date.length - 10) +
-        ' |' +
-        date.substring(date.length - 6, date.length);
-    return date;
-  }
-  */
-
   String _getLocation(BuildContext context) {
     return this._data.location;
   }

@@ -11,6 +11,8 @@ String format_date_time(BuildContext context, DateTime date) {
       .format(date);
 }
 
+/// returns a [String] with formatted [DateTime] without year and [BuildContext]
+/// dateTime is formatted based on the supported locales
 String feed_format_date_time(BuildContext context, DateTime date) {
   return DateFormat.MEd(AppLocalizations.of(context).translate('localization'))
       .add_jm()

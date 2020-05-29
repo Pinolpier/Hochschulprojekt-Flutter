@@ -63,7 +63,6 @@ class FilterTileState extends State<FilterTile> {
     bool _startState;
     switch (this._filter) {
       case FeedFilter.startDateFilter:
-        print(startDateFilter);
         if (startDateFilter != null) {
           _startState = true;
         } else {
