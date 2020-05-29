@@ -39,8 +39,10 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
     } on Exception catch (e) {
       show_toast(e.toString());
     }
-    for(String s in friendsMap.keys) {
-      groups.add(GroupDummies(name: s, profilepic: "mango.png"));
+    if (friendsMap != null) {
+      for (String s in friendsMap.keys) {
+        groups.add(GroupDummies(name: s, profilepic: "mango.png"));
+      }
     }
     if(friendsMap != null && friendsMap.containsKey('friends')) {
       List<dynamic> friend = friendsMap['friends'];
