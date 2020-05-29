@@ -11,14 +11,12 @@ import 'package:univents/service/storageService.dart';
 
 import '../controller/authService.dart';
 
-
 //Collection-Name in database
 final String collection = 'events';
 
 //initialize Firestore and GeoFirestore
 final db = Firestore.instance;
 final GeoFirestore geoFirestore = GeoFirestore(db.collection(collection));
-
 
 //DataField-names in database
 final String endDate = 'endDate';
@@ -60,7 +58,7 @@ void createEvent(File image, Event event) async {
   //TODO hier zu GeoPoint parsen oder direkt im Event ?
   double latitude = double.parse(event.latitude);
   double longitude = double.parse(event.longitude);
-  geoFirestore.setLocation(eventID, GeoPoint(latitude,longitude));
+  geoFirestore.setLocation(eventID, GeoPoint(latitude, longitude));
 
   if (image != null) {
     Map<String, dynamic> eventMap = new Map();
@@ -115,12 +113,14 @@ Future<List<Event>> getEvents() async {
 /// [List] may be empty if no Event was found
 /// throws [PlatformException] when an error occurs while Fetching data
 /// from Database
-Future<List<Event>> getEventNearLocation(GeoPoint geoLocation, double radius)async{
-  final List<DocumentSnapshot> documentList = await geoFirestore.getAtLocation(geoLocation, radius);
-  List<Event> eventList= new List();
-  for(int x=0;x<documentList.length;x++){
+Future<List<Event>> getEventNearLocation(
+    GeoPoint geoLocation, double radius) async {
+  final List<DocumentSnapshot> documentList =
+      await geoFirestore.getAtLocation(geoLocation, radius);
+  List<Event> eventList = new List();
+  for (int x = 0; x < documentList.length; x++) {
     Event event = _documentSnapshotToEvent(documentList[x]);
-    event.eventID= documentList[x].documentID;
+    event.eventID = documentList[x].documentID;
     eventList.add(event);
   }
   return eventList;
@@ -131,17 +131,17 @@ Future<List<Event>> getEventNearLocation(GeoPoint geoLocation, double radius)asy
 /// [List] may be empty if no Event was found
 /// throws [PlatformException] when an error occurs while Fetching data
 /// from Database
-Future<List<Event>> get_events_near_location_and_filters(GeoPoint geo_location,
-    double radius) async {
-  List<DocumentSnapshot> documentList = await geoFirestore.getAtLocation(
-      geo_location, radius);
+Future<List<Event>> get_events_near_location_and_filters(
+    GeoPoint geo_location, double radius) async {
+  List<DocumentSnapshot> documentList =
+      await geoFirestore.getAtLocation(geo_location, radius);
   for (int j = 0; j < documentList.length; j++) {
     bool remove = true;
     if (documentList[j].data[privateEvent] == true) {
       List<dynamic> attendesList = documentList[j].data[attendees];
       List<dynamic> ownerList = documentList[j].data[eventOwner];
       if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -154,7 +154,7 @@ Future<List<Event>> get_events_near_location_and_filters(GeoPoint geo_location,
   }
   if (_privateEventFilter != null) {
     documentList.removeWhere((DocumentSnapshot documentSnapshot) =>
-    (documentSnapshot.data[privateEvent] != privateEventFilter));
+        (documentSnapshot.data[privateEvent] != privateEventFilter));
   }
   if (myEventFilter != null) {
     for (int j = 0; j < documentList.length; j++) {
@@ -162,7 +162,7 @@ Future<List<Event>> get_events_near_location_and_filters(GeoPoint geo_location,
       List<dynamic> attendesList = documentList[j].data[attendees];
       List<dynamic> ownerList = documentList[j].data[eventOwner];
       if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -241,27 +241,26 @@ Future<List<Event>> get_events_near_location_and_filters(GeoPoint geo_location,
 /// throws [PlatformException] when an Error occurs while
 /// updating Data in Database
 Future<String> _addData(Event event) async {
-    DocumentReference documentReference =
-        await db.collection(collection).add(_eventToMap(event));
-    return documentReference.documentID;
+  DocumentReference documentReference =
+      await db.collection(collection).add(_eventToMap(event));
+  return documentReference.documentID;
 }
 
 /// updates an event in the database based on an [Event]
 /// throws [PlatformException] when Error occurs while updating Data
 void updateData(Event event) async {
-    if (event.eventID != null)
-      db
-          .collection(collection)
-          .document(event.eventID)
-          .updateData(_eventToMap(event));
+  if (event.eventID != null)
+    db
+        .collection(collection)
+        .document(event.eventID)
+        .updateData(_eventToMap(event));
 }
 
 /// in order to change an image of an event, the new [image] and the relevant [event] must be transferred
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null)
-    await deleteImage(collection, event.eventID);
+  if (event.imageURL != null) await deleteImage(collection, event.eventID);
   String url = await uploadImage(collection, image, event.eventID);
   _urlToID[event.eventID] = url;
   event.imageURL = url;
@@ -273,7 +272,7 @@ void updateImage(File image, Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Event from Database
 void updateField(String eventID, Map<dynamic, dynamic> map) {
-    db.collection(collection).document(eventID).updateData(map);
+  db.collection(collection).document(eventID).updateData(map);
 }
 
 /// deletes an event in the database based on an [Event]
@@ -281,10 +280,10 @@ void updateField(String eventID, Map<dynamic, dynamic> map) {
 /// deleting Event from Database
 deleteEvent(Event event) async {
   if (event.eventID != null) {
-      if (event.imageURL != null) {
-        deleteImage(event.eventID, collection);
-      }
-      db.collection(collection).document(event.eventID).delete();
+    if (event.imageURL != null) {
+      deleteImage(event.eventID, collection);
+    }
+    db.collection(collection).document(event.eventID).delete();
   }
 }
 
@@ -327,7 +326,7 @@ List<Event> filterEvents(List<Event> eventList) {
       List<dynamic> attendesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
       if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -339,8 +338,8 @@ List<Event> filterEvents(List<Event> eventList) {
     }
   }
   if (_privateEventFilter != null) {
-    eventList.removeWhere((Event event) =>
-    event.privateEvent != privateEventFilter);
+    eventList
+        .removeWhere((Event event) => event.privateEvent != privateEventFilter);
   }
   if (myEventFilter != null) {
     for (int j = 0; j < eventList.length; j++) {
@@ -348,7 +347,7 @@ List<Event> filterEvents(List<Event> eventList) {
       List<dynamic> attendesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
       if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -379,8 +378,8 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (_startDateFilter != null) {
     for (int i = 0; i < eventList.length; i++) {
-      Timestamp startdate = Timestamp.fromDate(eventList[i].eventStartDate);
-      if (startdate.toDate().isBefore(startDateFilter)) {
+      DateTime startdate = eventList[i].eventStartDate;
+      if (startdate.isBefore(startDateFilter)) {
         eventList.removeAt(i);
         i--;
       }
@@ -389,8 +388,8 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (_endDateFilter != null) {
     for (int i = 0; i < eventList.length; i++) {
-      Timestamp enddate = Timestamp.fromDate(eventList[i].eventEndDate);
-      if (enddate.toDate().isAfter(endDateFilter)) {
+      DateTime enddate = eventList[i].eventEndDate;
+      if (enddate.isAfter(endDateFilter)) {
         eventList.removeAt(i);
         i--;
       }
@@ -493,8 +492,7 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
 String exceptionHandling(PlatformException e) {
   switch (e.code) {
     case ('ABORTED'):
-      return (
-          'The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.');
+      return ('The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.');
       break;
     case ('ALREADY_EXISTS'):
       return ('Some document that we attempted to create already exists.');
@@ -506,46 +504,38 @@ String exceptionHandling(PlatformException e) {
       return ('Unrecoverable data loss or corruption.');
       break;
     case ('DEADLINE_EXCEEDED'):
-      return (
-          'Deadline expired before operation could complete. For operations that change the state of the system, this error may be returned even if the operation has completed successfully. For example, a successful response from a server could have been delayed long enough for the deadline to expire.');
+      return ('Deadline expired before operation could complete. For operations that change the state of the system, this error may be returned even if the operation has completed successfully. For example, a successful response from a server could have been delayed long enough for the deadline to expire.');
       break;
     case ('FAILED_PRECONDITION'):
-      return (
-          'Operation was rejected because the system is not in a state required for the operations execution.');
+      return ('Operation was rejected because the system is not in a state required for the operations execution.');
       break;
     case ('INTERNAL'):
-      return (
-          'Internal errors. Means some invariants expected by underlying system has been broken. If you see one of these errors, something is very broken.');
+      return ('Internal errors. Means some invariants expected by underlying system has been broken. If you see one of these errors, something is very broken.');
       break;
     case ('INVALID_ARGUMENT'):
-      return (
-          'Client specified an invalid argument. Note that this differs from FAILED_PRECONDITION. INVALID_ARGUMENT indicates arguments that are problematic regardless of the state of the system (e.g., an invalid field name).');
+      return ('Client specified an invalid argument. Note that this differs from FAILED_PRECONDITION. INVALID_ARGUMENT indicates arguments that are problematic regardless of the state of the system (e.g., an invalid field name).');
       break;
     case ('NOT_FOUND'):
       return ('Some requested document was not found.');
       break;
     case ('OK'):
-    //The operation completed successfully. Firebase/Firestore Exception will never have a status of OK.
+      //The operation completed successfully. Firebase/Firestore Exception will never have a status of OK.
       return ('The operation completed successfully.');
       break;
     case ('OUT_OF_RANGE'):
       return ('Operation was attempted past the valid range.');
       break;
     case ('PERMISSION_DENIED'):
-      return (
-          'The caller does not have permission to execute the specified operation.');
+      return ('The caller does not have permission to execute the specified operation.');
       break;
     case ('RESOURCE_EXHAUSTED'):
-      return (
-          'Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.');
+      return ('Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.');
       break;
     case ('UNAUTHENTICATED'):
-      return (
-          'The request does not have valid authentication credentials for the operation.');
+      return ('The request does not have valid authentication credentials for the operation.');
       break;
     case ('UNAVAILABLE'):
-      return (
-          'The service is currently unavailable. This is a most likely a transient condition and may be corrected by retrying with a backoff.');
+      return ('The service is currently unavailable. This is a most likely a transient condition and may be corrected by retrying with a backoff.');
       break;
     case ('UNIMPLEMENTED'):
       return ('Operation is not implemented or not supported/enabled.');
@@ -581,9 +571,21 @@ set tagsFilter(List<String> value) {
   _tagsFilter = value;
 }
 
-DateTime get startDateFilter => _startDateFilter.toDate();
+DateTime get startDateFilter {
+  if (_startDateFilter == null) {
+    return null;
+  } else {
+    return _startDateFilter.toDate();
+  }
+}
 
-DateTime get endDateFilter => _endDateFilter.toDate();
+DateTime get endDateFilter {
+  if (_endDateFilter == null) {
+    return null;
+  } else {
+    return _endDateFilter.toDate();
+  }
+}
 
 List<String> get tagsFilter => _tagsFilter;
 

@@ -1,6 +1,8 @@
 enum FeedFilter {
-  standardFilter,
-  dateFilter,
-  selectedEventsFilter,
-  eventsOfFriendsFilter
+  startDateFilter,
+  endDateFilter,
+  tagsFilter,
+  myEventFilter,
+  privateEventFilter,
+  friendsFilter,
 }
