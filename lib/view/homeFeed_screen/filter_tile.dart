@@ -28,10 +28,15 @@ class FilterTileState extends State<FilterTile> {
   bool _isSelected;
 
   FilterTileState(this._filter) {
-    this._icon = Icon(
-      Icons.add,
-    );
     _isSelected = _startState();
+    _icon = _isSelected
+        ? Icon(
+            Icons.check,
+            color: univentsCheckColor,
+          )
+        : Icon(
+            Icons.add,
+          );
   }
 
   @override
@@ -52,64 +57,50 @@ class FilterTileState extends State<FilterTile> {
 
   bool get isSelected => this._isSelected;
 
+  /// for setting up the start state of the icons
   bool _startState() {
     bool _startState;
     switch (this._filter) {
       case FeedFilter.startDateFilter:
-        try {
-          if (startDateFilter != null) {
-            _startState = true;
-          }
-        } catch (e) {
+        if (startDateFilter != null) {
+          _startState = true;
+        } else {
           _startState = false;
         }
         break;
       case FeedFilter.endDateFilter:
-        try {
-          if (endDateFilter != null) {
-            _startState = true;
-          }
-        } catch (e) {
+        if (endDateFilter != null) {
+          _startState = true;
+        } else {
           _startState = false;
         }
+
         break;
       case FeedFilter.tagsFilter:
-        try {
-          if (tagsFilter != null) {
-            _startState = true;
-          }
-        } catch (e) {
+        if (tagsFilter != null) {
+          _startState = true;
+        } else {
           _startState = false;
         }
         break;
       case FeedFilter.myEventFilter:
-        try {
-          if (myEventFilter != null && myEventFilter) {
-            _startState = true;
-          } else {
-            _startState = false;
-          }
-        } catch (e) {
+        if (myEventFilter != null && myEventFilter) {
+          _startState = true;
+        } else {
           _startState = false;
         }
         break;
       case FeedFilter.privateEventFilter:
-        try {
-          if (privateEventFilter != null && privateEventFilter) {
-            _startState = true;
-          } else {
-            _startState = false;
-          }
-        } catch (e) {
+        if (privateEventFilter != null && privateEventFilter) {
+          _startState = true;
+        } else {
           _startState = false;
         }
         break;
       case FeedFilter.friendsFilter:
-        try {
-          if (friendIdFilter != null) {
-            _startState = true;
-          }
-        } catch (e) {
+        if (friendIdFilter != null) {
+          _startState = true;
+        } else {
           _startState = false;
         }
         break;
