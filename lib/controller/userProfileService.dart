@@ -9,7 +9,7 @@ import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/model/userProfileExceptions.dart';
 import 'package:univents/service/friendlist_service.dart';
-import 'package:univents/service/storageService.dart';
+import 'package:univents/service/utils/toast.dart';
 
 final firestore = Firestore.instance;
 final String collection = 'profile';
@@ -56,7 +56,7 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   String uid = getUidOfCurrentlySignedInUser();
   String uri = await getProfilePictureUri(uid);
   if (uri != null && uri != "null" && uri.isNotEmpty) {
-    deleteImage(collection, uri); //delete the picture if one exists
+    deleteFile(collection, uri); //delete the picture if one exists
   }
   firestore.collection(collection).document(uid).delete();
   deleteAccount();
@@ -68,7 +68,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
     String uri = await getProfilePictureUri(profile.uid);
     if (uri != null && uri.isNotEmpty && uri != "null")
-      deleteImage(collection, profile.uid); //delete the picture if one exists
+      deleteFile(collection, profile.uid); //delete the picture if one exists
     if (file != null) {
       //if a not null picture has been given to the method upload it
       uidToUri[profile.uid] = await uploadFile(collection, file, profile.uid);
@@ -81,6 +81,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
         return true;
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
+        show_toast(e.toString());
         print(
             'An error has occured while updating the profile: $profile, the error is: ${e
                 .toString()}');

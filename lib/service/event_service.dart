@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/storageService.dart';
 
 import '../controller/authService.dart';
 
@@ -35,7 +35,7 @@ final String latitude = 'latitude';
 final String longitude = 'longitude';
 
 //Filter for database query's
-Timestamp _startDateFilter;
+DateTime _startDateFilter;
 Timestamp _endDateFilter;
 List<dynamic> _tagsFilter;
 List<dynamic> _friendIdFilter;
@@ -64,7 +64,7 @@ void createEvent(File image, Event event) async {
 
   if (image != null) {
     Map<String, dynamic> eventMap = new Map();
-    String imageURL = await uploadImage(collection, image, eventID);
+    String imageURL = await uploadFile(collection, image, eventID);
     eventMap[imageUrl] = imageURL;
     _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
@@ -261,8 +261,8 @@ void updateData(Event event) async {
 /// updating Image from Database
 void updateImage(File image, Event event) async {
   if (event.imageURL != null)
-    await deleteImage(collection, event.eventID);
-  String url = await uploadImage(collection, image, event.eventID);
+    await deleteFile(collection, event.eventID);
+  String url = await uploadFile(collection, image, event.eventID);
   _urlToID[event.eventID] = url;
   event.imageURL = url;
   updateData(event);
@@ -282,7 +282,7 @@ void updateField(String eventID, Map<dynamic, dynamic> map) {
 deleteEvent(Event event) async {
   if (event.eventID != null) {
       if (event.imageURL != null) {
-        deleteImage(event.eventID, collection);
+        deleteFile(event.eventID, collection);
       }
       db.collection(collection).document(event.eventID).delete();
   }
@@ -559,7 +559,7 @@ String exceptionHandling(PlatformException e) {
 
 //Filter setter/getter and delete
 set startDateFilter(DateTime value) {
-  _startDateFilter = Timestamp.fromDate(value);
+  _startDateFilter = value;
 }
 
 set endDateFilter(DateTime value) {
@@ -582,7 +582,7 @@ set tagsFilter(List<String> value) {
   _tagsFilter = value;
 }
 
-DateTime get startDateFilter => _startDateFilter.toDate();
+DateTime get startDateFilter => _startDateFilter;
 
 DateTime get endDateFilter => _endDateFilter.toDate();
 
