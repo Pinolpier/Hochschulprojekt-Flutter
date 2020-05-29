@@ -98,6 +98,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
         return true;
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
+        show_toast(e.toString());
         print(
             'An error has occured while updating the profile: $profile, the error is: ${e
                 .toString()}');

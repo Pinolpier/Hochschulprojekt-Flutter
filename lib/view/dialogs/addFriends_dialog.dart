@@ -110,6 +110,9 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
                     addFriendByUsername(query);
                   } on Exception catch (e) {
                     show_toast(e.toString());
+                    Log().error(causingClass: 'addFriends_dialog',
+                        method: 'addFriendByUsername',
+                        action: e.toString());
                   }
                 },
                 child: Icon(Icons.check_box),
