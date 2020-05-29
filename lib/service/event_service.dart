@@ -378,8 +378,8 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (_startDateFilter != null) {
     for (int i = 0; i < eventList.length; i++) {
-      Timestamp startdate = Timestamp.fromDate(eventList[i].eventStartDate);
-      if (startdate.toDate().isBefore(startDateFilter)) {
+      DateTime startdate = eventList[i].eventStartDate;
+      if (startdate.isBefore(startDateFilter)) {
         eventList.removeAt(i);
         i--;
       }
@@ -388,8 +388,8 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (_endDateFilter != null) {
     for (int i = 0; i < eventList.length; i++) {
-      Timestamp enddate = Timestamp.fromDate(eventList[i].eventEndDate);
-      if (enddate.toDate().isAfter(endDateFilter)) {
+      DateTime enddate = eventList[i].eventEndDate;
+      if (enddate.isAfter(endDateFilter)) {
         eventList.removeAt(i);
         i--;
       }
@@ -575,7 +575,7 @@ DateTime get startDateFilter {
   if (_startDateFilter == null) {
     return null;
   } else {
-    _startDateFilter.toDate();
+    return _startDateFilter.toDate();
   }
 }
 
@@ -583,7 +583,7 @@ DateTime get endDateFilter {
   if (_endDateFilter == null) {
     return null;
   } else {
-    _endDateFilter.toDate();
+    return _endDateFilter.toDate();
   }
 }
 
