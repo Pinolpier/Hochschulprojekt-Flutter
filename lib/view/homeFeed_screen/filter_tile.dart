@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
@@ -57,11 +58,12 @@ class FilterTileState extends State<FilterTile> {
 
   bool get isSelected => this._isSelected;
 
-  /// for setting up the start state of the icons
+  /// for setting up the start state of the icons for each filter
   bool _startState() {
     bool _startState;
     switch (this._filter) {
       case FeedFilter.startDateFilter:
+        print(startDateFilter);
         if (startDateFilter != null) {
           _startState = true;
         } else {
@@ -121,6 +123,7 @@ class FilterTileState extends State<FilterTile> {
           DateTime _date = await getDateTime(context);
           if (_date != null) {
             startDateFilter = _date;
+            print(_date);
             _setIsSelected();
           }
         }
@@ -155,7 +158,8 @@ class FilterTileState extends State<FilterTile> {
         }
         break;
       case FeedFilter.friendsFilter:
-        //todo: implement
+        Map<String, dynamic> friendMap = await getFriends();
+        friendIdFilter = friendMap['friends'];
         break;
     }
   }

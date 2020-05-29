@@ -60,7 +60,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
               fontSize: MediaQuery.of(context).size.height * 1 / 35,
             ),
           ),
-          leading: this._state == 0
+          leading: this._state == 0 || this._state == 1
               ? Builder(
                   builder: (BuildContext context) {
                     return IconButton(
@@ -95,7 +95,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
             ],
           ),
         ),
-        drawer: this._state == 0 ? FilterSidebar() : null,
+        drawer: this._state == 0 || this._state == 1 ? FilterSidebar() : null,
         body: _thisWidget,
       ),
     );
