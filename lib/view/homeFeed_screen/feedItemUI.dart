@@ -36,26 +36,30 @@ class FeedItemUIState extends State<FeedItemUI> {
               title: Text(
                 this._data.title,
                 style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 1 / 40),
+                    fontSize: MediaQuery.of(context).size.height * 1 / 50),
               ),
               subtitle: Column(
                 children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 1 / 200,
+                  ),
                   Row(
                     children: <Widget>[
                       Icon(
                         Icons.calendar_today,
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
-                      Text('  ' +
-                          feed_format_date_time(
-                              context, this._data.eventStartDate) +
-                          '  -  ' +
-                          feed_format_date_time(
-                              context, this._data.eventEndDate),
-                        style: TextStyle(fontSize: MediaQuery
-                            .of(context)
-                            .size
-                            .height * 1 / 55),),
+                      Text(
+                        '  ' +
+                            feed_format_date_time(
+                                context, this._data.eventStartDate) +
+                            '  -  ' +
+                            feed_format_date_time(
+                                context, this._data.eventEndDate),
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 1 / 60),
+                      ),
                     ],
                   ),
                   Row(
@@ -65,16 +69,14 @@ class FeedItemUIState extends State<FeedItemUI> {
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
                       SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 1 / 150,
+                        width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
-                      Text(' ' + _getLocation(context),
-                        style: TextStyle(fontSize: MediaQuery
-                            .of(context)
-                            .size
-                            .height * 1 / 55),)
+                      Text(
+                        ' ' + _getLocation(context),
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 1 / 60),
+                      )
                     ],
                   )
                 ],
