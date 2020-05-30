@@ -31,7 +31,7 @@ class FeedItemUIState extends State<FeedItemUI> {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                child: profilePicture(),
+                child: _profilePicture(),
               ),
               title: Text(
                 this._data.title,
@@ -82,20 +82,21 @@ class FeedItemUIState extends State<FeedItemUI> {
                 ],
               ),
               onTap: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new EventInfo(_data)));
+                _navigateToEventScreen();
               },
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: _data.imageURL != null
-                        ? NetworkImage(_data.imageURL)
-                        : Image.asset('assets/eventImagePlaceholder.png').image,
-                    fit: BoxFit.cover,
+              child: InkWell(
+                onTap: _navigateToEventScreen,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: _data.imageURL != null
+                          ? NetworkImage(_data.imageURL)
+                          : Image.asset('assets/eventImagePlaceholder.png')
+                              .image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -117,7 +118,9 @@ class FeedItemUIState extends State<FeedItemUI> {
     return this._data.location;
   }
 
-  Widget profilePicture() {
+  /// loads profile picture
+  /// if no profile picture in the backend, show placeholder
+  Widget _profilePicture() {
     Widget _profilePicture;
     getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
           _profilePicture = value;
@@ -125,5 +128,10 @@ class FeedItemUIState extends State<FeedItemUI> {
     return _profilePicture != null
         ? _profilePicture
         : Image.asset('assets/blank_profile.png');
+  }
+
+  void _navigateToEventScreen() async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => new EventInfo(_data)));
   }
 }
