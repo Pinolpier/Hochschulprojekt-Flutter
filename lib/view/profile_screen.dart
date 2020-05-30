@@ -316,6 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         createProfile == false
                                     ? GestureDetector(
                                         onTap: () {
+                                          //TODO: Fix bug where picture gets removed when choosing "cancel"
                                           showAlertDialog(context);
                                         },
                                         child: Center(
@@ -367,7 +368,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       action: e.toString());
                                                 }
 
-                                                //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
                                                 Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(

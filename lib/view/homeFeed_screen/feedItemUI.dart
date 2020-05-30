@@ -33,7 +33,11 @@ class FeedItemUIState extends State<FeedItemUI> {
               leading: CircleAvatar(
                 child: profilePicture(),
               ),
-              title: Text(this._data.title),
+              title: Text(
+                this._data.title,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 1 / 40),
+              ),
               subtitle: Column(
                 children: <Widget>[
                   Row(
@@ -47,17 +51,32 @@ class FeedItemUIState extends State<FeedItemUI> {
                               context, this._data.eventStartDate) +
                           '  -  ' +
                           feed_format_date_time(
-                              context, this._data.eventEndDate)),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 1 / 60,
-                      ),
+                              context, this._data.eventEndDate),
+                        style: TextStyle(fontSize: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 1 / 55),),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
                       Icon(
                         Icons.location_on,
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
-                      Text(' ' + _getLocation(context))
+                      SizedBox(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 1 / 150,
+                      ),
+                      Text(' ' + _getLocation(context),
+                        style: TextStyle(fontSize: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 1 / 55),)
                     ],
-                  ),
+                  )
                 ],
               ),
               onTap: () async {
