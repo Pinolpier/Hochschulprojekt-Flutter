@@ -38,6 +38,10 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
       friendsMap = await getFriends();
     } on Exception catch (e) {
       show_toast(e.toString());
+      Log().error(
+          causingClass: 'friendList_screen',
+          method: 'loadAsyncData',
+          action: e.toString());
     }
     if (friendsMap != null) {
       for (String s in friendsMap.keys) {
@@ -58,15 +62,16 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                   'assets/blank_profile.png') : profilePicture));
         } on Exception catch (e) {
           show_toast(e.toString());
-          Log().error(causingClass: 'friendList_Screen',
+          Log().error(causingClass: 'friendList_screen',
               method: 'loadAsyncData',
               action: e.toString());
         }
       }
     } else {
+      // if you dont have any friends added yet an empty list is created and the user sees an empty friends list as well, he still has the
+      // option to add new friends
       friends = new List();
     }
-
     return true;
   }
 
@@ -206,6 +211,9 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                         createGroupFriend(result[groupname], groupname);
                       } on Exception catch (e) {
                         show_toast(e.toString());
+                        Log().error(causingClass: 'friendList_screen',
+                            method: 'build',
+                            action: e.toString());
                       }
                     },
                     child: Icon(Icons.add),

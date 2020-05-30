@@ -32,5 +32,6 @@
   "loginscreen_forgot_password_send": "Email to reset password has been sent to: ",
   "loginscreen_bad_email": "E-Mail-address invalid",
   "loginscreen_bad_password": "Password must contain lower- and uppercase letters and a digit from 0-9 and has a minimum length of 8",
-  "unknown_Exception": "unknown Exception"
+  "unknown_Exception": "unknown Exception",
+  "no_events_found": "no matching events found!"
 }

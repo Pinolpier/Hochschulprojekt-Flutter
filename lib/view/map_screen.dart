@@ -100,7 +100,7 @@ class _MapScreenState extends State<MapScreen> {
       show_toast(exceptionHandling(e));
       Log().error(causingClass: 'map_screen',
           method: 'loadAsyncData',
-          action: e.toString());
+          action: exceptionHandling(e));
     }
     return true;
   }

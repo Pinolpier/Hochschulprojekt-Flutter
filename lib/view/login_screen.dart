@@ -208,6 +208,10 @@ class _LoginScreenState extends State<LoginScreen>
         signInWithEmailAndPassword(_email, _password);
       } on AuthException catch (e) {
         show_toast(e.toString());
+        Log().error(
+            causingClass: 'login_screen',
+            method: '_handleLogin',
+            action: e.toString());
       }
     } else {
       show_toast(AppLocalizations.of(context).translate(
@@ -248,6 +252,9 @@ class _LoginScreenState extends State<LoginScreen>
         registerWithEmailAndPassword(_email, _password);
       } on AuthException catch (e) {
         show_toast(e.toString());
+        Log().error(causingClass: 'login_screen',
+            method: 'handleRegistration',
+            action: e.toString());
       }
     } else {
       //TODO maybe better with red text under the fields ?

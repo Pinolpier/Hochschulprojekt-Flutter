@@ -32,5 +32,6 @@
   "loginscreen_forgot_password_send": "E-mail zum zurücksetzen des passwortes wurde gesendet an: ",
   "loginscreen_bad_email": "Email-Adresse ungültig",
   "loginscreen_bad_password": "Passwort muss mindestens einen groß- und Kleinbuchstaben sowie eine Zahl enthalten und aus mindestens 8 Zeichen bestehen ",
-  "unknown_Exception": "Unbekannter Fehler"
+  "unknown_Exception": "Unbekannter Fehler",
+  "no_events_found": "Keine passenden Events gefunden!"
 }

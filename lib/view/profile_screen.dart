@@ -130,7 +130,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
         print('got all userdata!');
       } on Exception catch (e) {
-        print(e);
+        Log().error(
+            causingClass: 'profile_screen',
+            method: 'loadAsyncData',
+            action: e.toString());
       }
     } else {
       profilePicFromDatabase = null;

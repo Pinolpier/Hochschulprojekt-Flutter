@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/authExceptions.dart';
 import 'package:univents/model/userProfile.dart';
+import 'package:univents/service/log.dart';
 
 /// These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -90,9 +91,10 @@ Future<bool> googleSignIn() async {
     return await isUserSignedIn();
   } on Exception catch (error, stacktrace) {
     //TODO maybe add error type based error handling?
-    //TODO log error
-    print("Das hier ist der Error:");
-    print(error.toString() + "\n" + stacktrace.toString());
+    Log().error(
+        causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: error.toString() + " " + stacktrace.toString());
   }
 }
 
@@ -198,10 +200,14 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
         break;
     }
   } on Exception catch (e) {
-    print("An unknown Exception has occured! Exception is : $e");
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: "An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
-    print(
-        "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: "SomeWTFthing has happend! Object of type ${fatal
+            .runtimeType} has been thrown. Trying to print it: $fatal");
   }
   if (!_user.isEmailVerified) {
     _user.sendEmailVerification(); //TODO usability ? chris fragen
@@ -225,7 +231,9 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
         .user;
     _user.sendEmailVerification();
   } on PlatformException catch (platformException) {
-    print(platformException);
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: platformException.toString());
     switch (platformException.code) {
       case "ERROR_WEAK_PASSWORD":
         //at least 6 characters needed
@@ -240,10 +248,14 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
         break;
     }
   } on Exception catch (e) {
-    print("An unknown Exception has occured! Exception is : $e");
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: "An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
-    print(
-        "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: "SomeWTFthing has happend! Object of type ${fatal
+            .runtimeType} has been thrown. Trying to print it: $fatal");
   }
   if (!_user.isEmailVerified) {
     signOut();
@@ -288,10 +300,14 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
         break;
     }
   } on Exception catch (e) {
-    print("An unknown Exception has occured! Exception is : $e");
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: "An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
-    print(
-        "SomeWTFthing has happend! Object of type ${fatal.runtimeType} has been thrown. Trying to print it: $fatal");
+    Log().error(causingClass: 'userProfileService',
+        method: 'updateProfile',
+        action: "SomeWTFthing has happend! Object of type ${fatal
+            .runtimeType} has been thrown. Trying to print it: $fatal");
   }
 }
 

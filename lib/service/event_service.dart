@@ -10,7 +10,7 @@ import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/event.dart';
 
 import '../controller/authService.dart';
-
+import 'log.dart';
 
 //Collection-Name in database
 final String collection = 'events';
@@ -439,8 +439,11 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
             ))
         .toList();
   } else
-    print('Keine passenden Events gefunden');
-  //TODO Toast message
+    //show_toast(AppLocalizations.of(context).translate("no_events_found"));
+    Log().error(causingClass: 'event_service',
+        method: '_snapShotToList',
+        action: "No matching events found!");
+  //TODO: show Toast with internationalized message
 }
 
 /// Returns a [Event] based on a documentSnapshot

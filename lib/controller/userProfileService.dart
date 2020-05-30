@@ -9,6 +9,7 @@ import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/model/userProfileExceptions.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
 final firestore = Firestore.instance;
@@ -43,9 +44,11 @@ Future<bool> updateProfile(UserProfile profile) async {
       return true;
     } catch (e) {
       //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
-      print(
-          'An error has occurred while creating the profile: $profile, the error is: ${e
-              .toString()}');
+      Log().error(
+          causingClass: 'userProfileService',
+          method: 'updateProfile',
+          action:
+              'An error has occurred while creating the profile: $profile, the error is: ${e.toString()}');
       return false;
     }
   }
@@ -82,8 +85,9 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
         show_toast(e.toString());
-        print(
-            'An error has occured while updating the profile: $profile, the error is: ${e
+        Log().error(causingClass: 'userProfileService',
+            method: 'updateProfile',
+            action: 'An error has occured while updating the profile: $profile, the error is: ${e
                 .toString()}');
         return false;
       }
@@ -99,8 +103,9 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
         show_toast(e.toString());
-        print(
-            'An error has occured while updating the profile: $profile, the error is: ${e
+        Log().error(causingClass: 'userProfileService',
+            method: 'updateProfile',
+            action: 'An error has occured while updating the profile: $profile, the error is: ${e
                 .toString()}');
         return false;
       }

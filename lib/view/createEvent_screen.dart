@@ -1,21 +1,18 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
 import 'package:flutter/services.dart';
-import 'package:univents/controller/authService.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
-import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
-import 'package:univents/view/map_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -407,6 +404,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             createEvent(eventImage, event);
           } on PlatformException catch (e) {
             exceptionHandling(e);
+            Log().error(
+                causingClass: 'createEvent_screen',
+                method: '_createButtonWidget',
+                action: exceptionHandling(e));
           }
           Navigator.pushAndRemoveUntil(
             context,

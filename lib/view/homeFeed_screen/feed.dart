@@ -20,7 +20,8 @@ class Feed {
       }
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
-      Log().error(causingClass: 'feed', method: 'init', action: e.toString());
+      Log().error(
+          causingClass: 'feed', method: 'init', action: exceptionHandling(e));
     }
     return _feed;
   }
