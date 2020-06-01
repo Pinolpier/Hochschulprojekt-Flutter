@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:univents/service/log.dart';
+import 'package:univents/service/utils/toast.dart';
 
 ///This Method uploads a [File],
 ///parameter [collectionID] is the "path" where to safe the [File]
@@ -13,8 +15,11 @@ Future<String> uploadFile(
     StorageUploadTask uploadTask = ref.putFile(file);
     return await (await uploadTask.onComplete).ref.getDownloadURL();
   } catch (e) {
-    //TODO improve exception handling
-    print(e.toString());
+    show_toast(e.toString());
+    Log().error(causingClass: 'storageService',
+        method: 'uploadFile',
+        action: e.toString());
+
   }
 }
 

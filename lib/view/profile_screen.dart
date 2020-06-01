@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
-import 'package:univents/controller/screenManager.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
+import 'package:univents/view/loading_screen.dart';
 
 import 'dialogs/DialogHelper.dart';
 
@@ -129,10 +130,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
         print('got all userdata!');
       } on Exception catch (e) {
-        print(e);
+        Log().error(
+            causingClass: 'profile_screen',
+            method: 'loadAsyncData',
+            action: e.toString());
       }
-      return true;
+    } else {
+      profilePicFromDatabase = null;
     }
+    return true;
   }
 
   @override
@@ -157,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_result == null && createProfile == false) {
+    if (_result == null) {
       return CircularProgressIndicator();
     } else {
       return new Scaffold(
@@ -310,6 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         createProfile == false
                                     ? GestureDetector(
                                         onTap: () {
+                                          //TODO: Fix bug where picture gets removed when choosing "cancel"
                                           showAlertDialog(context);
                                         },
                                         child: Center(
@@ -348,17 +355,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         lastName,
                                                         null,
                                                         null);
-                                                await updateProfile(
-                                                    userProfile);
-                                                await updateProfilePicture(
-                                                    profilepic, userProfile);
+                                                try {
+                                                  await updateProfile(
+                                                      userProfile);
+                                                  await updateProfilePicture(
+                                                      profilepic, userProfile);
+                                                } on Exception catch (e) {
+                                                  show_toast(e.toString());
+                                                  Log().error(
+                                                      causingClass: 'profile_screen',
+                                                      method: 'updateProfil',
+                                                      action: e.toString());
+                                                }
 
-                                                //Navigator.pop(context); //TODO: Rebuild Screenmanager after pop
                                                 Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ScreenManager()),
+                                                          LoadingScreen()),
                                                   (Route<dynamic> route) =>
                                                       false,
                                                 );

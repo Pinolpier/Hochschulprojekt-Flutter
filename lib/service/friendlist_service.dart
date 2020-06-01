@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/service/event_service.dart';
 
 //final collectionName for all friends in database
 final String collection = 'friends';
@@ -11,38 +10,29 @@ final firebaseInstance = Firestore.instance;
 /// adding a Friend by a [E-mail-address] to the database
 ///  the email gets converted to a unique UserId
 void addFriendByEmail(String email) async {
-  try {
     String friendId = await getUidFromEmail(email);
     if (friendId != null) {
       addFriend(friendId);
     } else {
       throw new FriendNotExistException(
           null, 'no user with this email address found');
-    }
-  } on Exception catch (e) {
-    exceptionHandling(e);
   }
 }
 
 /// adding a Friend by a [username] to the database
 /// the username gets converted to a unique UserId
 void addFriendByUsername(String username) async {
-  try {
     String friendId = await getUidFromUserName(username);
     if (friendId != null) {
       addFriend(friendId);
     } else {
       throw new FriendNotExistException(
           null, 'No user found with this username');
-    }
-  } on Exception catch (e) {
-    exceptionHandling(e);
   }
 }
 
 /// adding a Friend to database by a [friendId]
 void addFriend(String friendId) async {
-  try {
     String uid = getUidOfCurrentlySignedInUser();
     String friendID = friendId;
     DocumentSnapshot documentSnapshot =
@@ -67,16 +57,12 @@ void addFriend(String friendId) async {
           firebaseInstance.collection(collection).document(uid), friendMap,
           merge: true);
       await batch.commit();
-    }
-  } on Exception catch (exception) {
-    exceptionHandling(exception);
   }
 }
 
 /// remove a Friend from a group by getting a [friendId] and
 /// a [groupName]
 void removeFriend(String friendId, String groupName) async {
-  try {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
         await firebaseInstance.collection(collection).document(uid).get();
@@ -101,27 +87,19 @@ void removeFriend(String friendId, String groupName) async {
       }
     } else {
       throw new GroupNotExistException(null, 'the group $groupName does not exist');
-    }
-  } on Exception catch (e) {
-    exceptionHandling(e);
   }
 }
 
 /// returns a [Map] with [friends] and their [String] grouping
 Future<Map<String, dynamic>> getFriends() async {
-  try {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
         await firebaseInstance.collection(collection).document(uid).get();
     return documentSnapshot.data;
-  } on Exception catch (e) {
-    exceptionHandling(e);
-  }
 }
 
 /// adds a User to a Group by a [userId]  and a [groupName]
 void addUserToGroup(String userId, String groupName) async {
-  try {
     String uid = getUidOfCurrentlySignedInUser();
     DocumentSnapshot documentSnapshot =
         await firebaseInstance.collection(collection).document(uid).get();
@@ -142,15 +120,11 @@ void addUserToGroup(String userId, String groupName) async {
           firebaseInstance.collection(collection).document(uid), friendMap,
           merge: true);
       await batch.commit();
-    }
-  } on Exception catch (e) {
-    exceptionHandling(e);
   }
 }
 
 /// creates a new Group by a [userId] and a [groupName]
 void createGroupFriend(List<String> userId, String groupName) async {
-  try {
     String uid = getUidOfCurrentlySignedInUser();
     Map<String, List<String>> groupMap = new Map();
     groupMap[groupName] = userId;
@@ -159,9 +133,6 @@ void createGroupFriend(List<String> userId, String groupName) async {
         firebaseInstance.collection(collection).document(uid), groupMap,
         merge: true);
     writeBatch.commit();
-  } on Exception catch (e) {
-    exceptionHandling(e);
-  }
 }
 
 class FriendsException implements Exception {

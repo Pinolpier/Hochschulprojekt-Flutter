@@ -2,16 +2,15 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/FriendslistDummies.dart';
 import 'package:univents/model/colors.dart';
-import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/log.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 
 /// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
 /// here you have the option to search for new friends through username or import local friends from your phone contacts
-//TODO: implement backend so the user gets users to choose from when searching for them via name/through import, only dummies implemented yet
 class AddFriendsDialogScreen extends StatefulWidget {
   @override
   _AddFriendsDialogScreenState createState() => _AddFriendsDialogScreenState();
@@ -28,12 +27,19 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
 
   /// request permissions to use contacts from phone
   Future<void> requestPermission(Permission permission) async {
-    final status = await Permission.contacts.request();
-    setState(() {
-      print(status);
-      _permissionStatus = status;
-      print(_permissionStatus);
-    });
+    try {
+      final status = await Permission.contacts.request();
+      setState(() {
+        print(status);
+        _permissionStatus = status;
+        print(_permissionStatus);
+      });
+    } on Exception catch (e) {
+      show_toast(e.toString());
+      Log().error(causingClass: 'addFriends_dialog',
+          method: 'requestPermission',
+          action: e.toString());
+    }
   }
 
   @override
@@ -100,7 +106,14 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
               padding: const EdgeInsets.only(left: 260, bottom: 10.0),
               child: FloatingActionButton(
                 onPressed: () async {
-                  addFriendByUsername(query);
+                  try {
+                    addFriendByUsername(query);
+                  } on Exception catch (e) {
+                    show_toast(e.toString());
+                    Log().error(causingClass: 'addFriends_dialog',
+                        method: 'addFriendByUsername',
+                        action: e.toString());
+                  }
                 },
                 child: Icon(Icons.check_box),
                 backgroundColor: primaryColor,
@@ -125,7 +138,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
       child: Text("Confirm"),
       onPressed: () {
         contact.emails.forEach((item) {
-          print(item.value);
+          addFriendByEmail(item.value);
         });
         print(contact.displayName);
         Navigator.pop(context);
@@ -165,7 +178,15 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
     Widget confirmButton = FlatButton(
       child: Text("Confirm"),
       onPressed: () async {
-        var contacts = (await ContactsService.getContacts()).toList();
+        var contacts;
+        try {
+          contacts = (await ContactsService.getContacts()).toList();
+        } on Exception catch (e) {
+          show_toast(e.toString());
+          Log().error(causingClass: 'addFriends_dialog',
+              method: 'showContactsImportDialog',
+              action: e.toString());
+        }
         setState(() {
           _contacts = contacts;
         });

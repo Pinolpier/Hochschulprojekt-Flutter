@@ -31,50 +31,72 @@ class FeedItemUIState extends State<FeedItemUI> {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                child: profilePicture(),
+                child: _profilePicture(),
               ),
-              title: Text(this._data.title),
+              title: Text(
+                this._data.title,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 1 / 50),
+              ),
               subtitle: Column(
                 children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 1 / 200,
+                  ),
                   Row(
                     children: <Widget>[
                       Icon(
                         Icons.calendar_today,
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
-                      Text('  ' +
-                          feed_format_date_time(
-                              context, this._data.eventStartDate) +
-                          '  -  ' +
-                          feed_format_date_time(
-                              context, this._data.eventEndDate)),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 1 / 60,
+                      Text(
+                        '  ' +
+                            feed_format_date_time(
+                                context, this._data.eventStartDate) +
+                            '  -  ' +
+                            feed_format_date_time(
+                                context, this._data.eventEndDate),
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 1 / 60),
                       ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
                       Icon(
                         Icons.location_on,
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
-                      Text(' ' + _getLocation(context))
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 1 / 150,
+                      ),
+                      Text(
+                        ' ' + _getLocation(context),
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 1 / 60),
+                      )
                     ],
-                  ),
+                  )
                 ],
               ),
               onTap: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new EventInfo(_data)));
+                _navigateToEventScreen();
               },
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: _data.imageURL != null
-                        ? NetworkImage(_data.imageURL)
-                        : Image.asset('assets/eventImagePlaceholder.png').image,
-                    fit: BoxFit.cover,
+              child: InkWell(
+                onTap: _navigateToEventScreen,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: _data.imageURL != null
+                          ? NetworkImage(_data.imageURL)
+                          : Image.asset('assets/eventImagePlaceholder.png')
+                              .image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -96,7 +118,9 @@ class FeedItemUIState extends State<FeedItemUI> {
     return this._data.location;
   }
 
-  Widget profilePicture() {
+  /// loads profile picture
+  /// if no profile picture in the backend, show placeholder
+  Widget _profilePicture() {
     Widget _profilePicture;
     getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
           _profilePicture = value;
@@ -104,5 +128,10 @@ class FeedItemUIState extends State<FeedItemUI> {
     return _profilePicture != null
         ? _profilePicture
         : Image.asset('assets/blank_profile.png');
+  }
+
+  void _navigateToEventScreen() async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => new EventInfo(_data)));
   }
 }

@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
@@ -96,7 +97,10 @@ class _MapScreenState extends State<MapScreen> {
       getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
       print('got all events');
     } on Exception catch (e) {
-      show_toast(e.toString());
+      show_toast(exceptionHandling(e));
+      Log().error(causingClass: 'map_screen',
+          method: 'loadAsyncData',
+          action: exceptionHandling(e));
     }
     return true;
   }

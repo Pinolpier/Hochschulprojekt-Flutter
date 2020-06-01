@@ -7,6 +7,7 @@ import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
@@ -127,7 +128,10 @@ class _EventInfoState extends State<EventInfo> {
       try {
         eventimagewidget = await getImage(widget.event.eventID);
       } on Exception catch (e) {
-        //TODO handle exception here
+        Log().error(
+            causingClass: 'eventInfo_screen',
+            method: 'loadAsyncData',
+            action: e.toString());
       }
     } else {
       eventimagewidget = null;
@@ -158,7 +162,9 @@ class _EventInfoState extends State<EventInfo> {
         }
       }
     } on Exception catch (e) {
-      //TODO handle exception here
+      Log().error(causingClass: 'eventInfo_screen',
+          method: 'loadAsyncData',
+          action: e.toString());
     }
     return true;
   }
@@ -307,7 +313,10 @@ class _EventInfoState extends State<EventInfo> {
                                             try {
                                               updateData(widget.event);
                                             } on Exception catch (e){
-                                              //TODO Errorhandling
+                                              Log().error(
+                                                  causingClass: 'eventInfo_screen',
+                                                  method: 'build',
+                                                  action: e.toString());
                                             }
                                           });
                                         },

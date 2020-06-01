@@ -6,10 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/storageService.dart';
 
 import '../controller/authService.dart';
+import 'log.dart';
 
 //Collection-Name in database
 final String collection = 'events';
@@ -62,7 +63,7 @@ void createEvent(File image, Event event) async {
 
   if (image != null) {
     Map<String, dynamic> eventMap = new Map();
-    String imageURL = await uploadImage(collection, image, eventID);
+    String imageURL = await uploadFile(collection, image, eventID);
     eventMap[imageUrl] = imageURL;
     _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
@@ -260,8 +261,9 @@ void updateData(Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null) await deleteImage(collection, event.eventID);
-  String url = await uploadImage(collection, image, event.eventID);
+  if (event.imageURL != null)
+    await deleteFile(collection, event.eventID);
+  String url = await uploadFile(collection, image, event.eventID);
   _urlToID[event.eventID] = url;
   event.imageURL = url;
   updateData(event);
@@ -280,10 +282,10 @@ void updateField(String eventID, Map<dynamic, dynamic> map) {
 /// deleting Event from Database
 deleteEvent(Event event) async {
   if (event.eventID != null) {
-    if (event.imageURL != null) {
-      deleteImage(event.eventID, collection);
-    }
-    db.collection(collection).document(event.eventID).delete();
+      if (event.imageURL != null) {
+        deleteFile(event.eventID, collection);
+      }
+      db.collection(collection).document(event.eventID).delete();
   }
 }
 
@@ -438,8 +440,11 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
             ))
         .toList();
   } else
-    print('Keine passenden Events gefunden');
-  //TODO Toast message
+    //show_toast(AppLocalizations.of(context).translate("no_events_found"));
+    Log().error(causingClass: 'event_service',
+        method: '_snapShotToList',
+        action: "No matching events found!");
+  //TODO: show Toast with internationalized message
 }
 
 /// Returns a [Event] based on a documentSnapshot
@@ -544,6 +549,7 @@ String exceptionHandling(PlatformException e) {
       return ('Unknown error or an error from a different error domain.');
       break;
   }
+  return e.message;
 }
 
 //Filter setter/getter and delete

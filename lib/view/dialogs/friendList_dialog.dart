@@ -7,6 +7,8 @@ import 'package:univents/model/event.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/log.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
@@ -37,15 +39,19 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     this.event = event;
   }
 
-  _FriendlistdialogScreenState.create() {}
+  _FriendlistdialogScreenState.create() {
+    comeFromCreateEventScreen = false;
+  }
 
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
   bool comeFromCreateEventScreen = true;
   int selectedCount = 0;
   List<String> selected = List();
+  Map<String, dynamic> friendsInGroup = new Map();
   List<FriendslistDummies> friends = new List();
   Event event;
+  String groupname;
 
   void longPress() {
     setState(() {
@@ -60,20 +66,36 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   var _result;
 
   Future<bool> loadAsyncData() async {
-    Map<String, dynamic> friendsMap = await getFriends();
+    Map<String, dynamic> friendsMap = new Map();
+    try {
+      friendsMap = await getFriends();
+    } on Exception catch (e) {
+      show_toast(e.toString());
+      Log().error(causingClass: 'friendList_dialog',
+          method: 'loadAsyncData',
+          action: e.toString());
+    }
     if (friendsMap != null && friendsMap.containsKey('friends')) {
       List<dynamic> friend = friendsMap['friends'];
-      for (String s in friend) {
-        UserProfile up = await getUserProfile(s);
-        print(up.toString());
-        print(await getProfilePicture(s));
-        Widget profilePicture = await getProfilePicture(s);
-        friends.add(FriendslistDummies(
-            uid: s,
-            name: up.username,
-            profilepic: profilePicture == null
-                ? Image.asset('assets/blank_profile.png')
-                : profilePicture));
+      try {
+        for (String s in friend) {
+          UserProfile up = await getUserProfile(s);
+          print(up.toString());
+          print(await getProfilePicture(s));
+          Widget profilePicture = await getProfilePicture(s);
+          friends.add(FriendslistDummies(
+              uid: s,
+              name: up.username,
+              profilepic: profilePicture == null
+                  ? Image.asset('assets/blank_profile.png')
+                  : profilePicture));
+        }
+      } on Exception catch (e) {
+        show_toast(e.toString());
+        Log().error(causingClass: 'friendList_dialog',
+            method: 'loadAsyncData',
+            action: e.toString());
+
       }
     } else {
       friends = new List();
@@ -111,11 +133,12 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
             TextField(
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(10.0),
-                    hintText: "search for a friend"),
+                    hintText: comeFromCreateEventScreen == true ? "search for a friend" : "Enter a group name"),
                 onChanged: (string) {
                   //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                   _debouncer.run(() {
                     print(string);
+                    groupname = string;
                   });
                 }),
             Expanded(
@@ -161,10 +184,10 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
               child: FloatingActionButton(
                 onPressed: () {
                   comeFromCreateEventScreen == false
-                      ? showChangeGroup(context)
+                      ? goBackToGroupScreen()
                       : event == null
-                          ? Navigator.pop(context, selected)
-                          : doStuff();
+                          ? Navigator.pop(context, friendsInGroup)
+                          : goBackToEventScreen();
                 },
                 child: Icon(Icons.check),
                 backgroundColor: primaryColor,
@@ -176,7 +199,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     }
   }
 
-  void doStuff() {
+  void goBackToEventScreen() {
     for (String a in selected) {
       List<String> newAttendees = new List();
       for (String s in event.attendeesIds) {
@@ -187,5 +210,21 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     }
     updateData(event);
     Navigator.pop(context);
+  }
+
+  void goBackToGroupScreen() {
+    if (groupname != null && groupname.isNotEmpty && selected.isNotEmpty) {
+      friendsInGroup[groupname] = selected;
+      Navigator.pop(context, friendsInGroup);
+    }
+    else if (groupname == null || groupname.isEmpty) {
+      showErrorDialog(
+          context, "Groupname invalid!", "Please enter a valid Group name",
+          true);
+    }
+    else if (selected.isEmpty) {
+      showErrorDialog(context, "invalid amount of friends!",
+          "Please add at least 1 friend to the group", true);
+    }
   }
 }

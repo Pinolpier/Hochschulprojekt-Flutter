@@ -39,5 +39,6 @@
   "map_screen": "Karte",
   "friends_screen": "Freunde",
   "profile_screen": "Profil",
-  "settings_screen": "Einstellungen"
+  "settings_screen": "Einstellungen",
+  "no_events_found": "Keine passenden Events gefunden!"
 }

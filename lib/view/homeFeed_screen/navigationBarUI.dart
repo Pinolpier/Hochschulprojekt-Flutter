@@ -8,6 +8,7 @@ import 'package:univents/view/map_screen.dart';
 import 'package:univents/view/profile_screen.dart';
 import 'package:univents/view/settings_screen.dart';
 
+import '../../service/app_localizations.dart';
 import 'feed.dart';
 import 'filter_sidebar.dart';
 
@@ -26,14 +27,14 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   int _state = 0;
 
   /// dynamic app bar title (changes if screen changes)
-  String _appBarTitle;
+  String _appBarTitle = 'Home';
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
     _data = new List<Widget>();
     Feed.init().then((val) => setState(() {
-          _data = val;
           _initState(0);
+          this._data = val;
         }));
   }
 
