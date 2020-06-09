@@ -30,6 +30,11 @@ class _MapScreenState extends State<MapScreen> {
           plugins: [
             UserLocationPlugin(),
           ],
+        onPositionChanged: (position, hasGesture) async {
+          if (await loadNewEvents(position)) {
+            build(this.context);
+          };
+        },
           onLongPress: (LatLng latlng) {
             Navigator.push(
                 context,
@@ -37,7 +42,8 @@ class _MapScreenState extends State<MapScreen> {
                   builder: (context) =>
                   new CreateEventScreen(convertLatLngToString(latlng)),
                 ));
-          }),
+          },
+      ),
       layers: [
         new TileLayerOptions(
           urlTemplate: "https://api.tiles.mapbox.com/v4/"
@@ -87,6 +93,21 @@ class _MapScreenState extends State<MapScreen> {
             )),
       ));
     }
+  }
+
+  Future<bool> loadNewEvents(MapPosition position) async {
+    try {
+      GeoPoint geoPoint = new GeoPoint(
+          position.center.latitude, position.center.longitude);
+      getMarkerList(await get_events_near_location_and_filters(geoPoint, 10));
+      print('new events');
+    } on Exception catch (e) {
+      show_toast(exceptionHandling(e));
+      Log().error(causingClass: 'map_screen',
+          method: 'loadAsyncData',
+          action: exceptionHandling(e));
+    }
+    return true;
   }
 
   Future<bool> loadAsyncData() async {

@@ -99,16 +99,16 @@ class Log {
   /// saving the data into the log file
   /// based on (String) [information]
   void _log(String information) async {
-    this._file = await _init();
-    String previous = '';
-    try {
-      previous = await this._file.readAsString();
-      this._file = await this._file.writeAsString('$information');
-      print('$previous\n$information');
-    } catch (e) {
-      this._file = await this._file.writeAsString('-- start --\n$information');
-      print('$information');
-    }
+    //  this._file = await _init();
+    //  String previous = '';
+    //  try {
+    //    previous = await this._file.readAsString();
+    //    this._file = await this._file.writeAsString('$information');
+    //    print('$previous\n$information');
+    // } catch (e) {
+    //   this._file = await this._file.writeAsString('-- start --\n$information');
+    //  print('$information');
+    // }
   }
 
   File get file => this._file;
