@@ -122,9 +122,9 @@ class FeedItemUIState extends State<FeedItemUI> {
   /// if no profile picture in the backend, show placeholder
   Widget _profilePicture() {
     Widget _profilePicture;
-    getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
-          _profilePicture = value;
-        }));
+    getProfilePicture(this._data.ownerIds[0]).then((value) {
+      _profilePicture = value;
+    });
     return _profilePicture != null
         ? _profilePicture
         : Image.asset('assets/blank_profile.png');

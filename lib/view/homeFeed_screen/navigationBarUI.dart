@@ -32,6 +32,16 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
     _data = new List<Widget>();
+    Feed.init().then((val) {
+      _initState(0);
+      this._data = val;
+    });
+  }
+
+  /// initializes the _data list with data
+  @override
+  void initState() {
+    super.initState();
     Feed.init().then((val) => setState(() {
           _initState(0);
           this._data = val;
@@ -39,12 +49,12 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   }
 
   ///updates feed with the set filters
-  List<Widget> _update() {
+  Future<void> _update() async {
     Feed.init().then((val) => setState(() {
           this._data = val;
           _initState(_state);
         }));
-    return this._data;
+    return null;
   }
 
   @override
@@ -110,8 +120,11 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       switch (index) {
         case 0:
           {
-            this._thisWidget = ListView(
-              children: _update(),
+            this._thisWidget = RefreshIndicator(
+              child: ListView(
+                children: this._data,
+              ),
+              onRefresh: _update,
             );
             this._appBarTitle =
                 AppLocalizations.of(context).translate('home_screen');
