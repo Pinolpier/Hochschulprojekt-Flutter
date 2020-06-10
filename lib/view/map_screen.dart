@@ -45,7 +45,7 @@ class _MapScreenState extends State<MapScreen> {
                     position,
                     distance.as(LengthUnit.Kilometer, position.center,
                         position.bounds.northEast))) {
-                  this.didUpdateWidget(this.widget);
+                  this.setState(() {});
                 }
               } on Exception catch (e) {
                 show_toast(e.toString());
