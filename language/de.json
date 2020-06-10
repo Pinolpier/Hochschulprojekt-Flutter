@@ -40,5 +40,15 @@
   "friends_screen": "Freunde",
   "profile_screen": "Profil",
   "settings_screen": "Einstellungen",
-  "no_events_found": "Keine passenden Events gefunden!"
+  "no_events_found": "Keine passenden Events gefunden!",
+  "main_settings": "Allgemeine Einstellungen",
+  "misc_settings": "Verschiedenes",
+  "privacy_settings": "Rechtliches",
+  "email_visibility": "EMail anzeigen",
+  "name_visibility": "Name anzeigen",
+  "tags_visibility": "Tags anzeigen",
+  "delete_profile": "Profil löschen",
+  "sign_out": "Abmelden",
+  "share": "App teilen",
+  "feedback": "Feedback geben"
 }
