@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -18,31 +20,50 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   LatLng pos;
+  LatLng previousPosition;
   List<Marker> _markerList = new List();
   var _result;
   MapController mapController = new MapController();
+  Timer _timer;
+  bool _gestureStart = true;
 
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-          center: LatLng(49.140530, 9.210270),
-          zoom: 8.0,
-          plugins: [
-            UserLocationPlugin(),
-          ],
+        center: LatLng(49.140530, 9.210270),
+        zoom: 8.0,
+        plugins: [
+          UserLocationPlugin(),
+        ],
         onPositionChanged: (position, hasGesture) async {
-          if (await loadNewEvents(position)) {
-            build(this.context);
-          };
+          if (_gestureStart) {
+            if (previousPosition != position.center) {
+              final Distance distance = new Distance();
+              previousPosition = position.center;
+              try {
+                if (await loadNewEvents(
+                    position,
+                    distance.as(LengthUnit.Kilometer, position.center,
+                        position.bounds.northEast))) {
+                  this.didUpdateWidget(this.widget);
+                }
+              } on Exception catch (e) {
+                show_toast(e.toString());
+                Log().error(
+                    causingClass: 'map_screen', method: 'onPositionChanged:');
+              }
+              _restartTimer();
+            }
+          }
         },
-          onLongPress: (LatLng latlng) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                  new CreateEventScreen(convertLatLngToString(latlng)),
-                ));
-          },
+        onLongPress: (LatLng latlng) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    new CreateEventScreen(convertLatLngToString(latlng)),
+              ));
+        },
       ),
       layers: [
         new TileLayerOptions(
@@ -74,36 +95,41 @@ class _MapScreenState extends State<MapScreen> {
 
   /// Gets all Events from the Database, creates a Marker for each and sets an onClickListener to open the eventInfo of the respective Event
   void getMarkerList(List list) {
+    _markerList = new List<Marker>();
     for (Event e in list) {
       _markerList.add(new Marker(
         point: LatLng(double.parse(e.latitude), double.parse(e.longitude)),
-        builder: (ctx) => Container(
-            child: GestureDetector(
-              onTap: () async {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => new EventInfo(e),
-                    ));
-              },
-              child: Icon(
-                Icons.location_on,
-                color: Colors.red,
-              ),
-            )),
+        builder: (ctx) =>
+            Container(
+                child: GestureDetector(
+                  onTap: () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => new EventInfo(e),
+                        ));
+                  },
+                  child: Icon(
+                    Icons.location_on,
+                    color: Colors.red,
+                  ),
+                )),
       ));
     }
   }
 
-  Future<bool> loadNewEvents(MapPosition position) async {
+  /// Method to load new events when the card is moved.
+  /// The [MapPosition] and the double [radius] are transferred
+  Future<bool> loadNewEvents(MapPosition position, double radius) async {
     try {
-      GeoPoint geoPoint = new GeoPoint(
-          position.center.latitude, position.center.longitude);
-      getMarkerList(await get_events_near_location_and_filters(geoPoint, 10));
-      print('new events');
+      GeoPoint geoPoint =
+      new GeoPoint(position.center.latitude, position.center.longitude);
+      getMarkerList(
+          await get_events_near_location_and_filters(geoPoint, radius));
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
-      Log().error(causingClass: 'map_screen',
+      Log().error(
+          causingClass: 'map_screen',
           method: 'loadAsyncData',
           action: exceptionHandling(e));
     }
@@ -112,14 +138,15 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<bool> loadAsyncData() async {
     try {
-      Position position = await Geolocator().getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
       getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
       print('got all events');
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
-      Log().error(causingClass: 'map_screen',
+      Log().error(
+          causingClass: 'map_screen',
           method: 'loadAsyncData',
           action: exceptionHandling(e));
     }
@@ -170,5 +197,16 @@ class _MapScreenState extends State<MapScreen> {
     pointList1.add(pointList2[1]);
     pointList1.add(pointList3[1].substring(0, pointList3[1].length - 1));
     return pointList1;
+  }
+
+  /// Method to start a timer so that the card does not poll events too often
+  void _restartTimer() {
+    _gestureStart = false;
+    _timer?.cancel();
+    _timer = Timer(Duration(milliseconds: 500), () {
+      print('Timer beendet');
+      _gestureStart = true;
+      // mapGestureInteractionStopped callback here
+    });
   }
 }
