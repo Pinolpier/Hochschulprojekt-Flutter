@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
+import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
@@ -44,7 +45,8 @@ class _MapScreenState extends State<MapScreen> {
                 if (await loadNewEvents(
                     position,
                     distance.as(LengthUnit.Kilometer, position.center,
-                        position.bounds.northEast))) {
+                            position.bounds.northEast) +
+                        radius_buffer)) {
                   this.setState(() {});
                 }
               } on Exception catch (e) {
