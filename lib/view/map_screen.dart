@@ -142,7 +142,6 @@ class _MapScreenState extends State<MapScreen> {
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
       getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
-      print('got all events');
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
@@ -204,7 +203,6 @@ class _MapScreenState extends State<MapScreen> {
     _gestureStart = false;
     _timer?.cancel();
     _timer = Timer(Duration(milliseconds: 500), () {
-      print('Timer beendet');
       _gestureStart = true;
       // mapGestureInteractionStopped callback here
     });
