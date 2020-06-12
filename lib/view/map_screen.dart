@@ -122,15 +122,14 @@ class _MapScreenState extends State<MapScreen> {
   /// The [MapPosition] and the double [radius] are transferred
   Future<bool> loadNewEvents(MapPosition position, double radius) async {
     try {
-      GeoPoint geoPoint =
-      new GeoPoint(position.center.latitude, position.center.longitude);
-      getMarkerList(
-          await get_events_near_location_and_filters(geoPoint, radius));
+      getMarkerList(await get_events_near_location_and_filters(
+          new GeoPoint(position.center.latitude, position.center.longitude),
+          radius));
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
           causingClass: 'map_screen',
-          method: 'loadAsyncData',
+          method: 'loadNewEvents',
           action: exceptionHandling(e));
     }
     return true;
