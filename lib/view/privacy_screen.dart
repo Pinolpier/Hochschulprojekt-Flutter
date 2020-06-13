@@ -5,15 +5,35 @@ import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
 ///This class creates an AboutScreen which displays the Privacytext and the Impressumtext (found in assets/res/strings.json)
-///there is a Button to directly send feedback via E-Mail (mailto:-link)
-///also a butto to share a message with the native share menu (text can be changed in assets/res/strings.json)
+///
+///Author: Jan Oster
 
-class AboutScreen extends StatefulWidget {
+class PrivacyScreen extends StatefulWidget {
   @override
-  State createState() => _AboutScreenState();
+  State createState() => _PrivacyScreenState();
 }
 
-class _AboutScreenState extends State<AboutScreen> {
+class _PrivacyScreenState extends State<PrivacyScreen> {
+  Widget _backButtonWidget() {
+    return Positioned(
+      top: 0.0,
+      left: 0.0,
+      right: 0.0,
+      child: AppBar(
+        title: Text(
+          AppLocalizations.of(context).translate('privacy_settings'),
+          style: textStyleConstant,
+        ),
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back_ios, color: univentsBlackText),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        backgroundColor: primaryColor,
+        elevation: 0.0,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,27 +45,29 @@ class _AboutScreenState extends State<AboutScreen> {
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(
                 horizontal: 40.0,
-                vertical: 120.0,
+                vertical: 20.0,
               ),
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  _backButtonWidget(),
+                  SizedBox(height: 20.0),
                   Text(
-                    'Privacy',
+                    AppLocalizations.of(context).translate('privacy_statement'),
                     style: labelStyleConstant,
                   ),
                   Text(
-                    AppLocalizations.of(context).translate("privacy"),
+                    AppLocalizations.of(context).translate('privacy_text'),
                     style: textStyleConstant,
                   ),
                   SizedBox(height: 20.0),
                   Text(
-                    'impressum',
+                    AppLocalizations.of(context).translate('imprint'),
                     style: labelStyleConstant,
                   ),
                   Text(
-                    AppLocalizations.of(context).translate("impressum"),
+                    AppLocalizations.of(context).translate("imprint_text"),
                     style: textStyleConstant,
                   ),
                 ],

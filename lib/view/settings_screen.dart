@@ -3,7 +3,23 @@ import 'package:share/share.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/view/privacy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+///This class creates a SettingScreen
+///
+/// It has following settings:
+/// Switch for E-Mail visibility
+/// Switch for name visibility
+/// Switch for tags visibility
+/// Button for logout
+/// Button to share an text about the App
+/// Button to give Feedback via E-Mail
+/// Button to open the privacy_screen
+/// Button to delete the userprofile
+///
+/// Author: Jan Oster
+/// Plugins: share: ^0.6.4, url_launcher: ^5.4.5
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -115,7 +131,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => new PrivacyScreen(),
+              ));
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
