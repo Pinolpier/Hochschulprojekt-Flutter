@@ -4,7 +4,7 @@ import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
-///This class creates an AboutScreen which displays the Privacytext and the Impressumtext (found in assets/res/strings.json)
+///This class creates an AboutScreen which displays the Privacystatement and the Imprint (found in assets/res/strings.json)
 ///
 ///Author: Jan Oster
 

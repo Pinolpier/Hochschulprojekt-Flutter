@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:univents/controller/authService.dart';
+import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
+import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/privacy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,9 +29,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _emailVisibility = false;
-  bool _nameVisibility = false;
-  bool _tagsVisibility = false;
+  bool _emailVisibility;
+  bool _nameVisibility;
+  bool _tagsVisibility;
+  UserProfile profile;
+  var _result;
 
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
@@ -183,86 +187,136 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Future<bool> loadAsyncData() async {
+    profile = await getUserProfile(getUidOfCurrentlySignedInUser());
+    profile.emailVisibility == PRIVATE
+        ? _emailVisibility = false
+        : _emailVisibility = true;
+    profile.nameVisibility == PRIVATE
+        ? _nameVisibility = false
+        : _nameVisibility = true;
+    profile.tagsVisibility == PRIVATE
+        ? _tagsVisibility = false
+        : _tagsVisibility = true;
+    return true;
+  }
+
+  @override
+  void initState() {
+    // This is the proper place to make the async calls
+    // This way they only get called once
+
+    // During development, if you change this code,
+    // you will need to do a full restart instead of just a hot reload
+
+    // You can't use async/await here,
+    // We can't mark this method as async because of the @override
+    loadAsyncData().then((result) {
+      // If we need to rebuild the widget with the resulting data,
+      // make sure to use `setState`
+      setState(() {
+        _result = result;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Scaffold(
-        backgroundColor: univentsLightGreyBackground,
-        body: new Container(
-          height: double.infinity,
-          child: SingleChildScrollView(
-            //fixes pixel overflow error when keyboard is used
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(
-              horizontal: 40.0,
-              vertical: 20.0,
-            ),
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                new Text(
-                  AppLocalizations.of(context).translate('main_settings'),
-                  style: TextStyle(
-                    color: univentsBlackText,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OpenSans',
-                    fontSize: 20,
+    if (_result == null) {
+      return CircularProgressIndicator();
+    } else {
+      return Card(
+        child: Scaffold(
+          backgroundColor: univentsLightGreyBackground,
+          body: new Container(
+            height: double.infinity,
+            child: SingleChildScrollView(
+              //fixes pixel overflow error when keyboard is used
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: 40.0,
+                vertical: 20.0,
+              ),
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  new Text(
+                    AppLocalizations.of(context).translate('main_settings'),
+                    style: TextStyle(
+                      color: univentsBlackText,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'OpenSans',
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                new SwitchListTile(
-                  title: Text(AppLocalizations.of(context)
-                      .translate("email_visibility")),
-                  value: _emailVisibility,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _emailVisibility = value;
-                    });
-                  },
-                  secondary: Icon(Icons.mail_outline),
-                ),
-                new SwitchListTile(
-                  title: Text(AppLocalizations.of(context)
-                      .translate("name_visibility")),
-                  value: _nameVisibility,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _nameVisibility = value;
-                    });
-                  },
-                  secondary: Icon(Icons.mail_outline),
-                ),
-                new SwitchListTile(
-                  title: Text(AppLocalizations.of(context)
-                      .translate("tags_visibility")),
-                  value: _tagsVisibility,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _tagsVisibility = value;
-                    });
-                  },
-                  secondary: Icon(Icons.mail_outline),
-                ),
-                _deleteProfileButtonWidget(),
-                new Text(
-                  AppLocalizations.of(context).translate('misc_settings'),
-                  style: TextStyle(
-                    color: univentsBlackText,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OpenSans',
-                    fontSize: 20,
+                  new SwitchListTile(
+                    title: Text(AppLocalizations.of(context)
+                        .translate("email_visibility")),
+                    value: _emailVisibility,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _emailVisibility = value;
+                        _emailVisibility == true
+                            ? profile.emailVisibility = FRIENDS
+                            : profile.emailVisibility = PRIVATE;
+                        updateProfile(profile);
+                      });
+                    },
+                    secondary: Icon(Icons.mail_outline),
                   ),
-                ),
-                _shareAppButtonWidget(
-                    AppLocalizations.of(context).translate("shareMessage")),
-                _feedbackButtonWidget(),
-                _privacyButtonWidget(),
-                _signOutButtonWidget(),
-              ],
+                  new SwitchListTile(
+                    title: Text(AppLocalizations.of(context)
+                        .translate("name_visibility")),
+                    value: _nameVisibility,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _nameVisibility = value;
+                        _nameVisibility == true
+                            ? profile.nameVisibility = FRIENDS
+                            : profile.nameVisibility = PRIVATE;
+                        updateProfile(profile);
+                      });
+                    },
+                    secondary: Icon(Icons.mail_outline),
+                  ),
+                  new SwitchListTile(
+                    title: Text(AppLocalizations.of(context)
+                        .translate("tags_visibility")),
+                    value: _tagsVisibility,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _tagsVisibility = value;
+                        _tagsVisibility == true
+                            ? profile.tagsVisibility = FRIENDS
+                            : profile.tagsVisibility = PRIVATE;
+                        updateProfile(profile);
+                      });
+                    },
+                    secondary: Icon(Icons.mail_outline),
+                  ),
+                  new Text(
+                    AppLocalizations.of(context).translate('misc_settings'),
+                    style: TextStyle(
+                      color: univentsBlackText,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'OpenSans',
+                      fontSize: 20,
+                    ),
+                  ),
+                  _shareAppButtonWidget(
+                      AppLocalizations.of(context).translate("shareMessage")),
+                  _feedbackButtonWidget(),
+                  _privacyButtonWidget(),
+                  _signOutButtonWidget(),
+                  _deleteProfileButtonWidget(),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
