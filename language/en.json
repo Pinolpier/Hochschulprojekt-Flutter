@@ -52,5 +52,6 @@
   "share": "share App",
   "feedback": "give Feedback",
   "privacy_statement": "Privacy Statement",
-  "imprint": "Imprint"
+  "imprint": "Imprint",
+  "delete_profile_text": "You're about to delete your userprofile, are you sure?"
 }

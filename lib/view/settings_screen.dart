@@ -49,7 +49,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {},
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('delete profile' //TODO Fix Bug002
+                    //AppLocalizations.of(context).translate('delete_profile')
+                    ),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text(
+                          'you#re about to delete your profile, are you sure?' //TODO Fix Bug002
+                          //AppLocalizations.of(context).translate('delete_profile_text')
+                          ),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      deleteProfileOfCurrentlySignedInUser();
+                      signOut();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
