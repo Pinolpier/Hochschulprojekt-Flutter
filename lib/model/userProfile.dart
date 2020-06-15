@@ -7,8 +7,11 @@ final int PRIVATE = 1;
 final int FRIENDS = 2;
 final int PUBLIC = 3;
 
+/// todo: add author
+/// todo: CONSIDER writing a library-level doc comment
 /// used to model a UserProfile of the App
 class UserProfile {
+  /// todo: add documentation for the variables
   String _uid;
   String _username;
   String _email;
@@ -20,15 +23,21 @@ class UserProfile {
   int _nameVisibility = PRIVATE;
   int _tagsVisibility = PRIVATE;
 
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Takes all values from a [UserProfile] except the visibilities which have to be set using [tagVisibility], [emailVisibility] an [nameVisibility] methods. Their standard value is [PRIVATE] if not set.
   UserProfile(this._uid, this._username, this._email, this._forename,
       this._surname, this._biography, this._tags);
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Used to get an object from a [Firestore] query's return value, which is a [documentSnapshot].
   ///
   /// Visibilities will either be set to according to the values in the database or to [PRIVATE]
-  UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot,
-      String uid) {
+  UserProfile.fromDocumentSnapshot(
+      Map<String, dynamic> documentSnapshot, String uid) {
     _uid = uid;
     _username = documentSnapshot['username'];
     _email = documentSnapshot['email'];
@@ -36,15 +45,24 @@ class UserProfile {
     _surname = documentSnapshot['surname'];
     _biography = documentSnapshot['biography'];
     _tags = documentSnapshot['tags'];
-    _emailVisibility = documentSnapshot.containsKey('emailVisibility') ? documentSnapshot['emailVisibility'] : PRIVATE;
-    _nameVisibility = documentSnapshot.containsKey('nameVisibility') ? documentSnapshot['nameVisibility'] : PRIVATE;
-    _tagsVisibility = documentSnapshot.containsKey('tagsVisibility') ? documentSnapshot['tagsVisibility'] : PRIVATE;
+    _emailVisibility = documentSnapshot.containsKey('emailVisibility')
+        ? documentSnapshot['emailVisibility']
+        : PRIVATE;
+    _nameVisibility = documentSnapshot.containsKey('nameVisibility')
+        ? documentSnapshot['nameVisibility']
+        : PRIVATE;
+    _tagsVisibility = documentSnapshot.containsKey('tagsVisibility')
+        ? documentSnapshot['tagsVisibility']
+        : PRIVATE;
   }
 
+  /// todo: missing documentation
   String toString() {
     return 'UserProfile{_uid: $_uid, _username: $_username, _email: $_email, _forename: $_forename, _surname: $_surname, _biography: $_biography, _tags: $_tags, _emailVisibility: $_emailVisibility, _nameVisibility: $_nameVisibility, _tagsVisibility: $_tagsVisibility}';
   }
 
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// returns a [Map] to store this instance in the [Firestore] database
   Future<Map<String, dynamic>> toMap() async {
     String pictureURI = await getProfilePictureUri(uid);
@@ -54,24 +72,37 @@ class UserProfile {
       'forename': _forename,
       'surname': _surname,
       'biography': _biography,
-      'tags':_tags,
+      'tags': _tags,
       'profilePicture': pictureURI,
-      'emailVisibility':_emailVisibility,
-      'tagsVisibility':_tagsVisibility,
-      'nameVisibility':_nameVisibility
+      'emailVisibility': _emailVisibility,
+      'tagsVisibility': _tagsVisibility,
+      'nameVisibility': _nameVisibility
     };
   }
 
+  /// todo: missing documentation
   String get biography => _biography;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set biography(String value) {
     _biography = value;
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: PREFER starting variable, getter, or setter comments with noun phrases
   /// may be null if the logged in [FirebaseUser] has no access to this profile's information, because of it's [_nameVisibility] setting
   String get surname => _surname;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set surname(String value) {
     _surname = value;
