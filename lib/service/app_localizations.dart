@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 
 class AppLocalizations {
   /// todo: add documentation to variables
+  /// todo: variables are private
   final Locale locale;
 
   /// todo: missing documentation of constructor
