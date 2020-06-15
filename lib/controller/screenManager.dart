@@ -11,6 +11,7 @@ import 'package:univents/view/profile_screen.dart';
 /// If no user is signed In the Login Screen is shown, if one is signed in the HomeScreen is shown except
 /// the logged in user doesn't have a profile yet (e.g. newly registered), then another screen is shown to
 /// make sure that relevant information is added and a consistent database state is kept.
+/// todo: add author
 class ScreenManager extends StatelessWidget {
   Widget build(BuildContext context) {
     final FirebaseUser user = Provider.of<FirebaseUser>(context);

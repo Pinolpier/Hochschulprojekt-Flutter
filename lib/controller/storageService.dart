@@ -4,6 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
+/// todo: add author, add script description
+
+/// todo: DO separate the first sentence of a doc comment into its own paragraph, add "space" between the comment symbol and the comment itself
 ///This Method uploads a [File],
 ///parameter [collectionID] is the "path" where to safe the [File]
 ///The parameter [file] is the [File] to be uploaded with [filename]
@@ -16,10 +19,10 @@ Future<String> uploadFile(
     return await (await uploadTask.onComplete).ref.getDownloadURL();
   } catch (e) {
     show_toast(e.toString());
-    Log().error(causingClass: 'storageService',
+    Log().error(
+        causingClass: 'storageService',
         method: 'uploadFile',
         action: e.toString());
-
   }
 }
 
