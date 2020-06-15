@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+/// todo: add author
+/// todo: add space between comment symbol and text
+
 ///this class saves logs into a .txt file
 ///per log a line
 ///DateTime: [logType]: causing class, method, action
@@ -34,6 +37,7 @@ class Log {
     file.writeAsStringSync('-- start --');
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// info log
   /// writes and prints an info log with the information from
   /// (String) [causingClass], (String) [method],
@@ -50,6 +54,7 @@ class Log {
     _log(information);
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// warn log
   /// writes and prints an warning log with the information from
   /// (String) [causingClass], (String) [method],
@@ -66,6 +71,7 @@ class Log {
     _log(information);
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// error log
   /// writes and prints an error log with the information from
   /// (String) [causingClass], (String) [method],
@@ -82,6 +88,8 @@ class Log {
     _log(information);
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  ///    todo: DO use prose to explain parameters, return values, and exceptions
   /// concat's the data of log to a string
   /// creates a big String based on (String) [type],
   /// (String) [causingClass], (String) [method]
@@ -98,6 +106,7 @@ class Log {
             ' : [$type]: class: $causingClass, method: $method';
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// saving the data into the log file
   /// based on (String) [information]
   void _log(String information) async {
@@ -113,7 +122,9 @@ class Log {
     }
   }
 
+  /// todo: missing documentation
   File get file => this._file;
 
+  /// todo: missing documentation
   set file(File file) => this._file;
 }
