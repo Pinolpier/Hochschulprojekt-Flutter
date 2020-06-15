@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:univents/model/chatmessage_model.dart';
 import 'package:univents/model/colors.dart';
 
+/// @author Christian Henrich
+/// This screen represents the UI for the chat screen view where the users will be able to exchange text messages with their friends later.
+
 class ChatScreen extends StatefulWidget {
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  /// This method represents the individual chat containers.
+  ///
+  /// delivers text and timestamp of the [message] that got sent by a user for display on the screen.
+  /// it is either in the color blue or white. depending on if the bool [isMyself] is true or false (if the message got sent by me or someone else)
+  /// returns a container of the text that gets shown in the screen
   _buildMessage(Message message, bool isMyself) {
     final Container msg = Container(
       margin: isMyself
@@ -67,6 +75,10 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  /// This method represents the bar at the bottom where the user can input a textmessage and send it to his friends.
+  ///
+  /// returns a container of the message bar at the bottom of the screen with an input field for text, a button to upload pictures and
+  /// a button to send the textmessage input.
   _messageBarBottom() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
