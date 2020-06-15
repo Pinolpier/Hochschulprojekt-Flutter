@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// todo: add author
+/// todo: add small description to the variables
+/// todo: CONSIDER writing a library-level doc comment
+
 final primaryColor = Colors.blueAccent;
 final textButtonDarkBlue = Color(0xFF527DAA);
 final univentsWhiteText = Colors.white;
