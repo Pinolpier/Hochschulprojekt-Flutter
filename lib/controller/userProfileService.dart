@@ -64,7 +64,8 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   firestore.collection(collection).document(uid).delete();
   firestore.collection('friends').document(uid).delete();
   //TODO aus extrenen fruendeslisten entfernen
-  //TODO aus events entfernen und events die ich erstellt habe löschen
+  //TODO aus events an denen man teilnimmt entfernen
+  //TODO events die ich erstellt habe löschen
   deleteAccount();
 }
 
