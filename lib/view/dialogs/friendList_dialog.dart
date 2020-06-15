@@ -12,37 +12,47 @@ import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
+/// todo: add author
 /// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
 /// an option to directly invite friends to events and also to add new users to a group
 class FriendslistdialogScreen extends StatefulWidget {
+  /// todo: add documentation of variables
   Event event;
   bool create = false;
 
+  /// todo: missing documentation of constructor
   FriendslistdialogScreen(Event event) {
     this.event = event;
   }
 
+  /// todo: missing documentation
   FriendslistdialogScreen.create() {
     create = true;
   }
 
+  /// todo: missing documentation
   @override
   _FriendlistdialogScreenState createState() => create
       ? _FriendlistdialogScreenState.create()
       : _FriendlistdialogScreenState(event);
 }
 
+/// todo: hierarchy: class -> attributes -> constructor -> method
 /// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
 /// button at the bottom to create a new message
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
+  /// todo: missing documentation of constructor
   _FriendlistdialogScreenState(Event event) {
     this.event = event;
   }
 
+  /// todo: missing documentation
   _FriendlistdialogScreenState.create() {
     comeFromCreateEventScreen = false;
   }
 
+  /// todo: add documentation of variables
+  /// todo: set variables private
   final _debouncer = new Debouncer(500);
   bool longPressFlag = false;
   bool comeFromCreateEventScreen = true;
@@ -53,6 +63,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   Event event;
   String groupname;
 
+  /// todo: missing documentation
   void longPress() {
     setState(() {
       if (friends.isEmpty) {
@@ -65,13 +76,15 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
 
   var _result;
 
+  /// todo: missing documentation
   Future<bool> loadAsyncData() async {
     Map<String, dynamic> friendsMap = new Map();
     try {
       friendsMap = await getFriends();
     } on Exception catch (e) {
       show_toast(e.toString());
-      Log().error(causingClass: 'friendList_dialog',
+      Log().error(
+          causingClass: 'friendList_dialog',
           method: 'loadAsyncData',
           action: e.toString());
     }
@@ -92,10 +105,10 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
         }
       } on Exception catch (e) {
         show_toast(e.toString());
-        Log().error(causingClass: 'friendList_dialog',
+        Log().error(
+            causingClass: 'friendList_dialog',
             method: 'loadAsyncData',
             action: e.toString());
-
       }
     } else {
       friends = new List();
@@ -104,6 +117,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     return true;
   }
 
+  /// todo: missing documentation
   @override
   void initState() {
     loadAsyncData().then((result) {
@@ -133,7 +147,9 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
             TextField(
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(10.0),
-                    hintText: comeFromCreateEventScreen == true ? "search for a friend" : "Enter a group name"),
+                    hintText: comeFromCreateEventScreen == true
+                        ? "search for a friend"
+                        : "Enter a group name"),
                 onChanged: (string) {
                   //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                   _debouncer.run(() {
@@ -199,6 +215,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     }
   }
 
+  /// todo: missing documentation
   void goBackToEventScreen() {
     for (String a in selected) {
       List<String> newAttendees = new List();
@@ -212,17 +229,15 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     Navigator.pop(context);
   }
 
+  /// todo: missing documentation
   void goBackToGroupScreen() {
     if (groupname != null && groupname.isNotEmpty && selected.isNotEmpty) {
       friendsInGroup[groupname] = selected;
       Navigator.pop(context, friendsInGroup);
-    }
-    else if (groupname == null || groupname.isEmpty) {
-      showErrorDialog(
-          context, "Groupname invalid!", "Please enter a valid Group name",
-          true);
-    }
-    else if (selected.isEmpty) {
+    } else if (groupname == null || groupname.isEmpty) {
+      showErrorDialog(context, "Groupname invalid!",
+          "Please enter a valid Group name", true);
+    } else if (selected.isEmpty) {
       showErrorDialog(context, "invalid amount of friends!",
           "Please add at least 1 friend to the group", true);
     }
