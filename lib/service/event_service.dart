@@ -504,7 +504,13 @@ void deleteUserFromAttendeesList(String uid) async {
     for (int x = 0; x < eventList.length; x++) {
       Event event = eventList[x];
       if (event.attendeesIds.contains(uid)) {
-        event.attendeesIds.remove(uid);
+        List<String> attendees = new List();
+        for (int x = 0; x < event.attendeesIds.length; x++) {
+          if (event.attendeesIds[x] != uid) {
+            attendees.add(event.attendeesIds[x]);
+          }
+        }
+        event.attendeesIds = attendees;
       }
       updateData(event);
     }

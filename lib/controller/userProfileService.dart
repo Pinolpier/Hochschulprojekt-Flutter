@@ -64,9 +64,9 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   }
   firestore.collection(collection).document(uid).delete();
   firestore.collection('friends').document(uid).delete();
-  deleteUidFromFriendsLists(uid);
-  deleteUserFromAttendeesList(uid);
-  deleteEventsFromUser(uid);
+  await deleteUidFromFriendsLists(uid);
+  await deleteUserFromAttendeesList(uid);
+  await deleteEventsFromUser(uid);
   deleteAccount();
 }
 

@@ -147,7 +147,7 @@ void deleteUidFromFriendsLists(String uid) async {
   List<DocumentSnapshot> documentSnapshotList = qShot.documents;
   if (documentSnapshotList != null && documentSnapshotList.length > 0) {
     for (int x = 0; x < documentSnapshotList.length; x++) {
-      Map<String, List<dynamic>> friendMap = new Map();
+      Map<String, dynamic> friendMap = new Map();
       friendMap = documentSnapshotList[x].data;
       List<String> keyList = friendMap.keys;
       for (int x = 0; x < keyList.length; x++) {
