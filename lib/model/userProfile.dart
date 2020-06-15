@@ -108,60 +108,108 @@ class UserProfile {
     _surname = value;
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// may be null if the logged in [FirebaseUser] has no access to this profile's information, because of it's [_nameVisibility] setting
   String get forename => _forename;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set forename(String value) {
     _forename = value;
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// may be null if the logged in [FirebaseUser] has no access to this profile's information, because of it's [_emailVisibility] setting
   String get email => _email;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   setEmail(String value) {
     _email = value;
   }
 
+  /// todo: missing documentation
   String get username => _username;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set username(String value) {
     _username = value;
   }
 
+  /// todo: missing documentation
   String get uid => _uid;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set uid(String value) {
     _uid = value;
   }
 
+  /// todo: missing documentation
   int get tagsVisibility => _tagsVisibility;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set tagsVisibility(int value) {
     _tagsVisibility = value;
   }
 
+  /// todo: missing documentation
   int get nameVisibility => _nameVisibility;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set nameVisibility(int value) {
     _nameVisibility = value;
   }
 
+  /// todo: missing documentation
   int get emailVisibility => _emailVisibility;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set emailVisibility(int value) {
     _emailVisibility = value;
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// may be null if the logged in [FirebaseUser] has no access to this profile's information, because of it's [_tagsVisibility] setting
   List<String> get tags => _tags;
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// should only be used to update fields on the logged in User's profile
   set tags(List<String> value) {
     _tags = value;
