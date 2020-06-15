@@ -5,16 +5,20 @@ import 'package:univents/view/homeFeed_screen/feed_filter.dart';
 
 import 'filter_tile.dart';
 
+/// todo: add author
 /// this class helps to set filters for events with a sidebar
 class FilterSidebar extends StatefulWidget {
+  /// todo: misisng documentation
   @override
   State<StatefulWidget> createState() => FilterSidebarState();
 }
 
+/// todo: missing documentation
 class FilterSidebarState extends State<FilterSidebar> {
   /// list with all filters
   List<Widget> _filters = [];
 
+  /// todo: missing documentation of constructor
   FilterSidebarState() {
     this._filters = [
       FilterTile(FeedFilter.startDateFilter),
