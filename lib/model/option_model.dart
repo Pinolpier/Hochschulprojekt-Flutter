@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 /// option model for the settings_screen
 class Option {
   /// todo: add documentation for variables
+  /// todo: set variables private
   Icon icon;
   String title;
   String subtitle;

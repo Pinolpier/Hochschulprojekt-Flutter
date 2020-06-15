@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 /// todo: CONSIDER writing a library-level doc comment
 
 /// todo: documentation of variables
+/// todo: set variables private (provide setter and getter)
 DateTime selectedDateTime = DateTime.now();
 
 /// todo: missing documentation
