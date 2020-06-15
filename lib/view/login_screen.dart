@@ -11,36 +11,45 @@ import 'package:univents/service/utils/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
+/// todo: add author
+/// todo: documentation: -> /// documentation text
 /**
  * this class creates a loginscreen with different textfields to put in email and username and a few
  * buttons that add functionality like logging in through social media or remember me / forgot password
  */
 class LoginScreen extends StatefulWidget {
+  /// todo: missing documentation
   @override
   State createState() => _LoginScreenState();
 }
 
+/// todo: missing documentation
 class _LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
+
+    /// todo: missing documentation
+    with
+        SingleTickerProviderStateMixin {
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
   String _email = '';
   String _password = '';
 
+  /// todo: correct
   /**
    * this method is responsible for the short logo animation at the start of the app
    */
   @override
   void initState() {
-      super.initState();
-      _logoAnimationController = new AnimationController(
-          vsync: this, duration: new Duration(milliseconds: 5000));
-      _logoAnimation = new CurvedAnimation(
-          parent: _logoAnimationController, curve: Curves.easeInOutBack);
-      _logoAnimation.addListener(() => this.setState(() {}));
-      _logoAnimationController.forward();
+    super.initState();
+    _logoAnimationController = new AnimationController(
+        vsync: this, duration: new Duration(milliseconds: 5000));
+    _logoAnimation = new CurvedAnimation(
+        parent: _logoAnimationController, curve: Curves.easeInOutBack);
+    _logoAnimation.addListener(() => this.setState(() {}));
+    _logoAnimationController.forward();
   }
 
+  /// todo: missing documenation
   Widget _animatedLogoWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -54,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// todo: missing documentation
   Widget _emailTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,6 +103,8 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// This method checks whether the given parameter [email] of type [String] is a valid e-mail-address using regex.
   /// The regex is copied from StackOverflow. Returns true only if a valid email address has been passed as argument.
   bool _isEmailGood(String email) {
@@ -101,6 +113,7 @@ class _LoginScreenState extends State<LoginScreen>
     return regExpMail.hasMatch(_email);
   }
 
+  /// todo: missing documentation
   Widget _passwordTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,6 +153,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// This method checks whether a given parameter [password] of type [String] is a secure password. Secure is defined as:
   /// Contains lower- and uppercase letters and a digit from 0-9 in any random order and has a minimum length of 8
   /// Returns true only if the password is safe.
@@ -149,6 +163,7 @@ class _LoginScreenState extends State<LoginScreen>
     return regExpPassword.hasMatch(_password) && _password.length >= 8;
   }
 
+  /// todo: missing documentation
   Widget _forgotPasswordWidget() {
     return Container(
       alignment: Alignment.centerRight,
@@ -175,6 +190,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  /// todo: missing documentation
   Widget _loginButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -201,6 +217,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Sign a user in if the [_email] is valid.
   _handleLogin() {
     if (_isEmailGood(_email)) {
@@ -219,6 +236,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  /// todo: missing documenation
   Widget _registerButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -245,6 +263,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Registers a new user&password combination if [_isPasswordGood] and if [_isEmailGood].
   handleRegistration() {
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
@@ -252,7 +271,8 @@ class _LoginScreenState extends State<LoginScreen>
         registerWithEmailAndPassword(_email, _password);
       } on AuthException catch (e) {
         show_toast(e.toString());
-        Log().error(causingClass: 'login_screen',
+        Log().error(
+            causingClass: 'login_screen',
             method: 'handleRegistration',
             action: e.toString());
       }
@@ -271,6 +291,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  /// todo: missing documentation
   Widget _appleSignInWidget() {
     //TODO check for copyright and brandmark usage wheter it is allowed, also regarding Google Sign In Button!
     return Container(
@@ -284,7 +305,8 @@ class _LoginScreenState extends State<LoginScreen>
               await appleSignIn();
             } on Exception catch (e) {
               show_toast(e.toString());
-              Log().error(causingClass: 'Loginscreen',
+              Log().error(
+                  causingClass: 'Loginscreen',
                   method: 'applesigninWIdget',
                   action: e.toString());
             }
@@ -292,6 +314,7 @@ class _LoginScreenState extends State<LoginScreen>
         ));
   }
 
+  /// todo: missing documentation
   Widget _googleSignInWidget() {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -324,7 +347,8 @@ class _LoginScreenState extends State<LoginScreen>
               await googleSignIn();
             } on Exception catch (e) {
               show_toast(e.toString());
-              Log().error(causingClass: 'Loginscreen',
+              Log().error(
+                  causingClass: 'Loginscreen',
                   method: 'googleSigninWIdget',
                   action: e.toString());
             }
@@ -362,66 +386,66 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-      var widgetList = <Widget>[
-        _animatedLogoWidget(),
-        SizedBox(height: 30.0),
-        _emailTextfieldWidget(),
-        SizedBox(height: 20.0),
-        _passwordTextfieldWidget(),
-        _forgotPasswordWidget(),
-        _loginButtonWidget(),
-        _registerButtonWidget(),
-      ];
-      bool alreadyAdded = false;
-      bool alreadyAddedApple = false;
-      child:
-      return FutureBuilder<bool>(
-        future: checkAppleSignInAvailability(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data) {
-              if (!alreadyAddedApple) {
-                widgetList.add(
-                  _appleSignInWidget(),
-                );
-                alreadyAddedApple = true;
-              }
+    var widgetList = <Widget>[
+      _animatedLogoWidget(),
+      SizedBox(height: 30.0),
+      _emailTextfieldWidget(),
+      SizedBox(height: 20.0),
+      _passwordTextfieldWidget(),
+      _forgotPasswordWidget(),
+      _loginButtonWidget(),
+      _registerButtonWidget(),
+    ];
+    bool alreadyAdded = false;
+    bool alreadyAddedApple = false;
+    child:
+    return FutureBuilder<bool>(
+      future: checkAppleSignInAvailability(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data) {
+            if (!alreadyAddedApple) {
+              widgetList.add(
+                _appleSignInWidget(),
+              );
+              alreadyAddedApple = true;
             }
-            if (!alreadyAdded) {
-              widgetList.add(_googleSignInWidget());
-              widgetList.add(SizedBox(height: 20.0));
-//            widgetList.add(_signUpWidget());
-              alreadyAdded = true;
-            }
-          } else if (snapshot.hasError) {
-            //TODO add error handling whatever should be done in this case.
-          } else {
-            //TODO maybe improve this with loading animation.
-            return Container(
-              width: 0.0,
-              height: 0.0,
-            );
           }
-
-          return Scaffold(
-            backgroundColor: primaryColor,
-            body: new Container(
-              height: double.infinity,
-              child: SingleChildScrollView(
-                //fixes pixel overflow error when keyboard is used
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 120.0,
-                ),
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: widgetList),
-              ),
-            ),
+          if (!alreadyAdded) {
+            widgetList.add(_googleSignInWidget());
+            widgetList.add(SizedBox(height: 20.0));
+//            widgetList.add(_signUpWidget());
+            alreadyAdded = true;
+          }
+        } else if (snapshot.hasError) {
+          //TODO add error handling whatever should be done in this case.
+        } else {
+          //TODO maybe improve this with loading animation.
+          return Container(
+            width: 0.0,
+            height: 0.0,
           );
-        },
-      );
+        }
+
+        return Scaffold(
+          backgroundColor: primaryColor,
+          body: new Container(
+            height: double.infinity,
+            child: SingleChildScrollView(
+              //fixes pixel overflow error when keyboard is used
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: 40.0,
+                vertical: 120.0,
+              ),
+              child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: widgetList),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
