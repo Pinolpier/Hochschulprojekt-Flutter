@@ -6,6 +6,9 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/loading_screen.dart';
 
+/// todo: add author
+/// todo: add documentation
+
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));
 }
