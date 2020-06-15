@@ -73,7 +73,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text('OK'),
                     onPressed: () {
                       deleteProfileOfCurrentlySignedInUser();
-                      signOut();
                       Navigator.of(context).pop();
                     },
                   ),

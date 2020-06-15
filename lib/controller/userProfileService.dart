@@ -62,6 +62,7 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
     deleteFile(collection, uri); //delete the picture if one exists
   }
   firestore.collection(collection).document(uid).delete();
+  firestore.collection('friends').document(uid).delete();
   deleteAccount();
 }
 
