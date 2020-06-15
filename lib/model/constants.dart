@@ -24,3 +24,6 @@ final boxStyleConstant = BoxDecoration(
     ),
   ],
 );
+
+// constant value for the extended radius on the map_screen
+final radius_buffer = 1;
