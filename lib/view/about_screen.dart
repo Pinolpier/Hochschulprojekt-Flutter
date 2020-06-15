@@ -6,16 +6,20 @@ import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// todo: add author
+
 ///This class creates an AboutScreen which displays the Privacytext and the Impressumtext (found in assets/res/strings.json)
 ///there is a Button to directly send feedback via E-Mail (mailto:-link)
-///also a butto to share a message with the native share menu (text can be changed in assets/res/strings.json)
-
+///also a button to share a message with the native share menu (text can be changed in assets/res/strings.json)
 class AboutScreen extends StatefulWidget {
+  /// todo: missing documentation
   @override
   State createState() => _AboutScreenState();
 }
 
+/// todo: missing documentation
 class _AboutScreenState extends State<AboutScreen> {
+  /// todo: missing documentation
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
 
@@ -25,6 +29,7 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _feedbackButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -53,6 +58,7 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
+  /// todo: missing documentation
   _launchURL() async {
     const url =
         'mailto:feedback@univents.app?subject=Feedback&body=What could be better: ';
@@ -63,6 +69,7 @@ class _AboutScreenState extends State<AboutScreen> {
     }
   }
 
+  /// todo: missing documentation
   Widget _shareButtonWidget(String text) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -125,7 +132,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                   SizedBox(height: 20.0),
                   _feedbackButtonWidget(),
-                  _shareButtonWidget(AppLocalizations.of(context).translate("shareMessage")),
+                  _shareButtonWidget(
+                      AppLocalizations.of(context).translate("shareMessage")),
                 ],
               ),
             )));
