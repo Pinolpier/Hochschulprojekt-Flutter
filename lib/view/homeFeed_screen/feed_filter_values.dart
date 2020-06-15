@@ -17,6 +17,7 @@ class FeedFilterValues {
   FeedFilter get filterValue => _filterValue;
 
   /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// translates the value into the right language
   /// (BuildContext)[context] for setting the translation
   String convertToString(BuildContext context) {
