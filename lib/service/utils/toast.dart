@@ -3,7 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 /// todo: add author
 /// todo: CONSIDER writing a library-level doc comment
+/// todo: consider camel case spelling of variables, methods or classes (for example wordcount -> wordCount)
 
+/// todo: set variables private
 // limit of words for decision between short and long toast
 final int wordcount = 10;
 

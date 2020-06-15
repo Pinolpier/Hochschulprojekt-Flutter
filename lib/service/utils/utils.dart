@@ -3,6 +3,12 @@ import 'package:intl/intl.dart';
 
 import '../app_localizations.dart';
 
+/// todo: add author
+/// todo: CONSIDER writing a library-level doc comment
+/// todo: consider camel case spelling of variables, methods or classes (for example wordcount -> wordCount)
+
+/// todo: DO start doc comments with a single-sentence summary
+/// todo: DO separate the first sentence of a doc comment into its own paragraph.
 /// returns a [String] with formatted [DateTime] and [BuildContext]
 /// dateTime is formatted based on the supported locales
 String format_date_time(BuildContext context, DateTime date) {
@@ -11,6 +17,8 @@ String format_date_time(BuildContext context, DateTime date) {
       .format(date);
 }
 
+/// todo: DO start doc comments with a single-sentence summary
+/// todo: DO separate the first sentence of a doc comment into its own paragraph.
 /// returns a [String] with formatted [DateTime] without year and [BuildContext]
 /// dateTime is formatted based on the supported locales
 String feed_format_date_time(BuildContext context, DateTime date) {
