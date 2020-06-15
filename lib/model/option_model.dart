@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// todo: add author
 /// option model for the settings_screen
 class Option {
+  /// todo: add documentation for variables
   Icon icon;
   String title;
   String subtitle;
 
+  /// todo: add documentation for constructor
   Option({this.icon, this.title, this.subtitle});
 }
 
+/// todo: add documentation to this variable
 final options = [
   Option(
     icon: Icon(Icons.account_circle, size: 40.0),
@@ -24,7 +28,7 @@ final options = [
     icon: Icon(Icons.contacts, size: 40.0),
     title: 'Invite Friends',
     subtitle:
-    'if you enjoy using our app please consider inviting your friends through this option',
+        'if you enjoy using our app please consider inviting your friends through this option',
   ),
   Option(
     icon: Icon(Icons.star, size: 40.0),
@@ -35,7 +39,7 @@ final options = [
     icon: Icon(Icons.developer_mode, size: 40.0),
     title: 'Feedback',
     subtitle:
-    'give us feedback on our app or report bugs here to help us improve further in the future',
+        'give us feedback on our app or report bugs here to help us improve further in the future',
   ),
   Option(
     icon: Icon(Icons.dvr, size: 40.0),
