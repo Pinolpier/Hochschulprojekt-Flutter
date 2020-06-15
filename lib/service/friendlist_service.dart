@@ -125,19 +125,49 @@ void addUserToGroup(String userId, String groupName) async {
 
 /// creates a new Group by a [userId] and a [groupName]
 void createGroupFriend(List<String> userId, String groupName) async {
-    String uid = getUidOfCurrentlySignedInUser();
-    Map<String, List<String>> groupMap = new Map();
-    groupMap[groupName] = userId;
-    WriteBatch writeBatch = firebaseInstance.batch();
-    writeBatch.setData(
-        firebaseInstance.collection(collection).document(uid), groupMap,
-        merge: true);
-    writeBatch.commit();
+  String uid = getUidOfCurrentlySignedInUser();
+  Map<String, List<String>> groupMap = new Map();
+  groupMap[groupName] = userId;
+  WriteBatch writeBatch = firebaseInstance.batch();
+  writeBatch.setData(
+      firebaseInstance.collection(collection).document(uid), groupMap,
+      merge: true);
+  writeBatch.commit();
+}
+
+/// This method should be used by [userProfileService.dart] when a User
+/// deletes his/her/its Account
+/// remove a User from all Lists of all People by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteUidFromFriendsLists(String uid) async {
+  QuerySnapshot qShot = await firebaseInstance
+      .collection(collection)
+      .where(friendsList, arrayContains: uid)
+      .getDocuments();
+  List<DocumentSnapshot> documentSnapshotList = qShot.documents;
+  if (documentSnapshotList != null && documentSnapshotList.length > 0) {
+    for (int x = 0; x < documentSnapshotList.length; x++) {
+      Map<String, List<dynamic>> friendMap = new Map();
+      friendMap = documentSnapshotList[x].data;
+      List<String> keyList = friendMap.keys;
+      for (int x = 0; x < keyList.length; x++) {
+        List<String> friendsList = friendMap[keyList[x]];
+        if (friendsList.contains(uid)) {
+          friendsList.remove(uid);
+        }
+      }
+      firebaseInstance
+          .collection(collection)
+          .document(documentSnapshotList[x].documentID)
+          .updateData(friendMap);
+    }
+  }
 }
 
 class FriendsException implements Exception {
   final Exception _originalException;
   final String _message;
+
   const FriendsException(this._originalException, this._message);
 
   String toString() {

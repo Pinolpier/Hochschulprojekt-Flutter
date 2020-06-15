@@ -8,6 +8,7 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/model/userProfileExceptions.dart';
+import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
@@ -63,9 +64,9 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   }
   firestore.collection(collection).document(uid).delete();
   firestore.collection('friends').document(uid).delete();
-  //TODO aus extrenen fruendeslisten entfernen
-  //TODO aus events an denen man teilnimmt entfernen
-  //TODO events die ich erstellt habe löschen
+  deleteUidFromFriendsLists(uid);
+  deleteUserFromAttendeesList(uid);
+  deleteEventsFromUser(uid);
   deleteAccount();
 }
 

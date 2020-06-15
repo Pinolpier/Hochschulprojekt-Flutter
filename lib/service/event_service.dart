@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/controller/authService.dart';
@@ -53,10 +54,7 @@ void createEvent(File image, Event event) async {
   String uid = getUidOfCurrentlySignedInUser();
   event.ownerIds.add(uid);
   event.addAttendeesIds(uid);
-
   String eventID = await _addData(event);
-
-  //TODO hier zu GeoPoint parsen oder direkt im Event ?
   double latitude = double.parse(event.latitude);
   double longitude = double.parse(event.longitude);
   geoFirestore.setLocation(eventID, GeoPoint(latitude, longitude));
@@ -261,8 +259,7 @@ void updateData(Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null)
-    await deleteFile(collection, event.eventID);
+  if (event.imageURL != null) await deleteFile(collection, event.eventID);
   String url = await uploadFile(collection, image, event.eventID);
   _urlToID[event.eventID] = url;
   event.imageURL = url;
@@ -282,10 +279,10 @@ void updateField(String eventID, Map<dynamic, dynamic> map) {
 /// deleting Event from Database
 deleteEvent(Event event) async {
   if (event.eventID != null) {
-      if (event.imageURL != null) {
-        deleteFile(event.eventID, collection);
-      }
-      db.collection(collection).document(event.eventID).delete();
+    if (event.imageURL != null) {
+      deleteFile(event.eventID, collection);
+    }
+    db.collection(collection).document(event.eventID).delete();
   }
 }
 
@@ -441,7 +438,8 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
         .toList();
   } else
     //show_toast(AppLocalizations.of(context).translate("no_events_found"));
-    Log().error(causingClass: 'event_service',
+    Log().error(
+        causingClass: 'event_service',
         method: '_snapShotToList',
         action: "No matching events found!");
   //TODO: show Toast with internationalized message
@@ -489,6 +487,47 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
     eventList[x].eventID = qShot.documents[x].documentID;
   }
   return eventList;
+}
+
+/// This method should only be used with care,
+/// because the data will be permanently deleted
+/// deletes a User from all Events Attendeeslist by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteUserFromAttendeesList(String uid) async {
+  QuerySnapshot qShot = await db
+      .collection(collection)
+      .where(attendees, arrayContains: uid)
+      .getDocuments();
+  List<Event> eventList = _snapShotToList(qShot);
+  addEventIdToObjects(eventList, qShot);
+  if (eventList != null && eventList.length > 0) {
+    for (int x = 0; x < eventList.length; x++) {
+      Event event = eventList[x];
+      if (event.attendeesIds.contains(uid)) {
+        event.attendeesIds.remove(uid);
+      }
+      updateData(event);
+    }
+  }
+}
+
+/// This method should only be used with care,
+/// because the data will be permanently deleted
+/// deletes all Events from User where User is a Owner by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteEventsFromUser(String uid) async {
+  QuerySnapshot qShot = await db
+      .collection(collection)
+      .where(eventOwner, arrayContains: uid)
+      .getDocuments();
+  List<Event> eventList = _snapShotToList(qShot);
+  addEventIdToObjects(eventList, qShot);
+  if (eventList != null && eventList.length > 0) {
+    for (int x = 0; x < eventList.length; x++) {
+      Event event = eventList[x];
+      db.collection(collection).document(event.eventID).delete();
+    }
+  }
 }
 
 /// handles errors by [PlatformException] and returns a [String]
