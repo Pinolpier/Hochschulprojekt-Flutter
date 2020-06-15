@@ -12,19 +12,27 @@ import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
+/// todo: add author
+
 /// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
 /// Furthermore it shows stuff like an event picture, how many people will attend, open or closed and also adds functionality
 /// so that the user can change the event picture and set the event to private or open
 class EventInfo extends StatefulWidget {
+  /// todo: add documentation of variable
+  /// todo: set variable private
   final Event event;
 
+  /// todo: missing documentation of constructor
   EventInfo(this.event, {Key key}) : super(key: key);
 
+  /// todo: missing documentation
   @override
   _EventInfoState createState() => _EventInfoState();
 }
 
+/// todo: missing documentation
 class _EventInfoState extends State<EventInfo> {
+  /// todo: add documentation of variables
   DateTime now = new DateTime.fromMicrosecondsSinceEpoch(
       new DateTime.now().millisecondsSinceEpoch);
 
@@ -61,6 +69,10 @@ class _EventInfoState extends State<EventInfo> {
 
   ImagePickerUnivents ip = new ImagePickerUnivents();
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// gets displayed if no eventImage is specified or eventImage is deleted
   Widget _eventImagePlaceholder() {
     return GestureDetector(
@@ -76,6 +88,10 @@ class _EventInfoState extends State<EventInfo> {
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   ///gets displaced if eventImage gets changed
   Widget _eventImage() {
     return GestureDetector(
@@ -91,6 +107,10 @@ class _EventInfoState extends State<EventInfo> {
         child: Image.file(eventImage, height: 150));
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   ///gets displayed if Event has an eventImage in Database
   Widget _eventImageFromDatabase() {
     return GestureDetector(
@@ -113,6 +133,10 @@ class _EventInfoState extends State<EventInfo> {
                   ));
   }
 
+  /// todo: AVOID redundancy with the surrounding context
+  /// todo: DO start doc comments with a single-sentence summary
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   ///adds share functionality to share event
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
@@ -123,6 +147,7 @@ class _EventInfoState extends State<EventInfo> {
     );
   }
 
+  /// todo: missing documentation
   Future<bool> loadAsyncData() async {
     if (widget.event.imageURL != null) {
       try {
@@ -145,12 +170,11 @@ class _EventInfoState extends State<EventInfo> {
         print(uid);
         //TODO maybe don't load all profilepictures
         if (index < attendees.length) {
-          Widget pp = await getProfilePicture(
-              uid);
+          Widget pp = await getProfilePicture(uid);
           if (pp != null) {
             print(index);
-            profilePictureList.add(ClipOval(
-                child: await getProfilePicture(uid)));
+            profilePictureList
+                .add(ClipOval(child: await getProfilePicture(uid)));
             index++;
           } else {
             profilePictureList
@@ -162,13 +186,15 @@ class _EventInfoState extends State<EventInfo> {
         }
       }
     } on Exception catch (e) {
-      Log().error(causingClass: 'eventInfo_screen',
+      Log().error(
+          causingClass: 'eventInfo_screen',
           method: 'loadAsyncData',
           action: e.toString());
     }
     return true;
   }
 
+  /// todo: missing documentation
   @override
   void initState() {
     loadAsyncData().then((result) {
@@ -309,12 +335,14 @@ class _EventInfoState extends State<EventInfo> {
                                         onTap: () {
                                           setState(() {
                                             isEventOpen = !isEventOpen;
-                                            widget.event.privateEvent = isEventOpen;
+                                            widget.event.privateEvent =
+                                                isEventOpen;
                                             try {
                                               updateData(widget.event);
-                                            } on Exception catch (e){
+                                            } on Exception catch (e) {
                                               Log().error(
-                                                  causingClass: 'eventInfo_screen',
+                                                  causingClass:
+                                                      'eventInfo_screen',
                                                   method: 'build',
                                                   action: e.toString());
                                             }
