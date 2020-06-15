@@ -12,12 +12,17 @@ import '../../service/app_localizations.dart';
 import 'feed.dart';
 import 'filter_sidebar.dart';
 
+/// todo: add author
+/// todo: CONSIDER writing a library-level doc comment
 class NavigationBarUI extends StatefulWidget {
+  /// todo: missing documentation
   @override
   State<StatefulWidget> createState() => NavigationBarUIControl();
 }
 
+/// todo: missing documentation
 class NavigationBarUIControl extends State<NavigationBarUI> {
+  /// todo: missing documentation
   Widget _thisWidget;
 
   /// list of data that can be filtered
@@ -38,6 +43,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
         }));
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   ///updates feed with the set filters
   List<Widget> _update() {
     Feed.init().then((val) => setState(() {
@@ -102,6 +108,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     );
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// navigation over screen cards based on
   /// (int) [index]
   void _initState(int index) {
