@@ -60,14 +60,16 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   String uid = getUidOfCurrentlySignedInUser();
   String uri = await getProfilePictureUri(uid);
   if (uri != null && uri != "null" && uri.isNotEmpty) {
-    deleteFile(collection, uri); //delete the picture if one exists
+    await deleteFile(collection, uid); //delete the picture if one exists
   }
-  firestore.collection(collection).document(uid).delete();
-  firestore.collection('friends').document(uid).delete();
+  await firestore.collection(collection).document(uid).delete();
+  await firestore.collection('friends').document(uid).delete();
   await deleteUidFromFriendsLists(uid);
   await deleteUserFromAttendeesList(uid);
   await deleteEventsFromUser(uid);
-  deleteAccount();
+  print('next step is delete account');
+  await deleteAccount();
+  print('account should be deleted');
 }
 
 /// Use this method to change a user's profile picture. The parameter [file] should be the new file to upload as the [profile]'s profile picture.

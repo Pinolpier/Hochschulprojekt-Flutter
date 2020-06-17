@@ -71,9 +71,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('OK'),
-                    onPressed: () {
-                      deleteProfileOfCurrentlySignedInUser();
-                      Navigator.of(context).pop();
+                    onPressed: () async {
+                      await deleteProfileOfCurrentlySignedInUser();
+                      print('next step is sign out');
+                      signOut();
                     },
                   ),
                   FlatButton(
