@@ -149,7 +149,7 @@ void deleteUidFromFriendsLists(String uid) async {
     for (int x = 0; x < documentSnapshotList.length; x++) {
       Map<String, dynamic> friendMap = new Map();
       friendMap = documentSnapshotList[x].data;
-      List<String> keyList = friendMap.keys;
+      List<String> keyList = friendMap.keys.toList();
       for (int x = 0; x < keyList.length; x++) {
         List<String> friendsList = friendMap[keyList[x]];
         if (friendsList.contains(uid)) {
