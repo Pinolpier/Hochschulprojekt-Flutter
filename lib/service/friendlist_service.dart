@@ -155,7 +155,7 @@ void deleteUidFromFriendsLists(String uid) async {
         List<dynamic> friendsListCopy = new List();
         if (friendsList != null && friendsList.length > 0) {
           for (int i = 0; i < friendsList.length; i++) {
-            friendsListCopy[i] = friendsList[i];
+            friendsListCopy.add(friendsList[i]);
           }
           if (friendsListCopy.contains(uid)) {
             friendsListCopy.remove(uid);
