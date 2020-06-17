@@ -272,13 +272,61 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
 Future<void> changeEmailAddress(String newEmail, String password) async {
   await _user.reauthenticateWithCredential(EmailAuthProvider.getCredential(email: getEmailOfCurrentlySignedInUser(), password: password));
   await _user.updateEmail(newEmail);
-  UserProfile toUpdate = await (getUserProfile(getUidOfCurrentlySignedInUser()));
+  UserProfile toUpdate =
+      await (getUserProfile(getUidOfCurrentlySignedInUser()));
   await updateProfile(toUpdate.setEmail(newEmail));
 }
 
 /// used to delete an account. Only the [userProfileService.deleteProfileOfCurrentlySignedInUser] should call this method!
 Future<void> deleteAccount() async {
   await _user.delete(); // TODO handle different errors that could occur!
+}
+
+Future<void> _reauthenticate() async {
+  String providerId = await _user.providerId;
+  if (providerId == GoogleAuthProvider.providerId) {
+    // TODO show dialog to user that he/she has to sign in with google again. Also display email address which should be used for sign in.
+    // TODO Wrap with try / catch!
+    final GoogleSignInAccount _googleAccountToSignIn =
+        await _googleSignIn.signIn();
+    if (_googleAccountToSignIn != null) {
+      final GoogleSignInAuthentication _googleSignInAuthentication =
+          await _googleAccountToSignIn.authentication;
+      await _user.reauthenticateWithCredential(GoogleAuthProvider.getCredential(
+          idToken: _googleSignInAuthentication.idToken,
+          accessToken: _googleSignInAuthentication.accessToken));
+    }
+  } else if (providerId.contains("apple.com")) {
+    //TODO Test if this string is correct "apple.com"
+    // TODO show dialog to user that he/she has to sign in with google again. Also display email address which should be used for sign in.
+    // TODO Wrap with try / catch!
+    final result = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential;
+        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+        await _user.reauthenticateWithCredential(oAuthProvider.getCredential(
+            idToken: String.fromCharCodes(appleIdCredential.identityToken),
+            accessToken:
+                String.fromCharCodes(appleIdCredential.authorizationCode)));
+        break;
+      case AuthorizationStatus.error:
+        //TODO good exception handling here
+        print("AppleSignIn AuthorizationStatus Error occured: " +
+            result.error.toString());
+        //Throw an exception here
+        break;
+      case AuthorizationStatus.cancelled:
+        throw SignInAbortedException(null,
+            "The AppleSignIn was aborted by the user and thus no user is logged in!");
+        break;
+    }
+  } else if (providerId == EmailAuthProvider.providerId) {
+  } else {
+    // Possibly if apple was wrong
+  }
 }
 
 /// Call this method so Firebase can send an email for password reset.
