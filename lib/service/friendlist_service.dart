@@ -153,11 +153,13 @@ void deleteUidFromFriendsLists(String uid) async {
       for (int x = 0; x < keyList.length; x++) {
         List<dynamic> friendsList = friendMap[keyList[x]];
         List<dynamic> friendsListCopy = new List();
-        for (int i = 0; i < friendsList.length; i++) {
-          friendsListCopy[i] = friendsList[i];
-        }
-        if (friendsListCopy.contains(uid)) {
-          friendsListCopy.remove(uid);
+        if (friendsList != null && friendsList.length > 0) {
+          for (int i = 0; i < friendsList.length; i++) {
+            friendsListCopy[i] = friendsList[i];
+          }
+          if (friendsListCopy.contains(uid)) {
+            friendsListCopy.remove(uid);
+          }
         }
       }
       firebaseInstance
