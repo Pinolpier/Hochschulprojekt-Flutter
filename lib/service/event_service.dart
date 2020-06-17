@@ -122,17 +122,17 @@ void createEvent(File image, Event event) async {
 /// [List] may be empty if no Event was found
 /// throws [PlatformException] when an error occurs while Fetching data
 /// from Database
-Future<List<Event>> get_events_near_location_and_filters(
-    GeoPoint geo_location, double radius) async {
+Future<List<Event>> getEventsNearLocationAndFilters(
+    GeoPoint geoLocation, double radius) async {
   List<DocumentSnapshot> documentList =
-  await _geoFireStore.getAtLocation(geo_location, radius);
+      await _geoFireStore.getAtLocation(geoLocation, radius);
   for (int j = 0; j < documentList.length; j++) {
     bool remove = true;
     if (documentList[j].data[_privateEvent] == true) {
-      List<dynamic> attendesList = documentList[j].data[_attendees];
+      List<dynamic> attendeesList = documentList[j].data[_attendees];
       List<dynamic> ownerList = documentList[j].data[_eventOwner];
-      if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      if (attendeesList != null &&
+              attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -150,10 +150,10 @@ Future<List<Event>> get_events_near_location_and_filters(
   if (myEventFilter != null) {
     for (int j = 0; j < documentList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = documentList[j].data[_attendees];
+      List<dynamic> attendeesList = documentList[j].data[_attendees];
       List<dynamic> ownerList = documentList[j].data[_eventOwner];
-      if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      if (attendeesList != null &&
+          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -167,10 +167,11 @@ Future<List<Event>> get_events_near_location_and_filters(
   if (friendIdFilter != null) {
     for (int j = 0; j < documentList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = documentList[j].data[_attendees];
+      List<dynamic> attendeesList = documentList[j].data[_attendees];
       List<dynamic> ownerList = documentList[j].data[_eventOwner];
       for (int i = 0; i < friendIdFilter.length; i++) {
-        if (attendesList != null && attendesList.contains(friendIdFilter[i]) ||
+        if (attendeesList != null &&
+            attendeesList.contains(friendIdFilter[i]) ||
             ownerList != null && ownerList.contains(friendIdFilter[i])) {
           remove = false;
         }
@@ -184,8 +185,8 @@ Future<List<Event>> get_events_near_location_and_filters(
 
   if (_startDateFilter != null) {
     for (int i = 0; i < documentList.length; i++) {
-      Timestamp startdate = documentList[i].data[_startDate];
-      if (startdate.toDate().isBefore(startDateFilter)) {
+      Timestamp startDate = documentList[i].data[_startDate];
+      if (startDate.toDate().isBefore(startDateFilter)) {
         documentList.removeAt(i);
         i--;
       }
@@ -194,8 +195,8 @@ Future<List<Event>> get_events_near_location_and_filters(
 
   if (_endDateFilter != null) {
     for (int i = 0; i < documentList.length; i++) {
-      Timestamp enddate = documentList[i].data[_endDate];
-      if (enddate.toDate().isAfter(endDateFilter)) {
+      Timestamp endDate = documentList[i].data[_endDate];
+      if (endDate.toDate().isAfter(endDateFilter)) {
         documentList.removeAt(i);
         i--;
       }
@@ -334,10 +335,10 @@ List<Event> filterEvents(List<Event> eventList) {
   for (int j = 0; j < eventList.length; j++) {
     bool remove = true;
     if (eventList[j].privateEvent == true) {
-      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
-      if (attendesList != null &&
-          attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      if (attendeesList != null &&
+          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -355,10 +356,10 @@ List<Event> filterEvents(List<Event> eventList) {
   if (myEventFilter != null) {
     for (int j = 0; j < eventList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
-      if (attendesList != null &&
-              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      if (attendeesList != null &&
+          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -452,15 +453,15 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
           doc.data[_eventOwner],
         ))
         .toList();
-  } else
-
+  } else {
     //show_toast(AppLocalizations.of(context).translate("no_events_found"));
     Log().error(
         causingClass: 'event_service',
         method: '_snapShotToList',
         action: "No matching events found!");
-  //TODO: show Toast with internationalized message
-  return null;
+    //TODO: show Toast with internationalized message
+    return null;
+  }
 }
 
 /// Returns a [Event] based on a [documentSnapshot]

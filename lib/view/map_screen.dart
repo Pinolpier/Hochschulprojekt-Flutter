@@ -133,7 +133,7 @@ class _MapScreenState extends State<MapScreen> {
   /// The [MapPosition] and the double [radius] are transferred
   Future<bool> loadNewEvents(MapPosition position, double radius) async {
     try {
-      getMarkerList(await get_events_near_location_and_filters(
+      getMarkerList(await getEventsNearLocationAndFilters(
           new GeoPoint(position.center.latitude, position.center.longitude),
           radius));
     } on Exception catch (e) {
@@ -152,7 +152,7 @@ class _MapScreenState extends State<MapScreen> {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
-      getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
+      getMarkerList(await getEventsNearLocationAndFilters(geoPoint, 100));
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
