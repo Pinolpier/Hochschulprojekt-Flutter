@@ -115,13 +115,14 @@ void createEvent(File image, Event event) async {
   }
 }
 
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
+/// getting all Events from the database near a location in a specific radius
+/// and by set filters
+///
 /// fetches a [List] of events from the database by [geoLocation],[radius]
 /// and [filters]
 /// [List] may be empty if no Event was found
-/// throws [PlatformException] when an error occurs while Fetching data
-/// from Database
+/// throws [PlatformException] when an error occurs
+/// while Fetching data from Database
 Future<List<Event>> getEventsNearLocationAndFilters(
     GeoPoint geoLocation, double radius) async {
   List<DocumentSnapshot> documentList =
@@ -182,7 +183,6 @@ Future<List<Event>> getEventsNearLocationAndFilters(
       }
     }
   }
-
   if (_startDateFilter != null) {
     for (int i = 0; i < documentList.length; i++) {
       Timestamp startDate = documentList[i].data[_startDate];
@@ -192,7 +192,6 @@ Future<List<Event>> getEventsNearLocationAndFilters(
       }
     }
   }
-
   if (_endDateFilter != null) {
     for (int i = 0; i < documentList.length; i++) {
       Timestamp endDate = documentList[i].data[_endDate];
@@ -202,7 +201,6 @@ Future<List<Event>> getEventsNearLocationAndFilters(
       }
     }
   }
-
   if (tagsFilter != null && tagsFilter.length > 0) {
     for (int x = 0; x < documentList.length; x++) {
       bool dontRemove = true;
@@ -229,8 +227,9 @@ Future<List<Event>> getEventsNearLocationAndFilters(
   return eventList;
 }
 
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
+/// Adds information to a Event in the database
+/// when a new field is created
+///
 /// adds [Event] data to the database
 /// throws [PlatformException] when an Error occurs while
 /// updating Data in Database
@@ -240,8 +239,8 @@ Future<String> _addData(Event event) async {
   return documentReference.documentID;
 }
 
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
+/// Updates a Event in the database when something has changed in the Event
+///
 /// updates an event in the database based on an [Event]
 /// throws [PlatformException] when Error occurs while updating Data
 void updateData(Event event) async {
@@ -252,9 +251,13 @@ void updateData(Event event) async {
         .updateData(_eventToMap(event));
 }
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// in order to change an image of an event, the new [image] and the relevant [event] must be transferred
+/// Change a picture of a Event in the database
+///
+/// To Use when a Picture should change or when a Event gets a
+/// image after it was created bevore
+///
+/// in order to change an image of an event, the new [image]
+/// and the relevant [event] must be transferred
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
@@ -265,9 +268,10 @@ void updateImage(File image, Event event) async {
   updateData(event);
 }
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
+/// Updates a single Field in the database
+///
+/// Should be used when a attendees joins the event or leaves it for example.
+///
 /// adds data to a existing field in the database based
 /// on a [String] with the eventID and a [Map] with the new data
 /// throws [PlatformException] when an Error occurs while
@@ -276,7 +280,11 @@ void updateField(String eventID, Map<dynamic, dynamic> map) {
   _database.collection(_collection).document(eventID).updateData(map);
 }
 
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// Deletes a Event in the database
+///
+/// should be used with care! action is not reversible!
+/// data is permanently deleted!
+///
 /// deletes an event in the database based on an [Event]
 /// throws [PlatformException] when an Error occurs while
 /// deleting Event from Database
@@ -289,9 +297,11 @@ deleteEvent(Event event) async {
   }
 }
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
+/// Fetches the Image to a Event
+///
+/// should be used to get the Image to a Event so its not necessary to
+/// create a extra network connection in the view!.
+///
 /// Returns a [Widget] with a image based on an [String] eventID
 /// throws [PlatformException] when an Error occurs while Fetching imageURL
 Future<Widget> getImage(String eventID) async {
@@ -454,12 +464,10 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
         ))
         .toList();
   } else {
-    //show_toast(AppLocalizations.of(context).translate("no_events_found"));
     Log().error(
         causingClass: 'event_service',
         method: '_snapShotToList',
         action: "No matching events found!");
-    //TODO: show Toast with internationalized message
     return null;
   }
 }
@@ -500,6 +508,8 @@ Map<String, dynamic> _eventToMap(Event event) {
   };
 }
 
+/// Method to add EventIds from QuerySnapshot to Events
+///
 /// adds Event'ids based on a [QuerySnapshot] to a List<Events>[eventList]
 /// and returns the [List]
 List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
@@ -574,38 +584,38 @@ String exceptionHandling(PlatformException platformException) {
   return platformException.message;
 }
 
-/// todo: missing documentation
-//Filter setter/getter and delete
+/// sets the filter for the startdate of events by getting a Datetime[value]
 set startDateFilter(DateTime value) {
   _startDateFilter = Timestamp.fromDate(value);
 }
 
-/// todo: missing documentation
+/// sets the filter for the endDate of events by getting a Datetime[value]
 set endDateFilter(DateTime value) {
   _endDateFilter = Timestamp.fromDate(value);
 }
 
-/// todo: missing documentation
+/// deletes the filter for the end of the events when it is no longer needed
 void deleteEndFilter() {
   _endDateFilter = null;
 }
 
-/// todo: missing documentation
+/// deletes the filter for the start time when it is no longer needed
 void deleteStartFilter() {
   _startDateFilter = null;
 }
 
-/// todo: missing documentation
+/// deletes the filter for tags when it is no longer needed
 void deleteTagFilter() {
   _tagsFilter = null;
 }
 
-/// todo: missing documentation
+
 set tagsFilter(List<String> value) {
   _tagsFilter = value;
 }
 
-/// todo: missing documentation
+/// returns the Filter for the Startdate
+/// may be null if no Filter is set
 DateTime get startDateFilter {
   if (_startDateFilter == null) {
     return null;
@@ -614,7 +624,8 @@ DateTime get startDateFilter {
   }
 }
 
-/// returns
+/// returns the Filter for the endDate
+/// may be null if no Filter is set
 DateTime get endDateFilter {
   if (_endDateFilter == null) {
     return null;
@@ -623,42 +634,57 @@ DateTime get endDateFilter {
   }
 }
 
+/// returns the Filter for the tags
+/// may be null if no Filter is set
 List<String> get tagsFilter => _tagsFilter;
 
+/// sets the filter for users own events
+/// should set to true, if only events from user
+/// are necessary
 set myEventFilter(bool value) {
   _myEventsFilter = value;
 }
 
-
+/// sets the filter for users own events
+/// should set to true, if only private
+/// events from user are necessary
 set privateEventFilter(bool value) {
   _privateEventFilter = value;
 }
 
-
+/// returns the Filter for users own events
+/// returns true, if filter is set
+/// may be null if no Filter is set
 bool get myEventFilter => _myEventsFilter;
 
-
+/// returns the Filter for private events
+/// returns true, if filter is set
+/// may be null if no Filter is set
 bool get privateEventFilter => _privateEventFilter;
 
-
+/// sets the friendIdFilter by getting a List [value] with friend ids
 void set friendIdFilter(List<dynamic> value) {
   _friendIdFilter = value;
 }
 
-
+/// returns the Filter for the friendIds
+/// may be null if no Filter is set
 List<dynamic> get friendIdFilter => _friendIdFilter;
 
-
+/// deletes the filter for friend ids when it is no longer needed
 void deleteFriendIdFilter() {
   _friendIdFilter = null;
 }
 
+/// deletes the filter for private events when it is no longer needed
 void deletePrivateEventFilter() {
   privateEventFilter = null;
 }
 
+/// deletes the filter for users own events when it is no longer needed
 void deleteMyEventFilter() {
   _myEventsFilter = null;
 }
 
+/// returns the map that saves the image urls to every event
 Map<String, String> get urlToID => _urlToID;
