@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment (for the class)
+/// Markus Häring
 
+/// The Event class represents the model for each event
+/// with all the information necessary for it
 class Event {
-  /// todo: add documentation for the variables
   String _eventID;
   String _title;
   DateTime _eventStartDate;
@@ -21,8 +21,19 @@ class Event {
   File image;
   String _imageURL;
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// constructor for creating a event by a user
+  ///
+  /// [title] String for the name of a Event
+  /// [eventStartDate] a DateTime for the begin of the Event
+  /// [eventEndDate] a DateTime for the end of the Event
+  /// [description] String for the description of the Event
+  /// [location] dynamic Object with actual Text information about the location
+  /// [privateEvent] bool if the event is private or public. if the field is
+  /// to true, a event is marked as private, false for public
+  /// [attendeesIds] a List filled with UIDs for all attendees
+  /// [tagsList] a List filled with tags which the User has chosen
+  /// [latitude] String for the latitude of the Event location
+  /// [longitude] String for longitude of the Event location
   Event(
       this._title,
       this._eventStartDate,
@@ -35,12 +46,26 @@ class Event {
       this._latitude,
       this._longitude);
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph
-  /// todo: DO use prose to explain parameters, return values, and exceptions
-  /// constructor for creating a event from the database
-  /// from database the event getting a [eventId] and [imageUrl]
-  /// additionally
-  Event.createFrommDB(
+  /// Named Constructor for creating a event from the database
+  ///
+  /// this constructor should be used if an event has been loaded
+  /// from the database and therefore an [eventID] exists
+  ///
+  /// [title] String for the name of a Event
+  /// [eventStartDate] a DateTime for the begin of the Event
+  /// [eventEndDate] a DateTime for the end of the Event
+  /// [description] String for the description of the Event
+  /// [location] dynamic Object with actual Text information about the location
+  /// [privateEvent] bool if the event is private or public. if the field is
+  /// to true, a event is marked as private, false for public
+  /// [attendeesIds] a List filled with UIDs for all attendees
+  /// [tagsList] a List filled with tags which the User has chosen
+  /// [latitude] String for the latitude of the Event location
+  /// [longitude] String for longitude of the Event location
+  /// [eventID] String with the id created by the Database
+  /// [imageURL] String with the Url for the Event image. May be null if
+  /// no image exists for the Event
+  Event.createFromDB(
       this._title,
       Timestamp startDate,
       Timestamp endDate,
@@ -57,116 +82,93 @@ class Event {
     _eventEndDate = endDate.toDate();
   }
 
-  /// todo: missing documentation
-  /// todo: PREFER starting variable, getter, or setter comments with noun phrases
-  bool get privateEvent => _privateEvent;
-
-  /// todo: missing documentation
+  /// adds a attendee to the attendeesList
+  /// by getting a String [attendeesIds]
   void addAttendeesIds(String attendeesIds) {
     _attendeesIds.add(attendeesIds);
   }
 
-  /// todo: missing documentation
+  bool get privateEvent => _privateEvent;
+
   List<dynamic> get attendeesIds => _attendeesIds;
 
-  /// todo: missing documentation
   set attendeesIds(List<String> value) {
     _attendeesIds = value;
   }
 
-  /// todo: missing documentation
   set privateEvent(bool value) {
     _privateEvent = value;
   }
 
-  /// todo: missing documentation
   String get title => _title;
 
-  /// todo: missing documentation
   set title(String value) {
     _title = value;
   }
 
-  /// todo: missing documentation
   String get description => _description;
 
-  /// todo: missing documentation
   set description(String value) {
     _description = value;
   }
 
-  /// todo: missing documentation
   DateTime get eventEndDate => _eventEndDate;
 
-  /// todo: missing documentation
   set eventEndDate(DateTime value) {
     _eventEndDate = value;
   }
 
-  /// todo: missing documentation
   DateTime get eventStartDate => _eventStartDate;
 
-  /// todo: missing documentation
   set eventStartDate(DateTime value) {
     _eventStartDate = value;
   }
 
-  /// todo: missing documentation
   String get eventID => _eventID;
 
-  /// todo: missing documentation
   set eventID(String value) {
     _eventID = value;
   }
 
-  /// todo: missing documentation
   String get imageURL => _imageURL;
 
   set imageURL(String value) {
     _imageURL = value;
   }
 
-  /// todo: missing documentation
   dynamic get location => _location;
 
-  /// todo: missing documentation
+  /// sets the location by getting a String[value]
+  /// with information about the location
   set location(String value) {
     _location = value;
   }
 
-  /// todo: missing documentation
+  /// sets the location by getting a GeoPoint [value]
   set location_to_geopoint(GeoPoint value) {
     _location = value;
   }
 
-  /// todo: missing documentation
   List<dynamic> get tagsList => _tagsList;
 
-  /// todo: missing documentation
   set tagsList(List<dynamic> value) {
     _tagsList = value;
   }
 
-  /// todo: missing documentation
   get longitude => _longitude;
 
-  /// todo: missing documentation
-  set longitude(value) {
+  set longitude(String value) {
     _longitude = value;
   }
 
-  /// todo: missing documentation
   get latitude => _latitude;
 
-  /// todo: missing documentation
   set latitude(String value) {
     _latitude = value;
   }
 
-  /// todo: missing documentation
   List<dynamic> get ownerIds => _ownerIds;
 
-  /// todo: missing documentation
   set ownerIds(List<dynamic> value) {
     _ownerIds = value;
   }

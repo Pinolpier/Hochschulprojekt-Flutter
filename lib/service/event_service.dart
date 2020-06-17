@@ -457,7 +457,7 @@ List<Event> filterEvents(List<Event> eventList) {
 List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
-        .map((doc) => Event.createFrommDB(
+        .map((doc) => Event.createFromDB(
               doc.data[eventName],
               doc.data[startDate],
               doc.data[endDate],
@@ -483,7 +483,7 @@ List<Event> _snapShotToList(QuerySnapshot qShot) {
 
 /// Returns a [Event] based on a documentSnapshot
 Event _documentSnapshotToEvent(DocumentSnapshot documentSnapshot) {
-  Event event = new Event.createFrommDB(
+  Event event = new Event.createFromDB(
       documentSnapshot.data[eventName],
       documentSnapshot.data[startDate],
       documentSnapshot.data[endDate],
