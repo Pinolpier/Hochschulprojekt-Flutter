@@ -31,7 +31,7 @@ class Event {
   /// [privateEvent] bool if the event is private or public. if the field is
   /// to true, a event is marked as private, false for public
   /// [attendeesIds] a List filled with UIDs for all attendees
-  /// [tagsList] a List filled with tags which the User has chosen
+  /// [tagsList] a List filled with tags which the User chooses
   /// [latitude] String for the latitude of the Event location
   /// [longitude] String for longitude of the Event location
   Event(
@@ -59,7 +59,7 @@ class Event {
   /// [privateEvent] bool if the event is private or public. if the field is
   /// to true, a event is marked as private, false for public
   /// [attendeesIds] a List filled with UIDs for all attendees
-  /// [tagsList] a List filled with tags which the User has chosen
+  /// [tagsList] a List filled with tags which the User chooses
   /// [latitude] String for the latitude of the Event location
   /// [longitude] String for longitude of the Event location
   /// [eventID] String with the id created by the Database
@@ -88,6 +88,8 @@ class Event {
     _attendeesIds.add(attendeesIds);
   }
 
+  /// returns true, if the event is private
+  /// returns false, if the events is public
   bool get privateEvent => _privateEvent;
 
   List<dynamic> get attendeesIds => _attendeesIds;
@@ -100,42 +102,52 @@ class Event {
     _privateEvent = value;
   }
 
+  /// returns the name of the Event
   String get title => _title;
 
   set title(String value) {
     _title = value;
   }
 
+  /// returns the description of the event,
+  /// may be null if non description exists
   String get description => _description;
 
   set description(String value) {
     _description = value;
   }
 
+  /// returns the end of the Event
   DateTime get eventEndDate => _eventEndDate;
 
   set eventEndDate(DateTime value) {
     _eventEndDate = value;
   }
 
+  /// returns the start of the Event
   DateTime get eventStartDate => _eventStartDate;
 
   set eventStartDate(DateTime value) {
     _eventStartDate = value;
   }
 
+  /// returns the database id of the Event, may be null if event was not loaded
+  /// from the database
   String get eventID => _eventID;
 
   set eventID(String value) {
     _eventID = value;
   }
 
+  /// returns the url of the event image, may be null if non exists
   String get imageURL => _imageURL;
 
   set imageURL(String value) {
     _imageURL = value;
   }
 
+  /// returns the location of the event, actual could be a Geopoint
+  /// or a info String of the location
   dynamic get location => _location;
 
   /// sets the location by getting a String[value]
@@ -155,18 +167,21 @@ class Event {
     _tagsList = value;
   }
 
+  /// returns the longitude of the Events location
   get longitude => _longitude;
 
   set longitude(String value) {
     _longitude = value;
   }
 
+  /// returns the latitude of the Events location
   get latitude => _latitude;
 
   set latitude(String value) {
     _latitude = value;
   }
 
+  /// returns the [List] of owner ids
   List<dynamic> get ownerIds => _ownerIds;
 
   set ownerIds(List<dynamic> value) {
