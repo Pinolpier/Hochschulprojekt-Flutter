@@ -12,11 +12,12 @@ final String collection = 'friends';
 final String friendsList = 'friends';
 final firebaseInstance = Firestore.instance;
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// adding a Friend by a [E-mail-address] to the database
-///  the email gets converted to a unique UserId
+/// Searches for a friend by a email address and adds it to the friendsList
+///
+/// adding a Friend by a String [email] with the E-Mail address to the database
+/// the email gets converted to a unique UserId
+/// throws [FriendNotExistException] when no User were
+/// found by the email address
 void addFriendByEmail(String email) async {
   String friendId = await getUidFromEmail(email);
   if (friendId != null) {
@@ -27,9 +28,8 @@ void addFriendByEmail(String email) async {
   }
 }
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// todo: DO use prose to explain parameters, return values, and exceptions
+/// Adds a Friend to the friendsList in the database
+///
 /// adding a Friend by a [username] to the database
 /// the username gets converted to a unique UserId
 void addFriendByUsername(String username) async {
@@ -69,8 +69,8 @@ void addFriend(String friendId) async {
   }
 }
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// removes a friendId in the database
+///
 /// remove a Friend from a group by getting a [friendId] and
 /// a [groupName]
 void removeFriend(String friendId, String groupName) async {
@@ -147,18 +147,27 @@ void createGroupFriend(List<String> userId, String groupName) async {
   writeBatch.commit();
 }
 
-/// todo: missing documentation
+/// FriendsException to handle Exceptions while working with
+/// friendIds in database
 class FriendsException implements Exception {
-  /// todo: add documentation to variables
+
+  /// dataField for the original exception
   final Exception _originalException;
+
+  /// datafield for the message of the exception that should be thrown
   final String _message;
+
+  /// constructor for the FriendsException
+  ///
+  /// where the original Exception [_originalException] and the [_message]
+  /// that should be shown were given
   const FriendsException(this._originalException, this._message);
 
-  /// todo: missing documentation
+  /// provides a sensible output for the exception
   String toString() {
     return (_message != null
-            ? _message
-            : "no Message has been provided when this instance of Backend Exception was created.") +
+        ? _message
+        : "no Message has been provided when this instance of Backend Exception was created.") +
         " " +
         (_originalException != null
             ? (_originalException.toString() != null &&
@@ -170,20 +179,20 @@ class FriendsException implements Exception {
   }
 }
 
-/// todo: missing documentati
+/// Exception when a Friend should be added which does not exists
 class FriendNotExistException extends FriendsException {
   const FriendNotExistException(Exception originalException, String message)
       : super(originalException, message);
 }
 
-/// todo: missing documentati
+/// Exception when a Friend is already in the List he should be added
 class FriendAlreadyInListException extends FriendsException {
   const FriendAlreadyInListException(
       Exception originalException, String message)
       : super(originalException, message);
 }
 
-/// todo: missing documentati
+/// Exception when a Group not exists a user asked for
 class GroupNotExistException extends FriendsException {
   const GroupNotExistException(Exception originalException, String message)
       : super(originalException, message);
