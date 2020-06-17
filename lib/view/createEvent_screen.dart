@@ -126,7 +126,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           setState(() {
             print(selectedStartDateTime);
             selectedStartString =
-                format_date_time(context, selectedStartDateTime);
+                formatDateTime(context, selectedStartDateTime);
 
             ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
             selectedEndDateTime = null;
@@ -168,8 +168,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               errorEndDateTime();
             } else {
               print(selectedEndDateTime);
-              selectedEndString =
-                  format_date_time(context, selectedEndDateTime);
+              selectedEndString = formatDateTime(context, selectedEndDateTime);
             }
           });
         },

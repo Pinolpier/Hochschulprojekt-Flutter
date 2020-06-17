@@ -3,25 +3,29 @@ import 'package:intl/intl.dart';
 
 import '../app_localizations.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-/// todo: consider camel case spelling of variables, methods or classes (for example wordcount -> wordCount)
+/// Markus Häring
+///
+/// utils for the project
+/// until now there is the possibility to
+/// format a DateTime object
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// Formats a Date with internationalization to a String including the Year,
+/// month and day.
+///
 /// returns a [String] with formatted [DateTime] and [BuildContext]
 /// dateTime is formatted based on the supported locales
-String format_date_time(BuildContext context, DateTime date) {
+String formatDateTime(BuildContext context, DateTime date) {
   return DateFormat.yMEd(AppLocalizations.of(context).translate('localization'))
       .add_jm()
       .format(date);
 }
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// Formats a DateTime with internationalization to a String for the Feed
+/// with only month and day
+///
 /// returns a [String] with formatted [DateTime] without year and [BuildContext]
 /// dateTime is formatted based on the supported locales
-String feed_format_date_time(BuildContext context, DateTime date) {
+String feedFormatDateTime(BuildContext context, DateTime date) {
   return DateFormat.MEd(AppLocalizations.of(context).translate('localization'))
       .add_jm()
       .format(date);

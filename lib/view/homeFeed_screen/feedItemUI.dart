@@ -59,10 +59,10 @@ class FeedItemUIState extends State<FeedItemUI> {
                       ),
                       Text(
                         '  ' +
-                            feed_format_date_time(
+                            feedFormatDateTime(
                                 context, this._data.eventStartDate) +
                             '  -  ' +
-                            feed_format_date_time(
+                            feedFormatDateTime(
                                 context, this._data.eventEndDate),
                         style: TextStyle(
                             fontSize:
