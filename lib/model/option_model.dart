@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
-/// todo: add author
-/// option model for the settings_screen
+/// @author Christian Henrich
+///
+/// option model class for the settings_screen
 class Option {
-  /// todo: add documentation for variables
-  /// todo: set variables private
   Icon icon;
   String title;
   String subtitle;
 
-  /// todo: add documentation for constructor
+  /// consctructor gets passed the icon, title and subtitle of the respective settings card
   Option({this.icon, this.title, this.subtitle});
 }
 
-/// todo: add documentation to this variable
+/// options array with all the different respective settings cards that get shown as options in the [settings_screen]
 final options = [
   Option(
     icon: Icon(Icons.account_circle, size: 40.0),

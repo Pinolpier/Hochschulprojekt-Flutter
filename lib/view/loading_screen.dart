@@ -20,8 +20,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     loadAsyncData().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
       setState(() {
         _result = result;
       });
