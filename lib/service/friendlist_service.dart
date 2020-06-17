@@ -151,10 +151,13 @@ void deleteUidFromFriendsLists(String uid) async {
       friendMap = documentSnapshotList[x].data;
       List<String> keyList = friendMap.keys.toList();
       for (int x = 0; x < keyList.length; x++) {
-        //TODO Ich habe den Typ der Liste von String in dynamic geändert, da dies ein Problem war. Jetzt kommt ein Fehler fehler auf, dass er nicht mit eine fixed-lenght Liste arbeiten kann (Zeile 156)
         List<dynamic> friendsList = friendMap[keyList[x]];
-        if (friendsList.contains(uid)) {
-          friendsList.remove(uid);
+        List<dynamic> friendsListCopy = new List();
+        for (int i = 0; i < friendsList.length; i++) {
+          friendsListCopy[i] = friendsList[i];
+        }
+        if (friendsListCopy.contains(uid)) {
+          friendsListCopy.remove(uid);
         }
       }
       firebaseInstance
