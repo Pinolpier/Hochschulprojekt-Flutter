@@ -184,6 +184,12 @@ class _EventInfoState extends State<EventInfo> {
   @override
   void initState() {
     loadAsyncData().then((result) {
+      isEventOpen = !widget.event.privateEvent;
+      eventAttendeesCount = widget.event.attendeesIds.length;
+      eventDate = format_date_time(context, widget.event.eventStartDate);
+      eventName = widget.event.title;
+      eventLocation = widget.event.location;
+      eventText = widget.event.description;
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
@@ -195,14 +201,6 @@ class _EventInfoState extends State<EventInfo> {
 
   @override
   Widget build(BuildContext context) {
-    isEventOpen = !widget.event.privateEvent;
-    eventAttendeesCount = widget.event.attendeesIds.length;
-    eventDate = format_date_time(context, widget.event.eventStartDate);
-    //widget.event.eventStartDate.toIso8601String();
-    eventName = widget.event.title;
-    eventLocation = widget.event.location;
-    eventText = widget.event.description;
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -318,19 +316,20 @@ class _EventInfoState extends State<EventInfo> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isEventOpen = !isEventOpen;
-                                            widget.event.privateEvent = isEventOpen;
-                                            try {
-                                              updateData(widget.event);
-                                            } on Exception catch (e){
-                                              Log().error(
-                                                  causingClass: 'eventInfo_screen',
-                                                  method: 'build',
-                                                  action: e.toString());
-                                            }
-                                          });
+                                        onTap: () async {
+                                          isEventOpen = !isEventOpen;
+                                          widget.event.privateEvent =
+                                              !isEventOpen;
+                                          try {
+                                            updateData(widget.event);
+                                          } on Exception catch (e) {
+                                            Log().error(
+                                                causingClass:
+                                                    'eventInfo_screen',
+                                                method: 'build',
+                                                action: e.toString());
+                                          }
+                                          setState(() {});
                                         },
                                         child: isEventOpen == true
                                             ? Icon(
