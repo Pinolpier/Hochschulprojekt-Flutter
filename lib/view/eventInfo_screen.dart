@@ -67,12 +67,13 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          eventimagewidget = null;
-          eventImageAsync = await ip.chooseImage(context);
+          dynamic image = await ip.chooseImage(context);
+          if (image != 1) eventImageAsync = image;
           setState(() {
-            print(eventImageAsync);
-            eventImage = eventImageAsync;
-            updateImage(eventImage, widget.event);
+            if (eventImageAsync != 1) {
+              eventImage = eventImageAsync;
+              updateImage(eventImage, widget.event);
+            }
           }); // handle your image tap here
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
@@ -82,12 +83,14 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          eventimagewidget = null;
-          eventImageAsync = await ip.chooseImage(context);
+          dynamic image = await ip.chooseImage(context);
+          if (image != 1)
+            eventImageAsync = image;
           setState(() {
-            print(eventImageAsync);
-            eventImage = eventImageAsync;
-            updateImage(eventImage, widget.event);
+            if (image != 1) {
+              eventImage = eventImageAsync;
+              updateImage(eventImage, widget.event);
+            }
           }); // handle your image tap here
         },
         child: Image.file(eventImage, height: 150));
@@ -97,12 +100,14 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImageFromDatabase() {
     return GestureDetector(
         onTap: () async {
-          eventimagewidget = null;
-          eventImageAsync = await ip.chooseImage(context);
+          dynamic image = await ip.chooseImage(context);
+          if (image != 1)
+            eventImageAsync = image;
           setState(() {
-            print(eventImageAsync);
-            eventImage = eventImageAsync;
-            updateImage(eventImage, widget.event);
+            if (eventImageAsync != 1) {
+              eventImage = eventImageAsync;
+              updateImage(eventImage, widget.event);
+            }
           }); // handle your image tap here
         },
         child: eventimagewidget != null
@@ -525,19 +530,27 @@ class _EventInfoState extends State<EventInfo> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
+                                heroTag: 'addAttendee',
                                 onPressed: () async {
+                                  List<dynamic> fixedLengthList = widget.event
+                                      .attendeesIds;
+                                  List<String> attendeesList = new List();
+                                  for (int i = 0; i <
+                                      fixedLengthList.length; i++) {
+                                    attendeesList.add(fixedLengthList[i]);
+                                  }
                                   if (attending == true) {
-                                    attendees.remove(
+                                    attendeesList.remove(
                                         getUidOfCurrentlySignedInUser());
                                   }
                                   else {
-                                    widget.event.addAttendeesIds(
+                                    attendeesList.add(
                                         getUidOfCurrentlySignedInUser());
                                   }
+                                  widget.event.attendeesIds = attendeesList;
                                   updateData(widget.event);
-                                  setState(() {
-                                    attending != attending;
-                                  });
+                                  attending = !attending;
+                                  setState(() {});
                                 },
                                 child: attending == true
                                     ? Icon(Icons.check_box)
