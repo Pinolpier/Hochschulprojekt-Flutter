@@ -535,7 +535,9 @@ class _EventInfoState extends State<EventInfo> {
                                         getUidOfCurrentlySignedInUser());
                                   }
                                   updateData(widget.event);
-                                  attending != attending;
+                                  setState(() {
+                                    attending != attending;
+                                  });
                                 },
                                 child: attending == true
                                     ? Icon(Icons.check_box)
