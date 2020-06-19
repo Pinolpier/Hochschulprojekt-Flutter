@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
@@ -29,6 +30,7 @@ class _EventInfoState extends State<EventInfo> {
       new DateTime.now().millisecondsSinceEpoch);
 
   bool isEventOpen = true;
+  bool attending;
 
   /// how many people promised to attend
   int eventAttendeesCount = 400;
@@ -139,6 +141,11 @@ class _EventInfoState extends State<EventInfo> {
 
     attendees = widget.event.attendeesIds;
     print(attendees);
+    if (attendees.contains(getUidOfCurrentlySignedInUser())) {
+      attending = true;
+    } else {
+      attending = false;
+    }
     try {
       int index = 0;
       for (String uid in attendees) {
@@ -512,6 +519,27 @@ class _EventInfoState extends State<EventInfo> {
                                   showFriendsDialogEvent(context, widget.event);
                                 },
                                 child: Icon(Icons.group_add),
+                                backgroundColor: primaryColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: FloatingActionButton(
+                                onPressed: () async {
+                                  if (attending == true) {
+                                    attendees.remove(
+                                        getUidOfCurrentlySignedInUser());
+                                  }
+                                  else {
+                                    widget.event.addAttendeesIds(
+                                        getUidOfCurrentlySignedInUser());
+                                  }
+                                  updateData(widget.event);
+                                  attending != attending;
+                                },
+                                child: attending == true
+                                    ? Icon(Icons.check_box)
+                                    : Icon(Icons.check_box_outline_blank),
                                 backgroundColor: primaryColor,
                               ),
                             )
