@@ -3,20 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// todo: add author
-/// todo: add space between comment symbol and text
-
-///this class saves logs into a .txt file
-///per log a line
-///DateTime: [logType]: causing class, method, action
+/// @author mathias darscht
+/// this class saves logs into a .txt file
+/// per log a line
+/// DateTime: [logType]: causing class, method, action
 class Log {
-  ///file to save all logs
+  /// file to save all logs
   var _file;
 
-  ///path to file
+  /// path to file
   var _pathToFile;
 
-  ///singleton configuration
+  /// singleton configuration
   static final Log _instance = Log._internal();
 
   factory Log() => _instance;
@@ -37,8 +35,8 @@ class Log {
     file.writeAsStringSync('-- start --');
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// info log
+  ///
   /// writes and prints an info log with the information from
   /// (String) [causingClass], (String) [method],
   /// (String) [action] (optional)
@@ -54,8 +52,8 @@ class Log {
     _log(information);
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// warn log
+  ///
   /// writes and prints an warning log with the information from
   /// (String) [causingClass], (String) [method],
   /// (String) [action] (optional)
@@ -71,8 +69,8 @@ class Log {
     _log(information);
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// error log
+  ///
   /// writes and prints an error log with the information from
   /// (String) [causingClass], (String) [method],
   /// (String) [action] (optional)
@@ -88,12 +86,12 @@ class Log {
     _log(information);
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
-  ///    todo: DO use prose to explain parameters, return values, and exceptions
   /// concat's the data of log to a string
+  ///
   /// creates a big String based on (String) [type],
   /// (String) [causingClass], (String) [method]
-  ///  and (String) [action] (optional)
+  /// and (String) [action] (optional)
+  /// depending on the action it returns a longer or shorter message
   String _concat(
       {@required String type,
       @required String causingClass,
@@ -106,8 +104,8 @@ class Log {
             ' : [$type]: class: $causingClass, method: $method';
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
-  /// saving the data into the log file
+  /// saves the data into the log file
+  ///
   /// based on (String) [information]
   void _log(String information) async {
     this._file = await _init();
@@ -122,9 +120,9 @@ class Log {
     }
   }
 
-  /// todo: missing documentation
+  /// get's the log file
   File get file => this._file;
 
-  /// todo: missing documentation
+  /// set's up a file if it doesm't exist's
   set file(File file) => this._file;
 }
