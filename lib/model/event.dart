@@ -23,7 +23,7 @@ class Event {
   String _description;
 
   /// location of the event, can be a [String] for informations
-  /// about the location or a Geopoint relates to the location
+  /// about the location or a GeoPoint relates to the location
   dynamic _location;
 
   /// boolean if the event is private or local. If its true, the event is private
@@ -38,7 +38,7 @@ class Event {
   /// Tags relates to the event
   List<dynamic> _tagsList = new List();
 
-  /// List of ids freom event owners
+  /// List of ids from event owners
   List<dynamic> _ownerIds = new List();
 
   /// picture belongs to the event
