@@ -6,19 +6,27 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
-//'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
+/// todo: add author
+/// todo: CONSIDER writing a library-level doc comment
+
 class FeedItemUI extends StatefulWidget {
+  /// todo: add documentation of variable
   final Event _data;
 
+  /// todo: missing documentation of constructor
   FeedItemUI(this._data);
 
+  /// todo: missing documentation
   @override
   State<StatefulWidget> createState() => FeedItemUIState(this._data);
 }
 
+/// todo: missing documentation
 class FeedItemUIState extends State<FeedItemUI> {
+  /// todo: add documentation of variables
   final Event _data;
 
+  /// todo: missing documentation of constructor
   FeedItemUIState(this._data);
 
   @override
@@ -114,10 +122,13 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
+  /// todo: missing documentation
   String _getLocation(BuildContext context) {
     return this._data.location;
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// loads profile picture
   /// if no profile picture in the backend, show placeholder
   Widget _profilePicture() {
@@ -130,6 +141,7 @@ class FeedItemUIState extends State<FeedItemUI> {
         : Image.asset('assets/blank_profile.png');
   }
 
+  /// todo: missing documentation
   void _navigateToEventScreen() async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => new EventInfo(_data)));

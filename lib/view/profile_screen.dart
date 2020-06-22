@@ -14,6 +14,9 @@ import 'package:univents/view/loading_screen.dart';
 
 import 'dialogs/DialogHelper.dart';
 
+/// todo: add author
+/// todo: add documentation
+
 class ProfileScreen extends StatefulWidget {
   String UID;
   bool create = false;
@@ -363,7 +366,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 } on Exception catch (e) {
                                                   show_toast(e.toString());
                                                   Log().error(
-                                                      causingClass: 'profile_screen',
+                                                      causingClass:
+                                                          'profile_screen',
                                                       method: 'updateProfil',
                                                       action: e.toString());
                                                 }

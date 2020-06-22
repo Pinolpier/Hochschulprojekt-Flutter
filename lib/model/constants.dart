@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// todo: add author
+/// todo: CONSIDER writing a library-level doc comment
+/// todo: add description to the variables
 /// some constants for consistent decoration style and design
 
 final textStyleConstant = TextStyle(

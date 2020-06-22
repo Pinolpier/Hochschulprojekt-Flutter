@@ -3,6 +3,9 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/option_model.dart';
 
+/// todo: add author
+/// todo: add documentation
+
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();

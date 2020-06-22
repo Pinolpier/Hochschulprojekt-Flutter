@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// todo: add author
+/// todo: CONSIDER writing a library-level doc comment
+
+/// todo: documentation of variables
+/// todo: set variables private (provide setter and getter)
 DateTime selectedDateTime = DateTime.now();
 
+/// todo: missing documentation
 Future<TimeOfDay> _selectTime(BuildContext context) {
   final now = DateTime.now();
 
@@ -11,6 +17,7 @@ Future<TimeOfDay> _selectTime(BuildContext context) {
   );
 }
 
+/// todo: missing documentation
 Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       context: context,
       initialDate: DateTime.now().add(Duration(seconds: 1)),
@@ -18,6 +25,7 @@ Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       lastDate: DateTime(2100),
     );
 
+/// todo: missing documentation
 Future<DateTime> getDateTime(BuildContext context) async {
   final selectedDate = await _selectDateTime(context);
   if (selectedDate == null) return null;

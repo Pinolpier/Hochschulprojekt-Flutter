@@ -14,6 +14,8 @@ import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 
+/// todo: add author
+
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
 /// -Event Start DateTime (DateTimePicker)
@@ -27,14 +29,21 @@ import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 /// -Event CREATE (button)
 
 class CreateEventScreen extends StatefulWidget {
+  /// todo: add documentation of variable
   final List<String> tappedPoint;
-  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
 
+  /// todo: missing documentation of constructor
+  CreateEventScreen(this.tappedPoint, {Key key}) : super(key: key);
+
+  /// todo: missing documentation
   @override
   State createState() => _CreateEventScreenState();
 }
 
+/// todo: missing documentation
 class _CreateEventScreenState extends State<CreateEventScreen> {
+  /// todo: add documentation of variables
+  /// todo: set variables private
   DateTime selectedStartDateTime;
   DateTime selectedEndDateTime;
   String selectedStartString = 'not set';
@@ -45,11 +54,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
   TextEditingController eventDescriptionController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
   ImagePickerUnivents ip = new ImagePickerUnivents();
 
+  /// todo: missing documentation
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
       context: context,
@@ -78,6 +88,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
@@ -90,6 +101,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
+  /// todo: missing documentation
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
@@ -102,6 +114,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Image.file(eventImage, height: 150));
   }
 
+  /// todo: missing documentation
   Widget _selectStartDateTimeButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -139,6 +152,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _selectEndDateTimeButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -178,6 +192,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventNameTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,6 +229,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _locationTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,6 +266,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventDescriptionTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,6 +304,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventTagsTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,6 +341,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _addFriendsButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -363,6 +382,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _isPrivateCheckbox() {
     return Container(
       child: Checkbox(
@@ -377,6 +397,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _createButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -412,7 +433,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => NavigationBarUI()),
-                (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
           );
         },
         padding: EdgeInsets.all(15.0),
