@@ -7,18 +7,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// The Event class represents the model for each event
 /// with all the information necessary for it
 class Event {
+  /// Id of Event, assigned by database
   String _eventID;
+
+  /// Name of the Event
   String _title;
+
+  /// Date when the event starts
   DateTime _eventStartDate;
+
+  /// Date when the event ends
   DateTime _eventEndDate;
+
+  /// information about the event
   String _description;
+
+  /// location of the event, can be a [String] for informations
+  /// about the location or a Geopoint relates to the location
   dynamic _location;
+
+  /// boolean if the event is private or local. If its true, the event is private
   bool _privateEvent;
+
+  /// latitude and longitude to the location of the event
   String _latitude, _longitude;
+
+  /// List of all ids from attendees
   List<dynamic> _attendeesIds = new List();
+
+  /// Tags relates to the event
   List<dynamic> _tagsList = new List();
+
+  /// List of ids freom event owners
   List<dynamic> _ownerIds = new List();
+
+  /// picture belongs to the event
   File image;
+
+  /// URL relates to the eventPicture
   String _imageURL;
 
   /// constructor for creating a event by a user
@@ -92,6 +118,7 @@ class Event {
   /// returns false, if the events is public
   bool get privateEvent => _privateEvent;
 
+  /// returns all ids of the participants including that of the event creator
   List<dynamic> get attendeesIds => _attendeesIds;
 
   set attendeesIds(List<String> value) {
@@ -161,6 +188,7 @@ class Event {
     _location = value;
   }
 
+  /// returns all tags that relates to the event
   List<dynamic> get tagsList => _tagsList;
 
   set tagsList(List<dynamic> value) {
