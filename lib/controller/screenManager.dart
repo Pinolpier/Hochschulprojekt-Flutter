@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/homeFeed_screen/page_controller.dart';
 import 'package:univents/view/login_screen.dart';
 import 'package:univents/view/profile_screen.dart';
 
