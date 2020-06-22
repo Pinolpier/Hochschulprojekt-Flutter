@@ -167,6 +167,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       return new Scaffold(
         backgroundColor: univentsWhiteBackground,
+        appBar: isProfileOwner == false
+            ? AppBar(
+                title: Text("Profile of: " + userName),
+              )
+            : null,
         body: new Stack(
           children: <Widget>[
             Positioned(
