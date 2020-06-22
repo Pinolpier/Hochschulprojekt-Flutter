@@ -1,8 +1,6 @@
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-
+/// @mathias darscht
+/// enum for all the filters that can be setted
 enum FeedFilter {
-  /// todo: add documentation of variables
   startDateFilter,
   endDateFilter,
   tagsFilter,
