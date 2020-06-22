@@ -186,7 +186,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                   comeFromCreateEventScreen == false
                       ? goBackToGroupScreen()
                       : event == null
-                          ? Navigator.pop(context, friendsInGroup)
+                          ? Navigator.pop(context, selected)
                           : goBackToEventScreen();
                 },
                 child: Icon(Icons.check),
