@@ -286,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: isProfileOwner == true
                             ? 95.0
                             : isProfileOwner == false
-                                ? 150.0
+                                ? 0.0
                                 : createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
