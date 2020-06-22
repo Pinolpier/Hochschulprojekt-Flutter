@@ -541,15 +541,19 @@ class _EventInfoState extends State<EventInfo> {
                                   if (attending == true) {
                                     attendeesList.remove(
                                         getUidOfCurrentlySignedInUser());
-                                  }
-                                  else {
-                                    attendeesList.add(
-                                        getUidOfCurrentlySignedInUser());
+                                  } else {
+                                    attendeesList
+                                        .add(getUidOfCurrentlySignedInUser());
+                                    profilePictureList.add(
+                                        await getProfilePicture(
+                                            getUidOfCurrentlySignedInUser()));
                                   }
                                   widget.event.attendeesIds = attendeesList;
                                   updateData(widget.event);
                                   attending = !attending;
-                                  setState(() {});
+                                  setState(() {
+                                    initState(); //TODO this is just a workaround!
+                                  });
                                 },
                                 child: attending == true
                                     ? Icon(Icons.check_box)
