@@ -309,22 +309,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   )
-                                : isProfileOwner == false &&
-                                        createProfile == false
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          showAlertDialog(context);
-                                        },
-                                        child: Center(
-                                          child: Text(
-                                            "Send Friendsrequest",
-                                            //TODO: Add Internationalization
-                                            style: TextStyle(
-                                                color: univentsWhiteText,
-                                                fontFamily: 'Montserrat'),
-                                          ),
-                                        ),
-                                      )
                                     : createProfile == true
                                         ? GestureDetector(
                                             onTap: () async {
