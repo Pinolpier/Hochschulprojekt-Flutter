@@ -170,6 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: isProfileOwner == false
             ? AppBar(
                 title: Text("Profile of: " + userName),
+                backgroundColor: primaryColor,
               )
             : null,
         body: new Stack(
