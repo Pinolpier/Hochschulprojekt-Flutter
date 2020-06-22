@@ -3,7 +3,7 @@ import 'package:univents/service/app_localizations.dart';
 
 import 'feed_filter.dart';
 
-/// @mathias darscht
+/// @author mathias darscht
 /// this class translates the filter values of all filters
 class FeedFilterValues {
   /// value to translate

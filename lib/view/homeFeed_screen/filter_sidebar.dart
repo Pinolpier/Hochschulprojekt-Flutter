@@ -5,7 +5,7 @@ import 'package:univents/view/homeFeed_screen/feed_filter.dart';
 
 import 'filter_tile.dart';
 
-/// @mathias darscht
+/// @author mathias darscht
 /// this class helps to set filters for events with a sidebar
 class FilterSidebar extends StatefulWidget {
   @override

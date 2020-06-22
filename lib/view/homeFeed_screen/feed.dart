@@ -5,7 +5,7 @@ import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/homeFeed_screen/feed_item_ui.dart';
 
-/// @mathias darscht
+/// @author mathias darscht
 /// this class controls the feed and get's the data from firebase
 /// provides the information to feed_item_ui and let's them display it
 class Feed {

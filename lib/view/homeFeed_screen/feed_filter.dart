@@ -1,4 +1,4 @@
-/// @mathias darscht
+/// @author mathias darscht
 /// enum for all the filters that can be setted
 enum FeedFilter {
   startDateFilter,
