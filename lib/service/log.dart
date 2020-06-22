@@ -120,7 +120,6 @@ class Log {
     }
   }
 
-  /// get's the log file
   File get file => this._file;
 
   /// set's up a file if it doesm't exist's
