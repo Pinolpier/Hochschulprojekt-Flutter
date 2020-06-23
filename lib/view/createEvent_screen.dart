@@ -254,6 +254,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 //    );
 //  }
 
+  /// this button is used to open a location picker screen.
   Widget _eventlocationPickerButton(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 25.0),
