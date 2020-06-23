@@ -1,3 +1,4 @@
+/// author Markus Link
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,19 +13,25 @@ import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
-/// todo: add author
 /// todo: CONSIDER writing doc comments for private APIs
+/// --> What
 
-/// todo: add documentation for these variables
+/// used to keep a reference to the Firestore database
 final firestore = Firestore.instance;
+
+/// used to keep a reference to the "path" in the database.
 final String collection = 'profile';
+
+/// used to keep a reference from a userId to a image uri.
 Map<String, String> uidToUri = {};
 
 /// todo: AVOID redundancy with the surrounding context
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
-///Use this method to update a [UserProfile]. If it does not exist already it will be created.
+/// --> What
+///Use this method to update a [UserProfile].
+///
+///If it does not exist already it will be created.
 ///All fields will be overwritten with the values from the parameter [profile].
 ///Only the [FirebaseUser] referenced by [profile._uid] is allowed to update his own profile.
 Future<bool> updateProfile(UserProfile profile) async {
@@ -56,14 +63,14 @@ Future<bool> updateProfile(UserProfile profile) async {
           causingClass: 'userProfileService',
           method: 'updateProfile',
           action:
-              'An error has occurred while creating the profile: $profile, the error is: ${e.toString()}');
+          'An error has occurred while creating the profile: $profile, the error is: ${e.toString()}');
       return false;
     }
   }
   return false;
 }
 
-/// todo: missing documentation
+/// use this method to delete profile and profile picture.
 Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   String uid = getUidOfCurrentlySignedInUser();
   String uri = await getProfilePictureUri(uid);
@@ -75,10 +82,12 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
 }
 
 /// todo: AVOID redundancy with the surrounding context
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
-/// Use this method to change a user's profile picture. The parameter [file] should be the new file to upload as the [profile]'s profile picture.
+/// --> What
+/// Use this method to change a user's profile picture.
+///
+/// The parameter [file] should be the new file to upload as the [profile]'s profile picture.
 /// The user is referenced by [profile.uid] and the parameter [file] may be null to delete the (existing) profile picture.
 Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
@@ -102,7 +111,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
             causingClass: 'userProfileService',
             method: 'updateProfile',
             action:
-                'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
+            'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
         return false;
       }
     } else {
@@ -121,7 +130,7 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
             causingClass: 'userProfileService',
             method: 'updateProfile',
             action:
-                'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
+            'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
         return false;
       }
     }
@@ -130,9 +139,13 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
 }
 
 /// todo: PREFER starting variable, getter, or setter comments with noun phrases
+/// --> What
 /// todo: AVOID redundancy with the surrounding context
+/// --> What
 /// todo: DO start doc comments with a single-sentence summary
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
+/// --> What
 /// Use this method to retrieve an [Image] ([Widget]) with the profile picture of the [FirebaseUser] that is referenced by [uid]
 Future<Widget> getProfilePicture(String uid) async {
   String uri = await getProfilePictureUri(uid);
@@ -141,12 +154,16 @@ Future<Widget> getProfilePicture(String uid) async {
 }
 
 /// todo: AVOID redundancy with the surrounding context
+/// --> What
 /// todo: DO start doc comments with a single-sentence summary
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
-/// This method should probably only be used internally, but still it's ot private because it may be needed elsewhere
+/// --> What
+/// This method should probably only be used internally, but still it's not private because it may be needed elsewhere
 ///
 /// Handles caching profilePicture URIs and retrieving them for a profile identified by [uid].
 Future<String> getProfilePictureUri(String uid) async {
+  //TODO remove own cashing later when an own backend is implemented
   String uri = '';
   if (uidToUri.containsKey(uid)) {
     uri = uidToUri[uid];
@@ -161,8 +178,11 @@ Future<String> getProfilePictureUri(String uid) async {
 }
 
 /// todo: AVOID redundancy with the surrounding context
+/// --> What
 /// todo: DO start doc comments with a single-sentence summary
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
+/// --> What
 /// Use this method to retrieve a [UserProfile] referenced by a [uid].
 ///
 /// All privacy settings are evaluated locally! If access to some of the information is forbidden the value will be set to null
@@ -203,10 +223,14 @@ Future<UserProfile> getUserProfile(String uid) async {
 }
 
 /// todo: AVOID redundancy with the surrounding context
+/// --> What
 /// todo: DO start doc comments with a single-sentence summary
+/// --> What
 /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
-/// Use this method to be informed wheter a userProfile exists for the given [uid].
+/// --> What
+/// Use this method to be informed whether a userProfile exists for the given [uid].
 Future<bool> existsUserProfile(String uid) async {
   if (!await isUserSignedIn()) {
     throw new UserNotSignedInException(null,
@@ -222,7 +246,7 @@ Future<bool> existsUserProfile(String uid) async {
   }
 }
 
-/// todo: missing documentation
+/// only works for exact [username]s
 Future<String> getUidFromUserName(String username) async {
   var x = firestore
       .collectionGroup(collection)
@@ -244,7 +268,7 @@ Future<String> getUidFromUserName(String username) async {
   }
 }
 
-/// todo: missing documenation
+/// only works for exact [email]s
 Future<String> getUidFromEmail(String email) async {
   var x = firestore
       .collectionGroup(collection)
@@ -267,9 +291,13 @@ Future<String> getUidFromEmail(String email) async {
 }
 
 /// todo: AVOID redundancy with the surrounding context
+/// --> What
 /// todo: DO start doc comments with a single-sentence summary
+/// --> What
 /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+/// --> What
 /// todo: DO use prose to explain parameters, return values, and exceptions
+/// --> What
 ///this method is used twice internally to check that only a signed in user can change his own profile.
 Future<bool> _isOperationAllowed(UserProfile profile) async {
   if (profile == null || profile.uid == null) {
