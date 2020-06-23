@@ -25,13 +25,11 @@ bool _hasBeenChecked = false;
 /// This method completely relies on a method from the [AppleSignIn] class which is provided by a plugin.
 Future<bool> checkAppleSignInAvailability() async {
   if (!_hasBeenChecked) {
-    _hasBeenChecked = true;
     isAppleSignInAvailable = await AppleSignIn.isAvailable();
+    _hasBeenChecked = true;
   }
   return isAppleSignInAvailable;
 }
-
-//TODO maybe use the following plugin to keep users signed in?: https://pub.dev/packages/flutter_secure_storage#-changelog-tab-
 
 /// used only internally (therefore _privateMethod). Used to update the reference to the currently logged in [_user].
 Future<FirebaseUser> _refreshCurrentlyLoggedInUser() async {
@@ -86,7 +84,7 @@ Future<bool> googleSignIn() async {
       //TODO handle that the sign in with Google process was aborted
       print("GoogleSign in was aborted!");
       throw new SignInAbortedException(
-          null, "The Google Sign In Prcess has been aborted!");
+          null, "The Google Sign In Process has been aborted!");
     }
 
     return await isUserSignedIn();
@@ -284,12 +282,15 @@ Future<void> deleteAccount(BuildContext context) async {
   await _user.delete(); // TODO handle different errors that could occur!
 }
 
+/// For some sensitive operations a prior re-authentication is required. This method is user only internally and therefore private.
+/// The exact needed procedure depends on the identity provider that was used for creating the account (e.g. Google / Apple / E-Mail and Password). This method identifies the provider on its own and acts properly.
+///
+/// A [context] argument is needed to display dialogs in case user input is required.
 Future<void> _reauthenticate(BuildContext context) async {
-  print("Reauthenticate has been called!");
   String providerId = (_user.providerData.length > 1)
       ? _user.providerData[1].providerId
       : _user.providerData[0].providerId;
-  print("The providerId that will be switch-cased is: " + providerId);
+
   if (providerId == GoogleAuthProvider.providerId) {
     final GoogleSignInAccount _googleAccountToSignIn =
         await _googleSignIn.signIn();
@@ -302,33 +303,37 @@ Future<void> _reauthenticate(BuildContext context) async {
     }
   } else if (providerId.contains("apple.com")) {
     print("Reauthenticating an Apple Signed In Account");
-    // TODO Test if this string is correct "apple.com"
-    // TODO show dialog to user that he/she has to sign in with google again. Also display email address which should be used for sign in.
+    // TODO show dialog to user that he/she has to sign in with apple again.
     // TODO Wrap with try / catch!
-    final result = await AppleSignIn.performRequests([
-      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-    ]);
-    switch (result.status) {
-      case AuthorizationStatus.authorized:
-        print("Sign In Authorized!");
-        final appleIdCredential = result.credential;
-        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
-        await _user.reauthenticateWithCredential(oAuthProvider.getCredential(
-            idToken: String.fromCharCodes(appleIdCredential.identityToken),
-            accessToken:
-            String.fromCharCodes(appleIdCredential.authorizationCode)));
-        break;
-      case AuthorizationStatus.error:
-        //TODO good exception handling here
-        print("AppleSignIn AuthorizationStatus Error occured: " +
-            result.error.toString());
-        //Throw an exception here
-        break;
-      case AuthorizationStatus.cancelled:
-        print("Sign In with Apple has been aborted!");
-        throw SignInAbortedException(null,
-            "The AppleSignIn was aborted by the user and thus no user is logged in!");
-        break;
+    try {
+      final result = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+      switch (result.status) {
+        //TODO maybe remove duplicated code?
+        case AuthorizationStatus.authorized:
+          print("Sign In Authorized!");
+          final appleIdCredential = result.credential;
+          final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+          await _user.reauthenticateWithCredential(oAuthProvider.getCredential(
+              idToken: String.fromCharCodes(appleIdCredential.identityToken),
+              accessToken:
+                  String.fromCharCodes(appleIdCredential.authorizationCode)));
+          break;
+        case AuthorizationStatus.error:
+          //TODO good exception handling here
+          print("AppleSignIn AuthorizationStatus Error occured: " +
+              result.error.toString());
+          //Throw an exception here
+          break;
+        case AuthorizationStatus.cancelled:
+          print("Sign In with Apple has been aborted!");
+          throw SignInAbortedException(null,
+              "The AppleSignIn was aborted by the user and thus no user is logged in!");
+          break;
+      }
+    } on Exception catch (error, stacktrace) {
+      //TODO integrate error handling
     }
   } else if (providerId == EmailAuthProvider.providerId) {
     final TextEditingController _editingController = TextEditingController();
@@ -376,7 +381,7 @@ Future<void> _reauthenticate(BuildContext context) async {
       ),
     );
   } else {
-    // Possibly if apple was wrong
+    // TODO this should never happen?
   }
 }
 
