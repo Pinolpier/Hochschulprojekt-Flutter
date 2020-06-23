@@ -1,6 +1,7 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:univents/controller/userProfileService.dart';
@@ -278,15 +279,18 @@ Future<void> changeEmailAddress(String newEmail, String password) async {
 }
 
 /// used to delete an account. Only the [userProfileService.deleteProfileOfCurrentlySignedInUser] should call this method!
-Future<void> deleteAccount() async {
+Future<void> deleteAccount(BuildContext context) async {
+  await _reauthenticate(context);
   await _user.delete(); // TODO handle different errors that could occur!
 }
 
-Future<void> _reauthenticate() async {
-  String providerId = await _user.providerId;
+Future<void> _reauthenticate(BuildContext context) async {
+  print("Reauthenticate has been called!");
+  String providerId = (_user.providerData.length > 1)
+      ? _user.providerData[1].providerId
+      : _user.providerData[0].providerId;
+  print("The providerId that will be switch-cased is: " + providerId);
   if (providerId == GoogleAuthProvider.providerId) {
-    // TODO show dialog to user that he/she has to sign in with google again. Also display email address which should be used for sign in.
-    // TODO Wrap with try / catch!
     final GoogleSignInAccount _googleAccountToSignIn =
         await _googleSignIn.signIn();
     if (_googleAccountToSignIn != null) {
@@ -297,7 +301,8 @@ Future<void> _reauthenticate() async {
           accessToken: _googleSignInAuthentication.accessToken));
     }
   } else if (providerId.contains("apple.com")) {
-    //TODO Test if this string is correct "apple.com"
+    print("Reauthenticating an Apple Signed In Account");
+    // TODO Test if this string is correct "apple.com"
     // TODO show dialog to user that he/she has to sign in with google again. Also display email address which should be used for sign in.
     // TODO Wrap with try / catch!
     final result = await AppleSignIn.performRequests([
@@ -305,12 +310,13 @@ Future<void> _reauthenticate() async {
     ]);
     switch (result.status) {
       case AuthorizationStatus.authorized:
+        print("Sign In Authorized!");
         final appleIdCredential = result.credential;
         final oAuthProvider = OAuthProvider(providerId: 'apple.com');
         await _user.reauthenticateWithCredential(oAuthProvider.getCredential(
             idToken: String.fromCharCodes(appleIdCredential.identityToken),
             accessToken:
-                String.fromCharCodes(appleIdCredential.authorizationCode)));
+            String.fromCharCodes(appleIdCredential.authorizationCode)));
         break;
       case AuthorizationStatus.error:
         //TODO good exception handling here
@@ -319,11 +325,56 @@ Future<void> _reauthenticate() async {
         //Throw an exception here
         break;
       case AuthorizationStatus.cancelled:
+        print("Sign In with Apple has been aborted!");
         throw SignInAbortedException(null,
             "The AppleSignIn was aborted by the user and thus no user is logged in!");
         break;
     }
   } else if (providerId == EmailAuthProvider.providerId) {
+    final TextEditingController _editingController = TextEditingController();
+    String _password;
+    print("Email reauth started!");
+    await showDialog<String>(
+      context: context,
+      child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                obscureText: true,
+                autofocus: true,
+                decoration: new InputDecoration(
+                    labelText: 'Input your password below to confirm permanently deleting your account!',
+                    hintText: 'password'),
+                //TODO add internationalization and don't write about deletion, possibly called in other cases as well!
+                controller: _editingController,
+                onChanged: (string) {
+                  _password = string;
+                },
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('CANCEL'),
+              //TODO do NOT offer cancellation because deletion possibly already occured partially
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: const Text('CONFIRM'),
+              onPressed: () async {
+                await _user.reauthenticateWithCredential(
+                    EmailAuthProvider.getCredential(
+                        email: getEmailOfCurrentlySignedInUser(),
+                        password: _password));
+                Navigator.pop(context);
+              })
+        ],
+      ),
+    );
   } else {
     // Possibly if apple was wrong
   }

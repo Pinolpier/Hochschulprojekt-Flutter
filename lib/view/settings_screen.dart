@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: ListBody(
                     children: <Widget>[
                       Text(
-                          'you#re about to delete your profile, are you sure?' //TODO Fix Bug002
+                          'you\'re about to delete your profile, are you sure?' //TODO Fix Bug002
                           //AppLocalizations.of(context).translate('delete_profile_text')
                           ),
                     ],
@@ -72,9 +72,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   FlatButton(
                     child: Text('OK'),
                     onPressed: () async {
-                      await deleteProfileOfCurrentlySignedInUser();
+                      await deleteProfileOfCurrentlySignedInUser(context);
                       print('next step is sign out');
                       signOut();
+                      Navigator.of(context).pop();
                     },
                   ),
                   FlatButton(

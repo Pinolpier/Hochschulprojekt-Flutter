@@ -56,7 +56,7 @@ Future<bool> updateProfile(UserProfile profile) async {
   return false;
 }
 
-Future<bool> deleteProfileOfCurrentlySignedInUser() async {
+Future<bool> deleteProfileOfCurrentlySignedInUser(BuildContext context) async {
   String uid = getUidOfCurrentlySignedInUser();
   String uri = await getProfilePictureUri(uid);
   if (uri != null && uri != "null" && uri.isNotEmpty) {
@@ -68,7 +68,7 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   await deleteUserFromAttendeesList(uid);
   await deleteEventsFromUser(uid);
   print('next step is delete account');
-  await deleteAccount();
+  await deleteAccount(context);
   print('account should be deleted');
 }
 
