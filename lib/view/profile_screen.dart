@@ -6,7 +6,6 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/userProfile.dart';
-import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
@@ -168,6 +167,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       return new Scaffold(
         backgroundColor: univentsWhiteBackground,
+        appBar: isProfileOwner == false
+            ? AppBar(
+                title: Text("Profile of: " + userName),
+                backgroundColor: primaryColor,
+              )
+            : null,
         body: new Stack(
           children: <Widget>[
             Positioned(
@@ -216,8 +221,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       controller: _textControllerFirstName,
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10.0),
-                                        hintText: AppLocalizations.of(context)
-                                            .translate('first_name'),
+                                        hintText:
+                                            "First Name", //TODO: Add Internationalization
                                       ),
                                     ),
                                   ),
@@ -228,8 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       controller: _textControllerLastname,
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10.0),
-                                        hintText: AppLocalizations.of(context)
-                                            .translate("last_name"),
+                                        hintText: "Last Name", //TODO: Add Internationalization
                                       ),
                                     ),
                                   ),
@@ -250,8 +254,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               controller: _textControllerUsername,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(10.0),
-                                hintText: AppLocalizations.of(context)
-                                    .translate('username'),
+                                hintText: "username", //TODO: Add Internationalization
                               ),
                             ),
                           ),
@@ -289,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: isProfileOwner == true
                             ? 95.0
                             : isProfileOwner == false
-                                ? 150.0
+                                ? 0.0
                                 : createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
@@ -304,32 +307,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     child: Center(
                                       child: Text(
-                                        AppLocalizations.of(context)
-                                            .translate('edit_bio'),
+                                        "Edit Bio",
+                                        //TODO: Add Internationalization
                                         style: TextStyle(
                                             color: univentsWhiteText,
                                             fontFamily: 'Montserrat'),
                                       ),
                                     ),
                                   )
-                                : isProfileOwner == false &&
-                                        createProfile == false
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          //TODO: Fix bug where picture gets removed when choosing "cancel"
-                                          showAlertDialog(context);
-                                        },
-                                        child: Center(
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                .translate(
-                                                    'send_friends_request'),
-                                            style: TextStyle(
-                                                color: univentsWhiteText,
-                                                fontFamily: 'Montserrat'),
-                                          ),
-                                        ),
-                                      )
                                     : createProfile == true
                                         ? GestureDetector(
                                             onTap: () async {
@@ -377,16 +362,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       false,
                                                 );
                                               } else {
-                                                show_toast(AppLocalizations.of(
-                                                        context)
-                                                    .translate(
-                                                        'profile_screen_toast'));
+                                                show_toast(
+                                                    "username cant be empty!"); //TODO: Add Internationalization
                                               }
                                             },
                                             child: Center(
                                               child: Text(
-                                                AppLocalizations.of(context)
-                                                    .translate('confirm'),
+                                                "confirm",
+                                                //TODO: Add Internationalization
                                                 style: TextStyle(
                                                     color: univentsWhiteText,
                                                     fontFamily: 'Montserrat'),
@@ -405,13 +388,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = FlatButton(
-      child: Text(AppLocalizations.of(context).translate('cancel')),
+      child: Text("cancel"), //TODO: Add Internationalization
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget confirmButton = FlatButton(
-      child: Text(AppLocalizations.of(context).translate('confirm')),
+      child: Text("confirm"), //TODO: Add Internationalization
       onPressed: () {
         //contact.emails.forEach((item) {
         //print(item.value);
@@ -425,7 +408,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AlertDialog alert = AlertDialog(
       //title: Text(contact.displayName),
       content: Text(
-          AppLocalizations.of(context).translate('confirm_friend_request')),
+          "Do you really want to send a Friend Request to:"),
+      //TODO: Add Internationalization
       //contact.displayname
       actions: [
         cancelButton,

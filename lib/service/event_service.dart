@@ -260,9 +260,13 @@ void updateData(Event event) async {
 /// updating Image from Database
 void updateImage(File image, Event event) async {
   if (event.imageURL != null) await deleteFile(collection, event.eventID);
-  String url = await uploadFile(collection, image, event.eventID);
-  _urlToID[event.eventID] = url;
-  event.imageURL = url;
+  _urlToID.remove(event.eventID);
+  event.imageURL = null;
+  if (image != null) {
+    String url = await uploadFile(collection, image, event.eventID);
+    _urlToID[event.eventID] = url;
+    event.imageURL = url;
+  }
   updateData(event);
 }
 
