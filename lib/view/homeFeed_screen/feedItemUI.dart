@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
@@ -19,7 +20,28 @@ class FeedItemUI extends StatefulWidget {
 class FeedItemUIState extends State<FeedItemUI> {
   final Event _data;
 
+  Widget _pPicture;
+
   FeedItemUIState(this._data);
+
+  @override
+  void initState() {
+    super.initState();
+    getProfilePicture(this._data.ownerIds[0]).then((value) {
+      if (mounted) {
+        setState(() {
+          this._pPicture = value;
+        });
+      } else {
+        Log().error(
+            causingClass: 'feedItemUI',
+            method: '_profilePicture',
+            action: 'Memoryleak while loading profile pictures');
+      }
+    });
+    this._pPicture =
+        _pPicture != null ? _pPicture : Image.asset('assets/blank_profile.png');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +53,7 @@ class FeedItemUIState extends State<FeedItemUI> {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                child: _profilePicture(),
+                child: this._pPicture,
               ),
               title: Text(
                 this._data.title,
@@ -116,18 +138,6 @@ class FeedItemUIState extends State<FeedItemUI> {
 
   String _getLocation(BuildContext context) {
     return this._data.location;
-  }
-
-  /// loads profile picture
-  /// if no profile picture in the backend, show placeholder
-  Widget _profilePicture() {
-    Widget _profilePicture;
-    getProfilePicture(this._data.ownerIds[0]).then((value) {
-      _profilePicture = value;
-    });
-    return _profilePicture != null
-        ? _profilePicture
-        : Image.asset('assets/blank_profile.png');
   }
 
   void _navigateToEventScreen() async {

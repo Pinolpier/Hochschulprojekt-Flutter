@@ -31,28 +31,24 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
-    _data = new List<Widget>();
-    Feed.init().then((val) {
-      _initState(0);
-      this._data = val;
-    });
+    this._data = new List<Widget>();
   }
 
   /// initializes the _data list with data
   @override
   void initState() {
     super.initState();
-    Feed.init().then((val) => setState(() {
-          _initState(0);
-          this._data = val;
-        }));
+    Feed.init().then((val) {
+      _initializeState(0);
+      this._data = val;
+    });
   }
 
   ///updates feed with the set filters
   Future<void> _update() async {
     Feed.init().then((val) => setState(() {
           this._data = val;
-          _initState(_state);
+          _initializeState(_state);
         }));
     return null;
   }
@@ -86,7 +82,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
                 )
               : null,
           bottom: TabBar(
-            onTap: _initState,
+            onTap: _initializeState,
             tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.home),
@@ -114,7 +110,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   /// navigation over screen cards based on
   /// (int) [index]
-  void _initState(int index) {
+  void _initializeState(int index) {
     setState(() {
       this._state = index;
       switch (index) {
