@@ -342,12 +342,20 @@ Future<void> _reauthenticate(BuildContext context) async {
           break;
       }
     } on Exception catch (error, stacktrace) {
-      //TODO integrate error handling
+      Log().error(
+          causingClass: "authService.dart",
+          method: "_reauthenticate",
+          action:
+              "Something went wrong during Apple Reauthentication: Error: " +
+                  error.toString() +
+                  "; Stacktrace:  " +
+                  stacktrace.toString());
     }
   } else if (providerId == EmailAuthProvider.providerId) {
     final TextEditingController _editingController = TextEditingController();
     String _password;
-    await showDialog<String>(
+    await showDialog<
+        String>( //TODO define widget outside of _reauthenticate method.
       context: context,
       child: new AlertDialog(
         contentPadding: const EdgeInsets.all(16.0),
