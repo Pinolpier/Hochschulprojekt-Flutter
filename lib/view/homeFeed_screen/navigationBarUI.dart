@@ -30,7 +30,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   /// dynamic app bar title (changes if screen changes)
   String _appBarTitle = 'Home';
 
-  bool isHomeFeedOrMapScreen;
+  bool isHomeFeedScreen;
+  bool isMapScreen;
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
@@ -55,10 +56,13 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        floatingActionButton: isHomeFeedOrMapScreen == true
+        floatingActionButton: isHomeFeedScreen == true
             ? Padding(
-                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                padding: isMapScreen == true
+                    ? const EdgeInsets.only(left: 340.0, bottom: 50.0)
+                    : const EdgeInsets.only(left: 340.0, bottom: 5.0),
                 child: FloatingActionButton(
+                  mini: isMapScreen == true ? true : false,
                   heroTag: "btn1",
                   onPressed: () {
                     Navigator.push(
@@ -130,7 +134,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       switch (index) {
         case 0:
           {
-            isHomeFeedOrMapScreen = true;
+            isHomeFeedScreen = true;
+            isMapScreen = false;
             this._thisWidget = ListView(
               children: _update(),
             );
@@ -140,7 +145,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 1:
           {
-            isHomeFeedOrMapScreen = true;
+            isHomeFeedScreen = true;
+            isMapScreen = true;
             this._thisWidget = MapScreen();
             this._appBarTitle =
                 AppLocalizations.of(context).translate('map_screen');
@@ -148,7 +154,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 2:
           {
-            isHomeFeedOrMapScreen = false;
+            isHomeFeedScreen = false;
+            isMapScreen = false;
             this._thisWidget = FriendlistScreen();
             this._appBarTitle =
                 AppLocalizations.of(context).translate('friends_screen');
@@ -156,7 +163,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 3:
           {
-            isHomeFeedOrMapScreen = false;
+            isHomeFeedScreen = false;
+            isMapScreen = false;
             this._thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
             this._appBarTitle =
                 AppLocalizations.of(context).translate('profile_screen');
@@ -164,7 +172,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 4:
           {
-            isHomeFeedOrMapScreen = false;
+            isHomeFeedScreen = false;
+            isMapScreen = false;
             this._thisWidget = SettingsScreen();
             this._appBarTitle =
                 AppLocalizations.of(context).translate('settings_screen');
