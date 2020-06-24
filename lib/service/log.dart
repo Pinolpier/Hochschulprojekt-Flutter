@@ -15,7 +15,9 @@ class Log {
 
   ///singleton configuration
   static final Log _instance = Log._internal();
+
   factory Log() => _instance;
+
   Log._internal();
 
   /// initializes the file and path to file
