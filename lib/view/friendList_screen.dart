@@ -199,26 +199,34 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                 ),
                 Padding(
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                child: FloatingActionButton(
-                  heroTag: "btn1",
-                    onPressed: () async {
-                      try {
-                        final Map<String, dynamic> result = await Navigator
-                            .push(context, MaterialPageRoute(
-                            builder: (context) =>
-                                FriendslistdialogScreen.create()));
-                        String groupname = result.keys.elementAt(0);
-                        createGroupFriend(result[groupname], groupname);
-                      } on Exception catch (e) {
-                        show_toast(e.toString());
-                        Log().error(causingClass: 'friendList_screen',
-                            method: 'build',
-                            action: e.toString());
-                      }
-                    },
-                    child: Icon(Icons.add),
-                    backgroundColor: primaryColor,
-                ),
+                        child: Container(
+                          width: 400,
+                          height: 400,
+                          child: FloatingActionButton(
+                            heroTag: "btn1",
+                            onPressed: () async {
+                              try {
+                                final Map<String, dynamic> result =
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                FriendslistdialogScreen
+                                                    .create()));
+                                String groupname = result.keys.elementAt(0);
+                                createGroupFriend(result[groupname], groupname);
+                              } on Exception catch (e) {
+                                show_toast(e.toString());
+                                Log().error(
+                                    causingClass: 'friendList_screen',
+                                    method: 'build',
+                                    action: e.toString());
+                              }
+                            },
+                            child: Icon(Icons.add),
+                            backgroundColor: primaryColor,
+                          ),
+                        ),
               ),]
                   ),
             ],
