@@ -67,9 +67,7 @@ Future<bool> deleteProfileOfCurrentlySignedInUser(BuildContext context) async {
   await deleteUidFromFriendsLists(uid);
   await deleteUserFromAttendeesList(uid);
   await deleteEventsFromUser(uid);
-  print('next step is delete account');
   await deleteAccount(context);
-  print('account should be deleted');
 }
 
 /// Use this method to change a user's profile picture. The parameter [file] should be the new file to upload as the [profile]'s profile picture.
