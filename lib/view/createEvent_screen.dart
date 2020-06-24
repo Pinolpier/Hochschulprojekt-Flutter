@@ -126,7 +126,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteBackground,
         child: Text(
-          'select startDateTime',
+          'select start date',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -165,7 +165,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteBackground,
         child: Text(
-          'select endDateTime',
+          'select end date',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -350,7 +350,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteText,
         child: Text(
-          'addFriends',
+          'add friends',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -479,7 +479,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               _eventTagsTextfieldWidget(),
               SizedBox(height: 20.0),
               new Text(
-                'isPrivate: ',
+                'Soll das Event Privat sein? ', //TODO: Add Internationalization
                 style: labelStyleConstant,
               ),
               _isPrivateCheckbox(),
