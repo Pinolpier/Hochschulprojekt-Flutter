@@ -82,7 +82,10 @@ Future<bool> googleSignIn() async {
       }
     } else {
       //TODO handle that the sign in with Google process was aborted
-      print("GoogleSign in was aborted!");
+      Log().error(
+          causingClass: "authService.dart",
+          method: "googleSignIn()",
+          action: "Google Sign In was aborted.");
       throw new SignInAbortedException(
           null, "The Google Sign In Process has been aborted!");
     }
@@ -151,8 +154,10 @@ Future<bool> appleSignIn() async {
       break;
     case AuthorizationStatus.error:
       //TODO good exception handling here
-      print("AppleSignIn AuthorizationStatus Error occured: " +
-          result.error.toString());
+      Log().error(causingClass: "authService.dart",
+          method: "appleSignIn()",
+          action: ("AppleSignIn AuthorizationStatus Error occured: " +
+              result.error.toString()));
       //Throw an exception here
       break;
     case AuthorizationStatus.cancelled:
@@ -242,7 +247,9 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
             "The email ($email) is not an email. This should have been checked by the login screen BEFORE submitting a registration request!");
         break;
       case "ERROR_EMAIL_ALREADY_IN_USE":
-        print("MailAlreadyInUseError");
+        Log().error(causingClass: "authService.dart",
+            method: "registerWithEmailAndPassword(String email, String password) async",
+            action: "MailAlreadyInUseError");
         //TODO correct Error Handling, maybe offer to reset password or if an gmail address try google sign in?
         break;
     }
@@ -302,7 +309,6 @@ Future<void> _reauthenticate(BuildContext context) async {
           accessToken: _googleSignInAuthentication.accessToken));
     }
   } else if (providerId.contains("apple.com")) {
-    print("Reauthenticating an Apple Signed In Account");
     // TODO show dialog to user that he/she has to sign in with apple again.
     // TODO Wrap with try / catch!
     try {
@@ -312,7 +318,6 @@ Future<void> _reauthenticate(BuildContext context) async {
       switch (result.status) {
         //TODO maybe remove duplicated code?
         case AuthorizationStatus.authorized:
-          print("Sign In Authorized!");
           final appleIdCredential = result.credential;
           final oAuthProvider = OAuthProvider(providerId: 'apple.com');
           await _user.reauthenticateWithCredential(oAuthProvider.getCredential(
@@ -322,12 +327,16 @@ Future<void> _reauthenticate(BuildContext context) async {
           break;
         case AuthorizationStatus.error:
           //TODO good exception handling here
-          print("AppleSignIn AuthorizationStatus Error occured: " +
-              result.error.toString());
+          Log().error(causingClass: "authService.dart",
+              method: "_reauthenticate()",
+              action: "AppleSignIn AuthorizationStatus Error occured: " +
+                  result.error.toString());
           //Throw an exception here
           break;
         case AuthorizationStatus.cancelled:
-          print("Sign In with Apple has been aborted!");
+          Log().warn(causingClass: "authService.dart",
+              method: "_reauthenticate()",
+              action: "Sign In with Apple has been aborted!");
           throw SignInAbortedException(null,
               "The AppleSignIn was aborted by the user and thus no user is logged in!");
           break;
@@ -338,7 +347,6 @@ Future<void> _reauthenticate(BuildContext context) async {
   } else if (providerId == EmailAuthProvider.providerId) {
     final TextEditingController _editingController = TextEditingController();
     String _password;
-    print("Email reauth started!");
     await showDialog<String>(
       context: context,
       child: new AlertDialog(
@@ -400,7 +408,9 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
             "The email ($email) is not an email. This should have been checked by the login screen BEFORE submitting a password reset email request!");
         break;
       case "ERROR_USER_NOT_FOUND":
-        print("The user with email ($email) could not be found!");
+        Log().error(causingClass: "authService.dart",
+            method: "sendPasswordResetEmail(String email) async",
+            action: "The user with email ($email) could not be found!");
         break;
     }
   } on Exception catch (e) {
@@ -451,7 +461,9 @@ void signOut() async {
   await _googleSignIn.signOut();
 
   _user = null;
-  print("SignOut done!"); //TODO change to LOG
+  Log().info(causingClass: "authService.dart",
+      method: "signOut() async",
+      action: "SignOut done successfully!");
 }
 
 /// auth stream to be registered of user changes, should probably only be used to display the correct screen (Login vs. App)
