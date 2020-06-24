@@ -3,6 +3,7 @@ import 'package:univents/model/colors.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
+import 'package:univents/view/dialogs/slider_dialog.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
 import 'feed_filter.dart';
@@ -119,12 +120,10 @@ class FilterTileState extends State<FilterTile> {
           deleteStartFilter();
           _setIsSelected();
         } else {
-          DateTime _date = await getDateTime(context);
-          if (_date != null) {
-            startDateFilter = _date;
-            print(_date);
-            _setIsSelected();
-          }
+          List<DateTime> data = await showDialog(
+              context: context, builder: (context) => SliderDialog());
+          startDateFilter = data[0];
+          _setIsSelected();
         }
         break;
       case FeedFilter.endDateFilter:

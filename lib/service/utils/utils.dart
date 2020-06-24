@@ -18,3 +18,8 @@ String feed_format_date_time(BuildContext context, DateTime date) {
       .add_jm()
       .format(date);
 }
+
+String getDayAndMonth(BuildContext context, DateTime date) {
+  return DateFormat.Md(AppLocalizations.of(context).translate('localization'))
+      .format(date);
+}
