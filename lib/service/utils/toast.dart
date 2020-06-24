@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 /// Markus Häring
+///
+/// this file should be used for all notifications that should be displayed
+/// as a short "toast" message.
+/// There is only one method available, which uses the number of words
+/// to decide how long a toast should be displayed
 
 // limit of words for decision between short and long toast
 final int _wordCount = 10;
