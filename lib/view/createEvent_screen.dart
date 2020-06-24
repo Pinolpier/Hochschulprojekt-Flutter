@@ -10,6 +10,7 @@ import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
@@ -399,21 +400,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               tagsList,
               widget.tappedPoint[0],
               widget.tappedPoint[1]);
-
-          try {
-            createEvent(eventImage, event);
-          } on PlatformException catch (e) {
-            exceptionHandling(e);
-            Log().error(
-                causingClass: 'createEvent_screen',
-                method: '_createButtonWidget',
-                action: exceptionHandling(e));
-          }
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => NavigationBarUI()),
+          if (event.eventStartDate != null && event.eventEndDate != null) {
+            if (event.eventStartDate.isBefore(event.eventEndDate)) {
+              try {
+                createEvent(eventImage, event);
+              } on PlatformException catch (e) {
+                exceptionHandling(e);
+                Log().error(
+                    causingClass: 'createEvent_screen',
+                    method: '_createButtonWidget',
+                    action: exceptionHandling(e));
+              }
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => NavigationBarUI()),
                 (Route<dynamic> route) => false,
-          );
+              );
+            } else
+              show_toast('Enddatum darf nicht vor dem Start liegen');
+          } else
+            show_toast('Erstellung ohne Start und Enddatum nicht möglich');
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
