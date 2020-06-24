@@ -175,27 +175,35 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        friends.clear();
-                        if (friendsMap != null && friendsMap.containsKey('friends')) {
-                          List<dynamic> friend = friendsMap['friends'];
-                          for (String s in friend) {
-                            UserProfile userProfile = profileMap[s];
-                            Widget profilepic = profilePicMap[s];
-                            friends.add(FriendslistDummies(uid: s,
-                                name: userProfile.username,
-                                profilepic: profilepic == null ? Image.asset(
-                                    'assets/blank_profile.png') : profilepic));
-                          }
-                        }
-                        isFriendsScreen = true;
-                      });
-                    },
-                    child: Icon(Icons.group),
-                    backgroundColor: primaryColor,
-                  ),
+                        child: Container(
+                          width: 400,
+                          height: 400,
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              setState(() {
+                                friends.clear();
+                                if (friendsMap != null &&
+                                    friendsMap.containsKey('friends')) {
+                                  List<dynamic> friend = friendsMap['friends'];
+                                  for (String s in friend) {
+                                    UserProfile userProfile = profileMap[s];
+                                    Widget profilepic = profilePicMap[s];
+                                    friends.add(FriendslistDummies(
+                                        uid: s,
+                                        name: userProfile.username,
+                                        profilepic: profilepic == null
+                                            ? Image.asset(
+                                                'assets/blank_profile.png')
+                                            : profilepic));
+                                  }
+                                }
+                                isFriendsScreen = true;
+                              });
+                            },
+                            child: Icon(Icons.group),
+                            backgroundColor: primaryColor,
+                          ),
+                        ),
                 ),
                 Padding(
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
