@@ -222,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10.0),
                                         hintText:
-                                            "First Name", //TODO: Add Internationalization
+                                        "First Name", //TODO: Add Internationalization
                                       ),
                                     ),
                                   ),
@@ -292,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: isProfileOwner == true
                             ? 95.0
                             : isProfileOwner == false
-                                ? 0.0
+                            ? 0.0
                                 : createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
@@ -314,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             fontFamily: 'Montserrat'),
                                       ),
                                     ),
-                                  )
+                            )
                                     : createProfile == true
                                         ? GestureDetector(
                                             onTap: () async {

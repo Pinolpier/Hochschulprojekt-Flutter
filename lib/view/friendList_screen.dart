@@ -173,53 +173,65 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
               )
                   : Column(
               children: <Widget>[
+                      Padding(
+                        padding:
+                              const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                          child: FloatingActionButton(
+                          onPressed: () {
+                              setState(() {
+                                friends.clear();
+                                if (friendsMap != null &&
+                                    friendsMap.containsKey('friends')) {
+                                  List<dynamic> friend = friendsMap['friends'];
+                                  for (String s in friend) {
+                                    UserProfile userProfile = profileMap[s];
+                                    Widget profilepic = profilePicMap[s];
+                                    friends.add(FriendslistDummies(
+                                        uid: s,
+                                        name: userProfile.username,
+                                        profilepic: profilepic == null
+                                            ? Image.asset(
+                                            'assets/blank_profile.png')
+                                            : profilepic));
+                                  }
+                                }
+                                isFriendsScreen = true;
+                              });
+                            },
+                            child: Icon(Icons.group),
+                            backgroundColor: primaryColor,
+                          ),
+                        ),
+
                 Padding(
-                  padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        friends.clear();
-                        if (friendsMap != null && friendsMap.containsKey('friends')) {
-                          List<dynamic> friend = friendsMap['friends'];
-                          for (String s in friend) {
-                            UserProfile userProfile = profileMap[s];
-                            Widget profilepic = profilePicMap[s];
-                            friends.add(FriendslistDummies(uid: s,
-                                name: userProfile.username,
-                                profilepic: profilepic == null ? Image.asset(
-                                    'assets/blank_profile.png') : profilepic));
-                          }
+                    padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                    child: FloatingActionButton(
+                      heroTag: "btn1",
+                      onPressed: () async {
+                        try {
+                          final Map<String, dynamic> result =
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      FriendslistdialogScreen
+                                          .create()));
+                          String groupname = result.keys.elementAt(0);
+                          createGroupFriend(result[groupname], groupname);
+                        } on Exception catch (e) {
+                          show_toast(e.toString());
+                          Log().error(
+                              causingClass: 'friendList_screen',
+                              method: 'build',
+                              action: e.toString());
                         }
-                        isFriendsScreen = true;
-                      });
-                    },
-                    child: Icon(Icons.group),
-                    backgroundColor: primaryColor,
+                      },
+                      child: Icon(Icons.add),
+                      backgroundColor: primaryColor,
+                    ),
                   ),
-                ),
-                Padding(
-                padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-                child: FloatingActionButton(
-                  heroTag: "btn1",
-                    onPressed: () async {
-                      try {
-                        final Map<String, dynamic> result = await Navigator
-                            .push(context, MaterialPageRoute(
-                            builder: (context) =>
-                                FriendslistdialogScreen.create()));
-                        String groupname = result.keys.elementAt(0);
-                        createGroupFriend(result[groupname], groupname);
-                      } on Exception catch (e) {
-                        show_toast(e.toString());
-                        Log().error(causingClass: 'friendList_screen',
-                            method: 'build',
-                            action: e.toString());
-                      }
-                    },
-                    child: Icon(Icons.add),
-                    backgroundColor: primaryColor,
-                ),
-              ),]
+
+              ]
                   ),
             ],
           ),
