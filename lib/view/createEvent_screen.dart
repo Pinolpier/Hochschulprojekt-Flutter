@@ -13,6 +13,7 @@ import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/locationPicker_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -28,7 +29,8 @@ import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final List<String> tappedPoint;
-  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
+
+  CreateEventScreen(this.tappedPoint, {Key key}) : super(key: key);
 
   @override
   State createState() => _CreateEventScreenState();
@@ -45,10 +47,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
   TextEditingController eventDescriptionController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
   ImagePickerUnivents ip = new ImagePickerUnivents();
+  InterfaceToReturnPickedLocation _returnPickedLocation =
+      new InterfaceToReturnPickedLocation();
 
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
@@ -214,40 +218,58 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _locationTextfieldWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Event Location',
-          style: labelStyleConstant,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
-          height: 60.0,
-          child: TextField(
-            controller: eventLocationController,
-            keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: univentsWhiteText,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.add_location,
-                color: univentsWhiteBackground,
-              ),
-              hintText: 'Enter the location of the event',
-              hintStyle: textStyleConstant,
-            ),
-          ),
-        ),
-      ],
-    );
+//  Widget _locationTextfieldWidget() {
+//    return Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Text(
+//          'Event Location',
+//          style: labelStyleConstant,
+//        ),
+//        SizedBox(height: 10.0),
+//        Container(
+//          alignment: Alignment.centerLeft,
+//          decoration: boxStyleConstant,
+//          height: 60.0,
+//          child: TextField(
+//            controller: eventLocationController,
+//            keyboardType: TextInputType.text,
+//            style: TextStyle(
+//              color: univentsWhiteText,
+//              fontFamily: 'OpenSans',
+//            ),
+//            decoration: InputDecoration(
+//              border: InputBorder.none,
+//              contentPadding: EdgeInsets.only(top: 14.0),
+//              prefixIcon: Icon(
+//                Icons.add_location,
+//                color: univentsWhiteBackground,
+//              ),
+//              hintText: 'Enter the location of the event',
+//              hintStyle: textStyleConstant,
+//            ),
+//          ),
+//        ),
+//      ],
+//    );
+//  }
+
+  /// this button is used to open a location picker screen.
+  Widget _eventlocationPickerButton(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: RaisedButton(
+          elevation: 5.0,
+          child: Text("choose event location!"),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                    new LocationPickerScreen(_returnPickedLocation)));
+          },
+        ));
   }
 
   Widget _eventDescriptionTextfieldWidget() {
@@ -333,7 +355,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           final List<String> result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FriendslistdialogScreen.create(),
+                builder: (context) => FriendslistdialogScreen(null),
               ));
           setState(() {
             for (String s in result) {
@@ -387,18 +409,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           tagsList = eventTagsController.text.split(", ");
           print(tagsList);
           print(attendeeIDs);
-
+          print(
+              "Choosen Location Name:  ${_returnPickedLocation
+                  .choosenLocationName} & Coords: ${_returnPickedLocation
+                  .choosenLocationCoords.toString()}");
+          // TODO null-checks
           Event event = new Event(
               eventNameController.text,
               selectedStartDateTime,
               selectedEndDateTime,
               eventDescriptionController.text,
-              eventLocationController.text,
+              _returnPickedLocation.choosenLocationName,
               isPrivate,
               attendeeIDs,
               tagsList,
-              widget.tappedPoint[0],
-              widget.tappedPoint[1]);
+              _returnPickedLocation.choosenLocationCoords[1].toString(),
+              _returnPickedLocation.choosenLocationCoords[0].toString());
 
           try {
             createEvent(eventImage, event);
@@ -467,7 +493,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               SizedBox(height: 20.0),
               _eventNameTextfieldWidget(),
               SizedBox(height: 20.0),
-              _locationTextfieldWidget(),
+              _eventlocationPickerButton(context),
               SizedBox(height: 20.0),
               _eventDescriptionTextfieldWidget(),
               SizedBox(height: 20.0),
