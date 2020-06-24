@@ -6,13 +6,20 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/loading_screen.dart';
 
-/// todo: add author
-/// todo: add documentation
-
+/// Markus Häring
+///
+/// the main method is the entry point for the app
+/// and starts a new MaterialApp
 void main() {
   runApp(new MaterialApp(home: UniventsApp()));
 }
 
+/// the class UniventsApp represents the start of the app and loads all important data
+///
+/// When you start the app, all important data is loaded and which locales
+/// are supported and should be loaded. It is also checked which locale is
+/// active on the device and this is set for the app. If the set locale
+/// is not supported, it will automatically be set to English.
 class UniventsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<FirebaseUser>.value(
@@ -48,40 +55,3 @@ class UniventsApp extends StatelessWidget {
         ));
   }
 }
-
-/// --> The following code is the original code from Markus Häring, I tried merging above manually, but to keep a copy I also applied his change and commented it out until we can be sure it works!
-///// Start of the App where the localization gets initialized
-//class MyApp extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      theme: ThemeData(
-//        primarySwatch: Colors.blue,
-//      ),
-//      // List all of the app's supported locales here
-//      supportedLocales: [
-//        Locale('en', 'US'),
-//        Locale('de', 'DE'),
-//      ],
-//      localizationsDelegates: [
-//        AppLocalizations.delegate,
-//        GlobalMaterialLocalizations.delegate,
-//        GlobalWidgetsLocalizations.delegate,
-//      ],
-//      localeResolutionCallback: (locale, supportedLocales) {
-//        //ToDo This is just a workaround -> on IOS we don't get the locale at the first millisecond so when the locale is null we first take english as favorite language
-//        if (locale == null) {
-//          return supportedLocales.first;
-//        }
-//        for (Locale supportedLocale in supportedLocales) {
-//          if (supportedLocale.languageCode == locale.languageCode ||
-//              supportedLocale.countryCode == locale.countryCode) {
-//            return supportedLocale;
-//          }
-//        }
-//        return supportedLocales.first;
-//      },
-//      home: LoginScreen(),
-//    );
-//  }
-//}

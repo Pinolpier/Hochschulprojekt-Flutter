@@ -4,18 +4,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-/// todo: reorganize: class -> attributes -> contructor -> methods
-
+/// Markus Häring
+///
+/// handles the actual chosen locale
+/// and the related strings for the
+/// internationalization
 class AppLocalizations {
-  /// todo: add documentation to variables
-  /// todo: variables are private
+  /// actual locale
   final Locale locale;
 
-  /// todo: missing documentation of constructor
+  ///the map with the internationalized strings
+  Map<String, String> _localizedStrings;
+
+  /// to create the [AppLocalizations] the actual supported [locale]
+  /// is needed
   AppLocalizations(this.locale);
 
+  /// delegate method is needed in flutter to work
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
 
@@ -23,9 +28,10 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  Map<String, String> _localizedStrings;
-
-  /// todo: missing documentation
+  /// loads the JSON internationalization file into a map
+  ///
+  /// loads the internationalization file based on the [locale]
+  /// into the Map [_localizedStrings] and returns true, if its done
   Future<bool> load() async {
     String jsonString =
         await rootBundle.loadString('language/${locale.languageCode}.json');
@@ -36,25 +42,31 @@ class AppLocalizations {
     return true;
   }
 
-  /// todo: missing documentation
+  /// translate a string by getting the [key]
+  /// and returns the resulting [String]
   String translate(String key) {
     return _localizedStrings[key];
   }
 }
 
-/// todo: missing documentation
-// LocalizationsDelegate is a factory for a set of localized resources
+/// LocalizationsDelegate is a factory for a set of localized resources
 class _AppLocalizationsDelegate
     extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
-  /// todo: missing documentation
+  /// method to proof if the chosen language is supported
+  ///
+  /// proofs if a language is supported by getting a [locale]
+  /// returns true, if it is supported
   @override
   bool isSupported(Locale locale) {
     return ['en', 'de'].contains(locale.languageCode);
   }
 
-  /// todo: missing documentation
+  /// Method to loads the actual map with the keys for internationalization
+  ///
+  /// loads the localized map from [AppLocalizations]
+  /// by getting the [locale]
   @override
   Future<AppLocalizations> load(Locale locale) async {
     AppLocalizations localizations = new AppLocalizations(locale);
@@ -62,7 +74,7 @@ class _AppLocalizationsDelegate
     return localizations;
   }
 
-  /// todo: missing documentation
+  /// method needed and have to be false!
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }

@@ -21,7 +21,7 @@ class Feed {
     _feed = List<Widget>(); //create new instance
 
     try {
-      List<Event> data = await getAllEvents(); //get data from firebase
+      List<Event> data = await getEvents(); //get data from firebase
       if (_feed.length != data.length) {
         _addEventToFeed(data);
       }

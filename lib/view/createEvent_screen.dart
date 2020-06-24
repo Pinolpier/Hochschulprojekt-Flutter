@@ -10,6 +10,7 @@ import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/page_controller.dart';
@@ -126,7 +127,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           setState(() {
             print(selectedStartDateTime);
             selectedStartString =
-                format_date_time(context, selectedStartDateTime);
+                formatDateTime(context, selectedStartDateTime);
 
             ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
             selectedEndDateTime = null;
@@ -168,8 +169,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               errorEndDateTime();
             } else {
               print(selectedEndDateTime);
-              selectedEndString =
-                  format_date_time(context, selectedEndDateTime);
+              selectedEndString = formatDateTime(context, selectedEndDateTime);
             }
           });
         },
@@ -422,9 +422,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               widget.tappedPoint[1]);
 
           try {
+            if (eventImage != null) print('Image ist ungleich null');
             createEvent(eventImage, event);
           } on PlatformException catch (e) {
-            exceptionHandling(e);
+            show_toast(exceptionHandling(e));
             Log().error(
                 causingClass: 'createEvent_screen',
                 method: '_createButtonWidget',

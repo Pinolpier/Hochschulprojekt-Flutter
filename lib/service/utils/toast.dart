@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-/// todo: consider camel case spelling of variables, methods or classes (for example wordcount -> wordCount)
+/// Markus Häring
+///
+/// this file should be used for all notifications that should be displayed
+/// as a short "toast" message.
+/// There is only one method available, which uses the number of words
+/// to decide how long a toast should be displayed
 
-/// todo: set variables private
 // limit of words for decision between short and long toast
-final int wordcount = 10;
+final int _wordCount = 10;
 
-/// todo: DO start doc comments with a single-sentence summary
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// shows a toast based on a String [message]. The number of words is used
+/// Shows a Toast based on the number of words
+///
+/// shows a toast based on a String [message].
+/// The number of words is used
 /// to decide whether a short or a long toast should be displayed
+/// Whether a toast is displayed long or short is decided
+/// by the fixed variable wordCount
 show_toast(String message) {
-  if (message.split(' ').length >= wordcount)
+  if (message.split(' ').length >= _wordCount)
     _show_long_toast(message);
   else
     _show_short_toast(message);

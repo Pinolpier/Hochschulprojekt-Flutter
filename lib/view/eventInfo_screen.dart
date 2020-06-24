@@ -211,7 +211,7 @@ class _EventInfoState extends State<EventInfo> {
   Widget build(BuildContext context) {
     isEventOpen = !widget.event.privateEvent;
     eventAttendeesCount = widget.event.attendeesIds.length;
-    eventDate = format_date_time(context, widget.event.eventStartDate);
+    eventDate = formatDateTime(context, widget.event.eventStartDate);
     //widget.event.eventStartDate.toIso8601String();
     eventName = widget.event.title;
     eventLocation = widget.event.location;
