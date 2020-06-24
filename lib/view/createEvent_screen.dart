@@ -334,7 +334,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           final List<String> result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FriendslistdialogScreen.create(),
+                builder: (context) => FriendslistdialogScreen(null),
               ));
           setState(() {
             for (String s in result) {

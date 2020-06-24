@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
@@ -122,9 +123,18 @@ class FeedItemUIState extends State<FeedItemUI> {
   /// if no profile picture in the backend, show placeholder
   Widget _profilePicture() {
     Widget _profilePicture;
-    getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
+    getProfilePicture(this._data.ownerIds[0]).then((value) {
+      if (mounted) {
+        setState(() {
           _profilePicture = value;
-        }));
+        });
+      } else {
+        Log().error(
+            causingClass: 'feedItemUI',
+            method: '_profilePicture',
+            action: 'Memoryleak while loading profile pictures');
+      }
+    });
     return _profilePicture != null
         ? _profilePicture
         : Image.asset('assets/blank_profile.png');

@@ -181,9 +181,10 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
         var contacts;
         try {
           contacts = (await ContactsService.getContacts()).toList();
-        } on Exception catch (e) {
+        } on FriendsException catch (e) {
           show_toast(e.toString());
-          Log().error(causingClass: 'addFriends_dialog',
+          Log().error(
+              causingClass: 'addFriends_dialog',
               method: 'showContactsImportDialog',
               action: e.toString());
         }
