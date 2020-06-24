@@ -18,19 +18,17 @@ import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 
 class CreateEventScreen extends StatefulWidget {
-  /// todo: add documentation of variable
+  /// latitude and longitude of the location you clicked on the map where you want to create your event
   final List<String> tappedPoint;
 
-  /// todo: missing documentation of constructor
+  /// constructor gets the tappedPoint from the map
   CreateEventScreen(this.tappedPoint, {Key key}) : super(key: key);
 
-  /// todo: missing documentation
   @override
   State createState() => _CreateEventScreenState();
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  /// todo: add documentation of variables
   /// specified event start date
   DateTime _selectedStartDateTime;
 
@@ -73,8 +71,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   /// This Widget is a Dialog if a wrong startTime is given
   ///
-  ///
-  ///
+  /// returns a dialog that shows the user what he did wrong when choosing a time
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
       context: context,
@@ -217,7 +214,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   /// This widget displays a textfield to input the event name
   ///
-  /// return a [Column] that conatins a textField
+  /// return a [Column] that contains a textField
   Widget _eventNameTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,7 +251,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This Widget displays a textfield to input the events location
+  ///
+  /// returns a [Column] that containts a textfield
   Widget _locationTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +292,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   /// This widget displays a textfield to input the event description
   ///
-  /// return a [Column] that conatins a textField
+  /// return a [Column] that contains a textField
   Widget _eventDescriptionTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

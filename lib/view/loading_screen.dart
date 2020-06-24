@@ -4,14 +4,18 @@ import 'package:provider/provider.dart';
 import 'package:univents/controller/screenManager.dart';
 import 'package:univents/model/colors.dart';
 
+/// @author Jan Oster
+/// This Screen shows the univents logo with a Loadingcircle until the homefeed gets shown
 class LoadingScreen extends StatefulWidget {
   @override
   State createState() => _LoadingScreenState();
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  /// result of the async data from [initState()]
   var _result;
 
+  /// async method that retrieves all needed data from the backend before Widget Build runs and shows the screen to the user
   Future<bool> loadAsyncData() async {
     await new Future.delayed(const Duration(milliseconds: 1200));
     return true;
@@ -20,8 +24,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     loadAsyncData().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
       setState(() {
         _result = result;
       });
