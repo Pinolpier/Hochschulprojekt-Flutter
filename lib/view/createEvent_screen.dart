@@ -437,6 +437,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: Text("Create Your Event"),
+        centerTitle: true,
+      ),
       backgroundColor: primaryColor,
       body: new Container(
         height: double.infinity,

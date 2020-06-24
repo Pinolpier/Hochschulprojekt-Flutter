@@ -192,16 +192,21 @@ class _EventInfoState extends State<EventInfo> {
     eventText = widget.event.description;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: Text(widget.event.title),
+        centerTitle: true,
+      ),
       body: Stack(
         children: <Widget>[
           SizedBox.expand(
             child: _result == null
                 ? CircularProgressIndicator()
                 : _eventImageFromDatabase() != null
-                    ? _eventImageFromDatabase()
-                    : eventImage == null
-                        ? _eventImagePlaceholder()
-                        : _eventImage(),
+                ? _eventImageFromDatabase()
+                : eventImage == null
+                ? _eventImagePlaceholder()
+                : _eventImage(),
           ),
           DraggableScrollableSheet(
             minChildSize: 0.1,
@@ -228,10 +233,10 @@ class _EventInfoState extends State<EventInfo> {
                               child: _result == null
                                   ? CircularProgressIndicator()
                                   : _eventImageFromDatabase() != null
-                                      ? _eventImageFromDatabase()
-                                      : eventImage == null
-                                          ? _eventImagePlaceholder()
-                                          : _eventImage(),
+                                  ? _eventImageFromDatabase()
+                                  : eventImage == null
+                                  ? _eventImagePlaceholder()
+                                  : _eventImage(),
                             ),
                             SizedBox(
                               width: 16,
@@ -322,30 +327,30 @@ class _EventInfoState extends State<EventInfo> {
                                         },
                                         child: isEventOpen == true
                                             ? Icon(
-                                                Icons.lock_open,
-                                                color: univentsWhiteBackground,
-                                                size: 30,
-                                              )
+                                          Icons.lock_open,
+                                          color: univentsWhiteBackground,
+                                          size: 30,
+                                        )
                                             : isEventOpen == false
-                                                ? Icon(
-                                                    Icons.lock,
-                                                    color:
-                                                        univentsWhiteBackground,
-                                                    size: 30,
-                                                  )
-                                                : null),
+                                            ? Icon(
+                                          Icons.lock,
+                                          color:
+                                          univentsWhiteBackground,
+                                          size: 30,
+                                        )
+                                            : null),
                                     SizedBox(width: 4.0),
                                     isEventOpen == true
                                         ? Text("open",
-                                            style: TextStyle(
-                                                color: univentsWhiteText,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 24))
+                                        style: TextStyle(
+                                            color: univentsWhiteText,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 24))
                                         : Text("closed",
-                                            style: TextStyle(
-                                                color: univentsWhiteText,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 24))
+                                        style: TextStyle(
+                                            color: univentsWhiteText,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 24))
                                   ],
                                 ),
                               ],
