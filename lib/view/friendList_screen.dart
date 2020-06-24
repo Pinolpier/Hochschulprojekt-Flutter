@@ -173,11 +173,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
               )
                   : Column(
               children: <Widget>[
-                      Container(
-                        width: 100,
-                        height: 100,
-                        child: Padding(
-                          padding:
+                      Padding(
+                        padding:
                               const EdgeInsets.only(left: 340.0, bottom: 5.0),
                           child: FloatingActionButton(
                             onPressed: () {
@@ -205,11 +202,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                             backgroundColor: primaryColor,
                           ),
                         ),
-                      ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  child: Padding(
+
+                Padding(
                     padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
 
                     child: FloatingActionButton(
@@ -237,7 +231,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                       backgroundColor: primaryColor,
                     ),
                   ),
-                ),
+
               ]
                   ),
             ],
