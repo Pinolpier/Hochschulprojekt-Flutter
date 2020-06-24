@@ -100,6 +100,11 @@ class FeedItemUIState extends State<FeedItemUI> {
                                 MediaQuery.of(context).size.height * 1 / 60),
                       )
                     ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _getTags(),
+                    ],
                   )
                 ],
               ),
@@ -138,6 +143,22 @@ class FeedItemUIState extends State<FeedItemUI> {
 
   String _getLocation(BuildContext context) {
     return this._data.location;
+  }
+
+  /// _getTags displays tags of event in home feed as [Text]
+  Text _getTags() {
+    String tags = "";
+    if (this._data.tagsList != null && this._data.tagsList.length != 0) {
+      tags = this
+          ._data
+          .tagsList
+          .toString()
+          .substring(1, this._data.tagsList.toString().length - 1);
+    }
+    return Text(
+      tags,
+      style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1 / 60),
+    );
   }
 
   void _navigateToEventScreen() async {

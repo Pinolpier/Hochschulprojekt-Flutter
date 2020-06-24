@@ -31,17 +31,13 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
-    this._data = new List<Widget>();
+    _data = new List<Widget>();
   }
 
-  /// initializes the _data list with data
   @override
   void initState() {
+    _update();
     super.initState();
-    Feed.init().then((val) {
-      _initializeState(0);
-      this._data = val;
-    });
   }
 
   ///updates feed with the set filters
@@ -116,6 +112,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       switch (index) {
         case 0:
           {
+            _update();
             this._thisWidget = RefreshIndicator(
               child: ListView(
                 children: this._data,
