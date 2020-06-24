@@ -154,7 +154,8 @@ Future<bool> appleSignIn() async {
       break;
     case AuthorizationStatus.error:
       //TODO good exception handling here
-      Log().error(causingClass: "authService.dart",
+      Log().error(
+          causingClass: "authService.dart",
           method: "appleSignIn()",
           action: ("AppleSignIn AuthorizationStatus Error occured: " +
               result.error.toString()));
@@ -279,7 +280,7 @@ Future<void> changeEmailAddress(String newEmail, String password) async {
   await _user.reauthenticateWithCredential(EmailAuthProvider.getCredential(email: getEmailOfCurrentlySignedInUser(), password: password));
   await _user.updateEmail(newEmail);
   UserProfile toUpdate =
-      await (getUserProfile(getUidOfCurrentlySignedInUser()));
+  await (getUserProfile(getUidOfCurrentlySignedInUser()));
   await updateProfile(toUpdate.setEmail(newEmail));
 }
 
@@ -300,10 +301,10 @@ Future<void> _reauthenticate(BuildContext context) async {
 
   if (providerId == GoogleAuthProvider.providerId) {
     final GoogleSignInAccount _googleAccountToSignIn =
-        await _googleSignIn.signIn();
+    await _googleSignIn.signIn();
     if (_googleAccountToSignIn != null) {
       final GoogleSignInAuthentication _googleSignInAuthentication =
-          await _googleAccountToSignIn.authentication;
+      await _googleAccountToSignIn.authentication;
       await _user.reauthenticateWithCredential(GoogleAuthProvider.getCredential(
           idToken: _googleSignInAuthentication.idToken,
           accessToken: _googleSignInAuthentication.accessToken));
@@ -316,17 +317,17 @@ Future<void> _reauthenticate(BuildContext context) async {
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
       switch (result.status) {
-        //TODO maybe remove duplicated code?
+      //TODO maybe remove duplicated code?
         case AuthorizationStatus.authorized:
           final appleIdCredential = result.credential;
           final oAuthProvider = OAuthProvider(providerId: 'apple.com');
           await _user.reauthenticateWithCredential(oAuthProvider.getCredential(
               idToken: String.fromCharCodes(appleIdCredential.identityToken),
               accessToken:
-                  String.fromCharCodes(appleIdCredential.authorizationCode)));
+              String.fromCharCodes(appleIdCredential.authorizationCode)));
           break;
         case AuthorizationStatus.error:
-          //TODO good exception handling here
+        //TODO good exception handling here
           Log().error(causingClass: "authService.dart",
               method: "_reauthenticate()",
               action: "AppleSignIn AuthorizationStatus Error occured: " +
@@ -346,10 +347,10 @@ Future<void> _reauthenticate(BuildContext context) async {
           causingClass: "authService.dart",
           method: "_reauthenticate",
           action:
-              "Something went wrong during Apple Reauthentication: Error: " +
-                  error.toString() +
-                  "; Stacktrace:  " +
-                  stacktrace.toString());
+          "Something went wrong during Apple Reauthentication: Error: " +
+              error.toString() +
+              "; Stacktrace:  " +
+              stacktrace.toString());
     }
   } else if (providerId == EmailAuthProvider.providerId) {
     final TextEditingController _editingController = TextEditingController();
