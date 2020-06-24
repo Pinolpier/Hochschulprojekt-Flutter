@@ -26,10 +26,10 @@ import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
 /// -Event Visibility (input-type: checkbox)
 /// -Event addFriends (button)
 /// -Event CREATE (button)
-
 class CreateEventScreen extends StatefulWidget {
   final List<String> tappedPoint;
-  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
+
+  CreateEventScreen(this.tappedPoint, {Key key}) : super(key: key);
 
   @override
   State createState() => _CreateEventScreenState();
@@ -46,7 +46,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
   TextEditingController eventDescriptionController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
   ImagePickerUnivents ip = new ImagePickerUnivents();
@@ -400,26 +400,34 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               tagsList,
               widget.tappedPoint[0],
               widget.tappedPoint[1]);
-          if (event.eventStartDate != null && event.eventEndDate != null) {
-            if (event.eventStartDate.isBefore(event.eventEndDate)) {
-              try {
-                createEvent(eventImage, event);
-              } on PlatformException catch (e) {
-                exceptionHandling(e);
-                Log().error(
-                    causingClass: 'createEvent_screen',
-                    method: '_createButtonWidget',
-                    action: exceptionHandling(e));
-              }
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => NavigationBarUI()),
-                (Route<dynamic> route) => false,
-              );
-            } else
-              show_toast('Enddatum darf nicht vor dem Start liegen');
-          } else
-            show_toast('Erstellung ohne Start und Enddatum nicht möglich');
+          if (event.eventStartDate == null || event.eventEndDate == null) {
+            show_toast(
+                'Sowohl Start als auch Endzeitpunkt muss ausgewählt sein');
+          } else if (event.eventStartDate.isAfter(event.eventEndDate)) {
+            show_toast('Startdatum muss vor Enddatum liegen!');
+          }
+          if (event.title == null) {
+            show_toast('Event Name darf nicht leer sein');
+          } else if (event.description == null) {
+            show_toast('Eventbeschreibung darf nicht leer sein');
+          } else if (event.location == null) {
+            show_toast('location darf nicht fehlen');
+          } else {
+            try {
+              createEvent(eventImage, event);
+            } on PlatformException catch (e) {
+              show_toast(exceptionHandling(e));
+              Log().error(
+                  causingClass: 'createEvent_screen',
+                  method: '_createButtonWidget',
+                  action: exceptionHandling(e));
+            }
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => NavigationBarUI()),
+                  (Route<dynamic> route) => false,
+            );
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
