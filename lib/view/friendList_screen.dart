@@ -177,7 +177,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                         padding:
                               const EdgeInsets.only(left: 340.0, bottom: 5.0),
                           child: FloatingActionButton(
-                            onPressed: () {
+                          mini: false,
+                          onPressed: () {
                               setState(() {
                                 friends.clear();
                                 if (friendsMap != null &&
@@ -191,7 +192,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                                         name: userProfile.username,
                                         profilepic: profilepic == null
                                             ? Image.asset(
-                                                'assets/blank_profile.png')
+                                            'assets/blank_profile.png')
                                             : profilepic));
                                   }
                                 }
@@ -205,8 +206,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
 
                 Padding(
                     padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
-
                     child: FloatingActionButton(
+                      mini: false,
                       heroTag: "btn1",
                       onPressed: () async {
                         try {
