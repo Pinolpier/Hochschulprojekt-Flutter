@@ -161,6 +161,7 @@ void deleteUidFromFriendsLists(String uid) async {
             friendsListCopy.remove(uid);
           }
         }
+        friendMap[keyList[x]] = friendsListCopy;
       }
       firebaseInstance
           .collection(collection)
