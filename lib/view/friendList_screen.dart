@@ -176,8 +176,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
                         child: Container(
-                          width: 400,
-                          height: 400,
+                          width: 56,
+                          height: 56,
                           child: FittedBox(
                             child: FloatingActionButton(
                               onPressed: () {
@@ -211,8 +211,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                 Padding(
                 padding: const EdgeInsets.only(left: 340.0, bottom: 5.0),
                         child: Container(
-                          width: 400,
-                          height: 400,
+                          width: 56,
+                          height: 56,
                           child: FittedBox(
                             child: FloatingActionButton(
                               heroTag: "btn1",
