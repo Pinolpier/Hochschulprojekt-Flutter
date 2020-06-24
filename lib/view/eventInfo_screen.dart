@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
@@ -29,6 +30,7 @@ class _EventInfoState extends State<EventInfo> {
       new DateTime.now().millisecondsSinceEpoch);
 
   bool isEventOpen = true;
+  bool attending;
 
   /// how many people promised to attend
   int eventAttendeesCount = 400;
@@ -65,12 +67,13 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          eventimagewidget = null;
-          eventImageAsync = await ip.chooseImage(context);
+          dynamic image = await ip.chooseImage(context);
+          if (image != 1) eventImageAsync = image;
           setState(() {
-            print(eventImageAsync);
-            eventImage = eventImageAsync;
-            updateImage(eventImage, widget.event);
+            if (eventImageAsync != 1) {
+              eventImage = eventImageAsync;
+              updateImage(eventImage, widget.event);
+            }
           }); // handle your image tap here
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
@@ -80,12 +83,14 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
-          eventimagewidget = null;
-          eventImageAsync = await ip.chooseImage(context);
+          dynamic image = await ip.chooseImage(context);
+          if (image != 1)
+            eventImageAsync = image;
           setState(() {
-            print(eventImageAsync);
-            eventImage = eventImageAsync;
-            updateImage(eventImage, widget.event);
+            if (image != 1) {
+              eventImage = eventImageAsync;
+              updateImage(eventImage, widget.event);
+            }
           }); // handle your image tap here
         },
         child: Image.file(eventImage, height: 150));
@@ -95,12 +100,14 @@ class _EventInfoState extends State<EventInfo> {
   Widget _eventImageFromDatabase() {
     return GestureDetector(
         onTap: () async {
-          eventimagewidget = null;
-          eventImageAsync = await ip.chooseImage(context);
+          dynamic image = await ip.chooseImage(context);
+          if (image != 1)
+            eventImageAsync = image;
           setState(() {
-            print(eventImageAsync);
-            eventImage = eventImageAsync;
-            updateImage(eventImage, widget.event);
+            if (eventImageAsync != 1) {
+              eventImage = eventImageAsync;
+              updateImage(eventImage, widget.event);
+            }
           }); // handle your image tap here
         },
         child: eventimagewidget != null
@@ -139,6 +146,11 @@ class _EventInfoState extends State<EventInfo> {
 
     attendees = widget.event.attendeesIds;
     print(attendees);
+    if (attendees.contains(getUidOfCurrentlySignedInUser())) {
+      attending = true;
+    } else {
+      attending = false;
+    }
     try {
       int index = 0;
       for (String uid in attendees) {
@@ -172,6 +184,12 @@ class _EventInfoState extends State<EventInfo> {
   @override
   void initState() {
     loadAsyncData().then((result) {
+      isEventOpen = !widget.event.privateEvent;
+      eventAttendeesCount = widget.event.attendeesIds.length;
+      eventDate = format_date_time(context, widget.event.eventStartDate);
+      eventName = widget.event.title;
+      eventLocation = widget.event.location;
+      eventText = widget.event.description;
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
@@ -183,14 +201,6 @@ class _EventInfoState extends State<EventInfo> {
 
   @override
   Widget build(BuildContext context) {
-    isEventOpen = !widget.event.privateEvent;
-    eventAttendeesCount = widget.event.attendeesIds.length;
-    eventDate = format_date_time(context, widget.event.eventStartDate);
-    //widget.event.eventStartDate.toIso8601String();
-    eventName = widget.event.title;
-    eventLocation = widget.event.location;
-    eventText = widget.event.description;
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -306,19 +316,20 @@ class _EventInfoState extends State<EventInfo> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isEventOpen = !isEventOpen;
-                                            widget.event.privateEvent = isEventOpen;
-                                            try {
-                                              updateData(widget.event);
-                                            } on Exception catch (e){
-                                              Log().error(
-                                                  causingClass: 'eventInfo_screen',
-                                                  method: 'build',
-                                                  action: e.toString());
-                                            }
-                                          });
+                                        onTap: () async {
+                                          isEventOpen = !isEventOpen;
+                                          widget.event.privateEvent =
+                                              !isEventOpen;
+                                          try {
+                                            updateData(widget.event);
+                                          } on Exception catch (e) {
+                                            Log().error(
+                                                causingClass:
+                                                    'eventInfo_screen',
+                                                method: 'build',
+                                                action: e.toString());
+                                          }
+                                          setState(() {});
                                         },
                                         child: isEventOpen == true
                                             ? Icon(
@@ -512,6 +523,41 @@ class _EventInfoState extends State<EventInfo> {
                                   showFriendsDialogEvent(context, widget.event);
                                 },
                                 child: Icon(Icons.group_add),
+                                backgroundColor: primaryColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: FloatingActionButton(
+                                heroTag: 'addAttendee',
+                                onPressed: () async {
+                                  List<dynamic> fixedLengthList = widget.event
+                                      .attendeesIds;
+                                  List<String> attendeesList = new List();
+                                  for (int i = 0; i <
+                                      fixedLengthList.length; i++) {
+                                    attendeesList.add(fixedLengthList[i]);
+                                  }
+                                  if (attending == true) {
+                                    attendeesList.remove(
+                                        getUidOfCurrentlySignedInUser());
+                                  } else {
+                                    attendeesList
+                                        .add(getUidOfCurrentlySignedInUser());
+                                    profilePictureList.add(
+                                        await getProfilePicture(
+                                            getUidOfCurrentlySignedInUser()));
+                                  }
+                                  widget.event.attendeesIds = attendeesList;
+                                  updateData(widget.event);
+                                  attending = !attending;
+                                  setState(() {
+                                    initState(); //TODO this is just a workaround!
+                                  });
+                                },
+                                child: attending == true
+                                    ? Icon(Icons.check_box)
+                                    : Icon(Icons.check_box_outline_blank),
                                 backgroundColor: primaryColor,
                               ),
                             )
