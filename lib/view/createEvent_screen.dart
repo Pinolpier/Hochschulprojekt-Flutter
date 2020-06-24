@@ -10,6 +10,7 @@ import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/toast.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
@@ -421,9 +422,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               widget.tappedPoint[1]);
 
           try {
+            if (eventImage != null) print('Image ist ungleich null');
             createEvent(eventImage, event);
           } on PlatformException catch (e) {
-            exceptionHandling(e);
+            show_toast(exceptionHandling(e));
             Log().error(
                 causingClass: 'createEvent_screen',
                 method: '_createButtonWidget',
