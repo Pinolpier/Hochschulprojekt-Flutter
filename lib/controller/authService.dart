@@ -1,4 +1,7 @@
 /// author: Markus Link
+///
+/// Use the methods provided in this script to do all operations regarding user authentication and user account management.
+/// For user profile related things use [userProfileService.dart].
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,17 +11,6 @@ import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/authExceptions.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/service/log.dart';
-
-/// todo: CONSIDER writing doc comments for private APIs (add script description that informs about the functions of this script)
-/// --> What?
-/// todo: PREFER starting library or type comments with noun phrases
-/// --> What
-/// todo: in every method: PREFER starting function or method comments with third-person verbs.
-/// --> What
-/// todo: PREFER backtick fences for code blocks
-/// --> What
-/// todo: separate text from comment symbol -> // comment text
-/// --> What
 
 /// These variables are references to our Auth plugins
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -31,10 +23,6 @@ FirebaseUser _user;
 bool isAppleSignInAvailable;
 bool _hasBeenChecked = false;
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// Call this method to get a return bool that tells whether the device supports Sign-In-With-Apple.
 ///
 /// This feature is only supported on iOS 13+ devices.
@@ -49,21 +37,11 @@ Future<bool> checkAppleSignInAvailability() async {
   return isAppleSignInAvailable;
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// --> What
 /// used only internally (therefore _privateMethod). Used to update the reference to the currently logged in [_user].
 Future<FirebaseUser> _refreshCurrentlyLoggedInUser() async {
   _user = await _auth.currentUser();
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// Call this method to start the process of Google Sign In. Everything is handled automatically.
 ///
 /// Throws [UserDisabledException] if the user who tries to sign in is disabled e.g. because of manual action in the Firebase console
@@ -125,10 +103,6 @@ Future<bool> googleSignIn() async {
   }
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// Call this method to start the process of Apple Sign In.
 ///
 /// Everything is handled automatically, except that
@@ -197,10 +171,6 @@ Future<bool> appleSignIn() async {
   }
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// Call this method to sign a [FirebaseUser] in with email and password.
 ///
 /// You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
@@ -260,10 +230,6 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
   return _user != null ? true : false;
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 //TODO throw a NullParameterException in Email And Password methods and also throw a WeakPasswordException.
 /// Call this method to register a [FirebaseUser] with email and password.
 ///
@@ -316,10 +282,6 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
   return _user != null ? true : false;
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// use this method to change the email of the currently signed in user!
 ///
 /// You should check [newEmail] for correct format (meaning that the string truly represents an email) before calling this method!
@@ -334,8 +296,6 @@ Future<void> changeEmailAddress(String newEmail, String password) async {
   await updateProfile(toUpdate.setEmail(newEmail));
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
 /// used to delete an account.
 ///
 /// Only the [userProfileService.deleteProfileOfCurrentlySignedInUser] should call this method!
@@ -343,10 +303,6 @@ Future<void> deleteAccount() async {
   await _user.delete(); // TODO handle different errors that could occur!
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// Call this method so Firebase can send an email for password reset.
 ///
 /// Parameter [email] must be a correctly formatted email address.
@@ -381,18 +337,12 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
   }
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
 /// this method checks asynchronously whether a user is signed in in the firebase. Takes time because it uses the plugins method to check at firebase.
 Future<bool> isUserSignedIn() async {
   await _refreshCurrentlyLoggedInUser();
   return _user != null ? true : false;
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
 /// this method checks whether a user is signed in in the firebase. Is the quicker than [isUserSignedIn] because it only checks the internal variables.
 /// Only use this if asynchronous requests are not an option for your code.
 bool isUserSignedInQuickCheck() {

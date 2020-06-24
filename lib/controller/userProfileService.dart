@@ -1,4 +1,8 @@
 /// author Markus Link
+///
+/// Use the methods provided in this script to do all operations regarding user profile management.
+/// For user account related things use [authService.dart].
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,9 +17,6 @@ import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
-/// todo: CONSIDER writing doc comments for private APIs
-/// --> What
-
 /// used to keep a reference to the Firestore database
 final firestore = Firestore.instance;
 
@@ -25,10 +26,6 @@ final String collection = 'profile';
 /// used to keep a reference from a userId to a image uri.
 Map<String, String> uidToUri = {};
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 ///Use this method to update a [UserProfile].
 ///
 ///If it does not exist already it will be created.
@@ -81,10 +78,6 @@ Future<bool> deleteProfileOfCurrentlySignedInUser() async {
   deleteAccount();
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 /// Use this method to change a user's profile picture.
 ///
 /// The parameter [file] should be the new file to upload as the [profile]'s profile picture.
@@ -138,14 +131,6 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   return false;
 }
 
-/// todo: PREFER starting variable, getter, or setter comments with noun phrases
-/// --> What
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 /// Use this method to retrieve an [Image] ([Widget]) with the profile picture of the [FirebaseUser] that is referenced by [uid]
 Future<Widget> getProfilePicture(String uid) async {
   String uri = await getProfilePictureUri(uid);
@@ -153,12 +138,6 @@ Future<Widget> getProfilePicture(String uid) async {
   return null;
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 /// This method should probably only be used internally, but still it's not private because it may be needed elsewhere
 ///
 /// Handles caching profilePicture URIs and retrieving them for a profile identified by [uid].
@@ -177,12 +156,6 @@ Future<String> getProfilePictureUri(String uid) async {
   return uri;
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 /// Use this method to retrieve a [UserProfile] referenced by a [uid].
 ///
 /// All privacy settings are evaluated locally! If access to some of the information is forbidden the value will be set to null
@@ -222,14 +195,6 @@ Future<UserProfile> getUserProfile(String uid) async {
   }
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 /// Use this method to be informed whether a userProfile exists for the given [uid].
 Future<bool> existsUserProfile(String uid) async {
   if (!await isUserSignedIn()) {
@@ -290,14 +255,6 @@ Future<String> getUidFromEmail(String email) async {
   }
 }
 
-/// todo: AVOID redundancy with the surrounding context
-/// --> What
-/// todo: DO start doc comments with a single-sentence summary
-/// --> What
-/// todo: DO separate the first sentence of a doc comment into its own paragraph.
-/// --> What
-/// todo: DO use prose to explain parameters, return values, and exceptions
-/// --> What
 ///this method is used twice internally to check that only a signed in user can change his own profile.
 Future<bool> _isOperationAllowed(UserProfile profile) async {
   if (profile == null || profile.uid == null) {

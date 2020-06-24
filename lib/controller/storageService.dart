@@ -1,15 +1,12 @@
 /// author Markus Link
+///
+/// Use this script's methods to upload and delete files to / from Firebase Storage
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
-/// todo: CONSIDER writing doc comments for private APIs
-/// --> What
-
-/// todo: separate text from comment symbol -> // comment text
-/// --> What
 ///This Method uploads a [File] to Firebase
 ///
 ///parameter [collectionID] is the "path" where to safe the [File]

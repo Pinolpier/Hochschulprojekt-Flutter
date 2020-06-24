@@ -1,6 +1,4 @@
 /// author Markus Link
-/// todo: CONSIDER writing a library-level doc comment
-/// --> What
 
 /// In Dart an exception doesn't need to inherit from Exception
 ///
