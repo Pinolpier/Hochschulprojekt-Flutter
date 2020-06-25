@@ -13,6 +13,7 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/controller/storageService.dart';
 import 'package:univents/model/userProfile.dart';
 import 'package:univents/model/userProfileExceptions.dart';
+import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
@@ -67,15 +68,18 @@ Future<bool> updateProfile(UserProfile profile) async {
   return false;
 }
 
-/// use this method to delete profile and profile picture.
-Future<bool> deleteProfileOfCurrentlySignedInUser() async {
+Future<bool> deleteProfileOfCurrentlySignedInUser(BuildContext context) async {
   String uid = getUidOfCurrentlySignedInUser();
   String uri = await getProfilePictureUri(uid);
   if (uri != null && uri != "null" && uri.isNotEmpty) {
-    deleteFile(collection, uri); //delete the picture if one exists
+    await deleteFile(collection, uid); //delete the picture if one exists
   }
-  firestore.collection(collection).document(uid).delete();
-  deleteAccount();
+  await firestore.collection(collection).document(uid).delete();
+  await firestore.collection('friends').document(uid).delete();
+  await deleteUidFromFriendsLists(uid);
+  await deleteUserFromAttendeesList(uid);
+  await deleteEventsFromUser(uid);
+  await deleteAccount(context);
 }
 
 /// Use this method to change a user's profile picture.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/controller/userProfileService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
@@ -23,8 +24,29 @@ class FeedItemUIState extends State<FeedItemUI> {
   /// data provided from FeedItemUI
   final Event _data;
 
+  Widget _pPicture;
+
   /// constructor initializes [_data]
   FeedItemUIState(this._data);
+
+  @override
+  void initState() {
+    super.initState();
+    getProfilePicture(this._data.ownerIds[0]).then((value) {
+      if (mounted) {
+        setState(() {
+          this._pPicture = value;
+        });
+      } else {
+        Log().error(
+            causingClass: 'feedItemUI',
+            method: '_profilePicture',
+            action: 'Memoryleak while loading profile pictures');
+      }
+    });
+    this._pPicture =
+        _pPicture != null ? _pPicture : Image.asset('assets/blank_profile.png');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +58,7 @@ class FeedItemUIState extends State<FeedItemUI> {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                child: _profilePicture(),
+                child: this._pPicture,
               ),
               title: Text(
                 this._data.title,
@@ -83,6 +105,11 @@ class FeedItemUIState extends State<FeedItemUI> {
                                 MediaQuery.of(context).size.height * 1 / 60),
                       )
                     ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _getTags(),
+                    ],
                   )
                 ],
               ),
@@ -124,17 +151,20 @@ class FeedItemUIState extends State<FeedItemUI> {
     return this._data.location;
   }
 
-  /// loads profile picture
-  ///
-  /// in case of no [_profilePicture] a placholder will be displayed
-  Widget _profilePicture() {
-    Widget _profilePicture;
-    getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
-          _profilePicture = value;
-        }));
-    return _profilePicture != null
-        ? _profilePicture
-        : Image.asset('assets/blank_profile.png');
+  /// _getTags displays tags of event in home feed as [Text]
+  Text _getTags() {
+    String tags = "";
+    if (this._data.tagsList != null && this._data.tagsList.length != 0) {
+      tags = this
+          ._data
+          .tagsList
+          .toString()
+          .substring(1, this._data.tagsList.toString().length - 1);
+    }
+    return Text(
+      tags,
+      style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1 / 60),
+    );
   }
 
   /// navigates to the selected event

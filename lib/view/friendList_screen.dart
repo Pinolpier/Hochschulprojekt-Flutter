@@ -138,9 +138,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                   }),
               Expanded(
                 child: ListView.builder(
-                    itemCount: isFriendsScreen == true
-                        ? friends.length
-                        : groups.length,
+                    itemCount: isFriendsScreen == true ? friends.length : groups
+                        .length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(

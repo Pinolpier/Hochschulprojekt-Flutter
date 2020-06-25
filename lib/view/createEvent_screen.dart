@@ -16,6 +16,8 @@ import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/page_controller.dart';
 
 /// @author Jan Oster
+import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/locationPicker_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -59,6 +61,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
   ImagePickerUnivents ip = new ImagePickerUnivents();
+  InterfaceToReturnPickedLocation _returnPickedLocation =
+      new InterfaceToReturnPickedLocation();
 
   /// todo: missing documentation
   Future<void> errorEndDateTime() async {
@@ -140,7 +144,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteBackground,
         child: Text(
-          'select startDateTime',
+          'select start date',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -179,7 +183,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteBackground,
         child: Text(
-          'select endDateTime',
+          'select end date',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -221,43 +225,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 color: univentsWhiteBackground,
               ),
               hintText: 'Enter the event name',
-              hintStyle: textStyleConstant,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// todo: missing documentation
-  Widget _locationTextfieldWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Event Location',
-          style: labelStyleConstant,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
-          height: 60.0,
-          child: TextField(
-            controller: eventLocationController,
-            keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: univentsWhiteText,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.add_location,
-                color: univentsWhiteBackground,
-              ),
-              hintText: 'Enter the location of the event',
               hintStyle: textStyleConstant,
             ),
           ),
@@ -352,7 +319,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           final List<String> result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FriendslistdialogScreen.create(),
+                builder: (context) => FriendslistdialogScreen(null),
               ));
           setState(() {
             for (String s in result) {
@@ -369,7 +336,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteText,
         child: Text(
-          'addFriends',
+          'add friends',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -414,28 +381,40 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               selectedStartDateTime,
               selectedEndDateTime,
               eventDescriptionController.text,
-              eventLocationController.text,
+              _returnPickedLocation.choosenLocationName,
               isPrivate,
               attendeeIDs,
               tagsList,
-              widget.tappedPoint[0],
-              widget.tappedPoint[1]);
-
-          try {
-            if (eventImage != null) print('Image ist ungleich null');
-            createEvent(eventImage, event);
-          } on PlatformException catch (e) {
-            show_toast(exceptionHandling(e));
-            Log().error(
-                causingClass: 'createEvent_screen',
-                method: '_createButtonWidget',
-                action: exceptionHandling(e));
+              _returnPickedLocation.choosenLocationCoords[1].toString(),
+              _returnPickedLocation.choosenLocationCoords[0].toString());
+          if (event.eventStartDate == null || event.eventEndDate == null) {
+            show_toast(
+                'Sowohl Start als auch Endzeitpunkt muss ausgewählt sein');
+          } else if (event.eventStartDate.isAfter(event.eventEndDate)) {
+            show_toast('Startdatum muss vor Enddatum liegen!');
           }
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => NavigationBarUI()),
-            (Route<dynamic> route) => false,
-          );
+          if (event.title == null) {
+            show_toast('Event Name darf nicht leer sein');
+          } else if (event.description == null) {
+            show_toast('Eventbeschreibung darf nicht leer sein');
+          } else if (event.location == null) {
+            show_toast('location darf nicht fehlen');
+          } else {
+            try {
+              createEvent(eventImage, event);
+            } on PlatformException catch (e) {
+              show_toast(exceptionHandling(e));
+              Log().error(
+                  causingClass: 'createEvent_screen',
+                  method: '_createButtonWidget',
+                  action: exceptionHandling(e));
+            }
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => NavigationBarUI()),
+                  (Route<dynamic> route) => false,
+            );
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -459,6 +438,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: Text("Create Your Event"),
+        centerTitle: true,
+      ),
       backgroundColor: primaryColor,
       body: new Container(
         height: double.infinity,
@@ -489,14 +473,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               SizedBox(height: 20.0),
               _eventNameTextfieldWidget(),
               SizedBox(height: 20.0),
-              _locationTextfieldWidget(),
+              _eventlocationPickerButton(context),
               SizedBox(height: 20.0),
               _eventDescriptionTextfieldWidget(),
               SizedBox(height: 20.0),
               _eventTagsTextfieldWidget(),
               SizedBox(height: 20.0),
               new Text(
-                'isPrivate: ',
+                'Soll das Event Privat sein? ', //TODO: Add Internationalization
                 style: labelStyleConstant,
               ),
               _isPrivateCheckbox(),

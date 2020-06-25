@@ -32,7 +32,7 @@ void _show_long_toast(String message) {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
-      backgroundColor: Colors.blueAccent,
+      //     backgroundColor: Colors.blueAccent,
       textColor: Colors.black,
       fontSize: 16);
 }
@@ -44,7 +44,7 @@ void _show_short_toast(String message) {
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
-      backgroundColor: Colors.blueAccent,
+      //    backgroundColor: Colors.blueAccent,
       textColor: Colors.black,
       fontSize: 16);
 }

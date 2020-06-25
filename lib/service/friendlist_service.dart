@@ -174,6 +174,42 @@ void createGroupFriend(List<String> userId, String groupName) async {
   writeBatch.commit();
 }
 
+/// This method should be used by [userProfileService.dart] when a User
+/// deletes his/her/its Account
+/// remove a User from all Lists of all People by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteUidFromFriendsLists(String uid) async {
+  QuerySnapshot qShot = await firebaseInstance
+      .collection(collection)
+      .where(friendsList, arrayContains: uid)
+      .getDocuments();
+  List<DocumentSnapshot> documentSnapshotList = qShot.documents;
+  if (documentSnapshotList != null && documentSnapshotList.length > 0) {
+    for (int x = 0; x < documentSnapshotList.length; x++) {
+      Map<String, dynamic> friendMap = new Map();
+      friendMap = documentSnapshotList[x].data;
+      List<String> keyList = friendMap.keys.toList();
+      for (int x = 0; x < keyList.length; x++) {
+        List<dynamic> friendsList = friendMap[keyList[x]];
+        List<dynamic> friendsListCopy = new List();
+        if (friendsList != null && friendsList.length > 0) {
+          for (int i = 0; i < friendsList.length; i++) {
+            friendsListCopy.add(friendsList[i]);
+          }
+          if (friendsListCopy.contains(uid)) {
+            friendsListCopy.remove(uid);
+          }
+        }
+        friendMap[keyList[x]] = friendsListCopy;
+      }
+      firebaseInstance
+          .collection(collection)
+          .document(documentSnapshotList[x].documentID)
+          .updateData(friendMap);
+    }
+  }
+}
+
 /// FriendsException to handle Exceptions while working with
 /// friendIds in database
 class FriendsException implements Exception {

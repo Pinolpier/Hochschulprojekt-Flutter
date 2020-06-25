@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 /// todo: CONSIDER writing a library-level doc comment
 class ImagePickerUnivents {
   /// todo: add documentation to variable
-  File _image;
+  dynamic _image;
 
   /// todo: missing documentation
   Future<File> getImageFromCamera() async {
@@ -23,7 +23,7 @@ class ImagePickerUnivents {
   }
 
   /// todo: missing documentation
-  Future<File> chooseImage(BuildContext context) async {
+  Future<dynamic> chooseImage(BuildContext context) async {
     await showDialog<File>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -55,13 +55,14 @@ class ImagePickerUnivents {
             FlatButton(
               child: Text('Remove'),
               onPressed: () {
-                _image = null;
                 Navigator.of(context).pop();
+                _image = null;
               },
             ),
             FlatButton(
               child: Text('Cancel'),
               onPressed: () {
+                _image = 1;
                 Navigator.of(context).pop();
               },
             ),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/controller/authService.dart';
@@ -261,10 +262,14 @@ void updateData(Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null) await deleteFile(_collection, event.eventID);
-  String url = await uploadFile(_collection, image, event.eventID);
-  _urlToID[event.eventID] = url;
-  event.imageURL = url;
+  if (event.imageURL != null) await deleteFile(collection, event.eventID);
+  _urlToID.remove(event.eventID);
+  event.imageURL = null;
+  if (image != null) {
+    String url = await uploadFile(collection, image, event.eventID);
+    _urlToID[event.eventID] = url;
+    event.imageURL = url;
+  }
   updateData(event);
 }
 
@@ -517,6 +522,34 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
     eventList[x].eventID = qShot.documents[x].documentID;
   }
   return eventList;
+}
+
+/// This method should only be used with care,
+/// because the data will be permanently deleted
+/// deletes a User from all Events Attendeeslist by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteUserFromAttendeesList(String uid) async {
+  QuerySnapshot qShot = await db
+      .collection(collection)
+      .where(attendees, arrayContains: uid)
+      .getDocuments();
+  List<Event> eventList = _snapShotToList(qShot);
+  addEventIdToObjects(eventList, qShot);
+  if (eventList != null && eventList.length > 0) {
+    for (int x = 0; x < eventList.length; x++) {
+      Event event = eventList[x];
+      if (event.attendeesIds.contains(uid)) {
+        List<String> attendees = new List();
+        for (int x = 0; x < event.attendeesIds.length; x++) {
+          if (event.attendeesIds[x] != uid) {
+            attendees.add(event.attendeesIds[x]);
+          }
+        }
+        event.attendeesIds = attendees;
+      }
+      updateData(event);
+    }
+  }
 }
 
 /// ExceptionHandling for all PlatformException thrown by Firebase

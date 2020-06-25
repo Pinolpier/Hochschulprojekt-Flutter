@@ -216,6 +216,8 @@ class _LoginScreenState extends State<LoginScreen>
             causingClass: 'login_screen',
             method: '_handleLogin',
             action: e.toString());
+      } on Exception catch (e) {
+        show_toast(e.toString());
       }
     } else {
       show_toast(AppLocalizations.of(context).translate(
@@ -256,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen>
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
       try {
         registerWithEmailAndPassword(_email, _password);
-      } on AuthException catch (e) {
+      } on Exception catch (e) {
         show_toast(e.toString());
         Log().error(
             causingClass: 'login_screen',

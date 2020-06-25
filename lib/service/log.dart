@@ -112,8 +112,12 @@ class Log {
     String previous = '';
     try {
       previous = await this._file.readAsString();
-      this._file = await this._file.writeAsString('$information');
-      print('$previous\n$information');
+      if (previous.isEmpty) {
+        this._file = await this._file.writeAsString('$information');
+      } else {
+        this._file = await this._file.writeAsString('$previous\n$information');
+      }
+      print('$information');
     } catch (e) {
       this._file = await this._file.writeAsString('-- start --\n$information');
       print('$information');
