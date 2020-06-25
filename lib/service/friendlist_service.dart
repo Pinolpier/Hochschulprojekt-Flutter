@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:univents/controller/authService.dart';
-import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/controller/auth_service.dart';
+import 'package:univents/controller/user_profile_service.dart';
 
 /// Markus Häring
 ///
@@ -174,7 +174,7 @@ void createGroupFriend(List<String> userId, String groupName) async {
   writeBatch.commit();
 }
 
-/// This method should be used by [userProfileService.dart] when a User
+/// This method should be used by [user_profile_service.dart] when a User
 /// deletes his/her/its Account
 /// remove a User from all Lists of all People by a String [uid]
 /// throws [PlatformException] when an Error occurs while delete data

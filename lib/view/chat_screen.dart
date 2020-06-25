@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:univents/model/chatmessage_model.dart';
+import 'package:univents/model/chat_message_model.dart';
 import 'package:univents/model/colors.dart';
 
 /// @author Christian Henrich

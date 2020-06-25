@@ -11,8 +11,8 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/createEvent_screen.dart';
-import 'package:univents/view/eventInfo_screen.dart';
+import 'package:univents/view/create_event_screen.dart';
+import 'package:univents/view/event_info_screen.dart';
 import 'package:user_location/user_location.dart';
 
 import 'homeFeed_screen/feed_filter_values.dart';

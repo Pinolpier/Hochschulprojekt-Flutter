@@ -1,7 +1,7 @@
 /// author Markus Link
 ///
 /// Use the methods provided in this script to do all operations regarding user profile management.
-/// For user account related things use [authService.dart].
+/// For user account related things use [auth_service.dart].
 
 import 'dart:io';
 
@@ -9,10 +9,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:univents/controller/authService.dart';
-import 'package:univents/controller/storageService.dart';
-import 'package:univents/model/userProfile.dart';
-import 'package:univents/model/userProfileExceptions.dart';
+import 'package:univents/controller/auth_service.dart';
+import 'package:univents/controller/storage_service.dart';
+import 'package:univents/model/user_profile.dart';
+import 'package:univents/model/user_profile_exceptions.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';

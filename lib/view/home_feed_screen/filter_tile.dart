@@ -8,7 +8,7 @@ import 'package:univents/view/dialogs/date_slider_dialog.dart';
 import 'package:univents/view/dialogs/radius_slider_dialog.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
-import '../locationPicker_screen.dart';
+import '../location_picker_screen.dart';
 import 'feed_filter.dart';
 
 /// @mathias darscht

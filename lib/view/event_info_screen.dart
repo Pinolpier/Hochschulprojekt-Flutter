@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'package:univents/controller/authService.dart';
-import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/controller/auth_service.dart';
+import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/image_picker_univents.dart';
 import 'package:univents/service/utils/utils.dart';
-import 'package:univents/view/dialogs/DialogHelper.dart';
+import 'package:univents/view/dialogs/dialog_helper.dart';
 
 /// @author Christian Henrich
 
