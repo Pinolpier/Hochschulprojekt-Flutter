@@ -140,6 +140,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       switch (index) {
         case 0:
           {
+            isHomeFeedScreen = true;
+            isMapScreen = false;
             _update();
             this._thisWidget = RefreshIndicator(
               child: ListView(
