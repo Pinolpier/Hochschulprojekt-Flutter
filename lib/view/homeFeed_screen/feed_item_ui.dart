@@ -26,6 +26,8 @@ class FeedItemUIState extends State<FeedItemUI> {
 
   Widget _pPicture;
 
+  bool existsProfilePic;
+
   /// constructor initializes [_data]
   FeedItemUIState(this._data);
 
@@ -35,7 +37,9 @@ class FeedItemUIState extends State<FeedItemUI> {
     getProfilePicture(this._data.ownerIds[0]).then((value) {
       if (mounted) {
         setState(() {
-          this._pPicture = value;
+          this._pPicture =
+              value != null ? value : Image.asset('assets/blank_profile.png');
+          value != null ? existsProfilePic = true : false;
         });
       } else {
         Log().error(
@@ -44,8 +48,6 @@ class FeedItemUIState extends State<FeedItemUI> {
             action: 'Memoryleak while loading profile pictures');
       }
     });
-    this._pPicture =
-        _pPicture != null ? _pPicture : Image.asset('assets/blank_profile.png');
   }
 
   @override
@@ -57,9 +59,9 @@ class FeedItemUIState extends State<FeedItemUI> {
         child: Column(
           children: <Widget>[
             ListTile(
-              leading: CircleAvatar(
+              leading: existsProfilePic == false ? CircleAvatar(
                 child: this._pPicture,
-              ),
+              ) : this._pPicture,
               title: Text(
                 this._data.title,
                 style: TextStyle(
