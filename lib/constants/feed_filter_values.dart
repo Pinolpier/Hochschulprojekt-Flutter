@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:univents/service/app_localizations.dart';
 
-import 'feed_filter.dart';
+import '../view/home_feed_screen/feed_filter.dart';
 
 /// @author mathias darscht
 /// this class translates the filter values of all filters

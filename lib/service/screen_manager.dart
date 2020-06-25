@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/controller/user_profile_service.dart';
-import 'package:univents/view/home_feed_screen/page_controller.dart';
+import 'package:univents/service/page_controller.dart';
 import 'package:univents/view/login_screen.dart';
-import 'package:univents/view/profile_screen.dart';
+import 'package:univents/view/main_screens/profile_screen.dart';
 
 /// This class is used to handle to show the correct screen depending on whether a user is logged in or not.
 ///
@@ -20,26 +20,26 @@ class ScreenManager extends StatelessWidget {
     return (user == null)
         ? LoginScreen()
         : FutureBuilder<bool>(
-      future: existsUserProfile(user.uid),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data
+            future: existsUserProfile(user.uid),
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data
                     ? NavigationBarUI() //TODO HomeScreenHandler here, because existsUserProfile returned true
                     : ProfileScreen.create();
               } else if (snapshot.hasError) {
-          //TODO error handling here in case async function fails somehow
-          return Container(
-            width: 0.0,
-            height: 0.0,
+                //TODO error handling here in case async function fails somehow
+                return Container(
+                  width: 0.0,
+                  height: 0.0,
+                );
+              } else {
+                //TODO Maybe return a loading animation?
+                return Container(
+                  width: 0.0,
+                  height: 0.0,
+                );
+              }
+            },
           );
-        } else {
-          //TODO Maybe return a loading animation?
-          return Container(
-            width: 0.0,
-            height: 0.0,
-          );
-        }
-      },
-    );
   }
 }

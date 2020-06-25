@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
 
-import 'feed_filter.dart';
+import '../home_feed_screen/feed_filter.dart';
 import 'filter_tile.dart';
 
 /// @author mathias darscht

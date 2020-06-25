@@ -7,11 +7,11 @@ import 'package:univents/controller/auth_service.dart';
 import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/dialog_helper.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
+import 'package:univents/service/utils.dart';
 import 'package:univents/service/utils/image_picker_univents.dart';
-import 'package:univents/service/utils/utils.dart';
-import 'package:univents/view/dialogs/dialog_helper.dart';
 
 /// @author Christian Henrich
 
@@ -110,8 +110,7 @@ class _EventInfoState extends State<EventInfo> {
     return GestureDetector(
         onTap: () async {
           dynamic image = await ip.chooseImage(context);
-          if (image != 1)
-            eventImageAsync = image;
+          if (image != 1) eventImageAsync = image;
           setState(() {
             if (eventImageAsync != 1) {
               eventImage = eventImageAsync;
@@ -221,10 +220,10 @@ class _EventInfoState extends State<EventInfo> {
             child: _result == null
                 ? CircularProgressIndicator()
                 : _eventImageFromDatabase() != null
-                ? _eventImageFromDatabase()
-                : eventImage == null
-                ? _eventImagePlaceholder()
-                : _eventImage(),
+                    ? _eventImageFromDatabase()
+                    : eventImage == null
+                        ? _eventImagePlaceholder()
+                        : _eventImage(),
           ),
           DraggableScrollableSheet(
             minChildSize: 0.1,
@@ -251,10 +250,10 @@ class _EventInfoState extends State<EventInfo> {
                               child: _result == null
                                   ? CircularProgressIndicator()
                                   : _eventImageFromDatabase() != null
-                                  ? _eventImageFromDatabase()
-                                  : eventImage == null
-                                  ? _eventImagePlaceholder()
-                                  : _eventImage(),
+                                      ? _eventImageFromDatabase()
+                                      : eventImage == null
+                                          ? _eventImagePlaceholder()
+                                          : _eventImage(),
                             ),
                             SizedBox(
                               width: 16,
@@ -333,13 +332,13 @@ class _EventInfoState extends State<EventInfo> {
                                         onTap: () async {
                                           isEventOpen = !isEventOpen;
                                           widget._event.privateEvent =
-                                          !isEventOpen;
+                                              !isEventOpen;
                                           try {
                                             updateData(widget._event);
                                           } on Exception catch (e) {
                                             Log().error(
                                                 causingClass:
-                                                'eventInfo_screen',
+                                                    'eventInfo_screen',
                                                 method: 'build',
                                                 action: e.toString());
                                           }
@@ -347,30 +346,30 @@ class _EventInfoState extends State<EventInfo> {
                                         },
                                         child: isEventOpen == true
                                             ? Icon(
-                                          Icons.lock_open,
-                                          color: univentsWhiteBackground,
-                                          size: 30,
-                                        )
+                                                Icons.lock_open,
+                                                color: univentsWhiteBackground,
+                                                size: 30,
+                                              )
                                             : isEventOpen == false
-                                            ? Icon(
-                                          Icons.lock,
-                                          color:
-                                          univentsWhiteBackground,
-                                          size: 30,
-                                        )
-                                            : null),
+                                                ? Icon(
+                                                    Icons.lock,
+                                                    color:
+                                                        univentsWhiteBackground,
+                                                    size: 30,
+                                                  )
+                                                : null),
                                     SizedBox(width: 4.0),
                                     isEventOpen == true
                                         ? Text("open",
-                                        style: TextStyle(
-                                            color: univentsWhiteText,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 24))
+                                            style: TextStyle(
+                                                color: univentsWhiteText,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 24))
                                         : Text("closed",
-                                        style: TextStyle(
-                                            color: univentsWhiteText,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 24))
+                                            style: TextStyle(
+                                                color: univentsWhiteText,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 24))
                                   ],
                                 ),
                               ],
@@ -550,8 +549,9 @@ class _EventInfoState extends State<EventInfo> {
                                   List<dynamic> fixedLengthList =
                                       widget._event.attendeesIds;
                                   List<String> attendeesList = new List();
-                                  for (int i = 0; i <
-                                      fixedLengthList.length; i++) {
+                                  for (int i = 0;
+                                      i < fixedLengthList.length;
+                                      i++) {
                                     attendeesList.add(fixedLengthList[i]);
                                   }
                                   if (attending == true) {

@@ -15,7 +15,7 @@ import 'package:univents/view/create_event_screen.dart';
 import 'package:univents/view/event_info_screen.dart';
 import 'package:user_location/user_location.dart';
 
-import 'home_feed_screen/feed_filter_values.dart';
+import '../../constants/feed_filter_values.dart';
 
 /// @author Jan Oster
 /// todo: CONSIDER writing a library-level doc comment

@@ -4,7 +4,7 @@ import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/utils.dart';
+import 'package:univents/service/utils.dart';
 import 'package:univents/view/event_info_screen.dart';
 
 /// @author mathias darscht

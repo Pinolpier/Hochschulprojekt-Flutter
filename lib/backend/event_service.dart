@@ -9,9 +9,9 @@ import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/controller/auth_service.dart';
 import 'package:univents/controller/storage_service.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/service/log.dart';
 
 import '../controller/auth_service.dart';
-import 'log.dart';
 
 /// Markus Häring
 ///
@@ -27,7 +27,7 @@ final _database = Firestore.instance;
 
 /// initialized geoFireStore based on the database and the collection
 final GeoFirestore _geoFireStore =
-GeoFirestore(_database.collection(_collection));
+    GeoFirestore(_database.collection(_collection));
 final db = Firestore.instance;
 
 /// dataField name in database for the endDate
@@ -154,7 +154,7 @@ Future<List<Event>> getEventsNearLocationAndFilters(
   }
   if (_privateEventFilter != null) {
     documentList.removeWhere((DocumentSnapshot documentSnapshot) =>
-    (documentSnapshot.data[_privateEvent] != privateEventFilter));
+        (documentSnapshot.data[_privateEvent] != privateEventFilter));
   }
   if (myEventFilter != null) {
     for (int j = 0; j < documentList.length; j++) {
@@ -162,7 +162,7 @@ Future<List<Event>> getEventsNearLocationAndFilters(
       List<dynamic> attendeesList = documentList[j].data[_attendees];
       List<dynamic> ownerList = documentList[j].data[_eventOwner];
       if (attendeesList != null &&
-          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -180,7 +180,7 @@ Future<List<Event>> getEventsNearLocationAndFilters(
       List<dynamic> ownerList = documentList[j].data[_eventOwner];
       for (int i = 0; i < friendIdFilter.length; i++) {
         if (attendeesList != null &&
-            attendeesList.contains(friendIdFilter[i]) ||
+                attendeesList.contains(friendIdFilter[i]) ||
             ownerList != null && ownerList.contains(friendIdFilter[i])) {
           remove = false;
         }
@@ -243,7 +243,7 @@ Future<List<Event>> getEventsNearLocationAndFilters(
 /// updating Data in Database
 Future<String> _addData(Event event) async {
   DocumentReference documentReference =
-  await _database.collection(_collection).add(_eventToMap(event));
+      await _database.collection(_collection).add(_eventToMap(event));
   return documentReference.documentID;
 }
 
@@ -341,7 +341,7 @@ Future<Widget> getImage(String eventID) async {
     url = _urlToID[eventID];
   } else {
     DocumentSnapshot documentSnapshot =
-    await _database.collection(_collection).document(eventID).get();
+        await _database.collection(_collection).document(eventID).get();
     url = documentSnapshot.data[_imageUrl].toString();
     _urlToID[eventID] = url;
   }
@@ -366,7 +366,6 @@ Future<List<Event>> getEvents() async {
   return eventList;
 }
 
-
 /// filters a list of events based on the filters set and deletes all
 /// unnecessary events from the list
 ///
@@ -379,7 +378,7 @@ List<Event> filterEvents(List<Event> eventList) {
       List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
       if (attendeesList != null &&
-          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -400,7 +399,7 @@ List<Event> filterEvents(List<Event> eventList) {
       List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
       if (attendeesList != null &&
-          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
+              attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -418,7 +417,7 @@ List<Event> filterEvents(List<Event> eventList) {
       List<dynamic> ownerList = eventList[j].ownerIds;
       for (int i = 0; i < friendIdFilter.length; i++) {
         if (attendeesList != null &&
-            attendeesList.contains(friendIdFilter[i]) ||
+                attendeesList.contains(friendIdFilter[i]) ||
             ownerList != null && ownerList.contains(friendIdFilter[i])) {
           remove = false;
         }
@@ -478,21 +477,20 @@ List<Event> filterEvents(List<Event> eventList) {
 List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
-        .map((doc) =>
-        Event.createFromDB(
-          doc.data[_eventName],
-          doc.data[_startDate],
-          doc.data[_endDate],
-          doc.data[_description],
-          doc.data[_location],
-          doc.data[_privateEvent],
-          doc.data[_attendees],
-          doc.data[_tags],
-          doc.data[_latitude],
-          doc.data[_longitude],
-          doc.data[_imageUrl],
-          doc.data[_eventOwner],
-        ))
+        .map((doc) => Event.createFromDB(
+              doc.data[_eventName],
+              doc.data[_startDate],
+              doc.data[_endDate],
+              doc.data[_description],
+              doc.data[_location],
+              doc.data[_privateEvent],
+              doc.data[_attendees],
+              doc.data[_tags],
+              doc.data[_latitude],
+              doc.data[_longitude],
+              doc.data[_imageUrl],
+              doc.data[_eventOwner],
+            ))
         .toList();
   } else {
     Log().error(
@@ -667,7 +665,6 @@ void deleteStartFilter() {
 void deleteTagFilter() {
   _tagsFilter = null;
 }
-
 
 set tagsFilter(List<String> value) {
   _tagsFilter = value;

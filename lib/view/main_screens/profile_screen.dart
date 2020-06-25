@@ -6,12 +6,11 @@ import 'package:univents/controller/auth_service.dart';
 import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/user_profile.dart';
+import 'package:univents/service/dialog_helper.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/image_picker_univents.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/loading_screen.dart';
-
-import 'dialogs/dialog_helper.dart';
 
 /// @author Christian Henrich
 ///
@@ -228,16 +227,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ? CircularProgressIndicator()
                               : _profilePicFromDatabase() != null
                                   ? _profilePicFromDatabase()
-                              : _profilepic == null
+                                  : _profilepic == null
                                       ? _profilePicturePlaceholder()
                                       : _profilePicture(),
                         )),
                     SizedBox(height: 50.0),
                     _createProfile == false &&
-                        _firstName != null &&
-                        _lastName != null
+                            _firstName != null &&
+                            _lastName != null
                         ? Text(
-                      _firstName + " " + _lastName,
+                            _firstName + " " + _lastName,
                             style: TextStyle(
                                 color: univentsBlackText,
                                 fontSize: 30.0,
@@ -245,8 +244,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontFamily: 'Montserrat'),
                           )
                         : _createProfile == false &&
-                        _firstName == null &&
-                        _lastName == null
+                                _firstName == null &&
+                                _lastName == null
                             ? null
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -258,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10.0),
                                         hintText:
-                                        "First Name", //TODO: Add Internationalization
+                                            "First Name", //TODO: Add Internationalization
                                       ),
                                     ),
                                   ),
@@ -269,7 +268,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       controller: _textControllerLastname,
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10.0),
-                                        hintText: "Last Name", //TODO: Add Internationalization
+                                        hintText:
+                                            "Last Name", //TODO: Add Internationalization
                                       ),
                                     ),
                                   ),
@@ -278,7 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 10.0),
                     _createProfile == false
                         ? Text(
-                      _userName,
+                            _userName,
                             style: TextStyle(
                                 fontSize: 17.0,
                                 fontStyle: FontStyle.italic,
@@ -290,14 +290,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               controller: _textControllerUsername,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(10.0),
-                                hintText: "username", //TODO: Add Internationalization
+                                hintText:
+                                    "username", //TODO: Add Internationalization
                               ),
                             ),
                           ),
                     SizedBox(height: 10.0),
                     _createProfile == false && _emailAddress != null
                         ? Text(
-                      _emailAddress,
+                            _emailAddress,
                             style: TextStyle(
                                 fontSize: 17.0,
                                 fontStyle: FontStyle.italic,
@@ -315,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 20.0),
                     _createProfile == false
                         ? Text(
-                      _bioText,
+                            _bioText,
                             style: TextStyle(
                                 fontSize: 17.0,
                                 fontStyle: FontStyle.italic,
@@ -328,15 +329,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: _isProfileOwner == true
                             ? 95.0
                             : _isProfileOwner == false
-                            ? 0.0
-                            : _createProfile == true ? 100.0 : null,
+                                ? 0.0
+                                : _createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: univentsGreyBackgorund,
                             color: primaryColor,
                             elevation: 7.0,
                             child: _isProfileOwner == true &&
-                                _createProfile == false
+                                    _createProfile == false
                                 ? GestureDetector(
                                     onTap: () {
                                       showChangeBioDialog(context, userProfile);
@@ -350,72 +351,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             fontFamily: 'Montserrat'),
                                       ),
                                     ),
-                            )
+                                  )
                                 : _createProfile == true
-                                        ? GestureDetector(
-                                            onTap: () async {
-                                              setState(() {
-                                                _userName =
-                                                    _textControllerUsername
-                                                        .text;
-                                                _firstName =
-                                                    _textControllerFirstName
-                                                        .text;
-                                                _lastName =
-                                                    _textControllerLastname
-                                                        .text;
-                                              });
-                                              if (_userName != null &&
-                                                  _userName
-                                                      .trim()
-                                                      .isNotEmpty) {
-                                                UserProfile userProfile =
-                                                    new UserProfile(
-                                                        getUidOfCurrentlySignedInUser(),
-                                                        _userName,
-                                                        getEmailOfCurrentlySignedInUser(),
-                                                        _firstName,
-                                                        _lastName,
-                                                        null,
-                                                        null);
-                                                try {
-                                                  await updateProfile(
-                                                      userProfile);
-                                                  await updateProfilePicture(
-                                                      _profilepic, userProfile);
-                                                } on Exception catch (e) {
-                                                  show_toast(e.toString());
-                                                  Log().error(
-                                                      causingClass:
-                                                          'profile_screen',
-                                                      method: 'updateProfil',
-                                                      action: e.toString());
-                                                }
+                                    ? GestureDetector(
+                                        onTap: () async {
+                                          setState(() {
+                                            _userName =
+                                                _textControllerUsername.text;
+                                            _firstName =
+                                                _textControllerFirstName.text;
+                                            _lastName =
+                                                _textControllerLastname.text;
+                                          });
+                                          if (_userName != null &&
+                                              _userName.trim().isNotEmpty) {
+                                            UserProfile userProfile = new UserProfile(
+                                                getUidOfCurrentlySignedInUser(),
+                                                _userName,
+                                                getEmailOfCurrentlySignedInUser(),
+                                                _firstName,
+                                                _lastName,
+                                                null,
+                                                null);
+                                            try {
+                                              await updateProfile(userProfile);
+                                              await updateProfilePicture(
+                                                  _profilepic, userProfile);
+                                            } on Exception catch (e) {
+                                              show_toast(e.toString());
+                                              Log().error(
+                                                  causingClass:
+                                                      'profile_screen',
+                                                  method: 'updateProfil',
+                                                  action: e.toString());
+                                            }
 
-                                                Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          LoadingScreen()),
-                                                  (Route<dynamic> route) =>
-                                                      false,
-                                                );
-                                              } else {
-                                                show_toast(
-                                                    "username cant be empty!"); //TODO: Add Internationalization
-                                              }
-                                            },
-                                            child: Center(
-                                              child: Text(
-                                                "confirm",
-                                                //TODO: Add Internationalization
-                                                style: TextStyle(
-                                                    color: univentsWhiteText,
-                                                    fontFamily: 'Montserrat'),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(height: 0.0))),
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoadingScreen()),
+                                              (Route<dynamic> route) => false,
+                                            );
+                                          } else {
+                                            show_toast(
+                                                "username cant be empty!"); //TODO: Add Internationalization
+                                          }
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            "confirm",
+                                            //TODO: Add Internationalization
+                                            style: TextStyle(
+                                                color: univentsWhiteText,
+                                                fontFamily: 'Montserrat'),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(height: 0.0))),
                   ],
                 ))
           ],
@@ -441,8 +434,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     AlertDialog alert = AlertDialog(
-      content: Text(
-          "Do you really want to send a Friend Request to:"),
+      content: Text("Do you really want to send a Friend Request to:"),
       //TODO: Add Internationalization
       //contact.displayname
       actions: [
