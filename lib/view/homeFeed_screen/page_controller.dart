@@ -13,12 +13,16 @@ import '../../service/app_localizations.dart';
 import 'feed.dart';
 import 'filter_sidebar.dart';
 
+/// @author mathias darscht
+/// this class controls witch page should be shown and implements the home
+/// of the application
 class NavigationBarUI extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => NavigationBarUIControl();
 }
 
 class NavigationBarUIControl extends State<NavigationBarUI> {
+  /// page that is currently shown
   Widget _thisWidget;
 
   /// list of data that can be filtered
@@ -33,7 +37,7 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   bool isHomeFeedScreen;
   bool isMapScreen;
 
-  /// init data from firebase of Feed class
+  /// initializes [_data] from firebase of feed.dart
   NavigationBarUIControl() {
     _data = new List<Widget>();
   }
@@ -136,6 +140,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       switch (index) {
         case 0:
           {
+            isHomeFeedScreen = true;
+            isMapScreen = false;
             _update();
             this._thisWidget = RefreshIndicator(
               child: ListView(

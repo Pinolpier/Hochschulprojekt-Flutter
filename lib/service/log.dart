@@ -3,17 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-///this class saves logs into a .txt file
-///per log a line
-///DateTime: [logType]: causing class, method, action
+/// @author mathias darscht
+/// this class saves logs into a .txt file
+/// per log a line
+/// DateTime: [logType]: causing class, method, action
 class Log {
-  ///file to save all logs
+  /// file to save all logs
   var _file;
 
-  ///path to file
+  /// path to file
   var _pathToFile;
 
-  ///singleton configuration
+  /// singleton configuration
   static final Log _instance = Log._internal();
 
   factory Log() => _instance;
@@ -35,6 +36,7 @@ class Log {
   }
 
   /// info log
+  ///
   /// writes and prints an info log with the information from
   /// (String) [causingClass], (String) [method],
   /// (String) [action] (optional)
@@ -51,6 +53,7 @@ class Log {
   }
 
   /// warn log
+  ///
   /// writes and prints an warning log with the information from
   /// (String) [causingClass], (String) [method],
   /// (String) [action] (optional)
@@ -67,6 +70,7 @@ class Log {
   }
 
   /// error log
+  ///
   /// writes and prints an error log with the information from
   /// (String) [causingClass], (String) [method],
   /// (String) [action] (optional)
@@ -83,9 +87,11 @@ class Log {
   }
 
   /// concat's the data of log to a string
+  ///
   /// creates a big String based on (String) [type],
   /// (String) [causingClass], (String) [method]
-  ///  and (String) [action] (optional)
+  /// and (String) [action] (optional)
+  /// depending on the action it returns a longer or shorter message
   String _concat(
       {@required String type,
       @required String causingClass,
@@ -98,7 +104,8 @@ class Log {
             ' : [$type]: class: $causingClass, method: $method';
   }
 
-  /// saving the data into the log file
+  /// saves the data into the log file
+  ///
   /// based on (String) [information]
   void _log(String information) async {
     this._file = await _init();
@@ -119,5 +126,6 @@ class Log {
 
   File get file => this._file;
 
+  /// set's up a file if it doesm't exist's
   set file(File file) => this._file;
 }

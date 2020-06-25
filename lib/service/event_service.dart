@@ -13,39 +13,89 @@ import 'package:univents/model/event.dart';
 import '../controller/authService.dart';
 import 'log.dart';
 
-//Collection-Name in database
-final String collection = 'events';
+/// Markus Häring
+///
+/// The EventService is responsible for correctly writing events
+/// into the database and loading them from the database.
+/// Various filters can also be set to load the events.
 
-//initialize Firestore and GeoFirestore
+/// Collection-Name in database
+final String _collection = 'events';
+
+/// initialized database
+final _database = Firestore.instance;
+
+/// initialized geoFireStore based on the database and the collection
+final GeoFirestore _geoFireStore =
+GeoFirestore(_database.collection(_collection));
 final db = Firestore.instance;
-final GeoFirestore geoFirestore = GeoFirestore(db.collection(collection));
 
-//DataField-names in database
-final String endDate = 'endDate';
-final String startDate = 'startDate';
-final String eventOwner = 'eventOwner';
-final String privateEvent = 'private';
-final String attendees = 'attendeesIds';
-final String description = 'description';
-final String imageUrl = 'imageUrl';
-final String eventName = 'name';
-final String tags = 'tagsList';
-final String location = 'locationText';
-final String latitude = 'latitude';
-final String longitude = 'longitude';
+/// dataField name in database for the endDate
+final String _endDate = 'endDate';
 
-//Filter for database query's
+/// dataField name in database for the startDate
+final String _startDate = 'startDate';
+
+/// dataField name in database for the list of event Owners
+final String _eventOwner = 'eventOwner';
+
+/// dataField name in database for the boolean of privateEvent
+final String _privateEvent = 'private';
+
+/// dataField name in database for the list of attendees
+final String _attendees = 'attendeesIds';
+
+/// dataField name in database for the event description
+final String _description = 'description';
+
+/// dataField name in database for the image url
+final String _imageUrl = 'imageUrl';
+
+/// dataField name in database for the event name
+final String _eventName = 'name';
+
+/// dataField name in database for the list of tags
+final String _tags = 'tagsList';
+
+/// dataField name in database for the location
+final String _location = 'locationText';
+
+/// dataField name in database for the latitude
+final String _latitude = 'latitude';
+
+/// dataField name in database for the longitude
+final String _longitude = 'longitude';
+
+/// filter for events startDate.
+/// if the filter is set it will be considered in the search
 Timestamp _startDateFilter;
+
+/// filter for events endDate.
+/// if the filter is set it will be considered in the search
 Timestamp _endDateFilter;
+
+/// filter for events tags.
+/// if the filter is set it will be considered in the search
 List<dynamic> _tagsFilter;
+
+/// filter for events friends.
+/// if the filter is set it will be considered in the search
 List<dynamic> _friendIdFilter;
+
+/// filter for private events.
+/// if the filter is set it will be considered in the search
 bool _privateEventFilter;
+
+/// filter for own-users events.
+/// if the filter is set it will be considered in the search
 bool _myEventsFilter;
 
-//map to permanently save the url to the ids
+/// map to permanently save the url to the ids
 Map<String, String> _urlToID = new Map();
 
 /// uploads the data into the database when creating an [Event]
+///
+/// uploads a Event into the database by getting a [event]
 /// if a [File] is also handed over, it is also uploaded and the
 /// url for the file is assigned to the event
 /// throws [PlatformException] when an Error occurs while storing
@@ -57,90 +107,35 @@ void createEvent(File image, Event event) async {
   String eventID = await _addData(event);
   double latitude = double.parse(event.latitude);
   double longitude = double.parse(event.longitude);
-  geoFirestore.setLocation(eventID, GeoPoint(latitude, longitude));
-
+  _geoFireStore.setLocation(eventID, GeoPoint(latitude, longitude));
   if (image != null) {
     Map<String, dynamic> eventMap = new Map();
-    String imageURL = await uploadFile(collection, image, eventID);
-    eventMap[imageUrl] = imageURL;
+    String imageURL = await uploadFile(_collection, image, eventID);
+    eventMap[_imageUrl] = imageURL;
     _urlToID[eventID] = imageURL;
     await updateField(eventID, eventMap);
   }
 }
 
-/// fetches a [List] of events from the database and checks
-/// which filters are set
-/// throws [PlatformException] when an error occurs while Fetching data
-/// from Database
-Future<List<Event>> getEvents() async {
-  var x;
-  String uid = await getUidOfCurrentlySignedInUser();
-  if (_privateEventFilter) {
-    x = db
-        .collectionGroup(collection)
-        .reference()
-        .where(privateEvent, isEqualTo: true)
-        .where(attendees, arrayContains: uid);
-  } else {
-    x = db
-        .collectionGroup(collection)
-        .reference()
-        .where(privateEvent, isEqualTo: false);
-    if (_myEventsFilter) {
-      x = x.where(attendees, arrayContains: uid);
-    }
-  }
-  if (_startDateFilter != null) {
-    x = x.where(startDate, isGreaterThanOrEqualTo: _startDateFilter);
-  }
-  if (_endDateFilter != null) {
-    x = x.where(endDate, isSmallerThanOrEqualTo: _endDateFilter);
-  }
-  if (_tagsFilter != null) {
-    //  x = x.where('tagsList', arrayContains: _tags);
-  }
-  if (_friendIdFilter != null) {
-    // x = x.where(attendees, arrayContainsany:_friendIdFilter);
-  }
-  QuerySnapshot querySnapshot = await x.getDocuments();
-  List<Event> eventList = _snapShotToList(querySnapshot);
-  addEventIdToObjects(eventList, querySnapshot);
-  return eventList;
-}
-
-/// fetches a [List] of events from the database by [geoLocation] and [radius]
-/// [List] may be empty if no Event was found
-/// throws [PlatformException] when an error occurs while Fetching data
-/// from Database
-Future<List<Event>> getEventNearLocation(
-    GeoPoint geoLocation, double radius) async {
-  final List<DocumentSnapshot> documentList =
-      await geoFirestore.getAtLocation(geoLocation, radius);
-  List<Event> eventList = new List();
-  for (int x = 0; x < documentList.length; x++) {
-    Event event = _documentSnapshotToEvent(documentList[x]);
-    event.eventID = documentList[x].documentID;
-    eventList.add(event);
-  }
-  return eventList;
-}
-
+/// getting all Events from the database near a location in a specific radius
+/// and by set filters
+///
 /// fetches a [List] of events from the database by [geoLocation],[radius]
 /// and [filters]
 /// [List] may be empty if no Event was found
-/// throws [PlatformException] when an error occurs while Fetching data
-/// from Database
-Future<List<Event>> get_events_near_location_and_filters(
-    GeoPoint geo_location, double radius) async {
+/// throws [PlatformException] when an error occurs
+/// while Fetching data from Database
+Future<List<Event>> getEventsNearLocationAndFilters(
+    GeoPoint geoLocation, double radius) async {
   List<DocumentSnapshot> documentList =
-      await geoFirestore.getAtLocation(geo_location, radius);
+      await _geoFireStore.getAtLocation(geoLocation, radius);
   for (int j = 0; j < documentList.length; j++) {
     bool remove = true;
-    if (documentList[j].data[privateEvent] == true) {
-      List<dynamic> attendesList = documentList[j].data[attendees];
-      List<dynamic> ownerList = documentList[j].data[eventOwner];
-      if (attendesList != null &&
-              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+    if (documentList[j].data[_privateEvent] == true) {
+      List<dynamic> attendeesList = documentList[j].data[_attendees];
+      List<dynamic> ownerList = documentList[j].data[_eventOwner];
+      if (attendeesList != null &&
+              attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -153,15 +148,15 @@ Future<List<Event>> get_events_near_location_and_filters(
   }
   if (_privateEventFilter != null) {
     documentList.removeWhere((DocumentSnapshot documentSnapshot) =>
-        (documentSnapshot.data[privateEvent] != privateEventFilter));
+    (documentSnapshot.data[_privateEvent] != privateEventFilter));
   }
   if (myEventFilter != null) {
     for (int j = 0; j < documentList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = documentList[j].data[attendees];
-      List<dynamic> ownerList = documentList[j].data[eventOwner];
-      if (attendesList != null &&
-              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      List<dynamic> attendeesList = documentList[j].data[_attendees];
+      List<dynamic> ownerList = documentList[j].data[_eventOwner];
+      if (attendeesList != null &&
+          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -175,10 +170,11 @@ Future<List<Event>> get_events_near_location_and_filters(
   if (friendIdFilter != null) {
     for (int j = 0; j < documentList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = documentList[j].data[attendees];
-      List<dynamic> ownerList = documentList[j].data[eventOwner];
+      List<dynamic> attendeesList = documentList[j].data[_attendees];
+      List<dynamic> ownerList = documentList[j].data[_eventOwner];
       for (int i = 0; i < friendIdFilter.length; i++) {
-        if (attendesList != null && attendesList.contains(friendIdFilter[i]) ||
+        if (attendeesList != null &&
+            attendeesList.contains(friendIdFilter[i]) ||
             ownerList != null && ownerList.contains(friendIdFilter[i])) {
           remove = false;
         }
@@ -189,31 +185,28 @@ Future<List<Event>> get_events_near_location_and_filters(
       }
     }
   }
-
   if (_startDateFilter != null) {
     for (int i = 0; i < documentList.length; i++) {
-      Timestamp startdate = documentList[i].data[startDate];
-      if (startdate.toDate().isBefore(startDateFilter)) {
+      Timestamp startDate = documentList[i].data[_startDate];
+      if (startDate.toDate().isBefore(startDateFilter)) {
         documentList.removeAt(i);
         i--;
       }
     }
   }
-
   if (_endDateFilter != null) {
     for (int i = 0; i < documentList.length; i++) {
-      Timestamp enddate = documentList[i].data[endDate];
-      if (enddate.toDate().isAfter(endDateFilter)) {
+      Timestamp endDate = documentList[i].data[_endDate];
+      if (endDate.toDate().isAfter(endDateFilter)) {
         documentList.removeAt(i);
         i--;
       }
     }
   }
-
   if (tagsFilter != null && tagsFilter.length > 0) {
     for (int x = 0; x < documentList.length; x++) {
       bool dontRemove = true;
-      List<dynamic> tagsList = documentList[x].data[tags];
+      List<dynamic> tagsList = documentList[x].data[_tags];
       if (tagsList != null) {
         for (int i = 0; i < tagsFilter.length; i++) {
           if (tagsList.contains(tagsFilter[i])) {
@@ -236,60 +229,104 @@ Future<List<Event>> get_events_near_location_and_filters(
   return eventList;
 }
 
+/// Adds information to a Event in the database
+/// when a new field is created
+///
 /// adds [Event] data to the database
 /// throws [PlatformException] when an Error occurs while
 /// updating Data in Database
 Future<String> _addData(Event event) async {
   DocumentReference documentReference =
-      await db.collection(collection).add(_eventToMap(event));
+  await _database.collection(_collection).add(_eventToMap(event));
   return documentReference.documentID;
 }
 
+/// This method should only be used with care,
+/// because the data will be permanently deleted
+/// deletes all Events from User where User is a Owner by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteEventsFromUser(String uid) async {
+  QuerySnapshot qShot = await db
+      .collection(_collection)
+      .where(_eventOwner, arrayContains: uid)
+      .getDocuments();
+  List<Event> eventList = _snapShotToList(qShot);
+  addEventIdToObjects(eventList, qShot);
+  if (eventList != null && eventList.length > 0) {
+    for (int x = 0; x < eventList.length; x++) {
+      Event event = eventList[x];
+      db.collection(_collection).document(event.eventID).delete();
+    }
+  }
+}
+
+/// Updates a Event in the database when something has changed in the Event
+///
 /// updates an event in the database based on an [Event]
 /// throws [PlatformException] when Error occurs while updating Data
 void updateData(Event event) async {
   if (event.eventID != null)
-    db
-        .collection(collection)
+    _database
+        .collection(_collection)
         .document(event.eventID)
         .updateData(_eventToMap(event));
 }
 
-/// in order to change an image of an event, the new [image] and the relevant [event] must be transferred
+/// Change a picture of a Event in the database
+///
+/// To Use when a Picture should change or when a Event gets a
+/// image after it was created bevore
+///
+/// in order to change an image of an event, the new [image]
+/// and the relevant [event] must be transferred
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null) await deleteFile(collection, event.eventID);
+  if (event.imageURL != null) await deleteFile(_collection, event.eventID);
   _urlToID.remove(event.eventID);
   event.imageURL = null;
   if (image != null) {
-    String url = await uploadFile(collection, image, event.eventID);
+    String url = await uploadFile(_collection, image, event.eventID);
     _urlToID[event.eventID] = url;
     event.imageURL = url;
   }
   updateData(event);
 }
 
+/// Updates a single Field in the database
+///
+/// Should be used when a attendees joins the event or leaves it for example.
+///
 /// adds data to a existing field in the database based
 /// on a [String] with the eventID and a [Map] with the new data
 /// throws [PlatformException] when an Error occurs while
 /// updating Event from Database
 void updateField(String eventID, Map<dynamic, dynamic> map) {
-  db.collection(collection).document(eventID).updateData(map);
+  _database.collection(_collection).document(eventID).updateData(map);
 }
 
+/// Deletes a Event in the database
+///
+/// should be used with care! action is not reversible!
+/// data is permanently deleted!
+///
 /// deletes an event in the database based on an [Event]
 /// throws [PlatformException] when an Error occurs while
 /// deleting Event from Database
 deleteEvent(Event event) async {
   if (event.eventID != null) {
     if (event.imageURL != null) {
-      deleteFile(event.eventID, collection);
+      deleteFile(event.eventID, _collection);
     }
-    db.collection(collection).document(event.eventID).delete();
+    _database.collection(_collection).document(event.eventID).delete();
   }
 }
 
+/// Fetches the Image to a Event
+///
+/// should be used to get the Image to a Event so its not necessary to
+/// create a extra network connection in the view!.
+///
 /// Returns a [Widget] with a image based on an [String] eventID
 /// throws [PlatformException] when an Error occurs while Fetching imageURL
 Future<Widget> getImage(String eventID) async {
@@ -298,8 +335,8 @@ Future<Widget> getImage(String eventID) async {
     url = _urlToID[eventID];
   } else {
     DocumentSnapshot documentSnapshot =
-        await db.collection(collection).document(eventID).get();
-    url = documentSnapshot.data[imageUrl].toString();
+    await _database.collection(_collection).document(eventID).get();
+    url = documentSnapshot.data[_imageUrl].toString();
     _urlToID[eventID] = url;
   }
   if (url != null && url.isNotEmpty)
@@ -308,11 +345,14 @@ Future<Widget> getImage(String eventID) async {
     return null;
 }
 
+/// Fetches all events from the database and filters
+/// them based on the set filters
+///
 /// returns a [List] of all available events
 /// then filters based on the set filters
 /// throws [PlatformException] when an error occurs while fetching data
-Future<List<Event>> getAllEvents() async {
-  QuerySnapshot qShot = await db.collection(collection).getDocuments();
+Future<List<Event>> getEvents() async {
+  QuerySnapshot qShot = await _database.collection(_collection).getDocuments();
   List<Event> eventList = new List();
   eventList = _snapShotToList(qShot);
   addEventIdToObjects(eventList, qShot);
@@ -320,16 +360,20 @@ Future<List<Event>> getAllEvents() async {
   return eventList;
 }
 
-/// filters a [List] with [Events] based on the set filters
+
+/// filters a list of events based on the filters set and deletes all
+/// unnecessary events from the list
+///
+/// filters a List [eventList] with [Events] based on the set filters
 /// and returns the updated [List]
 List<Event> filterEvents(List<Event> eventList) {
   for (int j = 0; j < eventList.length; j++) {
     bool remove = true;
     if (eventList[j].privateEvent == true) {
-      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
-      if (attendesList != null &&
-              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      if (attendeesList != null &&
+          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -347,10 +391,10 @@ List<Event> filterEvents(List<Event> eventList) {
   if (myEventFilter != null) {
     for (int j = 0; j < eventList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
-      if (attendesList != null &&
-              attendesList.contains(getUidOfCurrentlySignedInUser()) ||
+      if (attendeesList != null &&
+          attendeesList.contains(getUidOfCurrentlySignedInUser()) ||
           ownerList != null &&
               ownerList.contains(getUidOfCurrentlySignedInUser())) {
         remove = false;
@@ -364,10 +408,11 @@ List<Event> filterEvents(List<Event> eventList) {
   if (friendIdFilter != null) {
     for (int j = 0; j < eventList.length; j++) {
       bool remove = true;
-      List<dynamic> attendesList = eventList[j].attendeesIds;
+      List<dynamic> attendeesList = eventList[j].attendeesIds;
       List<dynamic> ownerList = eventList[j].ownerIds;
       for (int i = 0; i < friendIdFilter.length; i++) {
-        if (attendesList != null && attendesList.contains(friendIdFilter[i]) ||
+        if (attendeesList != null &&
+            attendeesList.contains(friendIdFilter[i]) ||
             ownerList != null && ownerList.contains(friendIdFilter[i])) {
           remove = false;
         }
@@ -381,8 +426,8 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (_startDateFilter != null) {
     for (int i = 0; i < eventList.length; i++) {
-      DateTime startdate = eventList[i].eventStartDate;
-      if (startdate.isBefore(startDateFilter)) {
+      DateTime startDate = eventList[i].eventStartDate;
+      if (startDate.isBefore(startDateFilter)) {
         eventList.removeAt(i);
         i--;
       }
@@ -391,8 +436,8 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (_endDateFilter != null) {
     for (int i = 0; i < eventList.length; i++) {
-      DateTime enddate = eventList[i].eventEndDate;
-      if (enddate.isAfter(endDateFilter)) {
+      DateTime endDate = eventList[i].eventEndDate;
+      if (endDate.isAfter(endDateFilter)) {
         eventList.removeAt(i);
         i--;
       }
@@ -401,16 +446,16 @@ List<Event> filterEvents(List<Event> eventList) {
 
   if (tagsFilter != null && tagsFilter.length > 0) {
     for (int x = 0; x < eventList.length; x++) {
-      bool dontRemove = true;
+      bool remove = true;
       List<dynamic> tagsList = eventList[x].tagsList;
       if (tagsList != null) {
         for (int i = 0; i < tagsFilter.length; i++) {
           if (tagsList.contains(tagsFilter[i])) {
-            dontRemove = false;
+            remove = false;
           }
         }
       }
-      if (dontRemove) {
+      if (remove) {
         eventList.removeAt(x);
         x--;
       }
@@ -420,72 +465,78 @@ List<Event> filterEvents(List<Event> eventList) {
   return eventList;
 }
 
+/// Wraps a QuerySnapshot from database into a List of Events
+///
 /// returns a [List] of events that was created based
-/// on a [QuerySnapshot] returns nothing when no Event was found
+/// on a [QuerySnapshot] or returns [null] when no Event was found
 List<Event> _snapShotToList(QuerySnapshot qShot) {
   if (qShot != null) {
     return qShot.documents
-        .map((doc) => Event.createFrommDB(
-              doc.data[eventName],
-              doc.data[startDate],
-              doc.data[endDate],
-              doc.data[description],
-              doc.data[location],
-              doc.data[privateEvent],
-              doc.data[attendees],
-              doc.data[tags],
-              doc.data[latitude],
-              doc.data[longitude],
-              doc.data[imageUrl],
-              doc.data[eventOwner],
-            ))
+        .map((doc) =>
+        Event.createFromDB(
+          doc.data[_eventName],
+          doc.data[_startDate],
+          doc.data[_endDate],
+          doc.data[_description],
+          doc.data[_location],
+          doc.data[_privateEvent],
+          doc.data[_attendees],
+          doc.data[_tags],
+          doc.data[_latitude],
+          doc.data[_longitude],
+          doc.data[_imageUrl],
+          doc.data[_eventOwner],
+        ))
         .toList();
-  } else
-    //show_toast(AppLocalizations.of(context).translate("no_events_found"));
+  } else {
     Log().error(
         causingClass: 'event_service',
         method: '_snapShotToList',
         action: "No matching events found!");
-  //TODO: show Toast with internationalized message
+    return null;
+  }
 }
 
-/// Returns a [Event] based on a documentSnapshot
+/// Returns a [Event] based on a [documentSnapshot]
 Event _documentSnapshotToEvent(DocumentSnapshot documentSnapshot) {
-  Event event = new Event.createFrommDB(
-      documentSnapshot.data[eventName],
-      documentSnapshot.data[startDate],
-      documentSnapshot.data[endDate],
-      documentSnapshot.data[description],
-      documentSnapshot.data[location],
-      documentSnapshot.data[privateEvent],
-      documentSnapshot.data[attendees],
-      documentSnapshot.data[tags],
-      documentSnapshot.data[latitude],
-      documentSnapshot.data[longitude],
-      documentSnapshot.data[imageUrl],
-      documentSnapshot.data[eventOwner]);
+  Event event = new Event.createFromDB(
+      documentSnapshot.data[_eventName],
+      documentSnapshot.data[_startDate],
+      documentSnapshot.data[_endDate],
+      documentSnapshot.data[_description],
+      documentSnapshot.data[_location],
+      documentSnapshot.data[_privateEvent],
+      documentSnapshot.data[_attendees],
+      documentSnapshot.data[_tags],
+      documentSnapshot.data[_latitude],
+      documentSnapshot.data[_longitude],
+      documentSnapshot.data[_imageUrl],
+      documentSnapshot.data[_eventOwner]);
   return event;
 }
 
-/// Wraps a [Event] into a [Map]
+/// Wraps a [Event] into a [Map] and returns a [Map<String, dynamic>]
 Map<String, dynamic> _eventToMap(Event event) {
   return {
-    eventName: event.title,
-    description: event.description,
-    location: event.location,
-    startDate: event.eventStartDate,
-    endDate: event.eventEndDate,
-    privateEvent: event.privateEvent,
-    attendees: event.attendeesIds,
-    tags: event.tagsList,
-    imageUrl: event.imageURL,
-    latitude: event.latitude,
-    longitude: event.longitude,
-    eventOwner: event.ownerIds
+    _eventName: event.title,
+    _description: event.description,
+    _location: event.location,
+    _startDate: event.eventStartDate,
+    _endDate: event.eventEndDate,
+    _privateEvent: event.privateEvent,
+    _attendees: event.attendeesIds,
+    _tags: event.tagsList,
+    _imageUrl: event.imageURL,
+    _latitude: event.latitude,
+    _longitude: event.longitude,
+    _eventOwner: event.ownerIds
   };
 }
 
-/// adds Event'ids based on a [QuerySnapshot] to a [List] of events
+/// Method to add EventIds from QuerySnapshot to Events
+///
+/// adds Event'ids based on a [QuerySnapshot] to a List<Events>[eventList]
+/// and returns the [List]
 List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
   for (int x = 0; x < eventList.length; x++) {
     eventList[x].eventID = qShot.documents[x].documentID;
@@ -499,8 +550,8 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
 /// throws [PlatformException] when an Error occurs while delete data
 void deleteUserFromAttendeesList(String uid) async {
   QuerySnapshot qShot = await db
-      .collection(collection)
-      .where(attendees, arrayContains: uid)
+      .collection(_collection)
+      .where(_attendees, arrayContains: uid)
       .getDocuments();
   List<Event> eventList = _snapShotToList(qShot);
   addEventIdToObjects(eventList, qShot);
@@ -521,30 +572,15 @@ void deleteUserFromAttendeesList(String uid) async {
   }
 }
 
-/// This method should only be used with care,
-/// because the data will be permanently deleted
-/// deletes all Events from User where User is a Owner by a String [uid]
-/// throws [PlatformException] when an Error occurs while delete data
-void deleteEventsFromUser(String uid) async {
-  QuerySnapshot qShot = await db
-      .collection(collection)
-      .where(eventOwner, arrayContains: uid)
-      .getDocuments();
-  List<Event> eventList = _snapShotToList(qShot);
-  addEventIdToObjects(eventList, qShot);
-  if (eventList != null && eventList.length > 0) {
-    for (int x = 0; x < eventList.length; x++) {
-      Event event = eventList[x];
-      db.collection(collection).document(event.eventID).delete();
-    }
-  }
-}
-
-/// handles errors by [PlatformException] and returns a [String]
-/// with the Error message
-/// can be used by method caller to translate exception to a simple message
-String exceptionHandling(PlatformException e) {
-  switch (e.code) {
+/// ExceptionHandling for all PlatformException thrown by Firebase
+///
+/// should be used to decode PlatformExceptions by Firebase
+///
+/// handles errors by [platformException] and returns a [String]
+/// with the decoded error message or the original message text if no
+/// case applies to the given ones
+String exceptionHandling(PlatformException platformException) {
+  switch (platformException.code) {
     case ('ABORTED'):
       return ('The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.');
       break;
@@ -598,34 +634,41 @@ String exceptionHandling(PlatformException e) {
       return ('Unknown error or an error from a different error domain.');
       break;
   }
-  return e.message;
+  return platformException.message;
 }
 
-//Filter setter/getter and delete
+/// sets the filter for the startdate of events by getting a Datetime[value]
 set startDateFilter(DateTime value) {
   _startDateFilter = Timestamp.fromDate(value);
 }
 
+/// sets the filter for the endDate of events by getting a Datetime[value]
 set endDateFilter(DateTime value) {
   _endDateFilter = Timestamp.fromDate(value);
 }
 
+/// deletes the filter for the end of the events when it is no longer needed
 void deleteEndFilter() {
   _endDateFilter = null;
 }
 
+/// deletes the filter for the start time when it is no longer needed
 void deleteStartFilter() {
   _startDateFilter = null;
 }
 
+/// deletes the filter for tags when it is no longer needed
 void deleteTagFilter() {
   _tagsFilter = null;
 }
+
 
 set tagsFilter(List<String> value) {
   _tagsFilter = value;
 }
 
+/// returns the Filter for the Startdate
+/// may be null if no Filter is set
 DateTime get startDateFilter {
   if (_startDateFilter == null) {
     return null;
@@ -634,6 +677,8 @@ DateTime get startDateFilter {
   }
 }
 
+/// returns the Filter for the endDate
+/// may be null if no Filter is set
 DateTime get endDateFilter {
   if (_endDateFilter == null) {
     return null;
@@ -642,36 +687,57 @@ DateTime get endDateFilter {
   }
 }
 
+/// returns the Filter for the tags
+/// may be null if no Filter is set
 List<String> get tagsFilter => _tagsFilter;
 
+/// sets the filter for users own events
+/// should set to true, if only events from user
+/// are necessary
 set myEventFilter(bool value) {
   _myEventsFilter = value;
 }
 
+/// sets the filter for users own events
+/// should set to true, if only private
+/// events from user are necessary
 set privateEventFilter(bool value) {
   _privateEventFilter = value;
 }
 
+/// returns the Filter for users own events
+/// returns true, if filter is set
+/// may be null if no Filter is set
 bool get myEventFilter => _myEventsFilter;
 
+/// returns the Filter for private events
+/// returns true, if filter is set
+/// may be null if no Filter is set
 bool get privateEventFilter => _privateEventFilter;
 
+/// sets the friendIdFilter by getting a List [value] with friend ids
 void set friendIdFilter(List<dynamic> value) {
   _friendIdFilter = value;
 }
 
+/// returns the Filter for the friendIds
+/// may be null if no Filter is set
 List<dynamic> get friendIdFilter => _friendIdFilter;
 
+/// deletes the filter for friend ids when it is no longer needed
 void deleteFriendIdFilter() {
   _friendIdFilter = null;
 }
 
+/// deletes the filter for private events when it is no longer needed
 void deletePrivateEventFilter() {
   privateEventFilter = null;
 }
 
+/// deletes the filter for users own events when it is no longer needed
 void deleteMyEventFilter() {
   _myEventsFilter = null;
 }
 
+/// returns the map that saves the image urls to every event
 Map<String, String> get urlToID => _urlToID;

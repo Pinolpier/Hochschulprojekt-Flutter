@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// @author Christian Henrich
+///
+/// constants for all the colors used throughout the whole project in the screens for uniform use and ability to easily change color scheme with one class
+
 final primaryColor = Colors.blueAccent;
 final textButtonDarkBlue = Color(0xFF527DAA);
 final univentsWhiteText = Colors.white;

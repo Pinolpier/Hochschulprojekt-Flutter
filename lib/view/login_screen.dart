@@ -11,10 +11,10 @@ import 'package:univents/service/utils/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
-/**
- * this class creates a loginscreen with different textfields to put in email and username and a few
- * buttons that add functionality like logging in through social media or remember me / forgot password
- */
+/// @author Christian Henrich, Markus Link
+///
+/// this class represents the UI for the loginscreen where the user can login via email address and password, google/apple sign in or create a new profile
+/// if he doesn't have an existing one
 class LoginScreen extends StatefulWidget {
   @override
   State createState() => _LoginScreenState();
@@ -22,25 +22,25 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
+  /// for the animation of the univents logo at the start of opening the screen
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
   String _email = '';
   String _password = '';
 
-  /**
-   * this method is responsible for the short logo animation at the start of the app
-   */
+  /// this method is responsible for the short logo animation at the start of the app
   @override
   void initState() {
-      super.initState();
-      _logoAnimationController = new AnimationController(
-          vsync: this, duration: new Duration(milliseconds: 5000));
-      _logoAnimation = new CurvedAnimation(
-          parent: _logoAnimationController, curve: Curves.easeInOutBack);
-      _logoAnimation.addListener(() => this.setState(() {}));
-      _logoAnimationController.forward();
+    super.initState();
+    _logoAnimationController = new AnimationController(
+        vsync: this, duration: new Duration(milliseconds: 5000));
+    _logoAnimation = new CurvedAnimation(
+        parent: _logoAnimationController, curve: Curves.easeInOutBack);
+    _logoAnimation.addListener(() => this.setState(() {}));
+    _logoAnimationController.forward();
   }
 
+  /// widget for the animated logo at the beginning, currently used image is a univents logo from the assets
   Widget _animatedLogoWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  /// Widget for the textfield where the user can put in his email address
   Widget _emailTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen>
     return regExpMail.hasMatch(_email);
   }
 
+  /// Widget for the textfield where the user can put in his password
   Widget _passwordTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,6 +151,7 @@ class _LoginScreenState extends State<LoginScreen>
     return regExpPassword.hasMatch(_password) && _password.length >= 8;
   }
 
+  /// widget for the button that gives the user the ability to retrieve help in case he forgot his own password
   Widget _forgotPasswordWidget() {
     return Container(
       alignment: Alignment.centerRight,
@@ -175,6 +178,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  /// widget for the button that gives the user the ability to start the login process after putting in a valid email address and password in the respective textfields
   Widget _loginButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -221,6 +225,8 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  /// widget for the button that gives the user the ability to start the registration process after putting in a valid email address
+  /// that is not bound to any existing account yet
   Widget _registerButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -252,9 +258,11 @@ class _LoginScreenState extends State<LoginScreen>
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
       try {
         registerWithEmailAndPassword(_email, _password);
+        show_toast("we've sent you an email to verify your account!");
       } on Exception catch (e) {
         show_toast(e.toString());
-        Log().error(causingClass: 'login_screen',
+        Log().error(
+            causingClass: 'login_screen',
             method: 'handleRegistration',
             action: e.toString());
       }
@@ -273,6 +281,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  /// widget for the button that gives the user the ability to log in via Apple ID
   Widget _appleSignInWidget() {
     //TODO check for copyright and brandmark usage wheter it is allowed, also regarding Google Sign In Button!
     return Container(
@@ -286,7 +295,8 @@ class _LoginScreenState extends State<LoginScreen>
               await appleSignIn();
             } on Exception catch (e) {
               show_toast(e.toString());
-              Log().error(causingClass: 'Loginscreen',
+              Log().error(
+                  causingClass: 'Loginscreen',
                   method: 'applesigninWIdget',
                   action: e.toString());
             }
@@ -294,6 +304,7 @@ class _LoginScreenState extends State<LoginScreen>
         ));
   }
 
+  /// widget for the button that gives the user the ability to log in with his google account
   Widget _googleSignInWidget() {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -326,7 +337,8 @@ class _LoginScreenState extends State<LoginScreen>
               await googleSignIn();
             } on Exception catch (e) {
               show_toast(e.toString());
-              Log().error(causingClass: 'Loginscreen',
+              Log().error(
+                  causingClass: 'Loginscreen',
                   method: 'googleSigninWIdget',
                   action: e.toString());
             }
@@ -334,96 +346,68 @@ class _LoginScreenState extends State<LoginScreen>
         ));
   }
 
-//  Widget _signUpWidget() {
-//    return GestureDetector(
-//      onTap: () => print('Sign Up Button Pressed'),
-//      child: RichText(
-//        text: TextSpan(
-//          children: [
-//            TextSpan(
-//              text: 'Don\'t have an Account? ',
-//              style: TextStyle(
-//                color: Colors.white,
-//                fontSize: 18.0,
-//                fontWeight: FontWeight.w400,
-//              ),
-//            ),
-//            TextSpan(
-//              text: 'Sign Up',
-//              style: TextStyle(
-//                color: Colors.white,
-//                fontSize: 18.0,
-//                fontWeight: FontWeight.bold,
-//              ),
-//            ),
-//          ],
-//        ),
-//      ),
-//    );
-//  }
-
   @override
   Widget build(BuildContext context) {
-      var widgetList = <Widget>[
-        _animatedLogoWidget(),
-        SizedBox(height: 30.0),
-        _emailTextfieldWidget(),
-        SizedBox(height: 20.0),
-        _passwordTextfieldWidget(),
-        _forgotPasswordWidget(),
-        _loginButtonWidget(),
-        _registerButtonWidget(),
-      ];
-      bool alreadyAdded = false;
-      bool alreadyAddedApple = false;
-      child:
-      return FutureBuilder<bool>(
-        future: checkAppleSignInAvailability(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data) {
-              if (!alreadyAddedApple) {
-                widgetList.add(
-                  _appleSignInWidget(),
-                );
-                alreadyAddedApple = true;
-              }
+    var widgetList = <Widget>[
+      _animatedLogoWidget(),
+      SizedBox(height: 30.0),
+      _emailTextfieldWidget(),
+      SizedBox(height: 20.0),
+      _passwordTextfieldWidget(),
+      _forgotPasswordWidget(),
+      _loginButtonWidget(),
+      _registerButtonWidget(),
+    ];
+    bool alreadyAdded = false;
+    bool alreadyAddedApple = false;
+    child:
+    return FutureBuilder<bool>(
+      future: checkAppleSignInAvailability(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data) {
+            if (!alreadyAddedApple) {
+              widgetList.add(
+                _appleSignInWidget(),
+              );
+              alreadyAddedApple = true;
             }
-            if (!alreadyAdded) {
-              widgetList.add(_googleSignInWidget());
-              widgetList.add(SizedBox(height: 20.0));
-//            widgetList.add(_signUpWidget());
-              alreadyAdded = true;
-            }
-          } else if (snapshot.hasError) {
-            //TODO add error handling whatever should be done in this case.
-          } else {
-            //TODO maybe improve this with loading animation.
-            return Container(
-              width: 0.0,
-              height: 0.0,
-            );
           }
-
-          return Scaffold(
-            backgroundColor: primaryColor,
-            body: new Container(
-              height: double.infinity,
-              child: SingleChildScrollView(
-                //fixes pixel overflow error when keyboard is used
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 120.0,
-                ),
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: widgetList),
-              ),
-            ),
+          if (!alreadyAdded) {
+            widgetList.add(_googleSignInWidget());
+            widgetList.add(SizedBox(height: 20.0));
+//            widgetList.add(_signUpWidget());
+            alreadyAdded = true;
+          }
+        } else if (snapshot.hasError) {
+          //TODO add error handling whatever should be done in this case.
+        } else {
+          //TODO maybe improve this with loading animation.
+          return Container(
+            width: 0.0,
+            height: 0.0,
           );
-        },
-      );
+        }
+
+        return Scaffold(
+          backgroundColor: primaryColor,
+          body: new Container(
+            height: double.infinity,
+            child: SingleChildScrollView(
+              //fixes pixel overflow error when keyboard is used
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: 40.0,
+                vertical: 120.0,
+              ),
+              child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: widgetList),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

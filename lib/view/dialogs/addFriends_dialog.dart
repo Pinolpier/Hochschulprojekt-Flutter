@@ -2,13 +2,15 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/model/FriendModel.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 
+/// @author Christian Henrich
+///
 /// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
 /// here you have the option to search for new friends through username or import local friends from your phone contacts
 class AddFriendsDialogScreen extends StatefulWidget {
@@ -17,13 +19,16 @@ class AddFriendsDialogScreen extends StatefulWidget {
 }
 
 class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
+  /// debouncer makes sure the query in the searchbar doesn't get read out until 500ms of no new user input
   final _debouncer = new Debouncer(500);
-  List<Contact> _contacts;
-  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
 
-  //simple dummie list filled with dummie friend objects to test the list
-  List<FriendslistDummies> friends = new List();
-  String query;
+  /// list of retrieved phone contacts
+  List<Contact> _contacts;
+
+  /// permission status for access on local phone contacts
+  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  List<FriendModel> friends = new List();
+  String _query;
 
   /// request permissions to use contacts from phone
   Future<void> requestPermission(Permission permission) async {
@@ -36,7 +41,8 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
       });
     } on Exception catch (e) {
       show_toast(e.toString());
-      Log().error(causingClass: 'addFriends_dialog',
+      Log().error(
+          causingClass: 'addFriends_dialog',
           method: 'requestPermission',
           action: e.toString());
     }
@@ -61,7 +67,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
                 onChanged: (string) {
                   //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                   _debouncer.run(() {
-                    query = string;
+                    _query = string;
                   });
                 }),
             Expanded(
@@ -107,10 +113,11 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
               child: FloatingActionButton(
                 onPressed: () async {
                   try {
-                    addFriendByUsername(query);
+                    addFriendByUsername(_query);
                   } on Exception catch (e) {
                     show_toast(e.toString());
-                    Log().error(causingClass: 'addFriends_dialog',
+                    Log().error(
+                        causingClass: 'addFriends_dialog',
                         method: 'addFriendByUsername',
                         action: e.toString());
                   }

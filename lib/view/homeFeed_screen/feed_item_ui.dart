@@ -7,10 +7,13 @@ import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
-//'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
+/// @author mathias darscht
+/// this class defines the design of an event in the home feed
 class FeedItemUI extends StatefulWidget {
+  /// date from the feed.dart class that should have been displayed
   final Event _data;
 
+  /// constructor initializes [_data]
   FeedItemUI(this._data);
 
   @override
@@ -18,10 +21,14 @@ class FeedItemUI extends StatefulWidget {
 }
 
 class FeedItemUIState extends State<FeedItemUI> {
+  /// data provided from FeedItemUI
   final Event _data;
 
   Widget _pPicture;
 
+  bool existsProfilePic;
+
+  /// constructor initializes [_data]
   FeedItemUIState(this._data);
 
   @override
@@ -30,7 +37,9 @@ class FeedItemUIState extends State<FeedItemUI> {
     getProfilePicture(this._data.ownerIds[0]).then((value) {
       if (mounted) {
         setState(() {
-          this._pPicture = value;
+          this._pPicture =
+              value != null ? value : Image.asset('assets/blank_profile.png');
+          value != null ? existsProfilePic = true : false;
         });
       } else {
         Log().error(
@@ -39,8 +48,6 @@ class FeedItemUIState extends State<FeedItemUI> {
             action: 'Memoryleak while loading profile pictures');
       }
     });
-    this._pPicture =
-        _pPicture != null ? _pPicture : Image.asset('assets/blank_profile.png');
   }
 
   @override
@@ -52,9 +59,9 @@ class FeedItemUIState extends State<FeedItemUI> {
         child: Column(
           children: <Widget>[
             ListTile(
-              leading: CircleAvatar(
+              leading: existsProfilePic == false ? CircleAvatar(
                 child: this._pPicture,
-              ),
+              ) : this._pPicture,
               title: Text(
                 this._data.title,
                 style: TextStyle(
@@ -73,10 +80,10 @@ class FeedItemUIState extends State<FeedItemUI> {
                       ),
                       Text(
                         '  ' +
-                            feed_format_date_time(
+                            feedFormatDateTime(
                                 context, this._data.eventStartDate) +
                             '  -  ' +
-                            feed_format_date_time(
+                            feedFormatDateTime(
                                 context, this._data.eventEndDate),
                         style: TextStyle(
                             fontSize:
@@ -94,7 +101,7 @@ class FeedItemUIState extends State<FeedItemUI> {
                         width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
                       Text(
-                        ' ' + _getLocation(context),
+                        ' ' + _getLocation(),
                         style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).size.height * 1 / 60),
@@ -141,7 +148,8 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
-  String _getLocation(BuildContext context) {
+  /// this method get's the location from [_data]
+  String _getLocation() {
     return this._data.location;
   }
 
@@ -161,6 +169,7 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
+  /// navigates to the selected event
   void _navigateToEventScreen() async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => new EventInfo(_data)));

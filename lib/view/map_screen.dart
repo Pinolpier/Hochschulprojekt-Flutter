@@ -14,12 +14,18 @@ import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
 
+/// @author Jan Oster
+/// todo: CONSIDER writing a library-level doc comment
 class MapScreen extends StatefulWidget {
+  /// todo: missing documentation
   @override
   State createState() => _MapScreenState();
 }
 
+/// todo: missing documentation
 class _MapScreenState extends State<MapScreen> {
+  /// todo: add documentation of variables
+  /// todo: set variables private
   LatLng pos;
   LatLng previousPosition;
   List<Marker> _markerList = new List();
@@ -28,6 +34,7 @@ class _MapScreenState extends State<MapScreen> {
   Timer _timer;
   bool _gestureStart = true;
 
+  /// todo: missing documentation
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
@@ -73,7 +80,7 @@ class _MapScreenState extends State<MapScreen> {
               "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
           additionalOptions: {
             'accessToken':
-            'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
+                'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
             'id': 'mapbox.streets',
           },
         ),
@@ -95,36 +102,38 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Gets all Events from the Database, creates a Marker for each and sets an onClickListener to open the eventInfo of the respective Event
   void getMarkerList(List list) {
     _markerList = new List<Marker>();
     for (Event e in list) {
       _markerList.add(new Marker(
         point: LatLng(double.parse(e.latitude), double.parse(e.longitude)),
-        builder: (ctx) =>
-            Container(
-                child: GestureDetector(
-                  onTap: () async {
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => new EventInfo(e),
-                        ));
-                  },
-                  child: Icon(
-                    Icons.location_on,
-                    color: Colors.red,
-                  ),
-                )),
+        builder: (ctx) => Container(
+            child: GestureDetector(
+          onTap: () async {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new EventInfo(e),
+                ));
+          },
+          child: Icon(
+            Icons.location_on,
+            color: Colors.red,
+          ),
+        )),
       ));
     }
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Method to load new events when the card is moved.
   /// The [MapPosition] and the double [radius] are transferred
   Future<bool> loadNewEvents(MapPosition position, double radius) async {
     try {
-      getMarkerList(await get_events_near_location_and_filters(
+      getMarkerList(await getEventsNearLocationAndFilters(
           new GeoPoint(position.center.latitude, position.center.longitude),
           radius));
     } on Exception catch (e) {
@@ -137,12 +146,13 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
+  /// todo: missing documentation
   Future<bool> loadAsyncData() async {
     try {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
-      getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
+      getMarkerList(await getEventsNearLocationAndFilters(geoPoint, 100));
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
@@ -153,6 +163,8 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
+  /// todo: delete redundant comments
+  /// todo: missing documentation
   @override
   void initState() {
     // This is the proper place to make the async calls
@@ -184,6 +196,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   ///Converts LatLng to List<String> with index 0 = latitude, index 1 = longitude
   List<String> convertLatLngToString(LatLng latLng) {
     String point = latLng.toString();
@@ -199,7 +212,7 @@ class _MapScreenState extends State<MapScreen> {
     return pointList1;
   }
 
-  /// Method to start a timer so that the card does not poll events too often
+  /// method to start a timer so that the card does not poll events too often
   void _restartTimer() {
     _gestureStart = false;
     _timer?.cancel();

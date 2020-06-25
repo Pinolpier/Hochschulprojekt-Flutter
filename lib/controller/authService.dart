@@ -1,3 +1,7 @@
+/// author: Markus Link
+///
+/// Use the methods provided in this script to do all operations regarding user authentication and user account management.
+/// For user profile related things use [userProfileService.dart].
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,8 +24,11 @@ FirebaseUser _user;
 bool isAppleSignInAvailable;
 bool _hasBeenChecked = false;
 
-/// Call this method to get a return bool that tells whether the device supports Sign-In-With-Apple. This feature is only supported on iOS 13+ devices.
+/// Call this method to get a return bool that tells whether the device supports Sign-In-With-Apple.
+///
+/// This feature is only supported on iOS 13+ devices.
 /// If this information has not been checked before this method needs time for asynchronously checking, that's why a [Future] is returned.
+/// If this check was done before a value is returned instantly.
 /// This method completely relies on a method from the [AppleSignIn] class which is provided by a plugin.
 Future<bool> checkAppleSignInAvailability() async {
   if (!_hasBeenChecked) {
@@ -37,7 +44,8 @@ Future<FirebaseUser> _refreshCurrentlyLoggedInUser() async {
 }
 
 /// Call this method to start the process of Google Sign In. Everything is handled automatically.
-/// Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
+///
+/// Throws [UserDisabledException] if the user who tries to sign in is disabled e.g. because of manual action in the Firebase console
 /// Throws [SignInAbortedException] if the user aborted the Google Sign In, e.g. by pressing Cancel.
 /// In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
 /// Returns [bool] whether the sign in was successful meaning true only if a user is signed in afterwards.
@@ -54,29 +62,29 @@ Future<bool> googleSignIn() async {
           accessToken: _googleSignInAuthentication.accessToken);
       try {
         final AuthResult _authResult =
-            await _auth.signInWithCredential(_credentials);
+        await _auth.signInWithCredential(_credentials);
         _user = _authResult.user;
       } on PlatformException catch (platformException) {
         switch (platformException.code) {
           case "ERROR_INVALID_CREDENTIAL":
-            //If the credential data is malformed or has expired.
+          //If the credential data is malformed or has expired.
             break;
           case "ERROR_USER_DISABLED":
-            //If the user has been disabled (for example, in the Firebase console)
+          //If the user has been disabled (for example, in the Firebase console)
             throw new UserDisabledException(
                 platformException,
                 "The userAccount that tried to sign in with Google was disabled. Credentilas were: " +
                     _credentials.toString());
             break;
           case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-            //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
-            // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
+          //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
+          // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
             break;
           case "ERROR_OPERATION_NOT_ALLOWED":
-            //Indicates that Google accounts are not enabled.
+          //Indicates that Google accounts are not enabled.
             break;
           case "ERROR_INVALID_ACTION_CODE":
-            //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
+          //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
             break;
         }
       }
@@ -89,7 +97,6 @@ Future<bool> googleSignIn() async {
       throw new SignInAbortedException(
           null, "The Google Sign In Process has been aborted!");
     }
-
     return await isUserSignedIn();
   } on Exception catch (error, stacktrace) {
     //TODO maybe add error type based error handling?
@@ -100,9 +107,11 @@ Future<bool> googleSignIn() async {
   }
 }
 
-/// Call this method to start the process of Apple Sign In. Everything is handled automatically, except that
+/// Call this method to start the process of Apple Sign In.
+///
+/// Everything is handled automatically, except that
 /// this METHOD DOES NOT CHECK, WHETHER APPLE SIGN IS AVAILABLE ON THE DEVICE, THIS HAS TO BE DONE BEFORE CALLING THIS METHOD!
-/// Check for Apple Sign In availability (iOS 13 and higher) by calling [backendAPI.checkAppleSignInAvailability].
+/// Check for Apple Sign In availability (iOS 13 and higher) by calling [checkAppleSignInAvailability].
 /// Throws [UserDisabledException] if the user that tries to sign in is disabled e.g. because of manual action in the Firebase console
 /// Throws [SignInAbortedException] if the user aborted the Apple Sign In, e.g. by pressing Cancel.
 /// In all cases an appropriate error should be shown by the calling UI and no user will be signed in!
@@ -118,36 +127,37 @@ Future<bool> appleSignIn() async {
       final _credentials = oAuthProvider.getCredential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
           accessToken:
-              String.fromCharCodes(appleIdCredential.authorizationCode));
+          String.fromCharCodes(appleIdCredential.authorizationCode));
       try {
         final authResult = await _auth.signInWithCredential(_credentials);
         _user = authResult.user;
         final updateUser = UserUpdateInfo();
         updateUser.displayName =
-            '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
+        '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName
+            .familyName}';
         await _user.updateProfile(updateUser);
         return true;
       } on PlatformException catch (platformException) {
         switch (platformException.code) {
           case "ERROR_INVALID_CREDENTIAL":
-            //If the credential data is malformed or has expired.
+          //If the credential data is malformed or has expired.
             break;
           case "ERROR_USER_DISABLED":
-            //If the user has been disabled (for example, in the Firebase console)
+          //If the user has been disabled (for example, in the Firebase console)
             throw new UserDisabledException(
                 platformException,
                 "The userAccount that tried to sign in with Apple was disabled. Credentilas were: " +
                     _credentials.toString());
             break;
           case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-            //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
-            // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
+          //If there already exists an account with the email address asserted by Google. Resolve this case by calling [fetchSignInMethodsForEmail]and then asking
+          // the user to sign in using one of them. This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
             break;
           case "ERROR_OPERATION_NOT_ALLOWED":
-            //Indicates that Google accounts are not enabled.
+          //Indicates that Google accounts are not enabled.
             break;
           case "ERROR_INVALID_ACTION_CODE":
-            //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
+          //If the action code in the link is malformed, expired, or has already been used. This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
             break;
         }
       }
@@ -169,6 +179,7 @@ Future<bool> appleSignIn() async {
 }
 
 /// Call this method to sign a [FirebaseUser] in with email and password.
+///
 /// You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
 /// None of the parameters [email] & [password] can be null!
 /// Throws [NotAnEmailException] if the given String for [email] was not of correct format, this should be checked before calling this method.
@@ -179,7 +190,7 @@ Future<bool> appleSignIn() async {
 Future<bool> signInWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.signInWithEmailAndPassword(
-            email: email, password: password))
+        email: email, password: password))
         .user;
   } on PlatformException catch (platformException) {
     switch (platformException.code) {
@@ -205,13 +216,16 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
         break;
     }
   } on Exception catch (e) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
         action: "An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
-        action: "SomeWTFthing has happend! Object of type ${fatal
+        action:
+        "SomeWTFthing has happend! Object of type ${fatal
             .runtimeType} has been thrown. Trying to print it: $fatal");
   }
   if (!_user.isEmailVerified) {
@@ -225,6 +239,7 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
 
 //TODO throw a NullParameterException in Email And Password methods and also throw a WeakPasswordException.
 /// Call this method to register a [FirebaseUser] with email and password.
+///
 /// You should check [email] for correct format (meaning that the string truly represents an email) before calling this method!
 /// You should check [password] for strength (meaning 8 characters, containing at least one number and letter) before calling this method!
 /// None of the parameters [email] & [password] can be null!
@@ -232,16 +247,17 @@ Future<bool> signInWithEmailAndPassword(String email, String password) async {
 Future<bool> registerWithEmailAndPassword(String email, String password) async {
   try {
     _user = (await _auth.createUserWithEmailAndPassword(
-            email: email, password: password))
+        email: email, password: password))
         .user;
     _user.sendEmailVerification();
   } on PlatformException catch (platformException) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
         action: platformException.toString());
     switch (platformException.code) {
       case "ERROR_WEAK_PASSWORD":
-        //at least 6 characters needed
+      //at least 6 characters needed
         break;
       case "ERROR_INVALID_EMAIL":
         throw new NotAnEmailException(platformException,
@@ -255,13 +271,16 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
         break;
     }
   } on Exception catch (e) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
         action: "An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
-        action: "SomeWTFthing has happend! Object of type ${fatal
+        action:
+        "SomeWTFthing has happend! Object of type ${fatal
             .runtimeType} has been thrown. Trying to print it: $fatal");
   }
   if (!_user.isEmailVerified) {
@@ -277,14 +296,18 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
 /// You should check [newEmail] for correct format (meaning that the string truly represents an email) before calling this method!
 /// The [password] is required to reauthenticate the user before operating such sensitive stuff.
 Future<void> changeEmailAddress(String newEmail, String password) async {
-  await _user.reauthenticateWithCredential(EmailAuthProvider.getCredential(email: getEmailOfCurrentlySignedInUser(), password: password));
+  await _user.reauthenticateWithCredential(
+      EmailAuthProvider.getCredential( //TODO use [reauthenticate] method!
+          email: getEmailOfCurrentlySignedInUser(), password: password));
   await _user.updateEmail(newEmail);
   UserProfile toUpdate =
   await (getUserProfile(getUidOfCurrentlySignedInUser()));
   await updateProfile(toUpdate.setEmail(newEmail));
 }
 
-/// used to delete an account. Only the [userProfileService.deleteProfileOfCurrentlySignedInUser] should call this method!
+/// used to delete an account.
+///
+/// Only the [userProfileService.deleteProfileOfCurrentlySignedInUser] should call this method!
 Future<void> deleteAccount(BuildContext context) async {
   await _reauthenticate(context);
   await _user.delete(); // TODO handle different errors that could occur!
@@ -403,6 +426,7 @@ Future<void> _reauthenticate(BuildContext context) async {
 }
 
 /// Call this method so Firebase can send an email for password reset.
+///
 /// Parameter [email] must be a correctly formatted email address.
 /// Throws an [NotAnEmailException] if the parameter [email] was malformed.
 /// Throws an [UserNotFoundException] if no user with the given email could be found. Think twice before telling a random guy entering random emails, whether or not a user can or cannot be found!
@@ -411,7 +435,7 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
     await _auth.sendPasswordResetEmail(email: email);
   } on PlatformException catch (platformException) {
     switch (platformException.code) {
-      //TODO correct error handling
+    //TODO correct error handling
       case "ERROR_INVALID_EMAIL":
         throw new NotAnEmailException(platformException,
             "The email ($email) is not an email. This should have been checked by the login screen BEFORE submitting a password reset email request!");
@@ -423,13 +447,16 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
         break;
     }
   } on Exception catch (e) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
         action: "An unknown Exception has occured! Exception is : $e");
   } catch (fatal) {
-    Log().error(causingClass: 'userProfileService',
+    Log().error(
+        causingClass: 'userProfileService',
         method: 'updateProfile',
-        action: "SomeWTFthing has happend! Object of type ${fatal
+        action:
+        "SomeWTFthing has happend! Object of type ${fatal
             .runtimeType} has been thrown. Trying to print it: $fatal");
   }
 }
@@ -440,7 +467,7 @@ Future<bool> isUserSignedIn() async {
   return _user != null ? true : false;
 }
 
-/// this method checks whether a user is signed in in the firebase. Is the quicker than [backendAPI.isUserSignedIn] because it only checks the internal variables.
+/// this method checks whether a user is signed in in the firebase. Is the quicker than [isUserSignedIn] because it only checks the internal variables.
 /// Only use this if asynchronous requests are not an option for your code.
 bool isUserSignedInQuickCheck() {
   return _user != null ? true : false;

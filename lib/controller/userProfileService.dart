@@ -1,3 +1,8 @@
+/// author Markus Link
+///
+/// Use the methods provided in this script to do all operations regarding user profile management.
+/// For user account related things use [authService.dart].
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,11 +18,18 @@ import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 
+/// used to keep a reference to the Firestore database
 final firestore = Firestore.instance;
+
+/// used to keep a reference to the "path" in the database.
 final String collection = 'profile';
+
+/// used to keep a reference from a userId to a image uri.
 Map<String, String> uidToUri = {};
 
-///Use this method to update a [UserProfile]. If it does not exist already it will be created.
+///Use this method to update a [UserProfile].
+///
+///If it does not exist already it will be created.
 ///All fields will be overwritten with the values from the parameter [profile].
 ///Only the [FirebaseUser] referenced by [profile._uid] is allowed to update his own profile.
 Future<bool> updateProfile(UserProfile profile) async {
@@ -49,7 +61,7 @@ Future<bool> updateProfile(UserProfile profile) async {
           causingClass: 'userProfileService',
           method: 'updateProfile',
           action:
-              'An error has occurred while creating the profile: $profile, the error is: ${e.toString()}');
+          'An error has occurred while creating the profile: $profile, the error is: ${e.toString()}');
       return false;
     }
   }
@@ -70,7 +82,9 @@ Future<bool> deleteProfileOfCurrentlySignedInUser(BuildContext context) async {
   await deleteAccount(context);
 }
 
-/// Use this method to change a user's profile picture. The parameter [file] should be the new file to upload as the [profile]'s profile picture.
+/// Use this method to change a user's profile picture.
+///
+/// The parameter [file] should be the new file to upload as the [profile]'s profile picture.
 /// The user is referenced by [profile.uid] and the parameter [file] may be null to delete the (existing) profile picture.
 Future<bool> updateProfilePicture(File file, UserProfile profile) async {
   if (await _isOperationAllowed(profile)) {
@@ -90,10 +104,11 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
         show_toast(e.toString());
-        Log().error(causingClass: 'userProfileService',
+        Log().error(
+            causingClass: 'userProfileService',
             method: 'updateProfile',
-            action: 'An error has occured while updating the profile: $profile, the error is: ${e
-                .toString()}');
+            action:
+            'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
         return false;
       }
     } else {
@@ -108,10 +123,11 @@ Future<bool> updateProfilePicture(File file, UserProfile profile) async {
       } catch (e) {
         //TODO Find out what exceptions are thrown by trying out to be able to handle them correctly!
         show_toast(e.toString());
-        Log().error(causingClass: 'userProfileService',
+        Log().error(
+            causingClass: 'userProfileService',
             method: 'updateProfile',
-            action: 'An error has occured while updating the profile: $profile, the error is: ${e
-                .toString()}');
+            action:
+            'An error has occured while updating the profile: $profile, the error is: ${e.toString()}');
         return false;
       }
     }
@@ -126,17 +142,19 @@ Future<Widget> getProfilePicture(String uid) async {
   return null;
 }
 
-/// This method should probably only be used internally, but still it's ot private because it may be needed elsewhere
+/// This method should probably only be used internally, but still it's not private because it may be needed elsewhere
 ///
 /// Handles caching profilePicture URIs and retrieving them for a profile identified by [uid].
 Future<String> getProfilePictureUri(String uid) async {
+  //TODO remove own cashing later when an own backend is implemented
   String uri = '';
   if (uidToUri.containsKey(uid)) {
     uri = uidToUri[uid];
   } else {
     DocumentSnapshot documentSnapshot =
-    await firestore.collection(collection).document(uid).get();
-    if (documentSnapshot != null && documentSnapshot.exists) uri = documentSnapshot.data['profilePicture'].toString();
+        await firestore.collection(collection).document(uid).get();
+    if (documentSnapshot != null && documentSnapshot.exists)
+      uri = documentSnapshot.data['profilePicture'].toString();
   }
   uidToUri.putIfAbsent(uid, () => uri);
   return uri;
@@ -181,7 +199,7 @@ Future<UserProfile> getUserProfile(String uid) async {
   }
 }
 
-/// Use this method to be informed wheter a userProfile exists for the given [uid].
+/// Use this method to be informed whether a userProfile exists for the given [uid].
 Future<bool> existsUserProfile(String uid) async {
   if (!await isUserSignedIn()) {
     throw new UserNotSignedInException(null,
@@ -197,6 +215,7 @@ Future<bool> existsUserProfile(String uid) async {
   }
 }
 
+/// only works for exact [username]s
 Future<String> getUidFromUserName(String username) async {
   var x = firestore
       .collectionGroup(collection)
@@ -214,11 +233,11 @@ Future<String> getUidFromUserName(String username) async {
       break;
     default:
       throw new IllegalDatabaseStateException(null,
-          "More than 1 or less than 0 users with username: $username have been returned from database! Length og List is: ${querySnapshot
-              .documents.length}");
+          "More than 1 or less than 0 users with username: $username have been returned from database! Length og List is: ${querySnapshot.documents.length}");
   }
 }
 
+/// only works for exact [email]s
 Future<String> getUidFromEmail(String email) async {
   var x = firestore
       .collectionGroup(collection)
@@ -236,8 +255,7 @@ Future<String> getUidFromEmail(String email) async {
       break;
     default:
       throw new IllegalDatabaseStateException(null,
-          "More than 1 or less than 0 users with email adress: $email have been returned from database! Length og List is: ${querySnapshot
-              .documents.length}");
+          "More than 1 or less than 0 users with email adress: $email have been returned from database! Length og List is: ${querySnapshot.documents.length}");
   }
 }
 
@@ -255,8 +273,7 @@ Future<bool> _isOperationAllowed(UserProfile profile) async {
   }
   if (getUidOfCurrentlySignedInUser() != profile.uid) {
     throw new ForeignProfileAccessForbiddenException(null,
-        "Cannot update profile of another than the currently signed in user. Uid of profile that was intended to be updated: ${profile
-            .uid}, uid of currently signed in user: ${getUidOfCurrentlySignedInUser()}");
+        "Cannot update profile of another than the currently signed in user. Uid of profile that was intended to be updated: ${profile.uid}, uid of currently signed in user: ${getUidOfCurrentlySignedInUser()}");
     return false;
   }
   return true;

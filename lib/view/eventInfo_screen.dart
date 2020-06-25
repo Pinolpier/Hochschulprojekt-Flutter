@@ -13,22 +13,28 @@ import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
+/// @author Christian Henrich
+
 /// This Eventinfoscreen shows a description of the event and also its attendees in a horizontal listview at the bottom
-/// Furthermore it shows stuff like an event picture, how many people will attend, open or closed and also adds functionality
+/// Furthermore it shows information like an event picture, how many people will attend, open or closed and also adds functionality
 /// so that the user can change the event picture and set the event to private or open
 class EventInfo extends StatefulWidget {
-  final Event event;
+  /// matching event data that should get shown
+  final Event _event;
 
-  EventInfo(this.event, {Key key}) : super(key: key);
+  /// passes the matching event data of the event whose information should get shown on the screen
+  EventInfo(this._event, {Key key}) : super(key: key);
 
   @override
   _EventInfoState createState() => _EventInfoState();
 }
 
 class _EventInfoState extends State<EventInfo> {
+  /// current datetime in milliseconds
   DateTime now = new DateTime.fromMicrosecondsSinceEpoch(
       new DateTime.now().millisecondsSinceEpoch);
 
+  /// this bool is set to true if the event is public and false if the event is private
   bool isEventOpen = true;
   bool attending;
 
@@ -47,18 +53,22 @@ class _EventInfoState extends State<EventInfo> {
   /// description of the event (set by event creator)
   String eventText = 'Lorem Ipsum';
 
-  /// eventpicture
+  /// event image
   File eventImage;
 
+  /// event image retrieved from database
   File eventImageAsync;
 
   ///eventPicture from Firebase (if available)
   Widget eventimagewidget;
 
+  /// result of the async data from [initState()]
   bool _result;
 
+  /// UIDs of all users that will attend in the event
   List<dynamic> attendees;
 
+  /// profilepictures of all users that will attend in the event
   List<Widget> profilePictureList = new List();
 
   ImagePickerUnivents ip = new ImagePickerUnivents();
@@ -72,7 +82,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             if (eventImageAsync != 1) {
               eventImage = eventImageAsync;
-              updateImage(eventImage, widget.event);
+              updateImage(eventImage, widget._event);
             }
           }); // handle your image tap here
         }, // handle your image tap here
@@ -88,7 +98,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             if (image != 1) {
               eventImage = eventImageAsync;
-              updateImage(eventImage, widget.event);
+              updateImage(eventImage, widget._event);
             }
           }); // handle your image tap here
         },
@@ -105,7 +115,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             if (eventImageAsync != 1) {
               eventImage = eventImageAsync;
-              updateImage(eventImage, widget.event);
+              updateImage(eventImage, widget._event);
             }
           }); // handle your image tap here
         },
@@ -129,10 +139,11 @@ class _EventInfoState extends State<EventInfo> {
     );
   }
 
+  /// async method that retrieves all needed data from the backend before Widget Build runs and shows the screen to the user
   Future<bool> loadAsyncData() async {
-    if (widget.event.imageURL != null) {
+    if (widget._event.imageURL != null) {
       try {
-        eventimagewidget = await getImage(widget.event.eventID);
+        eventimagewidget = await getImage(widget._event.eventID);
       } on Exception catch (e) {
         Log().error(
             causingClass: 'eventInfo_screen',
@@ -143,7 +154,7 @@ class _EventInfoState extends State<EventInfo> {
       eventimagewidget = null;
     }
 
-    attendees = widget.event.attendeesIds;
+    attendees = widget._event.attendeesIds;
     print(attendees);
     if (attendees.contains(getUidOfCurrentlySignedInUser())) {
       attending = true;
@@ -153,15 +164,12 @@ class _EventInfoState extends State<EventInfo> {
     try {
       int index = 0;
       for (String uid in attendees) {
-        print(uid);
         //TODO maybe don't load all profilepictures
         if (index < attendees.length) {
-          Widget pp = await getProfilePicture(
-              uid);
+          Widget pp = await getProfilePicture(uid);
           if (pp != null) {
-            print(index);
-            profilePictureList.add(ClipOval(
-                child: await getProfilePicture(uid)));
+            profilePictureList
+                .add(ClipOval(child: await getProfilePicture(uid)));
             index++;
           } else {
             profilePictureList
@@ -173,7 +181,8 @@ class _EventInfoState extends State<EventInfo> {
         }
       }
     } on Exception catch (e) {
-      Log().error(causingClass: 'eventInfo_screen',
+      Log().error(
+          causingClass: 'eventInfo_screen',
           method: 'loadAsyncData',
           action: e.toString());
     }
@@ -183,16 +192,16 @@ class _EventInfoState extends State<EventInfo> {
   @override
   void initState() {
     loadAsyncData().then((result) {
-      isEventOpen = !widget.event.privateEvent;
-      eventAttendeesCount = widget.event.attendeesIds.length;
-      eventDate = format_date_time(context, widget.event.eventStartDate);
-      eventName = widget.event.title;
-      eventLocation = widget.event.location;
-      eventText = widget.event.description;
+      isEventOpen = !widget._event.privateEvent;
+      eventAttendeesCount = widget._event.attendeesIds.length;
+      eventDate = formatDateTime(context, widget._event.eventStartDate);
+      eventName = widget._event.title;
+      eventLocation = widget._event.location;
+      eventText = widget._event.description;
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
-        _result = result; 
+        _result = result;
       });
     });
     super.initState();
@@ -203,7 +212,7 @@ class _EventInfoState extends State<EventInfo> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text(widget.event.title),
+        title: Text(widget._event.title),
         centerTitle: true,
       ),
       body: Stack(
@@ -276,20 +285,21 @@ class _EventInfoState extends State<EventInfo> {
                                   share(
                                       context,
                                       'Eventtitel: ' +
-                                          widget.event.title +
+                                          widget._event.title +
                                           '\n' +
                                           'Eventort: ' +
-                                          widget.event.location +
+                                          widget._event.location +
                                           '\n' +
                                           'Eventinfo: ' +
-                                          widget.event.description +
+                                          widget._event.description +
                                           '\n' +
                                           'Start: ' +
-                                          widget.event.eventStartDate
+                                          widget._event.eventStartDate
                                               .toString() +
                                           '\n' +
                                           'Ende: ' +
-                                          widget.event.eventEndDate.toString() +
+                                          widget._event.eventEndDate
+                                              .toString() +
                                           '\n');
                                 },
                                 child: Icon(
@@ -322,10 +332,10 @@ class _EventInfoState extends State<EventInfo> {
                                     GestureDetector(
                                         onTap: () async {
                                           isEventOpen = !isEventOpen;
-                                          widget.event.privateEvent =
+                                          widget._event.privateEvent =
                                           !isEventOpen;
                                           try {
-                                            updateData(widget.event);
+                                            updateData(widget._event);
                                           } on Exception catch (e) {
                                             Log().error(
                                                 causingClass:
@@ -524,7 +534,8 @@ class _EventInfoState extends State<EventInfo> {
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
                                 onPressed: () {
-                                  showFriendsDialogEvent(context, widget.event);
+                                  showFriendsDialogEvent(
+                                      context, widget._event);
                                 },
                                 child: Icon(Icons.group_add),
                                 backgroundColor: primaryColor,
@@ -535,8 +546,8 @@ class _EventInfoState extends State<EventInfo> {
                               child: FloatingActionButton(
                                 heroTag: 'addAttendee',
                                 onPressed: () async {
-                                  List<dynamic> fixedLengthList = widget.event
-                                      .attendeesIds;
+                                  List<dynamic> fixedLengthList =
+                                      widget._event.attendeesIds;
                                   List<String> attendeesList = new List();
                                   for (int i = 0; i <
                                       fixedLengthList.length; i++) {
@@ -552,8 +563,8 @@ class _EventInfoState extends State<EventInfo> {
                                         await getProfilePicture(
                                             getUidOfCurrentlySignedInUser()));
                                   }
-                                  widget.event.attendeesIds = attendeesList;
-                                  updateData(widget.event);
+                                  widget._event.attendeesIds = attendeesList;
+                                  updateData(widget._event);
                                   attending = !attending;
                                   setState(() {
                                     initState(); //TODO this is just a workaround!

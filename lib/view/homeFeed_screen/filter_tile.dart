@@ -7,11 +7,13 @@ import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
 import 'feed_filter.dart';
 
+/// @mathias darscht
 /// this class implements the UI for setting filters
 class FilterTile extends StatefulWidget {
   /// this filter
   final FeedFilter _filter;
 
+  /// constructor initializes [_filter]
   FilterTile(this._filter);
 
   @override
@@ -28,6 +30,10 @@ class FilterTileState extends State<FilterTile> {
   /// state of selection
   bool _isSelected;
 
+  /// constructor initializes
+  ///
+  /// the var [_filter]
+  /// depending on [_isSelected] the [_icon] will be with a check or plus
   FilterTileState(this._filter) {
     _isSelected = _startState();
     _icon = _isSelected
@@ -58,7 +64,7 @@ class FilterTileState extends State<FilterTile> {
 
   bool get isSelected => this._isSelected;
 
-  /// for setting up the start state of the icons for each filter
+  /// depending on [_isSelected] the [_filter] will given a [_startState]
   bool _startState() {
     bool _startState;
     switch (this._filter) {
@@ -75,7 +81,6 @@ class FilterTileState extends State<FilterTile> {
         } else {
           _startState = false;
         }
-
         break;
       case FeedFilter.tagsFilter:
         if (tagsFilter != null) {
@@ -110,6 +115,7 @@ class FilterTileState extends State<FilterTile> {
   }
 
   /// this method checks the filter
+  ///
   /// case of date filter we need a (BuildContext)[context]
   /// for setting up a date picker
   void _changeSection(BuildContext context) async {
@@ -163,7 +169,8 @@ class FilterTileState extends State<FilterTile> {
     }
   }
 
-  /// changes the state of this class
+  /// changes the state of filter
+  ///
   /// if this tile is selected
   /// change the icon and the state
   void _setIsSelected() {
