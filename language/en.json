@@ -53,6 +53,6 @@
   "privacy_statement": "Privacy Statement",
   "imprint": "Imprint",
   "delete_profile_text": "You're about to delete your userprofile, are you sure?",
-  "select_range_values": "Select Start- and End Date",
-  "confirm": "Bestätigen"
+  "select_range_values_date": "Select Start- and End Date",
+  "select_range_value_radius": "Select distance"
 }

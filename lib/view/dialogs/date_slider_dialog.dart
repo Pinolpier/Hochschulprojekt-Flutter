@@ -33,6 +33,8 @@ class DateSliderDialogState extends State<DateSliderDialog> {
   String _start = "";
   String _end = "";
 
+  /// constructor with list of translated [_strings], list of [_sDates]
+  /// for displaying on the screen and [_dates] as values for the filter
   DateSliderDialogState(this._strings, this._sDates, this._dates);
 
   @override

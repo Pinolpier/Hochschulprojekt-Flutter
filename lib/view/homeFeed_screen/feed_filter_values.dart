@@ -36,12 +36,14 @@ class FeedFilterValues {
     return _filter;
   }
 
-  /// translates title on [context] of use
-  List<String> translatedStrings(BuildContext context) {
+  /// translates strings on [context] of use
+  static List<String> translatedStrings(BuildContext context) {
     List<String> stringsToTranslate = List();
-    stringsToTranslate
-        .add(AppLocalizations.of(context).translate('select_range_values'));
+    stringsToTranslate.add(
+        AppLocalizations.of(context).translate('select_range_values_date'));
     stringsToTranslate.add(AppLocalizations.of(context).translate('confirm'));
+    stringsToTranslate.add(
+        AppLocalizations.of(context).translate('select_range_value_radius'));
     return stringsToTranslate;
   }
 }

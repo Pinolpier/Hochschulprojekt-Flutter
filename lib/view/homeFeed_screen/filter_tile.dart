@@ -121,8 +121,7 @@ class FilterTileState extends State<FilterTile> {
             dates.add(today);
             sDates.add(getDayAndMonth(context, today));
           }
-          List<String> strings =
-              FeedFilterValues(_filter).translatedStrings(context);
+          List<String> strings = FeedFilterValues.translatedStrings(context);
           List<DateTime> data = await showDialog(
               context: context,
               builder: (context) => DateSliderDialog(strings, sDates, dates));

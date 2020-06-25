@@ -14,6 +14,9 @@ import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
 
+import 'dialogs/radius_slider_dialog.dart';
+import 'homeFeed_screen/feed_filter_values.dart';
+
 class MapScreen extends StatefulWidget {
   @override
   State createState() => _MapScreenState();
@@ -28,72 +31,72 @@ class _MapScreenState extends State<MapScreen> {
   Timer _timer;
   bool _gestureStart = true;
 
+  double _radius = 0;
+
   Widget _flutterMap(BuildContext context) {
-    return Card(
-      child: FlutterMap(
-        options: MapOptions(
-          center: LatLng(49.140530, 9.210270),
-          zoom: 8.0,
-          plugins: [
-            UserLocationPlugin(),
-          ],
-          onPositionChanged: (position, hasGesture) async {
-            if (_gestureStart) {
-              if (previousPosition != position.center) {
-                final Distance distance = new Distance();
-                previousPosition = position.center;
-                try {
-                  if (await loadNewEvents(
-                      position,
-                      distance.as(LengthUnit.Kilometer, position.center,
-                              position.bounds.northEast) +
-                          radius_buffer)) {
-                    this.setState(() {});
-                  }
-                } on Exception catch (e) {
-                  show_toast(e.toString());
-                  Log().error(
-                      causingClass: 'map_screen', method: 'onPositionChanged:');
+    return FlutterMap(
+      options: MapOptions(
+        center: LatLng(49.140530, 9.210270),
+        zoom: 8.0,
+        plugins: [
+          UserLocationPlugin(),
+        ],
+        onPositionChanged: (position, hasGesture) async {
+          if (_gestureStart) {
+            if (previousPosition != position.center) {
+              final Distance distance = new Distance();
+              previousPosition = position.center;
+              try {
+                if (await loadNewEvents(
+                    position,
+                    distance.as(LengthUnit.Kilometer, position.center,
+                            position.bounds.northEast) +
+                        radius_buffer)) {
+                  this.setState(() {});
                 }
-                _restartTimer();
+              } on Exception catch (e) {
+                show_toast(e.toString());
+                Log().error(
+                    causingClass: 'map_screen', method: 'onPositionChanged:');
               }
+              _restartTimer();
             }
-          },
-          onLongPress: (LatLng latlng) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      new CreateEventScreen(convertLatLngToString(latlng)),
-                ));
+          }
+        },
+        onLongPress: (LatLng latlng) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    new CreateEventScreen(convertLatLngToString(latlng)),
+              ));
+        },
+      ),
+      layers: [
+        TileLayerOptions(
+          urlTemplate: "https://api.tiles.mapbox.com/v4/"
+              "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+          additionalOptions: {
+            'accessToken':
+                'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
+            'id': 'mapbox.streets',
           },
         ),
-        layers: [
-          new TileLayerOptions(
-            urlTemplate: "https://api.tiles.mapbox.com/v4/"
-                "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-            additionalOptions: {
-              'accessToken':
-                  'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
-              'id': 'mapbox.streets',
-            },
-          ),
-          MarkerLayerOptions(
-            markers: _markerList,
-          ),
-          UserLocationOptions(
-            context: context,
-            mapController: mapController,
-            markers: _markerList,
-            updateMapLocationOnPositionChange: false,
-            onLocationUpdate: (LatLng pos) {
-              this.pos = pos;
-            },
-            showMoveToCurrentLocationFloatingActionButton: true,
-          ),
-        ],
-        mapController: mapController,
-      ),
+        MarkerLayerOptions(
+          markers: _markerList,
+        ),
+        UserLocationOptions(
+          context: context,
+          mapController: mapController,
+          markers: _markerList,
+          updateMapLocationOnPositionChange: false,
+          onLocationUpdate: (LatLng pos) {
+            this.pos = pos;
+          },
+          showMoveToCurrentLocationFloatingActionButton: true,
+        ),
+      ],
+      mapController: mapController,
     );
   }
 
@@ -181,7 +184,24 @@ class _MapScreenState extends State<MapScreen> {
       return CircularProgressIndicator();
     } else {
       // Do something with the `_result`s here
-      return Scaffold(body: _flutterMap(context));
+      String title = FeedFilterValues.translatedStrings(context)[2];
+      String buttonText = FeedFilterValues.translatedStrings(context)[1];
+      return Scaffold(
+        body: _flutterMap(context),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.adjust),
+          onPressed: () {
+            setState(() {
+              showDialog(
+                      context: context,
+                      builder: (context) =>
+                          RadiusSliderDialog(title, buttonText))
+                  .then((value) => _radius);
+            });
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      );
     }
   }
 
