@@ -192,7 +192,7 @@ class _EventInfoState extends State<EventInfo> {
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
-        _result = result;
+        _result = result; 
       });
     });
     super.initState();
