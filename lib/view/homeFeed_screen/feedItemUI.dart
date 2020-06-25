@@ -72,17 +72,22 @@ class FeedItemUIState extends State<FeedItemUI> {
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
                       Text(
-                        '  ' +
-                            feed_format_date_time(
-                                context, this._data.eventStartDate) +
-                            '  -  ' +
-                            feed_format_date_time(
-                                context, this._data.eventEndDate),
+                        _breakString(
+                            '  ' +
+                                feed_format_date_time(
+                                    context, this._data.eventStartDate) +
+                                '  -  ' +
+                                feed_format_date_time(
+                                    context, this._data.eventEndDate),
+                            '-'),
                         style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).size.height * 1 / 60),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 100,
                   ),
                   Row(
                     children: <Widget>[
@@ -93,11 +98,13 @@ class FeedItemUIState extends State<FeedItemUI> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
-                      Text(
-                        _breakString(' ' + _getLocation(context)),
-                        style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 1 / 60),
+                      SingleChildScrollView(
+                        child: Text(
+                          _breakString(' ' + _getLocation(context), ','),
+                          style: TextStyle(
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 1 / 60),
+                        ),
                       )
                     ],
                   ),
@@ -141,21 +148,22 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
-  String _breakString(String text) {
-    print(text.length);
+  String _breakString(String text, String sep) {
     String newText = "";
-    List sList = List();
     if (text.length > 30) {
-      sList = text.split(',');
       int sum = 0;
+      var sList = text.split(sep);
       for (String t in sList) {
+        sum += t.length;
         if (sum < 30) {
-          newText = newText + t;
+          newText = newText + t + ', ';
         } else {
-          newText = newText + '\n';
+          newText = newText + '\n$t';
           sum = 0;
         }
       }
+    } else {
+      newText = text;
     }
     return newText;
   }
