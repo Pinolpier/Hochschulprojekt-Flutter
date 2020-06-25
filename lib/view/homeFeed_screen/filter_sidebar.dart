@@ -17,8 +17,7 @@ class FilterSidebarState extends State<FilterSidebar> {
 
   FilterSidebarState() {
     this._filters = [
-      FilterTile(FeedFilter.startDateFilter),
-      FilterTile(FeedFilter.endDateFilter),
+      FilterTile(FeedFilter.dateFilter),
       FilterTile(FeedFilter.tagsFilter),
       FilterTile(FeedFilter.myEventFilter),
       FilterTile(FeedFilter.privateEventFilter),

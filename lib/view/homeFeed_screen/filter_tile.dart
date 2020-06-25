@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/friendlist_service.dart';
-import 'package:univents/service/utils/dateTimePickerUnivents.dart';
-import 'package:univents/view/dialogs/slider_dialog.dart';
+import 'package:univents/service/utils/utils.dart';
+import 'package:univents/view/dialogs/date_slider_dialog.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
 import 'feed_filter.dart';
@@ -63,20 +63,12 @@ class FilterTileState extends State<FilterTile> {
   bool _startState() {
     bool _startState;
     switch (this._filter) {
-      case FeedFilter.startDateFilter:
+      case FeedFilter.dateFilter:
         if (startDateFilter != null) {
           _startState = true;
         } else {
           _startState = false;
         }
-        break;
-      case FeedFilter.endDateFilter:
-        if (endDateFilter != null) {
-          _startState = true;
-        } else {
-          _startState = false;
-        }
-
         break;
       case FeedFilter.tagsFilter:
         if (tagsFilter != null) {
@@ -115,25 +107,28 @@ class FilterTileState extends State<FilterTile> {
   /// for setting up a date picker
   void _changeSection(BuildContext context) async {
     switch (this._filter) {
-      case FeedFilter.startDateFilter:
+      case FeedFilter.dateFilter:
         if (this._isSelected) {
           deleteStartFilter();
-          _setIsSelected();
-        } else {
-          List<DateTime> data = await showDialog(
-              context: context, builder: (context) => SliderDialog());
-          startDateFilter = data[0];
-          _setIsSelected();
-        }
-        break;
-      case FeedFilter.endDateFilter:
-        if (this._isSelected) {
           deleteEndFilter();
           _setIsSelected();
         } else {
-          DateTime _date = await getDateTime(context);
-          if (_date != null) {
-            endDateFilter = _date;
+          DateTime today = DateTime.now();
+          List<String> sDates = List();
+          List<DateTime> dates = List();
+          for (int dayRange = 0; dayRange < 10; dayRange++) {
+            today = today.add(Duration(days: dayRange));
+            dates.add(today);
+            sDates.add(getDayAndMonth(context, today));
+          }
+          List<String> strings =
+              FeedFilterValues(_filter).translatedStrings(context);
+          List<DateTime> data = await showDialog(
+              context: context,
+              builder: (context) => DateSliderDialog(strings, sDates, dates));
+          if (data != null) {
+            startDateFilter = data[0];
+            endDateFilter = data[1];
             _setIsSelected();
           }
         }
@@ -156,8 +151,12 @@ class FilterTileState extends State<FilterTile> {
         }
         break;
       case FeedFilter.friendsFilter:
+        _setIsSelected();
         Map<String, dynamic> friendMap = await getFriends();
         friendIdFilter = friendMap['friends'];
+        if (!_isSelected) {
+          deleteFriendIdFilter();
+        }
         break;
     }
   }

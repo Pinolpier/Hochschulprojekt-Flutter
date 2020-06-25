@@ -16,11 +16,8 @@ class FeedFilterValues {
   String convertToString(BuildContext context) {
     String _filter;
     switch (this._filterValue) {
-      case FeedFilter.startDateFilter:
-        _filter = AppLocalizations.of(context).translate('start_date_filter');
-        break;
-      case FeedFilter.endDateFilter:
-        _filter = AppLocalizations.of(context).translate('end_date_filter');
+      case FeedFilter.dateFilter:
+        _filter = AppLocalizations.of(context).translate('date_filter');
         break;
       case FeedFilter.tagsFilter:
         _filter = AppLocalizations.of(context).translate('tags_filter');
@@ -37,5 +34,14 @@ class FeedFilterValues {
         break;
     }
     return _filter;
+  }
+
+  /// translates title on [context] of use
+  List<String> translatedStrings(BuildContext context) {
+    List<String> stringsToTranslate = List();
+    stringsToTranslate
+        .add(AppLocalizations.of(context).translate('select_range_values'));
+    stringsToTranslate.add(AppLocalizations.of(context).translate('confirm'));
+    return stringsToTranslate;
   }
 }

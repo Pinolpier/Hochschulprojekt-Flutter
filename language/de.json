@@ -28,8 +28,7 @@
   "loginscreen_bad_email": "Email-Adresse ungültig",
   "loginscreen_bad_password": "Passwort muss mindestens einen groß- und Kleinbuchstaben sowie eine Zahl enthalten und aus mindestens 8 Zeichen bestehen ",
   "unknown_Exception": "Unbekannter Fehler",
-  "start_date_filter": "Startdatum",
-  "end_date_filter": "Enddatum",
+  "date_filter": "Start- und Enddatum",
   "tags_filter": "Tags",
   "my_event_filter": "Meine Events",
   "private_event_filter": "Private Events",
@@ -54,5 +53,6 @@
   "privacy_statement": "Datenschutzerklärung",
   "imprint": "Impressum",
   "delete_profile_text": "Sind Sie sich sicher, das Benutzerprofil zu löschen",
-  "select_range_values": "Wählen Sie Start- und Enddatum"
+  "select_range_values": "Wählen Sie Start- und Enddatum",
+  "confirm": "Bestätigen"
 }

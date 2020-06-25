@@ -28,8 +28,7 @@
   "loginscreen_bad_email": "E-Mail-address invalid",
   "loginscreen_bad_password": "Password must contain lower- and uppercase letters and a digit from 0-9 and has a minimum length of 8",
   "unknown_Exception": "unknown Exception",
-  "start_date_filter": "Start Date",
-  "end_date_filter": "End Date",
+  "date_filter": "Start and End Date",
   "tags_filter": "Tags",
   "my_event_filter": "My Events",
   "private_event_filter": "Private Events",
@@ -54,5 +53,6 @@
   "privacy_statement": "Privacy Statement",
   "imprint": "Imprint",
   "delete_profile_text": "You're about to delete your userprofile, are you sure?",
-  "select_range_values": "Select Start- and End Date"
+  "select_range_values": "Select Start- and End Date",
+  "confirm": "Bestätigen"
 }

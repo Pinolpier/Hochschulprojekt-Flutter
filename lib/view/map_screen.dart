@@ -29,69 +29,71 @@ class _MapScreenState extends State<MapScreen> {
   bool _gestureStart = true;
 
   Widget _flutterMap(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(
-        center: LatLng(49.140530, 9.210270),
-        zoom: 8.0,
-        plugins: [
-          UserLocationPlugin(),
-        ],
-        onPositionChanged: (position, hasGesture) async {
-          if (_gestureStart) {
-            if (previousPosition != position.center) {
-              final Distance distance = new Distance();
-              previousPosition = position.center;
-              try {
-                if (await loadNewEvents(
-                    position,
-                    distance.as(LengthUnit.Kilometer, position.center,
-                            position.bounds.northEast) +
-                        radius_buffer)) {
-                  this.setState(() {});
+    return Card(
+      child: FlutterMap(
+        options: MapOptions(
+          center: LatLng(49.140530, 9.210270),
+          zoom: 8.0,
+          plugins: [
+            UserLocationPlugin(),
+          ],
+          onPositionChanged: (position, hasGesture) async {
+            if (_gestureStart) {
+              if (previousPosition != position.center) {
+                final Distance distance = new Distance();
+                previousPosition = position.center;
+                try {
+                  if (await loadNewEvents(
+                      position,
+                      distance.as(LengthUnit.Kilometer, position.center,
+                              position.bounds.northEast) +
+                          radius_buffer)) {
+                    this.setState(() {});
+                  }
+                } on Exception catch (e) {
+                  show_toast(e.toString());
+                  Log().error(
+                      causingClass: 'map_screen', method: 'onPositionChanged:');
                 }
-              } on Exception catch (e) {
-                show_toast(e.toString());
-                Log().error(
-                    causingClass: 'map_screen', method: 'onPositionChanged:');
+                _restartTimer();
               }
-              _restartTimer();
             }
-          }
-        },
-        onLongPress: (LatLng latlng) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    new CreateEventScreen(convertLatLngToString(latlng)),
-              ));
-        },
+          },
+          onLongPress: (LatLng latlng) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      new CreateEventScreen(convertLatLngToString(latlng)),
+                ));
+          },
+        ),
+        layers: [
+          new TileLayerOptions(
+            urlTemplate: "https://api.tiles.mapbox.com/v4/"
+                "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+            additionalOptions: {
+              'accessToken':
+                  'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
+              'id': 'mapbox.streets',
+            },
+          ),
+          MarkerLayerOptions(
+            markers: _markerList,
+          ),
+          UserLocationOptions(
+            context: context,
+            mapController: mapController,
+            markers: _markerList,
+            updateMapLocationOnPositionChange: false,
+            onLocationUpdate: (LatLng pos) {
+              this.pos = pos;
+            },
+            showMoveToCurrentLocationFloatingActionButton: true,
+          ),
+        ],
+        mapController: mapController,
       ),
-      layers: [
-        new TileLayerOptions(
-          urlTemplate: "https://api.tiles.mapbox.com/v4/"
-              "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-          additionalOptions: {
-            'accessToken':
-            'pk.eyJ1IjoidW5pdmVudHMiLCJhIjoiY2s4YzJoZzFlMGlmazNtcGVvczZnMW84dyJ9.Pt9uy31wRUAcsijVLBS0vw',
-            'id': 'mapbox.streets',
-          },
-        ),
-        MarkerLayerOptions(
-          markers: _markerList,
-        ),
-        UserLocationOptions(
-          context: context,
-          mapController: mapController,
-          markers: _markerList,
-          updateMapLocationOnPositionChange: false,
-          onLocationUpdate: (LatLng pos) {
-            this.pos = pos;
-          },
-          showMoveToCurrentLocationFloatingActionButton: true,
-        ),
-      ],
-      mapController: mapController,
     );
   }
 
@@ -101,21 +103,20 @@ class _MapScreenState extends State<MapScreen> {
     for (Event e in list) {
       _markerList.add(new Marker(
         point: LatLng(double.parse(e.latitude), double.parse(e.longitude)),
-        builder: (ctx) =>
-            Container(
-                child: GestureDetector(
-                  onTap: () async {
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => new EventInfo(e),
-                        ));
-                  },
-                  child: Icon(
-                    Icons.location_on,
-                    color: Colors.red,
-                  ),
-                )),
+        builder: (ctx) => Container(
+            child: GestureDetector(
+          onTap: () async {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new EventInfo(e),
+                ));
+          },
+          child: Icon(
+            Icons.location_on,
+            color: Colors.red,
+          ),
+        )),
       ));
     }
   }
