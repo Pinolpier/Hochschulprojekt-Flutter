@@ -6,7 +6,7 @@ import 'package:univents/model/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// todo: add author
+/// @author Jan Oster
 
 ///This class creates an AboutScreen which displays the Privacytext and the Impressumtext (found in assets/res/strings.json)
 ///there is a Button to directly send feedback via E-Mail (mailto:-link)

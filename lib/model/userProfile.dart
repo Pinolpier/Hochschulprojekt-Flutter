@@ -8,12 +8,8 @@ final int PRIVATE = 1;
 final int FRIENDS = 2;
 final int PUBLIC = 3;
 
-/// todo: CONSIDER writing a library-level doc comment
-/// --> What
 /// used to model a UserProfile of the App
 class UserProfile {
-  /// todo: add documentation for the variables
-  /// --> What (sprechende Namen)
   String _uid;
   String _username;
   String _email;
@@ -52,8 +48,6 @@ class UserProfile {
         : PRIVATE;
   }
 
-  /// todo: missing documentation
-  /// --> What
   String toString() {
     return 'UserProfile{_uid: $_uid, _username: $_username, _email: $_email, _forename: $_forename, _surname: $_surname, _biography: $_biography, _tags: $_tags, _emailVisibility: $_emailVisibility, _nameVisibility: $_nameVisibility, _tagsVisibility: $_tagsVisibility}';
   }
@@ -113,7 +107,6 @@ class UserProfile {
     _username = value;
   }
 
-  /// todo: missing documentation
   String get uid => _uid;
 
   /// should only be used to update fields on the logged in User's profile

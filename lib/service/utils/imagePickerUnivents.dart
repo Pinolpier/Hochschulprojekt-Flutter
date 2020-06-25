@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// todo: add author
+/// @author Jan Oster
 /// todo: CONSIDER writing a library-level doc comment
 class ImagePickerUnivents {
   /// todo: add documentation to variable

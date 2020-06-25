@@ -14,7 +14,7 @@ import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
 
-/// todo: add author
+/// @author Jan Oster
 /// todo: CONSIDER writing a library-level doc comment
 class MapScreen extends StatefulWidget {
   /// todo: missing documentation

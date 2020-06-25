@@ -166,8 +166,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                                   ? friends[index].profilepic
                                   : CircleAvatar(
                                       backgroundImage: AssetImage(
-                                          'assets/${groups[index]
-                                              .grouppicture}'), //TODO Gruppenvorschaubild ändern können ? Rücksprache mit PO Markus Link
+                                          'assets/${groups[index].grouppicture}'),
                                     ),
                             ),
                           ),

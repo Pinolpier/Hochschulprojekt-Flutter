@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// todo: add author
+/// @author Jan Oster
 /// todo: CONSIDER writing a library-level doc comment
 
 /// todo: documentation of variables

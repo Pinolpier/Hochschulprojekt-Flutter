@@ -11,7 +11,7 @@ import 'package:univents/service/utils/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
-/// @author Christian Henrich
+/// @author Christian Henrich, Markus Link
 ///
 /// this class represents the UI for the loginscreen where the user can login via email address and password, google/apple sign in or create a new profile
 /// if he doesn't have an existing one
@@ -94,8 +94,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// This method checks whether the given parameter [email] of type [String] is a valid e-mail-address using regex.
   /// The regex is copied from StackOverflow. Returns true only if a valid email address has been passed as argument.
   bool _isEmailGood(String email) {
@@ -144,7 +142,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// This method checks whether a given parameter [password] of type [String] is a secure password. Secure is defined as:
   /// Contains lower- and uppercase letters and a digit from 0-9 in any random order and has a minimum length of 8
   /// Returns true only if the password is safe.
@@ -208,7 +205,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Sign a user in if the [_email] is valid.
   _handleLogin() {
     if (_isEmailGood(_email)) {
@@ -255,7 +251,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Registers a new user&password combination if [_isPasswordGood] and if [_isEmailGood].
   handleRegistration() {
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
