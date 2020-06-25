@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -29,14 +30,15 @@ class _MapScreenState extends State<MapScreen> {
   MapController mapController = new MapController();
   Timer _timer;
   bool _gestureStart = true;
+  GeoPoint initPosition;
 
   double _radius = 0;
 
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(49.140530, 9.210270),
-        zoom: 8.0,
+        center: LatLng(initPosition.latitude, initPosition.longitude),
+        zoom: radius == null ? 11.0 : (log(20000 / radius) / log(2)) - 0.5,
         plugins: [
           UserLocationPlugin(),
         ],
@@ -141,11 +143,16 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<bool> loadAsyncData() async {
-    try {
+    if (radius != null) {
+      initPosition = gPoint;
+    } else {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
-      getMarkerList(await get_events_near_location_and_filters(geoPoint, 100));
+      initPosition = new GeoPoint(position.latitude, position.longitude);
+    }
+    try {
+      getMarkerList(await get_events_near_location_and_filters(
+          initPosition, radius != null ? radius : 100.0));
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
