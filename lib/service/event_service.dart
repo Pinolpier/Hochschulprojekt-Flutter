@@ -45,6 +45,8 @@ bool _myEventsFilter;
 /// radius of certained point to filter
 double _radius;
 
+GeoPoint point;
+
 //map to permanently save the url to the ids
 Map<String, String> _urlToID = new Map();
 
@@ -663,7 +665,15 @@ bool get privateEventFilter => _privateEventFilter;
 double get radius => _radius;
 
 /// sets new [radius] for filter
-set radius(double radius) => _radius;
+set radius(double radius) {
+  _radius = radius;
+}
+
+void initPoint(GeoPoint p) {
+  point = p;
+}
+
+GeoPoint get gPoint => point;
 
 void set friendIdFilter(List<dynamic> value) {
   _friendIdFilter = value;

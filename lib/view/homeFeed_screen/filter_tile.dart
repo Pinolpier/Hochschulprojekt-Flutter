@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/event_service.dart';
@@ -7,6 +8,7 @@ import 'package:univents/view/dialogs/date_slider_dialog.dart';
 import 'package:univents/view/dialogs/radius_slider_dialog.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
+import '../locationPicker_screen.dart';
 import 'feed_filter.dart';
 
 /// this class implements the UI for setting filters
@@ -29,6 +31,8 @@ class FilterTileState extends State<FilterTile> {
 
   /// state of selection
   bool _isSelected;
+
+  static GeoPoint point;
 
   FilterTileState(this._filter) {
     _isSelected = _startState();
@@ -167,14 +171,24 @@ class FilterTileState extends State<FilterTile> {
         break;
       case FeedFilter.radiusFilter:
         _setIsSelected();
-        String title = FeedFilterValues.translatedStrings(context)[2];
-        String buttonText = FeedFilterValues.translatedStrings(context)[1];
-        double _radius = await showDialog(
-            context: context,
-            builder: (context) => RadiusSliderDialog(title, buttonText));
-        radius = _radius;
         if (!_isSelected) {
           deleteRadiusFilter();
+          initPoint(null);
+        } else {
+          String title = FeedFilterValues.translatedStrings(context)[2];
+          String buttonText = FeedFilterValues.translatedStrings(context)[1];
+          double _radius = await showDialog(
+              context: context,
+              builder: (context) => RadiusSliderDialog(title, buttonText));
+          radius = _radius;
+
+          var interface = InterfaceToReturnPickedLocation();
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LocationPickerScreen(interface)));
+          initPoint(GeoPoint(interface.choosenLocationCoords[1],
+              interface.choosenLocationCoords[0]));
         }
     }
   }

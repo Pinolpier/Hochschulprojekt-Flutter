@@ -12,9 +12,10 @@ class Feed {
   ///inits the feed with data from firebase
   static Future<List<Widget>> init() async {
     _feed = List<Widget>(); //create new instance
-
     try {
-      List<Event> data = await getAllEvents(); //get data from firebase
+      List<Event> data = point != null
+          ? await get_events_near_location_and_filters(point, radius)
+          : await getAllEvents(); //get data from firebase
       if (_feed.length != data.length) {
         _addEventToFeed(data);
       }
@@ -23,6 +24,7 @@ class Feed {
       Log().error(
           causingClass: 'feed', method: 'init', action: exceptionHandling(e));
     }
+    //rint(point == null);
     return _feed;
   }
 
@@ -30,21 +32,6 @@ class Feed {
   static void _addEventToFeed(List<Event> eList) {
     for (Event e in eList) {
       _feed.add(FeedItemUI(e));
-    }
-  }
-
-  static set feed(List<Event> list) {
-    _feed = List<Widget>(); //create new instance
-
-    try {
-      List<Event> data = list; //get data from firebase
-      if (_feed.length != data.length) {
-        _addEventToFeed(data);
-      }
-    } on Exception catch (e) {
-      show_toast(exceptionHandling(e));
-      Log().error(
-          causingClass: 'feed', method: 'init', action: exceptionHandling(e));
     }
   }
 }
