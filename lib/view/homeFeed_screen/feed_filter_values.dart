@@ -32,6 +32,8 @@ class FeedFilterValues {
       case FeedFilter.friendsFilter:
         _filter = AppLocalizations.of(context).translate('friends_filter');
         break;
+      case FeedFilter.radiusFilter:
+        _filter = AppLocalizations.of(context).translate('radius_filter');
     }
     return _filter;
   }

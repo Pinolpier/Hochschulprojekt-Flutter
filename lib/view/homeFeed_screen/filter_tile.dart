@@ -5,6 +5,7 @@ import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/date_slider_dialog.dart';
 import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
+import 'package:univents/view/locationPicker_screen.dart';
 
 import 'feed_filter.dart';
 
@@ -157,6 +158,9 @@ class FilterTileState extends State<FilterTile> {
           deleteFriendIdFilter();
         }
         break;
+      case FeedFilter.radiusFilter:
+        _setIsSelected();
+        Navigator.push(context, LocationPickerScreen());
     }
   }
 

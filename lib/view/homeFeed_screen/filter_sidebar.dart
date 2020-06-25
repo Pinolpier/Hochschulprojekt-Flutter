@@ -22,6 +22,7 @@ class FilterSidebarState extends State<FilterSidebar> {
       FilterTile(FeedFilter.myEventFilter),
       FilterTile(FeedFilter.privateEventFilter),
       FilterTile(FeedFilter.friendsFilter),
+      FilterTile(FeedFilter.radiusFilter)
     ];
   }
 

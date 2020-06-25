@@ -4,4 +4,5 @@ enum FeedFilter {
   myEventFilter,
   privateEventFilter,
   friendsFilter,
+  radiusFilter
 }

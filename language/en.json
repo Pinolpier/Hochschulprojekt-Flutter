@@ -34,6 +34,7 @@
   "private_event_filter": "Private Events",
   "friends_filter": "Events of Friends",
   "feed_filter": "Feed Filter",
+  "radius_filter": "Radius",
   "home_screen": "Home",
   "map_screen": "Map",
   "friends_screen": "Friends",

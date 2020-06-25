@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
@@ -15,7 +14,6 @@ import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
 
-import 'dialogs/radius_slider_dialog.dart';
 import 'homeFeed_screen/feed_filter_values.dart';
 
 class MapScreen extends StatefulWidget {
@@ -189,20 +187,6 @@ class _MapScreenState extends State<MapScreen> {
       String buttonText = FeedFilterValues.translatedStrings(context)[1];
       return Scaffold(
         body: _flutterMap(context),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.adjust),
-          backgroundColor: primaryColor,
-          onPressed: () {
-            setState(() {
-              showDialog(
-                      context: context,
-                      builder: (context) =>
-                          RadiusSliderDialog(title, buttonText))
-                  .then((value) => _radius);
-            });
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       );
     }
   }
