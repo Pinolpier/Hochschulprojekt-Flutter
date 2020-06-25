@@ -258,6 +258,7 @@ class _LoginScreenState extends State<LoginScreen>
     if (_isEmailGood(_email) && _isPasswordGood(_password)) {
       try {
         registerWithEmailAndPassword(_email, _password);
+        show_toast("we've sent you an email to verify your account!");
       } on Exception catch (e) {
         show_toast(e.toString());
         Log().error(
