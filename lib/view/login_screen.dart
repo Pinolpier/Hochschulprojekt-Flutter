@@ -11,33 +11,24 @@ import 'package:univents/service/utils/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
-/// todo: add author
-/// todo: documentation: -> /// documentation text
-/**
- * this class creates a loginscreen with different textfields to put in email and username and a few
- * buttons that add functionality like logging in through social media or remember me / forgot password
- */
+/// @author Christian Henrich
+///
+/// this class represents the UI for the loginscreen where the user can login via email address and password, google/apple sign in or create a new profile
+/// if he doesn't have an existing one
 class LoginScreen extends StatefulWidget {
-  /// todo: missing documentation
   @override
   State createState() => _LoginScreenState();
 }
 
-/// todo: missing documentation
 class _LoginScreenState extends State<LoginScreen>
-
-    /// todo: missing documentation
-    with
-        SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
+  /// for the animation of the univents logo at the start of opening the screen
   AnimationController _logoAnimationController;
   Animation<double> _logoAnimation;
   String _email = '';
   String _password = '';
 
-  /// todo: correct
-  /**
-   * this method is responsible for the short logo animation at the start of the app
-   */
+  /// this method is responsible for the short logo animation at the start of the app
   @override
   void initState() {
     super.initState();
@@ -49,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen>
     _logoAnimationController.forward();
   }
 
-  /// todo: missing documenation
+  /// widget for the animated logo at the beginning, currently used image is a univents logo from the assets
   Widget _animatedLogoWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// todo: missing documentation
+  /// Widget for the textfield where the user can put in his email address
   Widget _emailTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen>
     return regExpMail.hasMatch(_email);
   }
 
-  /// todo: missing documentation
+  /// Widget for the textfield where the user can put in his password
   Widget _passwordTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen>
     return regExpPassword.hasMatch(_password) && _password.length >= 8;
   }
 
-  /// todo: missing documentation
+  /// widget for the button that gives the user the ability to retrieve help in case he forgot his own password
   Widget _forgotPasswordWidget() {
     return Container(
       alignment: Alignment.centerRight,
@@ -190,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  /// todo: missing documentation
+  /// widget for the button that gives the user the ability to start the login process after putting in a valid email address and password in the respective textfields
   Widget _loginButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -236,7 +227,8 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  /// todo: missing documenation
+  /// widget for the button that gives the user the ability to start the registration process after putting in a valid email address
+  /// that is not bound to any existing account yet
   Widget _registerButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -291,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  /// todo: missing documentation
+  /// widget for the button that gives the user the ability to log in via Apple ID
   Widget _appleSignInWidget() {
     //TODO check for copyright and brandmark usage wheter it is allowed, also regarding Google Sign In Button!
     return Container(
@@ -314,7 +306,7 @@ class _LoginScreenState extends State<LoginScreen>
         ));
   }
 
-  /// todo: missing documentation
+  /// widget for the button that gives the user the ability to log in with his google account
   Widget _googleSignInWidget() {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -355,34 +347,6 @@ class _LoginScreenState extends State<LoginScreen>
           },
         ));
   }
-
-//  Widget _signUpWidget() {
-//    return GestureDetector(
-//      onTap: () => print('Sign Up Button Pressed'),
-//      child: RichText(
-//        text: TextSpan(
-//          children: [
-//            TextSpan(
-//              text: 'Don\'t have an Account? ',
-//              style: TextStyle(
-//                color: Colors.white,
-//                fontSize: 18.0,
-//                fontWeight: FontWeight.w400,
-//              ),
-//            ),
-//            TextSpan(
-//              text: 'Sign Up',
-//              style: TextStyle(
-//                color: Colors.white,
-//                fontSize: 18.0,
-//                fontWeight: FontWeight.bold,
-//              ),
-//            ),
-//          ],
-//        ),
-//      ),
-//    );
-//  }
 
   @override
   Widget build(BuildContext context) {

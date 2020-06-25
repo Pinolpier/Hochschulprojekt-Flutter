@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/model/FriendModel.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/model/userProfile.dart';
@@ -12,20 +12,23 @@ import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 import 'package:univents/view/dialogs/DialogHelper.dart';
 
-/// todo: add author
-/// this is a custom version of the friendslistscreen widget that should be used as a dialog for the eventinfocreate screen later to add
-/// an option to directly invite friends to events and also to add new users to a group
+/// @author Christian Henrich
+///
+/// this is a custom version of the [friendsList_screen] that should be used as a dialog for the [eventInfo_screen] screen later to add
+/// an option to directly invite friends to events and also to add new users to a group in the [friendsList_screen]
 class FriendslistdialogScreen extends StatefulWidget {
-  /// todo: add documentation of variables
+  /// data of the event where this dialog got called from
   Event event;
+
+  /// helper bool to distinct between the 2 constructors that get used dependent on where they got called from
   bool create = false;
 
-  /// todo: missing documentation of constructor
+  /// this constructor gets called whenever you want to add users to an event and gets called from [eventInfo_screen] or [createEvent_screen]
   FriendslistdialogScreen(Event event) {
     this.event = event;
   }
 
-  /// todo: missing documentation
+  /// this constructor gets called whenever you want to add friends to a group in [friendsList_screen]
   FriendslistdialogScreen.create() {
     create = true;
   }
@@ -37,33 +40,43 @@ class FriendslistdialogScreen extends StatefulWidget {
       : _FriendlistdialogScreenState(event);
 }
 
-/// todo: hierarchy: class -> attributes -> constructor -> method
 /// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
-/// button at the bottom to create a new message
+/// the option to mark several friends from your friends list via LongPress and confirm your choice through a button at the bottom right
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
-  /// todo: missing documentation of constructor
+  /// this constructor gets called whenever you want to add users to an event and gets called from [eventInfo_screen] or [createEvent_screen]
   _FriendlistdialogScreenState(Event event) {
     this.event = event;
   }
 
-  /// todo: missing documentation
+  /// this constructor gets called whenever you want to add friends to a group in [friendsList_screen]
   _FriendlistdialogScreenState.create() {
     comeFromCreateEventScreen = false;
   }
 
-  /// todo: add documentation of variables
-  /// todo: set variables private
+  /// debouncer makes sure the query in the searchbar doesn't get read out until 500ms of no new user input
   final _debouncer = new Debouncer(500);
+
+  /// helper bool for the [longPress] method
   bool longPressFlag = false;
+
+  /// this bool only gets set to true when the screen was called in the context of adding a user into an event, it gets set to false if it was called in the
+  /// context of adding a user to a group of the [friendsList_screen]
   bool comeFromCreateEventScreen = true;
+
+  /// amount of friends that got selected
   int selectedCount = 0;
+
+  /// UIDs of all the selected friends to pass to the next screen
   List<String> selected = List();
   Map<String, dynamic> friendsInGroup = new Map();
-  List<FriendslistDummies> friends = new List();
+  List<FriendModel> friends = new List();
   Event event;
   String groupname;
 
-  /// todo: missing documentation
+  /// result of the async data from [initState()]
+  var _result;
+
+  /// method for longpress on the respective friend items in listview
   void longPress() {
     setState(() {
       if (friends.isEmpty) {
@@ -74,9 +87,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     });
   }
 
-  var _result;
-
-  /// todo: missing documentation
+  /// async method that retrieves all needed data from the backend before Widget Build runs and shows the screen to the user
   Future<bool> loadAsyncData() async {
     Map<String, dynamic> friendsMap = new Map();
     try {
@@ -96,7 +107,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
           print(up.toString());
           print(await getProfilePicture(s));
           Widget profilePicture = await getProfilePicture(s);
-          friends.add(FriendslistDummies(
+          friends.add(FriendModel(
               uid: s,
               name: up.username,
               profilepic: profilePicture == null
@@ -113,16 +124,12 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     } else {
       friends = new List();
     }
-
     return true;
   }
 
-  /// todo: missing documentation
   @override
   void initState() {
     loadAsyncData().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
       setState(() {
         _result = result;
       });
@@ -132,9 +139,10 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // while the needed data to fill the screen gets retrieved from the backend by [loadAsyncData()] show a CircularProgressIndicator loading circle
     if (_result == null) {
       return CircularProgressIndicator();
-    } else {
+    } else { // when all the data was collected (_result != null) show the screen
       return Scaffold(
         backgroundColor: univentsLightGreyBackground,
         appBar: AppBar(
@@ -215,7 +223,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     }
   }
 
-  /// todo: missing documentation
+  /// this method gets called when all the friends got selected and the user confirms his choice through the button at the bottom right and updates
+  /// the data of the matching event with all the new attendees
   void goBackToEventScreen() {
     for (String a in selected) {
       List<String> newAttendees = new List();
@@ -229,7 +238,9 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     Navigator.pop(context);
   }
 
-  /// todo: missing documentation
+  /// this method gets called when all the friends got selected and the user confirms his choice through the button at the bottom right and requests the user
+  /// to put in a group name for the group he just created with all the selected friends and sends him back to the group screen of [friendsList_screen] when done with
+  /// the freshly created group shown in the screen now
   void goBackToGroupScreen() {
     if (groupname != null && groupname.isNotEmpty && selected.isNotEmpty) {
       friendsInGroup[groupname] = selected;

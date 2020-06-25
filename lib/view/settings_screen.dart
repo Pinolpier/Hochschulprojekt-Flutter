@@ -3,8 +3,10 @@ import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/option_model.dart';
 
-/// todo: add author
-/// todo: add documentation
+/// @author Christian Henrich
+///
+/// This screen represents the UI for the settings screen view where the user can choose between different app settings
+/// (like f.ex. personal account settings, notification settings, rate app, ...) and also Logout through the button on the very bottom
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -45,7 +47,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextStyle(color: univentsBlackText2),
                 ),
                 onTap: () {
-                  print('pressed');
                 },
               ),
             );

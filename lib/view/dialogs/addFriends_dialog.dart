@@ -2,16 +2,15 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:univents/model/FriendslistDummies.dart';
+import 'package:univents/model/FriendModel.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/view/dialogs/Debouncer.dart';
 
-/// todo: add author
-/// todo: attention with the hierarchy: class -> attributes -> constructor -> methods
-
+/// @author Christian Henrich
+///
 /// this is used as a dialog that opens when you press the button to add new friends on the friendslist_screen
 /// here you have the option to search for new friends through username or import local friends from your phone contacts
 class AddFriendsDialogScreen extends StatefulWidget {
@@ -19,19 +18,18 @@ class AddFriendsDialogScreen extends StatefulWidget {
   _AddFriendsDialogScreenState createState() => _AddFriendsDialogScreenState();
 }
 
-/// todo: missing documentation
 class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
-  /// todo: add documentation of variables
+  /// debouncer makes sure the query in the searchbar doesn't get read out until 500ms of no new user input
   final _debouncer = new Debouncer(500);
+
+  /// list of retrieved phone contacts
   List<Contact> _contacts;
+
+  /// permission status for access on local phone contacts
   PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  List<FriendModel> friends = new List();
+  String _query;
 
-  /// todo: set variables private
-  //simple dummie list filled with dummie friend objects to test the list
-  List<FriendslistDummies> friends = new List();
-  String query;
-
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// request permissions to use contacts from phone
   Future<void> requestPermission(Permission permission) async {
     try {
@@ -69,7 +67,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
                 onChanged: (string) {
                   //debouncer makes sure the user input only gets registered after 500ms to give the user time to input the full search query
                   _debouncer.run(() {
-                    query = string;
+                    _query = string;
                   });
                 }),
             Expanded(
@@ -115,7 +113,7 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
               child: FloatingActionButton(
                 onPressed: () async {
                   try {
-                    addFriendByUsername(query);
+                    addFriendByUsername(_query);
                   } on Exception catch (e) {
                     show_toast(e.toString());
                     Log().error(
@@ -134,7 +132,6 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
     );
   }
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Alertdialog to cancel or confirm the action of sending a marked user a friends request
   showAlertDialog(BuildContext context, Contact contact) {
     // set up the buttons
@@ -176,7 +173,6 @@ class _AddFriendsDialogScreenState extends State<AddFriendsDialogScreen> {
     );
   }
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Alertdialog to cancel or confirm the action of importing friends through the local contacts from your phone
   showContactsImportDialog(BuildContext context) {
     // set up the buttons

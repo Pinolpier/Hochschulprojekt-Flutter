@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-/// todo: add description to the variables
-/// some constants for consistent decoration style and design
+/// @author Christian Henrich
+///
+/// some constants for consistent decoration style and design in the screens
 
 final textStyleConstant = TextStyle(
   color: Colors.white54,
@@ -28,5 +27,5 @@ final boxStyleConstant = BoxDecoration(
   ],
 );
 
-// constant value for the extended radius on the map_screen
+/// constant value for the extended radius on the map_screen
 final radius_buffer = 1;
