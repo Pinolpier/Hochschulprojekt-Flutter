@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:univents/controller/auth_service.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/backend/auth_service.dart';
+import 'package:univents/constants/colors.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/create_event_screen.dart';
 import 'package:univents/view/main_screens/filter_sidebar.dart';

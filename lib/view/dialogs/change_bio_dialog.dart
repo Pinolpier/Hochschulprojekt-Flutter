@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:univents/controller/user_profile_service.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/constants/colors.dart';
 import 'package:univents/model/user_profile.dart';
-
-import 'file:///D:/eoao_backup_unsorted_backup/eoao/eoao_study/study_ai/4.SE/AI_10_Labor_fuer_SW_Projekte_und_Project_Skills/aib_labswp_2020_ss_univents/lib/service/colors.dart';
 
 /// @author Christian Henrich
 ///

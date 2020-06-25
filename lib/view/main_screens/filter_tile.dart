@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/service/event_service.dart';
-import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/backend/event_service.dart';
+import 'package:univents/backend/friend_list_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/feed_filter.dart';
 import 'package:univents/service/utils.dart';
 import 'package:univents/view/dialogs/date_slider_dialog.dart';
 import 'package:univents/view/dialogs/radius_slider_dialog.dart';
 
 import '../../constants/feed_filter_values.dart';
-import '../home_feed_screen/feed_filter.dart';
 import '../location_picker_screen.dart';
 
 /// @mathias darscht

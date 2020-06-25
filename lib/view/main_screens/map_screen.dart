@@ -6,16 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:univents/model/constants.dart';
+import 'package:univents/backend/event_service.dart';
+import 'package:univents/constants/constants.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
+import 'package:univents/service/toast.dart';
 import 'package:univents/view/create_event_screen.dart';
 import 'package:univents/view/event_info_screen.dart';
 import 'package:user_location/user_location.dart';
-
-import '../../constants/feed_filter_values.dart';
 
 /// @author Jan Oster
 /// todo: CONSIDER writing a library-level doc comment
@@ -37,8 +35,6 @@ class _MapScreenState extends State<MapScreen> {
   Timer _timer;
   bool _gestureStart = true;
   GeoPoint initPosition;
-
-  double _radius = 0;
 
   /// todo: missing documentation
   Widget _flutterMap(BuildContext context) {
@@ -203,8 +199,6 @@ class _MapScreenState extends State<MapScreen> {
       return CircularProgressIndicator();
     } else {
       // Do something with the `_result`s here
-      String title = FeedFilterValues.translatedStrings(context)[2];
-      String buttonText = FeedFilterValues.translatedStrings(context)[1];
       return Scaffold(
         body: _flutterMap(context),
       );

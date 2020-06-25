@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/constants.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
 ///This class creates an AboutScreen which displays the Privacystatement and the Imprint (found in assets/res/strings.json)

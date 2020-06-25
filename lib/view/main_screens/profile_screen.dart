@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/auth_service.dart';
-import 'package:univents/controller/user_profile_service.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/backend/auth_service.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/constants/colors.dart';
 import 'package:univents/model/user_profile.dart';
 import 'package:univents/service/dialog_helper.dart';
+import 'package:univents/service/image_picker_univents.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/image_picker_univents.dart';
-import 'package:univents/service/utils/toast.dart';
+import 'package:univents/service/toast.dart';
 import 'package:univents/view/loading_screen.dart';
 
 /// @author Christian Henrich

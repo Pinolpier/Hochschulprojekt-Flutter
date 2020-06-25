@@ -2,13 +2,12 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/friend_model.dart';
-import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/backend/friend_list_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/model/frontend/friend_model.dart';
+import 'package:univents/service/debouncer.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
-
-import 'debouncer.dart';
+import 'package:univents/service/toast.dart';
 
 /// @author Christian Henrich
 ///

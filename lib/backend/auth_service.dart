@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:univents/controller/user_profile_service.dart';
-import 'package:univents/model/auth_exceptions.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/model/backend/auth_exceptions.dart';
 import 'package:univents/model/user_profile.dart';
 import 'package:univents/service/log.dart';
 

@@ -6,12 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geo_firestore/geo_firestore.dart';
-import 'package:univents/controller/auth_service.dart';
-import 'package:univents/controller/storage_service.dart';
+import 'package:univents/backend/storage_service.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/log.dart';
 
-import '../controller/auth_service.dart';
+import 'auth_service.dart';
 
 /// Markus Häring
 ///

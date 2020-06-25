@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:univents/backend/event_service.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
+import 'package:univents/service/toast.dart';
 import 'package:univents/view/main_screens/feed_item_ui.dart';
 
 /// @author mathias darscht

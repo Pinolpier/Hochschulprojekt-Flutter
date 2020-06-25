@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:univents/controller/auth_service.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/loading_screen.dart';
+
+import 'backend/auth_service.dart';
 
 /// Markus Häring
 ///

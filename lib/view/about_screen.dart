@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/constants.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 

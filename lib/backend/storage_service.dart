@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
+import 'package:univents/service/toast.dart';
 
 ///This Method uploads a [File] to Firebase
 ///

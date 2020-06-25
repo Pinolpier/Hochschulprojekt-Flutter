@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:univents/model/chat_message_model.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/model/frontend/chat_message_model.dart';
 
 /// @author Christian Henrich
 /// This screen represents the UI for the chat screen view where the users will be able to exchange text messages with their friends later.

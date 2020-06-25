@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:univents/controller/auth_service.dart';
-import 'package:univents/controller/user_profile_service.dart';
+import 'package:univents/backend/user_profile_service.dart';
+
+import 'auth_service.dart';
 
 /// Markus Häring
 ///
