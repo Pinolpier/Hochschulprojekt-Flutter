@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
+import 'package:univents/model/colors.dart';
 import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
@@ -190,6 +191,7 @@ class _MapScreenState extends State<MapScreen> {
         body: _flutterMap(context),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.adjust),
+          backgroundColor: primaryColor,
           onPressed: () {
             setState(() {
               showDialog(

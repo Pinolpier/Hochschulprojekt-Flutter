@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
 
 /// author mathias darscht
 /// this class is for selecting the radius of events
@@ -52,7 +51,6 @@ class RadiusSliderDialogState extends State<RadiusSliderDialog> {
         actions: <Widget>[
           FlatButton(
               child: Text(_buttonText),
-              color: primaryColor,
               onPressed: () {
                 Navigator.pop(context, _radius);
               }),
