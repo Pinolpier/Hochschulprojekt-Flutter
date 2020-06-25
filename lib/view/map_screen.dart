@@ -15,14 +15,23 @@ import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
 
+<<<<<<< HEAD
 import 'homeFeed_screen/feed_filter_values.dart';
 
+=======
+/// @author Jan Oster
+/// todo: CONSIDER writing a library-level doc comment
+>>>>>>> developer
 class MapScreen extends StatefulWidget {
+  /// todo: missing documentation
   @override
   State createState() => _MapScreenState();
 }
 
+/// todo: missing documentation
 class _MapScreenState extends State<MapScreen> {
+  /// todo: add documentation of variables
+  /// todo: set variables private
   LatLng pos;
   LatLng previousPosition;
   List<Marker> _markerList = new List();
@@ -34,6 +43,7 @@ class _MapScreenState extends State<MapScreen> {
 
   double _radius = 0;
 
+  /// todo: missing documentation
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
@@ -101,6 +111,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Gets all Events from the Database, creates a Marker for each and sets an onClickListener to open the eventInfo of the respective Event
   void getMarkerList(List list) {
     _markerList = new List<Marker>();
@@ -125,11 +136,13 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Method to load new events when the card is moved.
   /// The [MapPosition] and the double [radius] are transferred
   Future<bool> loadNewEvents(MapPosition position, double radius) async {
     try {
-      getMarkerList(await get_events_near_location_and_filters(
+      getMarkerList(await getEventsNearLocationAndFilters(
           new GeoPoint(position.center.latitude, position.center.longitude),
           radius));
     } on Exception catch (e) {
@@ -142,17 +155,23 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
+  /// todo: missing documentation
   Future<bool> loadAsyncData() async {
     if (radius != null) {
       initPosition = gPoint;
     } else {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+<<<<<<< HEAD
       initPosition = new GeoPoint(position.latitude, position.longitude);
     }
     try {
       getMarkerList(await get_events_near_location_and_filters(
           initPosition, radius != null ? radius : 100.0));
+=======
+      GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
+      getMarkerList(await getEventsNearLocationAndFilters(geoPoint, 100));
+>>>>>>> developer
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
@@ -163,6 +182,8 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
+  /// todo: delete redundant comments
+  /// todo: missing documentation
   @override
   void initState() {
     // This is the proper place to make the async calls
@@ -198,6 +219,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  /// todo: DO use prose to explain parameters, return values, and exceptions
   ///Converts LatLng to List<String> with index 0 = latitude, index 1 = longitude
   List<String> convertLatLngToString(LatLng latLng) {
     String point = latLng.toString();
@@ -213,7 +235,7 @@ class _MapScreenState extends State<MapScreen> {
     return pointList1;
   }
 
-  /// Method to start a timer so that the card does not poll events too often
+  /// method to start a timer so that the card does not poll events too often
   void _restartTimer() {
     _gestureStart = false;
     _timer?.cancel();

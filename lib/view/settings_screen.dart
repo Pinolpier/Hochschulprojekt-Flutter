@@ -8,8 +8,11 @@ import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/privacy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-///This class creates a SettingScreen
+/// @author Christian Henrich, Jan Oster
+/// Plugins: share: ^0.6.4, url_launcher: ^5.4.5
 ///
+/// This screen represents the UI for the settings screen view where the user can choose between different app settings
+/// (like f.ex. personal account settings, notification settings, rate app, ...) and also Logout through the button on the very bottom
 /// It has following settings:
 /// Switch for E-Mail visibility
 /// Switch for name visibility
@@ -20,9 +23,6 @@ import 'package:url_launcher/url_launcher.dart';
 /// Button to open the privacy_screen
 /// Button to delete the userprofile
 ///
-/// Author: Jan Oster
-/// Plugins: share: ^0.6.4, url_launcher: ^5.4.5
-
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -55,14 +55,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             barrierDismissible: false, // user must tap button!
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('delete profile' //TODO Fix Bug002
+                title: Text('delete account' //TODO Fix Bug002
                     //AppLocalizations.of(context).translate('delete_profile')
                     ),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
-                      Text(
-                          'you\'re about to delete your profile, are you sure?' //TODO Fix Bug002
+                      Text('you\'re about to delete your profile, are you sure?'
                           //AppLocalizations.of(context).translate('delete_profile_text')
                           ),
                     ],

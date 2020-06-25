@@ -13,8 +13,10 @@ import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/homeFeed_screen/page_controller.dart';
 import 'package:univents/view/locationPicker_screen.dart';
+
+/// @author Jan Oster
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -29,14 +31,21 @@ import 'package:univents/view/locationPicker_screen.dart';
 /// -Event CREATE (button)
 
 class CreateEventScreen extends StatefulWidget {
+  /// todo: add documentation of variable
   final List<String> tappedPoint;
-  CreateEventScreen(this.tappedPoint, {Key key}) : super(key : key);
 
+  /// todo: missing documentation of constructor
+  CreateEventScreen(this.tappedPoint, {Key key}) : super(key: key);
+
+  /// todo: missing documentation
   @override
   State createState() => _CreateEventScreenState();
 }
 
+/// todo: missing documentation
 class _CreateEventScreenState extends State<CreateEventScreen> {
+  /// todo: add documentation of variables
+  /// todo: set variables private
   DateTime selectedStartDateTime;
   DateTime selectedEndDateTime;
   String selectedStartString = 'not set';
@@ -47,13 +56,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController eventNameController = new TextEditingController();
   TextEditingController eventLocationController = new TextEditingController();
   TextEditingController eventDescriptionController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController eventTagsController = new TextEditingController();
   File eventImage;
   ImagePickerUnivents ip = new ImagePickerUnivents();
   InterfaceToReturnPickedLocation _returnPickedLocation =
       new InterfaceToReturnPickedLocation();
 
+  /// todo: missing documentation
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
       context: context,
@@ -82,6 +92,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
@@ -94,6 +105,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
+  /// todo: missing documentation
   Widget _eventImage() {
     return GestureDetector(
         onTap: () async {
@@ -106,6 +118,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Image.file(eventImage, height: 150));
   }
 
+  /// todo: missing documentation
   Widget _selectStartDateTimeButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -117,7 +130,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           setState(() {
             print(selectedStartDateTime);
             selectedStartString =
-                format_date_time(context, selectedStartDateTime);
+                formatDateTime(context, selectedStartDateTime);
 
             ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
             selectedEndDateTime = null;
@@ -143,6 +156,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _selectEndDateTimeButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -158,8 +172,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               errorEndDateTime();
             } else {
               print(selectedEndDateTime);
-              selectedEndString =
-                  format_date_time(context, selectedEndDateTime);
+              selectedEndString = formatDateTime(context, selectedEndDateTime);
             }
           });
         },
@@ -182,6 +195,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventNameTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,74 +232,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-//  Widget _locationTextfieldWidget() {
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      children: <Widget>[
-//        Text(
-//          'Event Location',
-//          style: labelStyleConstant,
-//        ),
-//        SizedBox(height: 10.0),
-//        Container(
-//          alignment: Alignment.centerLeft,
-//          decoration: boxStyleConstant,
-//          height: 60.0,
-//          child: TextField(
-//            controller: eventLocationController,
-//            keyboardType: TextInputType.text,
-//            style: TextStyle(
-//              color: univentsWhiteText,
-//              fontFamily: 'OpenSans',
-//            ),
-//            decoration: InputDecoration(
-//              border: InputBorder.none,
-//              contentPadding: EdgeInsets.only(top: 14.0),
-//              prefixIcon: Icon(
-//                Icons.add_location,
-//                color: univentsWhiteBackground,
-//              ),
-//              hintText: 'Enter the location of the event',
-//              hintStyle: textStyleConstant,
-//            ),
-//          ),
-//        ),
-//      ],
-//    );
-//  }
-
-  /// this button is used to open a location picker screen.
-  Widget _eventlocationPickerButton(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(vertical: 25.0),
-        width: double.infinity,
-        child: RaisedButton(
-          elevation: 5.0,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                    new LocationPickerScreen(_returnPickedLocation)));
-          },
-          padding: EdgeInsets.all(15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          color: univentsWhiteBackground,
-          child: Text(
-            'Choose Location',
-            style: TextStyle(
-              color: textButtonDarkBlue,
-              letterSpacing: 1.5,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'OpenSans',
-            ),
-          ),
-        ));
-  }
-
+  /// todo: missing documentation
   Widget _eventDescriptionTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,6 +270,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _eventTagsTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,6 +307,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _addFriendsButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -399,6 +348,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// todo: missing documentation
   Widget _isPrivateCheckbox() {
     return Container(
       child: Checkbox(
@@ -413,6 +363,39 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  /// this button is used to open a location picker screen.
+  Widget _eventlocationPickerButton(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: RaisedButton(
+          elevation: 5.0,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        new LocationPickerScreen(_returnPickedLocation)));
+          },
+          padding: EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: univentsWhiteBackground,
+          child: Text(
+            'Choose Location',
+            style: TextStyle(
+              color: textButtonDarkBlue,
+              letterSpacing: 1.5,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
+          ),
+        ));
+  }
+
+  /// todo: missing documentation
   Widget _createButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -528,7 +511,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               _eventTagsTextfieldWidget(),
               SizedBox(height: 20.0),
               new Text(
-                'Soll das Event Privat sein? ', //TODO: Add Internationalization
+                'Should the event be private?', //TODO: Add Internationalization
                 style: labelStyleConstant,
               ),
               _isPrivateCheckbox(),

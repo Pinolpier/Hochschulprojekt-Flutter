@@ -1,4 +1,5 @@
-// Dummy class for presentation purposes of chat_screen.dart
+///@author Christian Henrich
+/// Dummy class for presentation purposes of chat_screen.dart
 class Message {
   final String time;
   final String text;
@@ -7,7 +8,7 @@ class Message {
   Message({this.time, this.text, this.senderIsMe});
 }
 
-// example messages for chat_screen.dart
+/// example messages for chat_screen.dart
 List<Message> messages = [
   Message(
     time: '4:50 PM',

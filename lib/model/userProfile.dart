@@ -1,3 +1,4 @@
+/// author Markus link
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:univents/controller/userProfileService.dart';
@@ -20,15 +21,15 @@ class UserProfile {
   int _nameVisibility = PRIVATE;
   int _tagsVisibility = PRIVATE;
 
-  /// Takes all values from a [UserProfile] except the visibilities which have to be set using [tagVisibility], [emailVisibility] an [nameVisibility] methods. Their standard value is [PRIVATE] if not set.
+  /// Takes all values from a [UserProfile] except the visibilities which have to be set using [tagVisibility], [emailVisibility] an [nameVisibility] methods.
+  /// Their standard value is [PRIVATE] if not set.
   UserProfile(this._uid, this._username, this._email, this._forename,
       this._surname, this._biography, this._tags);
 
   /// Used to get an object from a [Firestore] query's return value, which is a [documentSnapshot].
   ///
   /// Visibilities will either be set to according to the values in the database or to [PRIVATE]
-  UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot,
-      String uid) {
+  UserProfile.fromDocumentSnapshot(Map<String, dynamic> documentSnapshot, String uid) {
     _uid = uid;
     _username = documentSnapshot['username'];
     _email = documentSnapshot['email'];
@@ -36,9 +37,15 @@ class UserProfile {
     _surname = documentSnapshot['surname'];
     _biography = documentSnapshot['biography'];
     _tags = documentSnapshot['tags'];
-    _emailVisibility = documentSnapshot.containsKey('emailVisibility') ? documentSnapshot['emailVisibility'] : PRIVATE;
-    _nameVisibility = documentSnapshot.containsKey('nameVisibility') ? documentSnapshot['nameVisibility'] : PRIVATE;
-    _tagsVisibility = documentSnapshot.containsKey('tagsVisibility') ? documentSnapshot['tagsVisibility'] : PRIVATE;
+    _emailVisibility = documentSnapshot.containsKey('emailVisibility')
+        ? documentSnapshot['emailVisibility']
+        : PRIVATE;
+    _nameVisibility = documentSnapshot.containsKey('nameVisibility')
+        ? documentSnapshot['nameVisibility']
+        : PRIVATE;
+    _tagsVisibility = documentSnapshot.containsKey('tagsVisibility')
+        ? documentSnapshot['tagsVisibility']
+        : PRIVATE;
   }
 
   String toString() {
@@ -54,11 +61,11 @@ class UserProfile {
       'forename': _forename,
       'surname': _surname,
       'biography': _biography,
-      'tags':_tags,
+      'tags': _tags,
       'profilePicture': pictureURI,
-      'emailVisibility':_emailVisibility,
-      'tagsVisibility':_tagsVisibility,
-      'nameVisibility':_nameVisibility
+      'emailVisibility': _emailVisibility,
+      'tagsVisibility': _tagsVisibility,
+      'nameVisibility': _nameVisibility
     };
   }
 

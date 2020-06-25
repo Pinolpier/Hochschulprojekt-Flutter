@@ -1,7 +1,8 @@
-/*
-In Dart an exception doesn't need to inherit from Exception, I decided not to do so, because
-1) I want the the original Exception that has happened in the backend to be attached to my BackendException, but if it's final I can't build a constructor that fits Exception's needs
- */
+/// author Markus Link
+
+/// In Dart an exception doesn't need to inherit from Exception,
+/// I decided not to do so, because
+/// 1) I want the the original Exception that has happened in the backend to be attached to my BackendException, but if it's final I can't build a constructor that fits Exception's needs
 class UserProfileException implements Exception {
   final Exception _originalException;
   final String _message;
@@ -45,8 +46,8 @@ class PermissionDeniedException extends UserProfileException {
 }
 
 class IllegalDatabaseStateException extends UserProfileException {
-  const IllegalDatabaseStateException(Exception originalException,
-      String message)
+  const IllegalDatabaseStateException(
+      Exception originalException, String message)
       : super(originalException, message);
 }
 
@@ -56,6 +57,7 @@ class NoUserProfileFoundException extends UserProfileException {
 }
 
 class UniqueConstraintViolatedException extends UserProfileException {
-  const UniqueConstraintViolatedException(Exception originalException, String message)
+  const UniqueConstraintViolatedException(
+      Exception originalException, String message)
       : super(originalException, message);
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// some constants for consistent decoration style and design
+/// @author Christian Henrich
+///
+/// some constants for consistent decoration style and design in the screens
 
 final textStyleConstant = TextStyle(
   color: Colors.white54,
@@ -25,5 +27,5 @@ final boxStyleConstant = BoxDecoration(
   ],
 );
 
-// constant value for the extended radius on the map_screen
+/// constant value for the extended radius on the map_screen
 final radius_buffer = 1;
