@@ -1,13 +1,13 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/authService.dart';
-import 'package:univents/model/authExceptions.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/constants.dart';
+import 'package:univents/backend/auth_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/constants.dart';
+import 'package:univents/model/backend/auth_exceptions.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
+import 'package:univents/service/toast.dart';
 
 //TODO handle exceptions thrown by authService properly by giving feedback to the user!
 
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  /// This method uses the [authService.dart] to send a password Reset E-Mail if the email address is valid.
+  /// This method uses the [auth_service.dart] to send a password Reset E-Mail if the email address is valid.
   _handleForgotPassword() {
     if (_isEmailGood(_email)) {
       sendPasswordResetEMail(email: _email);
@@ -360,7 +360,6 @@ class _LoginScreenState extends State<LoginScreen>
     ];
     bool alreadyAdded = false;
     bool alreadyAddedApple = false;
-    child:
     return FutureBuilder<bool>(
       future: checkAppleSignInAvailability(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {

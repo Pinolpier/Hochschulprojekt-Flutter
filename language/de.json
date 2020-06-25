@@ -28,13 +28,13 @@
   "loginscreen_bad_email": "Email-Adresse ungültig",
   "loginscreen_bad_password": "Passwort muss mindestens einen groß- und Kleinbuchstaben sowie eine Zahl enthalten und aus mindestens 8 Zeichen bestehen ",
   "unknown_Exception": "Unbekannter Fehler",
-  "start_date_filter": "Startdatum",
-  "end_date_filter": "Enddatum",
+  "date_filter": "Start- und Enddatum",
   "tags_filter": "Tags",
   "my_event_filter": "Meine Events",
   "private_event_filter": "Private Events",
   "friends_filter": "Events von Freunden",
   "feed_filter": "Feed Filter",
+  "radius_filter": "Radius",
   "home_screen": "Home",
   "map_screen": "Karte",
   "friends_screen": "Freunde",
@@ -53,5 +53,7 @@
   "feedback": "Feedback geben",
   "privacy_statement": "Datenschutzerklärung",
   "imprint": "Impressum",
-  "delete_profile_text": "Sind Sie sich sicher, das Benutzerprofil zu löschen"
+  "delete_profile_text": "Sind Sie sich sicher, das Benutzerprofil zu löschen",
+  "select_range_values_date": "Wählen Sie Start- und Enddatum",
+  "select_range_value_radius": "Wählen Sie eine Distanz aus"
 }

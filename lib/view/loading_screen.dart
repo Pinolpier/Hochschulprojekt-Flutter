@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:univents/controller/screenManager.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/service/screen_manager.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -32,6 +32,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final FirebaseUser user = Provider.of<FirebaseUser>(context);
     if (_result == null) {
       return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: primaryColor,
           body: Column(
             children: <Widget>[

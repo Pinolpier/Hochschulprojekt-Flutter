@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/feed_filter.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/view/homeFeed_screen/feed_filter.dart';
 
 import 'filter_tile.dart';
 
@@ -19,12 +19,12 @@ class FilterSidebarState extends State<FilterSidebar> {
   /// constructor initializes [_filters] with values from feed_filter.dart
   FilterSidebarState() {
     this._filters = [
-      FilterTile(FeedFilter.startDateFilter),
-      FilterTile(FeedFilter.endDateFilter),
+      FilterTile(FeedFilter.dateFilter),
       FilterTile(FeedFilter.tagsFilter),
       FilterTile(FeedFilter.myEventFilter),
       FilterTile(FeedFilter.privateEventFilter),
       FilterTile(FeedFilter.friendsFilter),
+      FilterTile(FeedFilter.radiusFilter)
     ];
   }
 

@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:univents/backend/event_service.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/homeFeed_screen/feed_item_ui.dart';
+import 'package:univents/service/toast.dart';
+import 'package:univents/view/main_screens/feed_item_ui.dart';
 
 /// @author mathias darscht
 /// this class controls the feed and get's the data from firebase
@@ -19,9 +19,10 @@ class Feed {
   /// the data will be returned
   static Future<List<Widget>> init() async {
     _feed = List<Widget>(); //create new instance
-
     try {
-      List<Event> data = await getEvents(); //get data from firebase
+      List<Event> data = point != null
+          ? await getEventsNearLocationAndFilters(point, radius)
+          : await getEvents(); //get data from firebase
       if (_feed.length != data.length) {
         _addEventToFeed(data);
       }

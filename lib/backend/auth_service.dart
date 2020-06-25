@@ -1,16 +1,16 @@
 /// author: Markus Link
 ///
 /// Use the methods provided in this script to do all operations regarding user authentication and user account management.
-/// For user profile related things use [userProfileService.dart].
+/// For user profile related things use [user_profile_service.dart].
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/model/authExceptions.dart';
-import 'package:univents/model/userProfile.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/model/backend/auth_exceptions.dart';
+import 'package:univents/model/user_profile.dart';
 import 'package:univents/service/log.dart';
 
 /// These variables are references to our Auth plugins
@@ -91,7 +91,7 @@ Future<bool> googleSignIn() async {
     } else {
       //TODO handle that the sign in with Google process was aborted
       Log().error(
-          causingClass: "authService.dart",
+          causingClass: "auth_service.dart",
           method: "googleSignIn()",
           action: "Google Sign In was aborted.");
       throw new SignInAbortedException(
@@ -165,7 +165,7 @@ Future<bool> appleSignIn() async {
     case AuthorizationStatus.error:
       //TODO good exception handling here
       Log().error(
-          causingClass: "authService.dart",
+          causingClass: "auth_service.dart",
           method: "appleSignIn()",
           action: ("AppleSignIn AuthorizationStatus Error occured: " +
               result.error.toString()));
@@ -264,7 +264,7 @@ Future<bool> registerWithEmailAndPassword(String email, String password) async {
             "The email ($email) is not an email. This should have been checked by the login screen BEFORE submitting a registration request!");
         break;
       case "ERROR_EMAIL_ALREADY_IN_USE":
-        Log().error(causingClass: "authService.dart",
+        Log().error(causingClass: "auth_service.dart",
             method: "registerWithEmailAndPassword(String email, String password) async",
             action: "MailAlreadyInUseError");
         //TODO correct Error Handling, maybe offer to reset password or if an gmail address try google sign in?
@@ -351,14 +351,14 @@ Future<void> _reauthenticate(BuildContext context) async {
           break;
         case AuthorizationStatus.error:
         //TODO good exception handling here
-          Log().error(causingClass: "authService.dart",
+          Log().error(causingClass: "auth_service.dart",
               method: "_reauthenticate()",
               action: "AppleSignIn AuthorizationStatus Error occured: " +
                   result.error.toString());
           //Throw an exception here
           break;
         case AuthorizationStatus.cancelled:
-          Log().warn(causingClass: "authService.dart",
+          Log().warn(causingClass: "auth_service.dart",
               method: "_reauthenticate()",
               action: "Sign In with Apple has been aborted!");
           throw SignInAbortedException(null,
@@ -367,7 +367,7 @@ Future<void> _reauthenticate(BuildContext context) async {
       }
     } on Exception catch (error, stacktrace) {
       Log().error(
-          causingClass: "authService.dart",
+          causingClass: "auth_service.dart",
           method: "_reauthenticate",
           action:
           "Something went wrong during Apple Reauthentication: Error: " +
@@ -441,7 +441,7 @@ Future<void> sendPasswordResetEMail({@required String email}) async {
             "The email ($email) is not an email. This should have been checked by the login screen BEFORE submitting a password reset email request!");
         break;
       case "ERROR_USER_NOT_FOUND":
-        Log().error(causingClass: "authService.dart",
+        Log().error(causingClass: "auth_service.dart",
             method: "sendPasswordResetEmail(String email) async",
             action: "The user with email ($email) could not be found!");
         break;
@@ -497,7 +497,7 @@ void signOut() async {
   await _googleSignIn.signOut();
 
   _user = null;
-  Log().info(causingClass: "authService.dart",
+  Log().info(causingClass: "auth_service.dart",
       method: "signOut() async",
       action: "SignOut done successfully!");
 }

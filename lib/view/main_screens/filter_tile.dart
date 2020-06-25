@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/service/event_service.dart';
-import 'package:univents/service/friendlist_service.dart';
-import 'package:univents/service/utils/dateTimePickerUnivents.dart';
-import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
+import 'package:univents/backend/event_service.dart';
+import 'package:univents/backend/friend_list_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/feed_filter.dart';
+import 'package:univents/service/utils.dart';
+import 'package:univents/view/dialogs/date_slider_dialog.dart';
+import 'package:univents/view/dialogs/radius_slider_dialog.dart';
 
-import 'feed_filter.dart';
+import '../../constants/feed_filter_values.dart';
+import '../location_picker_screen.dart';
 
 /// @mathias darscht
 /// this class implements the UI for setting filters
@@ -29,6 +33,8 @@ class FilterTileState extends State<FilterTile> {
 
   /// state of selection
   bool _isSelected;
+
+  static GeoPoint point;
 
   /// constructor initializes
   ///
@@ -68,15 +74,8 @@ class FilterTileState extends State<FilterTile> {
   bool _startState() {
     bool _startState;
     switch (this._filter) {
-      case FeedFilter.startDateFilter:
+      case FeedFilter.dateFilter:
         if (startDateFilter != null) {
-          _startState = true;
-        } else {
-          _startState = false;
-        }
-        break;
-      case FeedFilter.endDateFilter:
-        if (endDateFilter != null) {
           _startState = true;
         } else {
           _startState = false;
@@ -110,6 +109,13 @@ class FilterTileState extends State<FilterTile> {
           _startState = false;
         }
         break;
+      case FeedFilter.radiusFilter:
+        if (radius != null) {
+          _startState = true;
+        } else {
+          _startState = false;
+        }
+        break;
     }
     return _startState;
   }
@@ -120,27 +126,27 @@ class FilterTileState extends State<FilterTile> {
   /// for setting up a date picker
   void _changeSection(BuildContext context) async {
     switch (this._filter) {
-      case FeedFilter.startDateFilter:
+      case FeedFilter.dateFilter:
         if (this._isSelected) {
           deleteStartFilter();
-          _setIsSelected();
-        } else {
-          DateTime _date = await getDateTime(context);
-          if (_date != null) {
-            startDateFilter = _date;
-            print(_date);
-            _setIsSelected();
-          }
-        }
-        break;
-      case FeedFilter.endDateFilter:
-        if (this._isSelected) {
           deleteEndFilter();
           _setIsSelected();
         } else {
-          DateTime _date = await getDateTime(context);
-          if (_date != null) {
-            endDateFilter = _date;
+          DateTime today = DateTime.now();
+          List<String> sDates = List();
+          List<DateTime> dates = List();
+          for (int dayRange = 0; dayRange < 10; dayRange++) {
+            today = today.add(Duration(days: dayRange));
+            dates.add(today);
+            sDates.add(getDayAndMonth(context, today));
+          }
+          List<String> strings = FeedFilterValues.translatedStrings(context);
+          List<DateTime> data = await showDialog(
+              context: context,
+              builder: (context) => DateSliderDialog(strings, sDates, dates));
+          if (data != null) {
+            startDateFilter = data[0];
+            endDateFilter = data[1];
             _setIsSelected();
           }
         }
@@ -163,9 +169,34 @@ class FilterTileState extends State<FilterTile> {
         }
         break;
       case FeedFilter.friendsFilter:
+        _setIsSelected();
         Map<String, dynamic> friendMap = await getFriends();
         friendIdFilter = friendMap['friends'];
+        if (!_isSelected) {
+          deleteFriendIdFilter();
+        }
         break;
+      case FeedFilter.radiusFilter:
+        _setIsSelected();
+        if (!_isSelected) {
+          deleteRadiusFilter();
+          initPoint(null);
+        } else {
+          String title = FeedFilterValues.translatedStrings(context)[2];
+          String buttonText = FeedFilterValues.translatedStrings(context)[1];
+          double _radius = await showDialog(
+              context: context,
+              builder: (context) => RadiusSliderDialog(title, buttonText));
+          radius = _radius;
+
+          var interface = InterfaceToReturnPickedLocation();
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LocationPickerScreen(interface)));
+          initPoint(GeoPoint(interface.choosenLocationCoords[1],
+              interface.choosenLocationCoords[0]));
+        }
     }
   }
 

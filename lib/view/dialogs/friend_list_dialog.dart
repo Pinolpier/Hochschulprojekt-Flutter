@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/model/FriendModel.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/backend/event_service.dart';
+import 'package:univents/backend/friend_list_service.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/constants/colors.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/model/userProfile.dart';
-import 'package:univents/service/event_service.dart';
-import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/model/frontend/friend_model.dart';
+import 'package:univents/model/user_profile.dart';
+import 'package:univents/service/debouncer.dart';
+import 'package:univents/service/dialog_helper.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/dialogs/Debouncer.dart';
-import 'package:univents/view/dialogs/DialogHelper.dart';
+import 'package:univents/service/toast.dart';
 
 /// @author Christian Henrich
 ///
@@ -142,7 +142,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     // while the needed data to fill the screen gets retrieved from the backend by [loadAsyncData()] show a CircularProgressIndicator loading circle
     if (_result == null) {
       return CircularProgressIndicator();
-    } else { // when all the data was collected (_result != null) show the screen
+    } else {
+      // when all the data was collected (_result != null) show the screen
       return Scaffold(
         backgroundColor: univentsLightGreyBackground,
         appBar: AppBar(

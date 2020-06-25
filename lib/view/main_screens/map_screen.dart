@@ -1,17 +1,18 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:univents/model/constants.dart';
+import 'package:univents/backend/event_service.dart';
+import 'package:univents/constants/constants.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/createEvent_screen.dart';
-import 'package:univents/view/eventInfo_screen.dart';
+import 'package:univents/service/toast.dart';
+import 'package:univents/view/create_event_screen.dart';
+import 'package:univents/view/event_info_screen.dart';
 import 'package:user_location/user_location.dart';
 
 /// @author Jan Oster
@@ -33,13 +34,14 @@ class _MapScreenState extends State<MapScreen> {
   MapController mapController = new MapController();
   Timer _timer;
   bool _gestureStart = true;
+  GeoPoint initPosition;
 
   /// todo: missing documentation
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(49.140530, 9.210270),
-        zoom: 8.0,
+        center: LatLng(initPosition.latitude, initPosition.longitude),
+        zoom: radius == null ? 11.0 : (log(20000 / radius) / log(2)) - 0.5,
         plugins: [
           UserLocationPlugin(),
         ],
@@ -75,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
         },
       ),
       layers: [
-        new TileLayerOptions(
+        TileLayerOptions(
           urlTemplate: "https://api.tiles.mapbox.com/v4/"
               "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
           additionalOptions: {
@@ -148,11 +150,16 @@ class _MapScreenState extends State<MapScreen> {
 
   /// todo: missing documentation
   Future<bool> loadAsyncData() async {
-    try {
+    if (radius != null) {
+      initPosition = gPoint;
+    } else {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
-      getMarkerList(await getEventsNearLocationAndFilters(geoPoint, 100));
+      initPosition = new GeoPoint(position.latitude, position.longitude);
+    }
+    try {
+      getMarkerList(await getEventsNearLocationAndFilters(
+          initPosition, radius != null ? radius : 100.0));
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(
@@ -192,7 +199,9 @@ class _MapScreenState extends State<MapScreen> {
       return CircularProgressIndicator();
     } else {
       // Do something with the `_result`s here
-      return Scaffold(body: _flutterMap(context));
+      return Scaffold(
+        body: _flutterMap(context),
+      );
     }
   }
 

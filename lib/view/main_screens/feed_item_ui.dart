@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/constants/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/utils.dart';
-import 'package:univents/view/eventInfo_screen.dart';
+import 'package:univents/service/utils.dart';
+import 'package:univents/view/event_info_screen.dart';
 
 /// @author mathias darscht
 /// this class defines the design of an event in the home feed
@@ -24,6 +24,7 @@ class FeedItemUIState extends State<FeedItemUI> {
   /// data provided from FeedItemUI
   final Event _data;
 
+  /// profile picture of event owner
   Widget _pPicture;
 
   bool existsProfilePic;
@@ -59,9 +60,11 @@ class FeedItemUIState extends State<FeedItemUI> {
         child: Column(
           children: <Widget>[
             ListTile(
-              leading: existsProfilePic == false ? CircleAvatar(
-                child: this._pPicture,
-              ) : this._pPicture,
+              leading: existsProfilePic == false
+                  ? CircleAvatar(
+                      child: this._pPicture,
+                    )
+                  : this._pPicture,
               title: Text(
                 this._data.title,
                 style: TextStyle(
@@ -79,17 +82,22 @@ class FeedItemUIState extends State<FeedItemUI> {
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
                       Text(
-                        '  ' +
-                            feedFormatDateTime(
-                                context, this._data.eventStartDate) +
-                            '  -  ' +
-                            feedFormatDateTime(
-                                context, this._data.eventEndDate),
+                        _breakString(
+                            '  ' +
+                                feedFormatDateTime(
+                                    context, this._data.eventStartDate) +
+                                '  -  ' +
+                                feedFormatDateTime(
+                                    context, this._data.eventEndDate),
+                            '-'),
                         style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).size.height * 1 / 60),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 100,
                   ),
                   Row(
                     children: <Widget>[
@@ -100,17 +108,24 @@ class FeedItemUIState extends State<FeedItemUI> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
-                      Text(
-                        ' ' + _getLocation(),
-                        style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 1 / 60),
+                      SingleChildScrollView(
+                        child: Text(
+                          _breakString(' ' + _getLocation(), ','),
+                          style: TextStyle(
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 1 / 60),
+                        ),
                       )
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      _getTags(),
+                      Text(
+                        _breakString(_getTags(), ','),
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 1 / 60),
+                      ),
                     ],
                   )
                 ],
@@ -148,13 +163,37 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
+  /// for controlling the pixel over roll
+  ///
+  /// decides based on [text] length and [sep]
+  /// if something fits into one line
+  String _breakString(String text, String sep) {
+    String newText = "";
+    if (text.length > 30) {
+      int sum = 0;
+      var sList = text.split(sep);
+      for (String t in sList) {
+        sum += t.length;
+        if (sum < 30) {
+          newText = newText + t + ', ';
+        } else {
+          newText = newText + '\n$t, ';
+          sum = t.length;
+        }
+      }
+    } else {
+      newText = text;
+    }
+    return newText;
+  }
+
   /// this method get's the location from [_data]
   String _getLocation() {
     return this._data.location;
   }
 
   /// _getTags displays tags of event in home feed as [Text]
-  Text _getTags() {
+  String _getTags() {
     String tags = "";
     if (this._data.tagsList != null && this._data.tagsList.length != 0) {
       tags = this
@@ -163,10 +202,7 @@ class FeedItemUIState extends State<FeedItemUI> {
           .toString()
           .substring(1, this._data.tagsList.toString().length - 1);
     }
-    return Text(
-      tags,
-      style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1 / 60),
-    );
+    return tags;
   }
 
   /// navigates to the selected event

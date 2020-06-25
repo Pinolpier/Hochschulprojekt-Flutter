@@ -3,18 +3,18 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/constants.dart';
+import 'package:univents/backend/event_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/constants/constants.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/service/event_service.dart';
+import 'package:univents/service/date_time_picker_univents.dart';
+import 'package:univents/service/image_picker_univents.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/dateTimePickerUnivents.dart';
-import 'package:univents/service/utils/imagePickerUnivents.dart';
-import 'package:univents/service/utils/toast.dart';
-import 'package:univents/service/utils/utils.dart';
-import 'package:univents/view/dialogs/friendList_dialog.dart';
-import 'package:univents/view/homeFeed_screen/page_controller.dart';
-import 'package:univents/view/locationPicker_screen.dart';
+import 'package:univents/service/page_controller.dart';
+import 'package:univents/service/toast.dart';
+import 'package:univents/service/utils.dart';
+import 'package:univents/view/dialogs/friend_list_dialog.dart';
+import 'package:univents/view/location_picker_screen.dart';
 
 /// @author Jan Oster
 
@@ -443,7 +443,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => NavigationBarUI()),
-                  (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
             );
           }
         },

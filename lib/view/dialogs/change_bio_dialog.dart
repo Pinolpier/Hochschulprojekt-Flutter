@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/userProfile.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/model/user_profile.dart';
 
 /// @author Christian Henrich
 ///
@@ -51,7 +50,7 @@ class _ChangeBioDialogState extends State<ChangeBioDialog> {
               child: TextField(
                 controller: _textController,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10.0),
+                    contentPadding: EdgeInsets.all(10.0),
                     hintText: "input new bio here"),
               ),
             ),

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:univents/controller/authService.dart';
-import 'package:univents/model/colors.dart';
+import 'package:univents/backend/auth_service.dart';
+import 'package:univents/constants/colors.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/view/createEvent_screen.dart';
-import 'package:univents/view/friendList_screen.dart';
-import 'package:univents/view/homeFeed_screen/feed.dart';
-import 'package:univents/view/map_screen.dart';
-import 'package:univents/view/profile_screen.dart';
-import 'package:univents/view/settings_screen.dart';
+import 'package:univents/view/create_event_screen.dart';
+import 'package:univents/view/main_screens/filter_sidebar.dart';
+import 'package:univents/view/main_screens/friend_list_screen.dart';
+import 'package:univents/view/main_screens/map_screen.dart';
+import 'package:univents/view/main_screens/profile_screen.dart';
+import 'package:univents/view/main_screens/settings_screen.dart';
 
-import '../../service/app_localizations.dart';
 import 'feed.dart';
-import 'filter_sidebar.dart';
 
 /// @author mathias darscht
 /// this class controls witch page should be shown and implements the home

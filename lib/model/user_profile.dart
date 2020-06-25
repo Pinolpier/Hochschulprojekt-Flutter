@@ -1,7 +1,7 @@
 /// author Markus link
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/backend/user_profile_service.dart';
 
 /// spoken values for the different privacy options
 final int PRIVATE = 1;

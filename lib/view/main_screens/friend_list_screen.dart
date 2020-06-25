@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/userProfileService.dart';
-import 'package:univents/model/FriendModel.dart';
-import 'package:univents/model/GroupModel.dart';
-import 'package:univents/model/colors.dart';
-import 'package:univents/model/userProfile.dart';
+import 'package:univents/backend/friend_list_service.dart';
+import 'package:univents/backend/user_profile_service.dart';
+import 'package:univents/constants/colors.dart';
+import 'package:univents/model/frontend/friend_model.dart';
+import 'package:univents/model/frontend/group_model.dart';
+import 'package:univents/model/user_profile.dart';
 import 'package:univents/service/app_localizations.dart';
-import 'package:univents/service/friendlist_service.dart';
+import 'package:univents/service/debouncer.dart';
+import 'package:univents/service/dialog_helper.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/dialogs/Debouncer.dart';
-import 'package:univents/view/dialogs/DialogHelper.dart';
-import 'package:univents/view/dialogs/friendList_dialog.dart';
+import 'package:univents/service/toast.dart';
+import 'package:univents/view/dialogs/friend_list_dialog.dart';
 
 /// @author Christian Henrich
 ///
@@ -55,7 +55,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
   Future<bool> loadAsyncData() async {
     try {
       friendsMap =
-      await getFriends(); // save all UIDs of friends into [friendsMap] from backend
+          await getFriends(); // save all UIDs of friends into [friendsMap] from backend
     } on Exception catch (e) {
       show_toast(e.toString());
       Log().error(
@@ -63,8 +63,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
           method: 'loadAsyncData',
           action: e.toString());
     }
-    if (friendsMap !=
-        null) { // if the user has friends, retrieve all groupings from backend and save into the list [groups]
+    if (friendsMap != null) {
+      // if the user has friends, retrieve all groupings from backend and save into the list [groups]
       for (String s in friendsMap.keys) {
         groups.add(GroupModel(name: s, grouppicture: "mango.png"));
       }
@@ -115,7 +115,8 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
     // while the needed data to fill the screen gets retrieved from the backend by [loadAsyncData()] show a CircularProgressIndicator loading circle
     if (_result == null) {
       return CircularProgressIndicator();
-    } else { // when all the data was collected (_result != null) show the screen
+    } else {
+      // when all the data was collected (_result != null) show the screen
       return Card(
         child: Scaffold(
           backgroundColor: univentsLightGreyBackground,
@@ -138,8 +139,9 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                   }),
               Expanded(
                 child: ListView.builder(
-                    itemCount: isFriendsScreen == true ? friends.length : groups
-                        .length,
+                    itemCount: isFriendsScreen == true
+                        ? friends.length
+                        : groups.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -183,7 +185,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                             onPressed: () {
                               setState(() {
                                 isFriendsScreen =
-                                false; // switch between friendslistscreen and group screen
+                                    false; // switch between friendslistscreen and group screen
                               });
                             },
                             child: Icon(Icons.group),
