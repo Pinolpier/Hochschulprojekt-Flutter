@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
@@ -21,8 +21,8 @@ class Feed {
     _feed = List<Widget>(); //create new instance
     try {
       List<Event> data = point != null
-          ? await get_events_near_location_and_filters(point, radius)
-          : await getAllEvents(); //get data from firebase
+          ? await getEventsNearLocationAndFilters(point, radius)
+          : await getEvents(); //get data from firebase
       if (_feed.length != data.length) {
         _addEventToFeed(data);
       }
@@ -31,7 +31,6 @@ class Feed {
       Log().error(
           causingClass: 'feed', method: 'init', action: exceptionHandling(e));
     }
-    //rint(point == null);
     return _feed;
   }
 

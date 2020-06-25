@@ -7,11 +7,8 @@ import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
-<<<<<<< HEAD:lib/view/homeFeed_screen/feedItemUI.dart
-=======
 /// @author mathias darscht
 /// this class defines the design of an event in the home feed
->>>>>>> developer:lib/view/homeFeed_screen/feed_item_ui.dart
 class FeedItemUI extends StatefulWidget {
   /// date from the feed.dart class that should have been displayed
   final Event _data;
@@ -27,6 +24,7 @@ class FeedItemUIState extends State<FeedItemUI> {
   /// data provided from FeedItemUI
   final Event _data;
 
+  /// profile picture of event owner
   Widget _pPicture;
 
   bool existsProfilePic;
@@ -62,9 +60,11 @@ class FeedItemUIState extends State<FeedItemUI> {
         child: Column(
           children: <Widget>[
             ListTile(
-              leading: existsProfilePic == false ? CircleAvatar(
-                child: this._pPicture,
-              ) : this._pPicture,
+              leading: existsProfilePic == false
+                  ? CircleAvatar(
+                      child: this._pPicture,
+                    )
+                  : this._pPicture,
               title: Text(
                 this._data.title,
                 style: TextStyle(
@@ -82,23 +82,14 @@ class FeedItemUIState extends State<FeedItemUI> {
                         size: MediaQuery.of(context).size.height * 1 / 50,
                       ),
                       Text(
-<<<<<<< HEAD:lib/view/homeFeed_screen/feedItemUI.dart
                         _breakString(
                             '  ' +
-                                feed_format_date_time(
+                                feedFormatDateTime(
                                     context, this._data.eventStartDate) +
                                 '  -  ' +
-                                feed_format_date_time(
+                                feedFormatDateTime(
                                     context, this._data.eventEndDate),
                             '-'),
-=======
-                        '  ' +
-                            feedFormatDateTime(
-                                context, this._data.eventStartDate) +
-                            '  -  ' +
-                            feedFormatDateTime(
-                                context, this._data.eventEndDate),
->>>>>>> developer:lib/view/homeFeed_screen/feed_item_ui.dart
                         style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).size.height * 1 / 60),
@@ -117,21 +108,13 @@ class FeedItemUIState extends State<FeedItemUI> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
-<<<<<<< HEAD:lib/view/homeFeed_screen/feedItemUI.dart
                       SingleChildScrollView(
                         child: Text(
-                          _breakString(' ' + _getLocation(context), ','),
+                          _breakString(' ' + _getLocation(), ','),
                           style: TextStyle(
                               fontSize:
                                   MediaQuery.of(context).size.height * 1 / 60),
                         ),
-=======
-                      Text(
-                        ' ' + _getLocation(),
-                        style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 1 / 60),
->>>>>>> developer:lib/view/homeFeed_screen/feed_item_ui.dart
                       )
                     ],
                   ),
@@ -180,7 +163,6 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
-<<<<<<< HEAD:lib/view/homeFeed_screen/feedItemUI.dart
   /// for controlling the pixel over roll
   ///
   /// decides based on [text] length and [sep]
@@ -205,11 +187,8 @@ class FeedItemUIState extends State<FeedItemUI> {
     return newText;
   }
 
-  String _getLocation(BuildContext context) {
-=======
   /// this method get's the location from [_data]
   String _getLocation() {
->>>>>>> developer:lib/view/homeFeed_screen/feed_item_ui.dart
     return this._data.location;
   }
 

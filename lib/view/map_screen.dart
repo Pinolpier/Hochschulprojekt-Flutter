@@ -15,13 +15,10 @@ import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 import 'package:user_location/user_location.dart';
 
-<<<<<<< HEAD
 import 'homeFeed_screen/feed_filter_values.dart';
 
-=======
 /// @author Jan Oster
 /// todo: CONSIDER writing a library-level doc comment
->>>>>>> developer
 class MapScreen extends StatefulWidget {
   /// todo: missing documentation
   @override
@@ -162,16 +159,11 @@ class _MapScreenState extends State<MapScreen> {
     } else {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-<<<<<<< HEAD
       initPosition = new GeoPoint(position.latitude, position.longitude);
     }
     try {
-      getMarkerList(await get_events_near_location_and_filters(
+      getMarkerList(await getEventsNearLocationAndFilters(
           initPosition, radius != null ? radius : 100.0));
-=======
-      GeoPoint geoPoint = new GeoPoint(position.latitude, position.longitude);
-      getMarkerList(await getEventsNearLocationAndFilters(geoPoint, 100));
->>>>>>> developer
     } on Exception catch (e) {
       show_toast(exceptionHandling(e));
       Log().error(

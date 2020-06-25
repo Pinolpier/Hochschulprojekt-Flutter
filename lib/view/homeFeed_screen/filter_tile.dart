@@ -34,15 +34,12 @@ class FilterTileState extends State<FilterTile> {
   /// state of selection
   bool _isSelected;
 
-<<<<<<< HEAD
   static GeoPoint point;
 
-=======
   /// constructor initializes
   ///
   /// the var [_filter]
   /// depending on [_isSelected] the [_icon] will be with a check or plus
->>>>>>> developer
   FilterTileState(this._filter) {
     _isSelected = _startState();
     _icon = _isSelected
@@ -84,16 +81,6 @@ class FilterTileState extends State<FilterTile> {
           _startState = false;
         }
         break;
-<<<<<<< HEAD
-=======
-      case FeedFilter.endDateFilter:
-        if (endDateFilter != null) {
-          _startState = true;
-        } else {
-          _startState = false;
-        }
-        break;
->>>>>>> developer
       case FeedFilter.tagsFilter:
         if (tagsFilter != null) {
           _startState = true;
