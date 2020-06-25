@@ -3,7 +3,8 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/toast.dart';
-import 'package:univents/view/homeFeed_screen/feed_item_ui.dart';
+
+import 'feed_item_ui.dart';
 
 /// @author mathias darscht
 /// this class controls the feed and get's the data from firebase

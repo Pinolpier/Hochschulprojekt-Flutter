@@ -6,10 +6,10 @@ import 'package:univents/service/friendlist_service.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/date_slider_dialog.dart';
 import 'package:univents/view/dialogs/radius_slider_dialog.dart';
-import 'package:univents/view/homeFeed_screen/feed_filter_values.dart';
 
 import '../location_picker_screen.dart';
 import 'feed_filter.dart';
+import 'feed_filter_values.dart';
 
 /// @mathias darscht
 /// this class implements the UI for setting filters

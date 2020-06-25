@@ -4,12 +4,12 @@ import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/create_event_screen.dart';
 import 'package:univents/view/friend_list_screen.dart';
-import 'package:univents/view/homeFeed_screen/feed.dart';
 import 'package:univents/view/map_screen.dart';
 import 'package:univents/view/profile_screen.dart';
 import 'package:univents/view/settings_screen.dart';
 
 import '../../service/app_localizations.dart';
+import 'feed.dart';
 import 'filter_sidebar.dart';
 
 /// @author mathias darscht
