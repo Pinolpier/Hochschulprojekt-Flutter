@@ -261,7 +261,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         width: double.infinity,
         child: RaisedButton(
           elevation: 5.0,
-          child: Text("choose event location!"),
           onPressed: () {
             Navigator.push(
                 context,
@@ -269,6 +268,21 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     builder: (context) =>
                     new LocationPickerScreen(_returnPickedLocation)));
           },
+          padding: EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: univentsWhiteBackground,
+          child: Text(
+            'Choose Location',
+            style: TextStyle(
+              color: textButtonDarkBlue,
+              letterSpacing: 1.5,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
+          ),
         ));
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:univents/controller/authService.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/service/app_localizations.dart';
+import 'package:univents/view/createEvent_screen.dart';
 import 'package:univents/view/friendList_screen.dart';
 import 'package:univents/view/homeFeed_screen/feed.dart';
 import 'package:univents/view/map_screen.dart';
@@ -29,6 +30,9 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   /// dynamic app bar title (changes if screen changes)
   String _appBarTitle = 'Home';
 
+  bool isHomeFeedScreen;
+  bool isMapScreen;
+
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
     _data = new List<Widget>();
@@ -52,6 +56,26 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
+        floatingActionButton: isHomeFeedScreen == true
+            ? Padding(
+                padding: isMapScreen == true
+                    ? const EdgeInsets.only(left: 340.0, bottom: 50.0)
+                    : const EdgeInsets.only(left: 340.0, bottom: 5.0),
+                child: FloatingActionButton(
+                  mini: isMapScreen == true ? true : false,
+                  heroTag: "btn1",
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => new CreateEventScreen(null),
+                        ));
+                  },
+                  child: Icon(Icons.add),
+                  backgroundColor: primaryColor,
+                ),
+              )
+            : null,
         appBar: AppBar(
           backgroundColor: primaryColor,
           centerTitle: true,
@@ -63,17 +87,17 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           ),
           leading: this._state == 0 || this._state == 1
               ? Builder(
-                  builder: (BuildContext context) {
-                    return IconButton(
-                      icon: const Icon(Icons.filter_list),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      tooltip: MaterialLocalizations.of(context)
-                          .openAppDrawerTooltip,
-                    );
-                  },
-                )
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context)
+                    .openAppDrawerTooltip,
+              );
+            },
+          )
               : null,
           bottom: TabBar(
             onTap: _initState,
@@ -110,6 +134,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
       switch (index) {
         case 0:
           {
+            isHomeFeedScreen = true;
+            isMapScreen = false;
             this._thisWidget = ListView(
               children: _update(),
             );
@@ -119,6 +145,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 1:
           {
+            isHomeFeedScreen = true;
+            isMapScreen = true;
             this._thisWidget = MapScreen();
             this._appBarTitle =
                 AppLocalizations.of(context).translate('map_screen');
@@ -126,6 +154,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 2:
           {
+            isHomeFeedScreen = false;
+            isMapScreen = false;
             this._thisWidget = FriendlistScreen();
             this._appBarTitle =
                 AppLocalizations.of(context).translate('friends_screen');
@@ -133,6 +163,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 3:
           {
+            isHomeFeedScreen = false;
+            isMapScreen = false;
             this._thisWidget = ProfileScreen(getUidOfCurrentlySignedInUser());
             this._appBarTitle =
                 AppLocalizations.of(context).translate('profile_screen');
@@ -140,6 +172,8 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           break;
         case 4:
           {
+            isHomeFeedScreen = false;
+            isMapScreen = false;
             this._thisWidget = SettingsScreen();
             this._appBarTitle =
                 AppLocalizations.of(context).translate('settings_screen');
