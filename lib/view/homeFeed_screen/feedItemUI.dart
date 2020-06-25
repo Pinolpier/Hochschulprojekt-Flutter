@@ -168,7 +168,7 @@ class FeedItemUIState extends State<FeedItemUI> {
           newText = newText + t + ', ';
         } else {
           newText = newText + '\n$t, ';
-          sum = 0;
+          sum = t.length;
         }
       }
     } else {
