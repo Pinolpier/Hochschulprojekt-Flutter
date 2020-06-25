@@ -94,7 +94,7 @@ class FeedItemUIState extends State<FeedItemUI> {
                         width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
                       Text(
-                        ' ' + _getLocation(context),
+                        _breakString(' ' + _getLocation(context)),
                         style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).size.height * 1 / 60),
@@ -139,6 +139,25 @@ class FeedItemUIState extends State<FeedItemUI> {
         ),
       ),
     );
+  }
+
+  String _breakString(String text) {
+    print(text.length);
+    String newText = "";
+    List sList = List();
+    if (text.length > 30) {
+      sList = text.split(',');
+      int sum = 0;
+      for (String t in sList) {
+        if (sum < 30) {
+          newText = newText + t;
+        } else {
+          newText = newText + '\n';
+          sum = 0;
+        }
+      }
+    }
+    return newText;
   }
 
   String _getLocation(BuildContext context) {

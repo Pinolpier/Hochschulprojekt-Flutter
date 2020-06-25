@@ -34,6 +34,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final FirebaseUser user = Provider.of<FirebaseUser>(context);
     if (_result == null) {
       return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: primaryColor,
           body: Column(
             children: <Widget>[
