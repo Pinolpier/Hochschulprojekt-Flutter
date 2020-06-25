@@ -32,4 +32,19 @@ class Feed {
       _feed.add(FeedItemUI(e));
     }
   }
+
+  static set feed(List<Event> list) {
+    _feed = List<Widget>(); //create new instance
+
+    try {
+      List<Event> data = list; //get data from firebase
+      if (_feed.length != data.length) {
+        _addEventToFeed(data);
+      }
+    } on Exception catch (e) {
+      show_toast(exceptionHandling(e));
+      Log().error(
+          causingClass: 'feed', method: 'init', action: exceptionHandling(e));
+    }
+  }
 }

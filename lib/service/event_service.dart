@@ -42,6 +42,9 @@ List<dynamic> _friendIdFilter;
 bool _privateEventFilter;
 bool _myEventsFilter;
 
+/// radius of certained point to filter
+double _radius;
+
 //map to permanently save the url to the ids
 Map<String, String> _urlToID = new Map();
 
@@ -656,6 +659,12 @@ bool get myEventFilter => _myEventsFilter;
 
 bool get privateEventFilter => _privateEventFilter;
 
+/// gets radius for filter
+double get radius => _radius;
+
+/// sets new [radius] for filter
+set radius(double radius) => _radius;
+
 void set friendIdFilter(List<dynamic> value) {
   _friendIdFilter = value;
 }
@@ -672,6 +681,10 @@ void deletePrivateEventFilter() {
 
 void deleteMyEventFilter() {
   _myEventsFilter = null;
+}
+
+void deleteRadiusFilter() {
+  _radius = null;
 }
 
 Map<String, String> get urlToID => _urlToID;
