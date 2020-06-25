@@ -55,14 +55,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             barrierDismissible: false, // user must tap button!
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('delete profile' //TODO Fix Bug002
+                title: Text('delete account' //TODO Fix Bug002
                     //AppLocalizations.of(context).translate('delete_profile')
                     ),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
-                      Text(
-                          'you\'re about to delete your profile, are you sure?' //TODO Fix Bug002
+                      Text('you\'re about to delete your profile, are you sure?'
                           //AppLocalizations.of(context).translate('delete_profile_text')
                           ),
                     ],

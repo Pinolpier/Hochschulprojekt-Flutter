@@ -511,7 +511,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               _eventTagsTextfieldWidget(),
               SizedBox(height: 20.0),
               new Text(
-                'Soll das Event Privat sein? ', //TODO: Add Internationalization
+                'Should the event be private?', //TODO: Add Internationalization
                 style: labelStyleConstant,
               ),
               _isPrivateCheckbox(),
