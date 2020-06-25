@@ -416,12 +416,13 @@ class _EventInfoState extends State<EventInfo> {
                         padding: EdgeInsets.all(32),
                         color: primaryColor,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Column(
                               children: <Widget>[
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Icon(
                                       Icons.calendar_today,
