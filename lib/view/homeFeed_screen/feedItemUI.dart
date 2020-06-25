@@ -153,6 +153,10 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
+  /// for controlling the pixel over roll
+  ///
+  /// decides based on [text] length and [sep]
+  /// if something fits into one line
   String _breakString(String text, String sep) {
     String newText = "";
     if (text.length > 30) {
