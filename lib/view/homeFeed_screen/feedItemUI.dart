@@ -7,7 +7,6 @@ import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
-//'https://i.imgflip.com/syi19.jpg', //TODO: set variable from avatar
 class FeedItemUI extends StatefulWidget {
   final Event _data;
 
