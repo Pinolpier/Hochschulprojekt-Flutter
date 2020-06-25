@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
-import 'package:univents/model/userProfile.dart';
+import 'package:univents/model/user_profile.dart';
 
 /// @author Christian Henrich
 ///

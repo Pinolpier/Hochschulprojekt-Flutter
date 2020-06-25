@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'package:univents/controller/authService.dart';
-import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/controller/auth_service.dart';
+import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
-import 'package:univents/model/userProfile.dart';
+import 'package:univents/model/user_profile.dart';
 import 'package:univents/service/app_localizations.dart';
 import 'package:univents/view/privacy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';

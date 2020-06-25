@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:univents/controller/userProfileService.dart';
+import 'package:univents/controller/user_profile_service.dart';
 import 'package:univents/model/colors.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/utils/utils.dart';
-import 'package:univents/view/eventInfo_screen.dart';
+import 'package:univents/view/event_info_screen.dart';
 
 /// @author mathias darscht
 /// this class defines the design of an event in the home feed

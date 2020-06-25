@@ -8,13 +8,14 @@ import 'package:univents/model/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/service/event_service.dart';
 import 'package:univents/service/log.dart';
-import 'package:univents/service/utils/dateTimePickerUnivents.dart';
-import 'package:univents/service/utils/imagePickerUnivents.dart';
+import 'package:univents/service/utils/date_time_picker_univents.dart';
+import 'package:univents/service/utils/image_picker_univents.dart';
 import 'package:univents/service/utils/toast.dart';
 import 'package:univents/service/utils/utils.dart';
-import 'package:univents/view/dialogs/friendList_dialog.dart';
-import 'package:univents/view/homeFeed_screen/page_controller.dart';
-import 'package:univents/view/locationPicker_screen.dart';
+import 'package:univents/view/dialogs/friend_list_dialog.dart';
+import 'package:univents/view/location_picker_screen.dart';
+
+import 'home_feed_screen/page_controller.dart';
 
 /// @author Jan Oster
 

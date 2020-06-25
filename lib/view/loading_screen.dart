@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:univents/controller/screenManager.dart';
+import 'package:univents/controller/screen_manager.dart';
 import 'package:univents/model/colors.dart';
 
 class LoadingScreen extends StatefulWidget {

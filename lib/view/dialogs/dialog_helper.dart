@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:univents/model/event.dart';
-import 'package:univents/model/userProfile.dart';
-import 'package:univents/service/utils/errorDialogCreator.dart';
+import 'package:univents/model/user_profile.dart';
+import 'package:univents/service/utils/error_dialog_creator.dart';
 import 'package:univents/view/profile_screen.dart';
 
-import 'addFriends_dialog.dart';
-import 'changeBio_dialog.dart';
-import 'friendList_dialog.dart';
+import 'add_friends_dialog.dart';
+import 'change_bio_dialog.dart';
+import 'friend_list_dialog.dart';
 
 /// @author Christian Henrich
 ///
