@@ -436,7 +436,7 @@ class _EventInfoState extends State<EventInfo> {
                                       style: TextStyle(
                                           color: univentsWhiteText,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 24),
+                                          fontSize: 20),
                                     )
                                   ],
                                 ),
