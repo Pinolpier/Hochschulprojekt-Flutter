@@ -20,7 +20,28 @@ class FeedItemUI extends StatefulWidget {
 class FeedItemUIState extends State<FeedItemUI> {
   final Event _data;
 
+  Widget _pPicture;
+
   FeedItemUIState(this._data);
+
+  @override
+  void initState() {
+    super.initState();
+    getProfilePicture(this._data.ownerIds[0]).then((value) {
+      if (mounted) {
+        setState(() {
+          this._pPicture = value;
+        });
+      } else {
+        Log().error(
+            causingClass: 'feedItemUI',
+            method: '_profilePicture',
+            action: 'Memoryleak while loading profile pictures');
+      }
+    });
+    this._pPicture =
+        _pPicture != null ? _pPicture : Image.asset('assets/blank_profile.png');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +53,7 @@ class FeedItemUIState extends State<FeedItemUI> {
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                child: _profilePicture(),
+                child: this._pPicture,
               ),
               title: Text(
                 this._data.title,
@@ -79,6 +100,11 @@ class FeedItemUIState extends State<FeedItemUI> {
                                 MediaQuery.of(context).size.height * 1 / 60),
                       )
                     ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _getTags(),
+                    ],
                   )
                 ],
               ),
@@ -119,25 +145,20 @@ class FeedItemUIState extends State<FeedItemUI> {
     return this._data.location;
   }
 
-  /// loads profile picture
-  /// if no profile picture in the backend, show placeholder
-  Widget _profilePicture() {
-    Widget _profilePicture;
-    getProfilePicture(this._data.ownerIds[0]).then((value) {
-      if (mounted) {
-        setState(() {
-          _profilePicture = value;
-        });
-      } else {
-        Log().error(
-            causingClass: 'feedItemUI',
-            method: '_profilePicture',
-            action: 'Memoryleak while loading profile pictures');
-      }
-    });
-    return _profilePicture != null
-        ? _profilePicture
-        : Image.asset('assets/blank_profile.png');
+  /// _getTags displays tags of event in home feed as [Text]
+  Text _getTags() {
+    String tags = "";
+    if (this._data.tagsList != null && this._data.tagsList.length != 0) {
+      tags = this
+          ._data
+          .tagsList
+          .toString()
+          .substring(1, this._data.tagsList.toString().length - 1);
+    }
+    return Text(
+      tags,
+      style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1 / 60),
+    );
   }
 
   void _navigateToEventScreen() async {

@@ -36,19 +36,21 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
   /// init data from firebase of Feed class
   NavigationBarUIControl() {
     _data = new List<Widget>();
-    Feed.init().then((val) => setState(() {
-          _initState(0);
-          this._data = val;
-        }));
+  }
+
+  @override
+  void initState() {
+    _update();
+    super.initState();
   }
 
   ///updates feed with the set filters
-  List<Widget> _update() {
+  Future<void> _update() async {
     Feed.init().then((val) => setState(() {
           this._data = val;
-          _initState(_state);
+          _initializeState(_state);
         }));
-    return this._data;
+    return null;
   }
 
   @override
@@ -87,20 +89,20 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
           ),
           leading: this._state == 0 || this._state == 1
               ? Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.filter_list),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context)
-                    .openAppDrawerTooltip,
-              );
-            },
-          )
+                  builder: (BuildContext context) {
+                    return IconButton(
+                      icon: const Icon(Icons.filter_list),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      tooltip: MaterialLocalizations.of(context)
+                          .openAppDrawerTooltip,
+                    );
+                  },
+                )
               : null,
           bottom: TabBar(
-            onTap: _initState,
+            onTap: _initializeState,
             tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.home),
@@ -128,16 +130,18 @@ class NavigationBarUIControl extends State<NavigationBarUI> {
 
   /// navigation over screen cards based on
   /// (int) [index]
-  void _initState(int index) {
+  void _initializeState(int index) {
     setState(() {
       this._state = index;
       switch (index) {
         case 0:
           {
-            isHomeFeedScreen = true;
-            isMapScreen = false;
-            this._thisWidget = ListView(
-              children: _update(),
+            _update();
+            this._thisWidget = RefreshIndicator(
+              child: ListView(
+                children: this._data,
+              ),
+              onRefresh: _update,
             );
             this._appBarTitle =
                 AppLocalizations.of(context).translate('home_screen');
