@@ -27,7 +27,8 @@ final _database = Firestore.instance;
 
 /// initialized geoFireStore based on the database and the collection
 final GeoFirestore _geoFireStore =
-    GeoFirestore(_database.collection(_collection));
+GeoFirestore(_database.collection(_collection));
+final db = Firestore.instance;
 
 /// dataField name in database for the endDate
 final String _endDate = 'endDate';
@@ -240,6 +241,25 @@ Future<String> _addData(Event event) async {
   return documentReference.documentID;
 }
 
+/// This method should only be used with care,
+/// because the data will be permanently deleted
+/// deletes all Events from User where User is a Owner by a String [uid]
+/// throws [PlatformException] when an Error occurs while delete data
+void deleteEventsFromUser(String uid) async {
+  QuerySnapshot qShot = await db
+      .collection(_collection)
+      .where(_eventOwner, arrayContains: uid)
+      .getDocuments();
+  List<Event> eventList = _snapShotToList(qShot);
+  addEventIdToObjects(eventList, qShot);
+  if (eventList != null && eventList.length > 0) {
+    for (int x = 0; x < eventList.length; x++) {
+      Event event = eventList[x];
+      db.collection(_collection).document(event.eventID).delete();
+    }
+  }
+}
+
 /// Updates a Event in the database when something has changed in the Event
 ///
 /// updates an event in the database based on an [Event]
@@ -262,11 +282,11 @@ void updateData(Event event) async {
 /// throws [PlatformException] when an Error occurs while
 /// updating Image from Database
 void updateImage(File image, Event event) async {
-  if (event.imageURL != null) await deleteFile(collection, event.eventID);
+  if (event.imageURL != null) await deleteFile(_collection, event.eventID);
   _urlToID.remove(event.eventID);
   event.imageURL = null;
   if (image != null) {
-    String url = await uploadFile(collection, image, event.eventID);
+    String url = await uploadFile(_collection, image, event.eventID);
     _urlToID[event.eventID] = url;
     event.imageURL = url;
   }
@@ -530,8 +550,8 @@ List<Event> addEventIdToObjects(List<Event> eventList, QuerySnapshot qShot) {
 /// throws [PlatformException] when an Error occurs while delete data
 void deleteUserFromAttendeesList(String uid) async {
   QuerySnapshot qShot = await db
-      .collection(collection)
-      .where(attendees, arrayContains: uid)
+      .collection(_collection)
+      .where(_attendees, arrayContains: uid)
       .getDocuments();
   List<Event> eventList = _snapShotToList(qShot);
   addEventIdToObjects(eventList, qShot);

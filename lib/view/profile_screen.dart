@@ -203,9 +203,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // when all the data was collected (_result != null) show the screen
       return new Scaffold(
         backgroundColor: univentsWhiteBackground,
-        appBar: isProfileOwner == false
+        appBar: _isProfileOwner == false
             ? AppBar(
-                title: Text("Profile of: " + userName),
+                title: Text("Profile of: " + _userName),
                 backgroundColor: primaryColor,
               )
             : null,
@@ -327,9 +327,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 30.0,
                         width: _isProfileOwner == true
                             ? 95.0
-                            : isProfileOwner == false
+                            : _isProfileOwner == false
                             ? 0.0
-                                : createProfile == true ? 100.0 : null,
+                            : _createProfile == true ? 100.0 : null,
                         child: Material(
                             borderRadius: BorderRadius.circular(20.0),
                             shadowColor: univentsGreyBackgorund,
@@ -351,7 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                             )
-                                    : createProfile == true
+                                : _createProfile == true
                                         ? GestureDetector(
                                             onTap: () async {
                                               setState(() {

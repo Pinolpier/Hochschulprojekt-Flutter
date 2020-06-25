@@ -82,7 +82,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             if (eventImageAsync != 1) {
               eventImage = eventImageAsync;
-              updateImage(eventImage, widget.event);
+              updateImage(eventImage, widget._event);
             }
           }); // handle your image tap here
         }, // handle your image tap here
@@ -98,7 +98,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             if (image != 1) {
               eventImage = eventImageAsync;
-              updateImage(eventImage, widget.event);
+              updateImage(eventImage, widget._event);
             }
           }); // handle your image tap here
         },
@@ -115,7 +115,7 @@ class _EventInfoState extends State<EventInfo> {
           setState(() {
             if (eventImageAsync != 1) {
               eventImage = eventImageAsync;
-              updateImage(eventImage, widget.event);
+              updateImage(eventImage, widget._event);
             }
           }); // handle your image tap here
         },
@@ -154,7 +154,7 @@ class _EventInfoState extends State<EventInfo> {
       eventimagewidget = null;
     }
 
-    attendees = widget.event.attendeesIds;
+    attendees = widget._event.attendeesIds;
     print(attendees);
     if (attendees.contains(getUidOfCurrentlySignedInUser())) {
       attending = true;
@@ -192,12 +192,12 @@ class _EventInfoState extends State<EventInfo> {
   @override
   void initState() {
     loadAsyncData().then((result) {
-      isEventOpen = !widget.event.privateEvent;
-      eventAttendeesCount = widget.event.attendeesIds.length;
-      eventDate = format_date_time(context, widget.event.eventStartDate);
-      eventName = widget.event.title;
-      eventLocation = widget.event.location;
-      eventText = widget.event.description;
+      isEventOpen = !widget._event.privateEvent;
+      eventAttendeesCount = widget._event.attendeesIds.length;
+      eventDate = formatDateTime(context, widget._event.eventStartDate);
+      eventName = widget._event.title;
+      eventLocation = widget._event.location;
+      eventText = widget._event.description;
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
@@ -212,7 +212,7 @@ class _EventInfoState extends State<EventInfo> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text(widget.event.title),
+        title: Text(widget._event.title),
         centerTitle: true,
       ),
       body: Stack(
@@ -546,8 +546,8 @@ class _EventInfoState extends State<EventInfo> {
                               child: FloatingActionButton(
                                 heroTag: 'addAttendee',
                                 onPressed: () async {
-                                  List<dynamic> fixedLengthList = widget.event
-                                      .attendeesIds;
+                                  List<dynamic> fixedLengthList =
+                                      widget._event.attendeesIds;
                                   List<String> attendeesList = new List();
                                   for (int i = 0; i <
                                       fixedLengthList.length; i++) {
@@ -563,8 +563,8 @@ class _EventInfoState extends State<EventInfo> {
                                         await getProfilePicture(
                                             getUidOfCurrentlySignedInUser()));
                                   }
-                                  widget.event.attendeesIds = attendeesList;
-                                  updateData(widget.event);
+                                  widget._event.attendeesIds = attendeesList;
+                                  updateData(widget._event);
                                   attending = !attending;
                                   setState(() {
                                     initState(); //TODO this is just a workaround!

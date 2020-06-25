@@ -14,10 +14,9 @@ import 'package:univents/service/utils/toast.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
 import 'package:univents/view/homeFeed_screen/page_controller.dart';
+import 'package:univents/view/locationPicker_screen.dart';
 
 /// @author Jan Oster
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
-import 'package:univents/view/locationPicker_screen.dart';
 
 /// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
 /// -Event Picture (AssetImage with ImagePicker from gallery onPress)
@@ -362,6 +361,38 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         },
       ),
     );
+  }
+
+  /// this button is used to open a location picker screen.
+  Widget _eventlocationPickerButton(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: RaisedButton(
+          elevation: 5.0,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        new LocationPickerScreen(_returnPickedLocation)));
+          },
+          padding: EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: univentsWhiteBackground,
+          child: Text(
+            'Choose Location',
+            style: TextStyle(
+              color: textButtonDarkBlue,
+              letterSpacing: 1.5,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
+          ),
+        ));
   }
 
   /// todo: missing documentation

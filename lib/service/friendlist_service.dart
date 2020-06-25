@@ -179,9 +179,9 @@ void createGroupFriend(List<String> userId, String groupName) async {
 /// remove a User from all Lists of all People by a String [uid]
 /// throws [PlatformException] when an Error occurs while delete data
 void deleteUidFromFriendsLists(String uid) async {
-  QuerySnapshot qShot = await firebaseInstance
+  QuerySnapshot qShot = await _firebaseInstance
       .collection(collection)
-      .where(friendsList, arrayContains: uid)
+      .where(_friendsList, arrayContains: uid)
       .getDocuments();
   List<DocumentSnapshot> documentSnapshotList = qShot.documents;
   if (documentSnapshotList != null && documentSnapshotList.length > 0) {
@@ -202,7 +202,7 @@ void deleteUidFromFriendsLists(String uid) async {
         }
         friendMap[keyList[x]] = friendsListCopy;
       }
-      firebaseInstance
+      _firebaseInstance
           .collection(collection)
           .document(documentSnapshotList[x].documentID)
           .updateData(friendMap);
