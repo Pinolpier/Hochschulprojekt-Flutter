@@ -163,7 +163,7 @@ class FeedItemUIState extends State<FeedItemUI> {
         if (sum < 30) {
           newText = newText + t + ', ';
         } else {
-          newText = newText + '\n$t';
+          newText = newText + '\n$t, ';
           sum = 0;
         }
       }
