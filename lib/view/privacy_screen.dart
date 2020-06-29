@@ -4,9 +4,8 @@ import 'package:univents/constants/colors.dart';
 import 'package:univents/constants/constants.dart';
 import 'package:univents/service/app_localizations.dart';
 
-///This class creates an AboutScreen which displays the Privacystatement and the Imprint (found in assets/res/strings.json)
-///
-///Author: Jan Oster
+///This class creates an AboutScreen which displays the privacy statement and the imprint (found in assets/res/strings.json)
+///@author: Jan Oster
 
 class PrivacyScreen extends StatefulWidget {
   @override
