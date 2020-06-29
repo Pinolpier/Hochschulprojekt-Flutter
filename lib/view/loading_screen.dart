@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:univents/constants/colors.dart';
 import 'package:univents/service/screen_manager.dart';
+import 'package:univents/view/login_screen.dart';
+
+/// @author Jan Oster
+/// Displays a loading screen for 1.2 seconds and then displays the [ScreenManager]
+/// It is used to avoid various animation errors at the [LoginScreen]
 
 class LoadingScreen extends StatefulWidget {
   @override
