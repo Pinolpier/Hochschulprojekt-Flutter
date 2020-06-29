@@ -7,10 +7,8 @@ import 'package:univents/service/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// @author Jan Oster
-
 ///This class creates an AboutScreen which displays the Privacytext and the Impressumtext (found in assets/res/strings.json)
-///there is a Button to directly send feedback via E-Mail (mailto:-link)
-///also a button to share a message with the native share menu (text can be changed in assets/res/strings.json)
+
 class AboutScreen extends StatefulWidget {
   /// todo: missing documentation
   @override
@@ -19,7 +17,7 @@ class AboutScreen extends StatefulWidget {
 
 /// todo: missing documentation
 class _AboutScreenState extends State<AboutScreen> {
-  /// todo: missing documentation
+  /// This function is used to open the share menu of your device
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
 
@@ -29,7 +27,7 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This Button opens a mail:to-link to send feedback directly to feedback@univents.app
   Widget _feedbackButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -58,7 +56,7 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  /// todo: missing documentation
+  ///This function is used to launch the mail:to-link
   _launchURL() async {
     const url =
         'mailto:feedback@univents.app?subject=Feedback&body=What could be better: ';
@@ -69,7 +67,7 @@ class _AboutScreenState extends State<AboutScreen> {
     }
   }
 
-  /// todo: missing documentation
+  /// This Button opens the native share menu of the device to share a text (text can be changed in assets/res/strings.json)
   Widget _shareButtonWidget(String text) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
