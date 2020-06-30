@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 /// @author Jan Oster
-/// todo: CONSIDER writing a library-level doc comment
+/// This class opens a DateTimePicker dialog
+///
+/// To use the DateTimePicker just call the function [getDateTime] in a Widget
 
-/// todo: documentation of variables
-/// todo: set variables private (provide setter and getter)
-DateTime selectedDateTime = DateTime.now();
+/// selected DateTime, if not set it's the current time
+DateTime _selectedDateTime = DateTime.now();
 
-/// todo: missing documentation
+/// This function is used to pick a time
+/// Returns selected [TimeOfDay] asynchronous
 Future<TimeOfDay> _selectTime(BuildContext context) {
   final now = DateTime.now();
 
@@ -17,7 +19,8 @@ Future<TimeOfDay> _selectTime(BuildContext context) {
   );
 }
 
-/// todo: missing documentation
+/// This function is used to pick a date
+/// Returns selected [DateTime] asynchronous
 Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       context: context,
       initialDate: DateTime.now().add(Duration(seconds: 1)),
@@ -25,7 +28,10 @@ Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       lastDate: DateTime(2100),
     );
 
-/// todo: missing documentation
+/// This function displays firstly the date picker and the the time picker so that you
+/// have both pickers as one function
+///
+/// Returns selected [DateTime] asynchronous
 Future<DateTime> getDateTime(BuildContext context) async {
   final selectedDate = await _selectDateTime(context);
   if (selectedDate == null) return null;
@@ -33,7 +39,7 @@ Future<DateTime> getDateTime(BuildContext context) async {
   final selectedTime = await _selectTime(context);
   if (selectedTime == null) return null;
 
-  selectedDateTime = DateTime(selectedDate.year, selectedDate.month,
+  _selectedDateTime = DateTime(selectedDate.year, selectedDate.month,
       selectedDate.day, selectedTime.hour, selectedTime.minute);
-  return selectedDateTime;
+  return _selectedDateTime;
 }

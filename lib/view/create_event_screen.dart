@@ -16,7 +16,7 @@ import 'package:univents/service/utils.dart';
 import 'package:univents/view/dialogs/friend_list_dialog.dart';
 import 'package:univents/view/location_picker_screen.dart';
 
-/// @author Jan Oster
+/// @author Jan Oster, Markus Häring
 /// this class creates an createEventScreen which opens if you want to create a event
 
 class CreateEventScreen extends StatefulWidget {

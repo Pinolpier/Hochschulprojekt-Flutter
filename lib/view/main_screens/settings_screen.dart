@@ -9,20 +9,8 @@ import 'package:univents/view/privacy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// @author Christian Henrich, Jan Oster
-/// Plugins: share: ^0.6.4, url_launcher: ^5.4.5
-///
 /// This screen represents the UI for the settings screen view where the user can choose between different app settings
-/// (like f.ex. personal account settings, notification settings, rate app, ...) and also Logout through the button on the very bottom
-/// It has following settings:
-/// Switch for E-Mail visibility
-/// Switch for name visibility
-/// Switch for tags visibility
-/// Button for logout
-/// Button to share an text about the App
-/// Button to give Feedback via E-Mail
-/// Button to open the privacy_screen
-/// Button to delete the userprofile
-///
+
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -32,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _emailVisibility;
   bool _nameVisibility;
   bool _tagsVisibility;
-  UserProfile profile;
+  UserProfile _profile;
   var _result;
 
   void share(BuildContext context, String text) {
@@ -226,14 +214,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<bool> loadAsyncData() async {
-    profile = await getUserProfile(getUidOfCurrentlySignedInUser());
-    profile.emailVisibility == PRIVATE
+    _profile = await getUserProfile(getUidOfCurrentlySignedInUser());
+    _profile.emailVisibility == PRIVATE
         ? _emailVisibility = false
         : _emailVisibility = true;
-    profile.nameVisibility == PRIVATE
+    _profile.nameVisibility == PRIVATE
         ? _nameVisibility = false
         : _nameVisibility = true;
-    profile.tagsVisibility == PRIVATE
+    _profile.tagsVisibility == PRIVATE
         ? _tagsVisibility = false
         : _tagsVisibility = true;
     return true;
@@ -241,17 +229,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    // This is the proper place to make the async calls
-    // This way they only get called once
-
-    // During development, if you change this code,
-    // you will need to do a full restart instead of just a hot reload
-
-    // You can't use async/await here,
-    // We can't mark this method as async because of the @override
     loadAsyncData().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
       setState(() {
         _result = result;
       });
@@ -297,9 +275,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() {
                         _emailVisibility = value;
                         _emailVisibility == true
-                            ? profile.emailVisibility = FRIENDS
-                            : profile.emailVisibility = PRIVATE;
-                        updateProfile(profile);
+                            ? _profile.emailVisibility = FRIENDS
+                            : _profile.emailVisibility = PRIVATE;
+                        updateProfile(_profile);
                       });
                     },
                     secondary: Icon(Icons.mail_outline),
@@ -312,9 +290,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() {
                         _nameVisibility = value;
                         _nameVisibility == true
-                            ? profile.nameVisibility = FRIENDS
-                            : profile.nameVisibility = PRIVATE;
-                        updateProfile(profile);
+                            ? _profile.nameVisibility = FRIENDS
+                            : _profile.nameVisibility = PRIVATE;
+                        updateProfile(_profile);
                       });
                     },
                     secondary: Icon(Icons.mail_outline),
@@ -327,9 +305,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() {
                         _tagsVisibility = value;
                         _tagsVisibility == true
-                            ? profile.tagsVisibility = FRIENDS
-                            : profile.tagsVisibility = PRIVATE;
-                        updateProfile(profile);
+                            ? _profile.tagsVisibility = FRIENDS
+                            : _profile.tagsVisibility = PRIVATE;
+                        updateProfile(_profile);
                       });
                     },
                     secondary: Icon(Icons.mail_outline),
