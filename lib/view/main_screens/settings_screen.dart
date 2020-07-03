@@ -10,6 +10,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// @author Christian Henrich, Jan Oster
 /// This screen represents the UI for the settings screen view where the user can choose between different app settings
+///
+/// Also the user can change here his privacy settings
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -23,6 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   UserProfile _profile;
   var _result;
 
+  /// adds share functionality to share the app
   void share(BuildContext context, String text) {
     final RenderBox box = context.findRenderObject(); //fix for iPad
     Share.share(
@@ -31,6 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// This Button is used to delete the profile of the currently signed in user and logging out
   Widget _deleteProfileButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -95,6 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// This Button opens the native share menu of the device to share a text (text can be changed in ./language/)
   Widget _shareAppButtonWidget(String text) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -121,6 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// This Button opens a mail:to-link to send feedback directly to feedback@univents.app
   Widget _feedbackButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -155,6 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// This button opens the [PrivacyScreen]
   Widget _privacyButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -187,6 +194,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// This Button signs out the currently signed in user
   Widget _signOutButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
