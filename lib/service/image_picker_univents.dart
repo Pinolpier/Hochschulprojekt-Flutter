@@ -5,24 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// @author Jan Oster
-/// todo: CONSIDER writing a library-level doc comment
+/// This class displays an image picker dialog
+///
+/// To use the image picker create an instance of it at your desired location and then call its method [chooseImage]
 class ImagePickerUnivents {
-  /// todo: add documentation to variable
+  /// selected image, can be null if nothing is selected
   dynamic _image;
 
-  /// todo: missing documentation
+  /// This Function is used to get an image from the camera of the device
+  ///
+  /// Returns [pickedImage]
   Future<File> getImageFromCamera() async {
     File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
     return pickedImage;
   }
 
-  /// todo: missing documentation
+  /// This function is used to get an image from the gallery of the device
+  ///
+  /// Returns [pickedImage]
   Future<File> getImageFromGallery() async {
     File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
     return pickedImage;
   }
 
-  /// todo: missing documentation
+  /// This Function opens a dialog where you can choose from where you want to pick the image (Gallery, Camera) or you can remove the image or close the Dialog
+  ///
+  /// Returns the selected image, if no image is selected/remove pressed/cancel pressed then null is returned
   Future<dynamic> chooseImage(BuildContext context) async {
     await showDialog<File>(
       context: context,

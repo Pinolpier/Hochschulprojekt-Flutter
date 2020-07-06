@@ -15,28 +15,26 @@ import 'package:univents/view/create_event_screen.dart';
 import 'package:univents/view/event_info_screen.dart';
 import 'package:user_location/user_location.dart';
 
-/// @author Jan Oster
-/// todo: CONSIDER writing a library-level doc comment
+/// @author Jan Oster, Markus Häring
+/// This class displays the Map screen
 class MapScreen extends StatefulWidget {
-  /// todo: missing documentation
   @override
   State createState() => _MapScreenState();
 }
 
-/// todo: missing documentation
 class _MapScreenState extends State<MapScreen> {
-  /// todo: add documentation of variables
-  /// todo: set variables private
+  /// todo: add documentation of variables need to be done Markus Häring
+  /// todo: set variables private Markus Häring
   LatLng pos;
   LatLng previousPosition;
   List<Marker> _markerList = new List();
   var _result;
-  MapController mapController = new MapController();
+  MapController _mapController = new MapController();
   Timer _timer;
   bool _gestureStart = true;
   GeoPoint initPosition;
 
-  /// todo: missing documentation
+  /// This Widget displays the Map with given parameters ans shows the location of the user
   Widget _flutterMap(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
@@ -91,7 +89,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
         UserLocationOptions(
           context: context,
-          mapController: mapController,
+          mapController: _mapController,
           markers: _markerList,
           updateMapLocationOnPositionChange: false,
           onLocationUpdate: (LatLng pos) {
@@ -100,11 +98,10 @@ class _MapScreenState extends State<MapScreen> {
           showMoveToCurrentLocationFloatingActionButton: true,
         ),
       ],
-      mapController: mapController,
+      mapController: _mapController,
     );
   }
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// Gets all Events from the Database, creates a Marker for each and sets an onClickListener to open the eventInfo of the respective Event
   void getMarkerList(List list) {
     _markerList = new List<Marker>();
@@ -131,6 +128,7 @@ class _MapScreenState extends State<MapScreen> {
 
   /// todo: DO separate the first sentence of a doc comment into its own paragraph.
   /// todo: DO use prose to explain parameters, return values, and exceptions
+  /// todo: Markus Häring please correct documentation
   /// Method to load new events when the card is moved.
   /// The [MapPosition] and the double [radius] are transferred
   Future<bool> loadNewEvents(MapPosition position, double radius) async {
@@ -148,7 +146,6 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
-  /// todo: missing documentation
   Future<bool> loadAsyncData() async {
     if (radius != null) {
       initPosition = gPoint;
@@ -170,21 +167,9 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
-  /// todo: delete redundant comments
-  /// todo: missing documentation
   @override
   void initState() {
-    // This is the proper place to make the async calls
-    // This way they only get called once
-
-    // During development, if you change this code,
-    // you will need to do a full restart instead of just a hot reload
-
-    // You can't use async/await here,
-    // We can't mark this method as async because of the @override
     loadAsyncData().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
       setState(() {
         _result = result;
       });
@@ -195,18 +180,17 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     if (_result == null) {
-      // This is what we show while we're loading
       return CircularProgressIndicator();
     } else {
-      // Do something with the `_result`s here
       return Scaffold(
         body: _flutterMap(context),
       );
     }
   }
 
-  /// todo: DO use prose to explain parameters, return values, and exceptions
-  ///Converts LatLng to List<String> with index 0 = latitude, index 1 = longitude
+  ///Converts LatLng to a readable List
+  ///
+  /// Returns a [pointList] with index 0 = latitude, index 1 = longitude
   List<String> convertLatLngToString(LatLng latLng) {
     String point = latLng.toString();
     List<String> pointList1 = new List();

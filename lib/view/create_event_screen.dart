@@ -16,25 +16,14 @@ import 'package:univents/service/utils.dart';
 import 'package:univents/view/dialogs/friend_list_dialog.dart';
 import 'package:univents/view/location_picker_screen.dart';
 
-/// @author Jan Oster
-
-/// this class creates an createEventScreen which opens if you want to create a event The screen has following input fields:
-/// -Event Picture (AssetImage with ImagePicker from gallery onPress)
-/// -Event Start DateTime (DateTimePicker)
-/// -Event End Date (DateTimePicker)
-/// -Event Name (input-type: text)
-/// -Event Location (input-type: text, maybe convert it to an button which opens the map and where you then can choose the location)
-/// -Event Description (input-type: multiline text)
-/// -Event Tags (input-type: text, separated by comma)
-/// -Event Visibility (input-type: checkbox)
-/// -Event addFriends (button)
-/// -Event CREATE (button)
+/// @author Jan Oster, Markus Häring
+/// this class creates an createEventScreen which opens if you want to create a event
 
 class CreateEventScreen extends StatefulWidget {
-  /// todo: add documentation of variable
+  /// latitude and longitude of the location you clicked on the map where you want to create your event
   final List<String> tappedPoint;
 
-  /// todo: missing documentation of constructor
+  /// constructor gets the tappedPoint from the map
   CreateEventScreen(this.tappedPoint, {Key key}) : super(key: key);
 
   /// todo: missing documentation
@@ -42,28 +31,50 @@ class CreateEventScreen extends StatefulWidget {
   State createState() => _CreateEventScreenState();
 }
 
-/// todo: missing documentation
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  /// todo: add documentation of variables
-  /// todo: set variables private
-  DateTime selectedStartDateTime;
-  DateTime selectedEndDateTime;
-  String selectedStartString = 'not set';
-  String selectedEndString = 'not set';
-  bool isPrivate = false;
-  List<dynamic> tagsList = new List();
-  List<dynamic> attendeeIDs = new List();
-  TextEditingController eventNameController = new TextEditingController();
-  TextEditingController eventLocationController = new TextEditingController();
-  TextEditingController eventDescriptionController =
+  /// specified event start date
+  DateTime _selectedStartDateTime;
+
+  /// specified event end date
+  DateTime _selectedEndDateTime;
+
+  /// placeholder if no event start date is set
+  String _selectedStartString = 'not set';
+
+  /// placeholder if no event end date is set
+  String _selectedEndString = 'not set';
+
+  /// specified privacy setting of event
+  bool _isPrivate = false;
+
+  /// specified tags of the event
+  List<dynamic> _tagsList = new List();
+
+  /// specified attendees of the event
+  List<dynamic> _attendeeIDs = new List();
+
+  /// used to read the inputted text of the event name
+  TextEditingController _eventNameController = new TextEditingController();
+
+  /// used to read the inputted text of the event location
+  TextEditingController _eventLocationController = new TextEditingController();
+
+  /// used to read the inputted text of the event description
+  TextEditingController _eventDescriptionController =
       new TextEditingController();
-  TextEditingController eventTagsController = new TextEditingController();
-  File eventImage;
-  ImagePickerUnivents ip = new ImagePickerUnivents();
+
+  /// used to read the inputted text of the event tags
+  TextEditingController _eventTagsController = new TextEditingController();
+
+  /// specified event image
+  File _eventImage;
+
+  /// imagePicker for selecting the image from device
+  ImagePickerUnivents _ip = new ImagePickerUnivents();
   InterfaceToReturnPickedLocation _returnPickedLocation =
       new InterfaceToReturnPickedLocation();
 
-  /// todo: missing documentation
+  /// This Widget displays a Dialog if a wrong startTime is given
   Future<void> errorEndDateTime() async {
     return showDialog<void>(
       context: context,
@@ -92,33 +103,33 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This Widget displays a placeholder image if no event image is specified
   Widget _eventImagePlaceholder() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await ip.chooseImage(context);
+          File eventImageAsync = await _ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            eventImage = eventImageAsync;
+            _eventImage = eventImageAsync;
           });
         }, // handle your image tap here
         child: Image.asset('assets/eventImagePlaceholder.png', height: 150));
   }
 
-  /// todo: missing documentation
-  Widget _eventImage() {
+  /// This widget displays the event image if set
+  Widget _eventImageWidget() {
     return GestureDetector(
         onTap: () async {
-          File eventImageAsync = await ip.chooseImage(context);
+          File eventImageAsync = await _ip.chooseImage(context);
           setState(() {
             print(eventImageAsync);
-            eventImage = eventImageAsync;
+            _eventImage = eventImageAsync;
           }); // handle your image tap here
         },
-        child: Image.file(eventImage, height: 150));
+        child: Image.file(_eventImage, height: 150));
   }
 
-  /// todo: missing documentation
+  /// This button opens a dateTimePicker to select the event start date
   Widget _selectStartDateTimeButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -126,15 +137,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          selectedStartDateTime = await getDateTime(context);
+          _selectedStartDateTime = await getDateTime(context);
           setState(() {
-            print(selectedStartDateTime);
-            selectedStartString =
-                formatDateTime(context, selectedStartDateTime);
+            print(_selectedStartDateTime);
+            _selectedStartString =
+                formatDateTime(context, _selectedStartDateTime);
 
-            ///reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
-            selectedEndDateTime = null;
-            selectedEndString = 'not set';
+            //reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
+            _selectedEndDateTime = null;
+            _selectedEndString = 'not set';
           });
         },
         padding: EdgeInsets.all(15.0),
@@ -156,7 +167,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This button opens a dateTimePicker to select the event end date
   Widget _selectEndDateTimeButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -164,15 +175,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          selectedEndDateTime = await getDateTime(context);
+          _selectedEndDateTime = await getDateTime(context);
           setState(() {
-            if (selectedStartDateTime == null ||
-                selectedEndDateTime.isBefore(
-                    selectedStartDateTime.add(Duration(minutes: 1)))) {
+            if (_selectedStartDateTime == null ||
+                _selectedEndDateTime.isBefore(
+                    _selectedStartDateTime.add(Duration(minutes: 1)))) {
               errorEndDateTime();
             } else {
-              print(selectedEndDateTime);
-              selectedEndString = formatDateTime(context, selectedEndDateTime);
+              print(_selectedEndDateTime);
+              _selectedEndString =
+                  formatDateTime(context, _selectedEndDateTime);
             }
           });
         },
@@ -195,7 +207,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This widget displays a textfield to input the event name
   Widget _eventNameTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +222,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           decoration: boxStyleConstant,
           height: 60.0,
           child: TextField(
-            controller: eventNameController,
+            controller: _eventNameController,
             keyboardType: TextInputType.text,
             style: TextStyle(
               color: univentsWhiteText,
@@ -232,7 +244,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This widget displays a textfield to input the event description
   Widget _eventDescriptionTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,7 +259,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           decoration: boxStyleConstant,
           height: 120.0,
           child: TextField(
-            controller: eventDescriptionController,
+            controller: _eventDescriptionController,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             style: TextStyle(
@@ -270,7 +282,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This widget displays a textfield to input the event tags, separated by comma e.g. Tag1, Tag2, Tag3, ...
   Widget _eventTagsTextfieldWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,7 +296,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           alignment: Alignment.topLeft,
           decoration: boxStyleConstant,
           child: TextField(
-            controller: eventTagsController,
+            controller: _eventTagsController,
             keyboardType: TextInputType.text,
             maxLines: null,
             style: TextStyle(
@@ -307,7 +319,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This button opens the select friends dialog
   Widget _addFriendsButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -322,7 +334,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               ));
           setState(() {
             for (String s in result) {
-              attendeeIDs.add(s);
+              _attendeeIDs.add(s);
               print(s);
             }
           });
@@ -348,15 +360,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// todo: missing documentation
+  /// This checkbox specifies if the event is private. Unchecked = open, checked = private
   Widget _isPrivateCheckbox() {
     return Container(
       child: Checkbox(
-        value: isPrivate,
+        value: _isPrivate,
         onChanged: (value) {
           setState(() {
-            isPrivate = value;
-            print(isPrivate);
+            _isPrivate = value;
+            print(_isPrivate);
           });
         },
       ),
@@ -395,7 +407,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ));
   }
 
-  /// todo: missing documentation
+  /// This button creates the event with the specified variables and sends it to the backend
   Widget _createButtonWidget() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -403,19 +415,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          tagsList = eventTagsController.text.split(", ");
-          print(tagsList);
-          print(attendeeIDs);
+          _tagsList = _eventTagsController.text.split(", ");
+          print(_tagsList);
+          print(_attendeeIDs);
 
           Event event = new Event(
-              eventNameController.text,
-              selectedStartDateTime,
-              selectedEndDateTime,
-              eventDescriptionController.text,
+              _eventNameController.text,
+              _selectedStartDateTime,
+              _selectedEndDateTime,
+              _eventDescriptionController.text,
               _returnPickedLocation.choosenLocationName,
-              isPrivate,
-              attendeeIDs,
-              tagsList,
+              _isPrivate,
+              _attendeeIDs,
+              _tagsList,
               _returnPickedLocation.choosenLocationCoords[1].toString(),
               _returnPickedLocation.choosenLocationCoords[0].toString());
           if (event.eventStartDate == null || event.eventEndDate == null) {
@@ -432,7 +444,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             show_toast('location darf nicht fehlen');
           } else {
             try {
-              createEvent(eventImage, event);
+              createEvent(_eventImage, event);
             } on PlatformException catch (e) {
               show_toast(exceptionHandling(e));
               Log().error(
@@ -488,16 +500,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              eventImage == null ? _eventImagePlaceholder() : _eventImage(),
+              _eventImage == null
+                  ? _eventImagePlaceholder()
+                  : _eventImageWidget(),
               SizedBox(height: 40.0),
               new Text(
-                'Start Date: ' + selectedStartString,
+                'Start Date: ' + _selectedStartString,
                 style: labelStyleConstant,
               ),
               _selectStartDateTimeButtonWidget(),
               SizedBox(height: 20.0),
               new Text(
-                'End Date: ' + selectedEndString,
+                'End Date: ' + _selectedEndString,
                 style: labelStyleConstant,
               ),
               _selectEndDateTimeButtonWidget(),
