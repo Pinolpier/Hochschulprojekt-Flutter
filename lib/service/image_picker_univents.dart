@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:univents/constants/constants.dart';
 
 /// @author Jan Oster
 /// This class displays an image picker dialog
@@ -16,7 +17,8 @@ class ImagePickerUnivents {
   ///
   /// Returns [pickedImage]
   Future<File> getImageFromCamera() async {
-    File pickedImage = await ImagePicker.pickImage(source: ImageSource.camera);
+    File pickedImage = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: imageQuality);
     return pickedImage;
   }
 
@@ -24,7 +26,8 @@ class ImagePickerUnivents {
   ///
   /// Returns [pickedImage]
   Future<File> getImageFromGallery() async {
-    File pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File pickedImage = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: imageQuality);
     return pickedImage;
   }
 

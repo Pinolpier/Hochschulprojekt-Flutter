@@ -29,3 +29,6 @@ final boxStyleConstant = BoxDecoration(
 
 /// constant value for the extended radius on the map_screen
 final radius_buffer = 1;
+
+///constant value for compressing an image (100 = original)
+final imageQuality = 65;
