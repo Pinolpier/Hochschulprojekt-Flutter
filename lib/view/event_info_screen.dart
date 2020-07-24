@@ -216,18 +216,26 @@ class _EventInfoState extends State<EventInfo> {
       ),
       body: Stack(
         children: <Widget>[
-          SizedBox.expand(
-            child: _result == null
-                ? CircularProgressIndicator()
-                : _eventImageFromDatabase() != null
-                    ? _eventImageFromDatabase()
-                    : eventImage == null
-                        ? _eventImagePlaceholder()
-                        : _eventImage(),
-          ),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  child: _result == null
+                      ? CircularProgressIndicator()
+                      : _eventImageFromDatabase() != null
+                          ? _eventImageFromDatabase()
+                          : eventImage == null
+                              ? _eventImagePlaceholder()
+                              : _eventImage(),
+                )
+              ]),
           DraggableScrollableSheet(
-            minChildSize: 0.1,
-            initialChildSize: 0.22,
+            minChildSize: 1 - (200 / MediaQuery.of(context).size.height),
+            initialChildSize: 1 - (200 / MediaQuery.of(context).size.height),
             builder: (context, scrollController) {
               return SingleChildScrollView(
                 controller: scrollController,
@@ -244,20 +252,6 @@ class _EventInfoState extends State<EventInfo> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: _result == null
-                                  ? CircularProgressIndicator()
-                                  : _eventImageFromDatabase() != null
-                                      ? _eventImageFromDatabase()
-                                      : eventImage == null
-                                          ? _eventImagePlaceholder()
-                                          : _eventImage(),
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
