@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -492,45 +493,82 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: SingleChildScrollView(
           //fixes pixel overflow error when keyboard is used
           physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: 40.0,
-            vertical: 120.0,
-          ),
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _eventImage == null
-                  ? _eventImagePlaceholder()
-                  : _eventImageWidget(),
-              SizedBox(height: 40.0),
-              new Text(
-                'Start Date: ' + _selectedStartString,
-                style: labelStyleConstant,
+              Stack(
+                children: <Widget>[
+                  _eventImage != null
+                      ? Stack(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width,
+                              child: FittedBox(
+                                child: _eventImageWidget(),
+                                fit: BoxFit.fill,
+                                alignment: Alignment.center,
+                              ),
+                            ),
+                            Positioned.fill(
+                                child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 15.0,
+                                      sigmaY: 0,
+                                    ),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0),
+                                    ))),
+                          ],
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    child: _eventImage == null
+                        ? _eventImagePlaceholder()
+                        : _eventImageWidget(),
+                  )
+                ],
               ),
-              _selectStartDateTimeButtonWidget(),
-              SizedBox(height: 20.0),
-              new Text(
-                'End Date: ' + _selectedEndString,
-                style: labelStyleConstant,
-              ),
-              _selectEndDateTimeButtonWidget(),
-              SizedBox(height: 20.0),
-              _eventNameTextfieldWidget(),
-              SizedBox(height: 20.0),
-              _eventlocationPickerButton(context),
-              SizedBox(height: 20.0),
-              _eventDescriptionTextfieldWidget(),
-              SizedBox(height: 20.0),
-              _eventTagsTextfieldWidget(),
-              SizedBox(height: 20.0),
-              new Text(
-                'Should the event be private?', //TODO: Add Internationalization
-                style: labelStyleConstant,
-              ),
-              _isPrivateCheckbox(),
-              _addFriendsButtonWidget(),
-              _createButtonWidget(),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 40.0,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      _eventNameTextfieldWidget(),
+                      SizedBox(height: 20.0),
+                      new Text(
+                        'Start Date: ' + _selectedStartString,
+                        style: labelStyleConstant,
+                      ),
+                      _selectStartDateTimeButtonWidget(),
+                      SizedBox(height: 20.0),
+                      new Text(
+                        'End Date: ' + _selectedEndString,
+                        style: labelStyleConstant,
+                      ),
+                      _selectEndDateTimeButtonWidget(),
+                      SizedBox(height: 20.0),
+                      _eventlocationPickerButton(context),
+                      SizedBox(height: 20.0),
+                      _eventDescriptionTextfieldWidget(),
+                      SizedBox(height: 20.0),
+                      _eventTagsTextfieldWidget(),
+                      SizedBox(height: 20.0),
+                      new Text(
+                        'Should the event be private?',
+                        //TODO: Add Internationalization
+                        style: labelStyleConstant,
+                      ),
+                      _isPrivateCheckbox(),
+                      _addFriendsButtonWidget(),
+                      _createButtonWidget(),
+                    ],
+                  )),
             ],
           ),
         ),
