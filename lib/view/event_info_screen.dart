@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -221,17 +222,39 @@ class _EventInfoState extends State<EventInfo> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  child: _result == null
-                      ? CircularProgressIndicator()
-                      : _eventImageFromDatabase() != null
-                          ? _eventImageFromDatabase()
-                          : eventImage == null
-                              ? _eventImagePlaceholder()
-                              : _eventImage(),
-                )
+                Stack(children: <Widget>[
+                  eventimagewidget != null
+                      ? Stack(
+                          children: <Widget>[
+                            FittedBox(
+                              child: eventimagewidget,
+                              fit: BoxFit.fill,
+                              alignment: Alignment.center,
+                            ),
+                            Positioned.fill(
+                                child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 5.0,
+                                      sigmaY: 5.0,
+                                    ),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0),
+                                    ))),
+                          ],
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    child: _result == null
+                        ? CircularProgressIndicator()
+                        : _eventImageFromDatabase() != null
+                            ? _eventImageFromDatabase()
+                            : eventImage == null
+                                ? _eventImagePlaceholder()
+                                : _eventImage(),
+                  )
+                ]),
               ]),
           DraggableScrollableSheet(
             minChildSize: 1 - (200 / MediaQuery.of(context).size.height),
