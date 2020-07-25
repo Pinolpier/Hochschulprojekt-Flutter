@@ -65,6 +65,9 @@ dependencies:
   #The following dependency enables us to launch URLs in Flutter (e. g. <mailto:>)
   url_launcher: ^5.4.5
 
+  #The following dependency enables us to use tags fields
+  flutter_tagging: ^2.2.0+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

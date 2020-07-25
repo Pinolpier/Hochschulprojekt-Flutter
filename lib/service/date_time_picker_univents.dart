@@ -21,19 +21,27 @@ Future<TimeOfDay> _selectTime(BuildContext context) {
 
 /// This function is used to pick a date
 /// Returns selected [DateTime] asynchronous
-Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
-      context: context,
-      initialDate: DateTime.now().add(Duration(seconds: 1)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
+Future<DateTime> _selectDateTime(BuildContext context,
+    {DateTime initialDateTime, DateTime firstDateTime, DateTime lastDateTime}) {
+  initialDateTime ??= DateTime.now().add(Duration(seconds: 1));
+  firstDateTime ??= DateTime.now();
+  lastDateTime ??= DateTime(2100);
+  return showDatePicker(
+    context: context,
+    initialDate: initialDateTime,
+    firstDate: firstDateTime,
+    lastDate: lastDateTime,
+  );
+}
 
 /// This function displays firstly the date picker and the the time picker so that you
 /// have both pickers as one function
 ///
 /// Returns selected [DateTime] asynchronous
-Future<DateTime> getDateTime(BuildContext context) async {
-  final selectedDate = await _selectDateTime(context);
+Future<DateTime> getDateTime(BuildContext context,
+    [DateTime minDateTime]) async {
+  final selectedDate = await _selectDateTime(context,
+      firstDateTime: minDateTime, initialDateTime: minDateTime);
   if (selectedDate == null) return null;
 
   final selectedTime = await _selectTime(context);

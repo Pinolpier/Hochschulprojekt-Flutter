@@ -4,16 +4,17 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:univents/backend/event_service.dart';
 import 'package:univents/constants/colors.dart';
 import 'package:univents/constants/constants.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/model/eventTag.dart';
 import 'package:univents/service/date_time_picker_univents.dart';
 import 'package:univents/service/image_picker_univents.dart';
 import 'package:univents/service/log.dart';
 import 'package:univents/service/page_controller.dart';
 import 'package:univents/service/toast.dart';
-import 'package:univents/service/utils.dart';
 import 'package:univents/view/dialogs/friend_list_dialog.dart';
 import 'package:univents/view/location_picker_screen.dart';
 
@@ -33,29 +34,41 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
+  List<EventTag> _tagsList;
+
+  @override
+  void initState() {
+    _tagsList = [];
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tagsList.clear();
+    super.dispose();
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   /// specified event start date
-  DateTime _selectedStartDateTime;
+  DateTime _selectedBeginDateTime;
 
   /// specified event end date
   DateTime _selectedEndDateTime;
-
-  /// placeholder if no event start date is set
-  String _selectedStartString = 'not set';
-
-  /// placeholder if no event end date is set
-  String _selectedEndString = 'not set';
 
   /// specified privacy setting of event
   bool _isPrivate = false;
 
   /// specified tags of the event
-  List<dynamic> _tagsList = new List();
 
   /// specified attendees of the event
   List<dynamic> _attendeeIDs = new List();
 
   /// used to read the inputted text of the event name
   TextEditingController _eventNameController = new TextEditingController();
+
+  TextEditingController _beginDateController = new TextEditingController();
+  TextEditingController _endDateController = new TextEditingController();
 
   /// used to read the inputted text of the event location
   TextEditingController _eventLocationController = new TextEditingController();
@@ -75,34 +88,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   InterfaceToReturnPickedLocation _returnPickedLocation =
       new InterfaceToReturnPickedLocation();
 
-  /// This Widget displays a Dialog if a wrong startTime is given
-  Future<void> errorEndDateTime() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Rewind and remember'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('1. please specify first a startDateTime'),
-                Text('2. endDateTime can#t be earlier than startDateTime'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
+  ///Box styles to set a red border around invalid fields
+  BoxDecoration _eventNameBoxStyle = boxStyleConstant;
+  BoxDecoration _beginDateBoxStyle = boxStyleConstant;
+  BoxDecoration _endDateBoxStyle = boxStyleConstant;
+  BoxDecoration _locationBoxStyle = boxStyleConstant;
 
   /// This Widget displays a placeholder image if no event image is specified
   Widget _eventImagePlaceholder() {
@@ -110,7 +100,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         onTap: () async {
           File eventImageAsync = await _ip.chooseImage(context);
           setState(() {
-            print(eventImageAsync);
             _eventImage = eventImageAsync;
           });
         }, // handle your image tap here
@@ -123,93 +112,136 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         onTap: () async {
           File eventImageAsync = await _ip.chooseImage(context);
           setState(() {
-            print(eventImageAsync);
             _eventImage = eventImageAsync;
           }); // handle your image tap here
         },
         child: Image.file(_eventImage, height: 150));
   }
 
-  /// This button opens a dateTimePicker to select the event start date
-  Widget _selectStartDateTimeButtonWidget() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () async {
-          _selectedStartDateTime = await getDateTime(context);
-          setState(() {
-            print(_selectedStartDateTime);
-            _selectedStartString =
-                formatDateTime(context, _selectedStartDateTime);
-
-            //reset the endDateTime after setting the startDateTime so there is no possibility for it to be earlier
-            _selectedEndDateTime = null;
-            _selectedEndString = 'not set';
-          });
-        },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: univentsWhiteBackground,
-        child: Text(
-          'select start date',
-          style: TextStyle(
-            color: textButtonDarkBlue,
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+  /// This widgets displays a datetime textformfield with a dateTimePicker on tab
+  Widget _beginDateTimeWidget() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Beginn',
+            style: labelStyleConstant,
           ),
-        ),
+          SizedBox(height: 10.0),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: _beginDateBoxStyle,
+            height: 60.0,
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty ||
+                    _selectedBeginDateTime.isBefore(DateTime.now())) {
+                  setState(() {
+                    _beginDateBoxStyle = boxErrorStyleConstant;
+                  });
+                  return "";
+                } else {
+                  setState(() {
+                    _beginDateBoxStyle = boxStyleConstant;
+                  });
+                  return null;
+                }
+              },
+              onTap: () async {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                _selectedBeginDateTime = await getDateTime(context);
+                _beginDateController.text =
+                    dateTimeShortDateFormat.format(_selectedBeginDateTime);
+              },
+              controller: _beginDateController,
+              keyboardType: TextInputType.datetime,
+              style: TextStyle(
+                color: univentsWhiteText,
+                fontFamily: 'OpenSans',
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.date_range,
+                  color: univentsWhiteBackground,
+                ),
+                hintText: 'Set begin',
+                hintStyle: textStyleConstant,
+                errorStyle: TextStyle(height: 0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  /// This button opens a dateTimePicker to select the event end date
-  Widget _selectEndDateTimeButtonWidget() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () async {
-          _selectedEndDateTime = await getDateTime(context);
-          setState(() {
-            if (_selectedStartDateTime == null ||
-                _selectedEndDateTime.isBefore(
-                    _selectedStartDateTime.add(Duration(minutes: 1)))) {
-              errorEndDateTime();
-            } else {
-              print(_selectedEndDateTime);
-              _selectedEndString =
-                  formatDateTime(context, _selectedEndDateTime);
-            }
-          });
-        },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: univentsWhiteBackground,
-        child: Text(
-          'select end date',
-          style: TextStyle(
-            color: textButtonDarkBlue,
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+  /// This widgets displays a datetime textformfield with a dateTimePicker on tab
+  Widget _endDateTimeWidget() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Ende',
+            style: labelStyleConstant,
           ),
-        ),
+          SizedBox(height: 10.0),
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: _endDateBoxStyle,
+            height: 60.0,
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty ||
+                    _selectedEndDateTime.isBefore(
+                        _selectedBeginDateTime.add(Duration(minutes: 1)))) {
+                  setState(() {
+                    _endDateBoxStyle = boxErrorStyleConstant;
+                  });
+                  return "";
+                } else {
+                  setState(() {
+                    _endDateBoxStyle = boxStyleConstant;
+                  });
+                  return null;
+                }
+              },
+              onTap: () async {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                _selectedEndDateTime =
+                await getDateTime(context, _selectedBeginDateTime);
+                _endDateController.text =
+                    dateTimeShortDateFormat.format(_selectedEndDateTime);
+              },
+              controller: _endDateController,
+              keyboardType: TextInputType.datetime,
+              style: TextStyle(
+                color: univentsWhiteText,
+                fontFamily: 'OpenSans',
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.date_range,
+                  color: univentsWhiteBackground,
+                ),
+                hintText: 'Set end',
+                hintStyle: textStyleConstant,
+                errorStyle: TextStyle(height: 0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   /// This widget displays a textfield to input the event name
-  Widget _eventNameTextfieldWidget() {
+  Widget _eventNameWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -220,25 +252,38 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: boxStyleConstant,
+          decoration: _eventNameBoxStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
             controller: _eventNameController,
+            validator: (value) {
+              if (value.isEmpty) {
+                setState(() {
+                  _eventNameBoxStyle = boxErrorStyleConstant;
+                });
+                return "";
+              } else {
+                setState(() {
+                  _eventNameBoxStyle = boxStyleConstant;
+                });
+                return null;
+              }
+            },
             keyboardType: TextInputType.text,
             style: TextStyle(
               color: univentsWhiteText,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.create,
-                color: univentsWhiteBackground,
-              ),
-              hintText: 'Enter the event name',
-              hintStyle: textStyleConstant,
-            ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.create,
+                  color: univentsWhiteBackground,
+                ),
+                hintText: 'Enter the event name',
+                hintStyle: textStyleConstant,
+                errorStyle: TextStyle(height: 0)),
           ),
         ),
       ],
@@ -246,7 +291,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   /// This widget displays a textfield to input the event description
-  Widget _eventDescriptionTextfieldWidget() {
+  Widget _eventDescriptionWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -284,7 +329,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   /// This widget displays a textfield to input the event tags, separated by comma e.g. Tag1, Tag2, Tag3, ...
-  Widget _eventTagsTextfieldWidget() {
+  Widget _tagsWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -293,28 +338,62 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.topLeft,
-          decoration: boxStyleConstant,
-          child: TextField(
-            controller: _eventTagsController,
-            keyboardType: TextInputType.text,
-            maxLines: null,
-            style: TextStyle(
-              color: univentsWhiteText,
-              fontFamily: 'OpenSans',
-            ),
+        FlutterTagging<EventTag>(
+          initialItems: _tagsList,
+          textFieldConfiguration: TextFieldConfiguration(
+            style: TextStyle(color: univentsWhiteText),
             decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              border: new OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: const BorderRadius.all(
+                  const Radius.circular(borderRadiusStyle),
+                ),
+              ),
+              fillColor: univentsLightBlue,
+              filled: true,
               prefixIcon: Icon(
-                Icons.add,
+                Icons.label_outline,
                 color: univentsWhiteBackground,
               ),
-              hintText: 'Tags, seperated by comma',
               hintStyle: textStyleConstant,
+              hintText: 'Search Tags',
             ),
           ),
+          findSuggestions: EventTagService.getTagSuggestions,
+          additionCallback: (value) {
+            return EventTag(
+              tag: value,
+            );
+          },
+          onAdded: (language) {
+            return language;
+          },
+          configureSuggestion: (lang) {
+            return SuggestionConfiguration(
+              title: Text(lang.tag),
+              additionWidget: Chip(
+                avatar: Icon(
+                  Icons.add_circle,
+                  color: Colors.white,
+                ),
+                label: Text('Add New Tag'),
+                labelStyle: TextStyle(
+                  color: univentsWhiteText,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w300,
+                ),
+                backgroundColor: univentsTagColor,
+              ),
+            );
+          },
+          configureChip: (lang) {
+            return ChipConfiguration(
+              label: Text(lang.tag),
+              backgroundColor: univentsTagColor,
+              labelStyle: TextStyle(color: univentsWhiteText),
+              deleteIconColor: univentsWhiteText,
+            );
+          },
         ),
       ],
     );
@@ -336,7 +415,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           setState(() {
             for (String s in result) {
               _attendeeIDs.add(s);
-              print(s);
             }
           });
           //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
@@ -369,10 +447,65 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         onChanged: (value) {
           setState(() {
             _isPrivate = value;
-            print(_isPrivate);
           });
         },
       ),
+    );
+  }
+
+  Widget _eventLocationWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Event location',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: _locationBoxStyle,
+          height: 60.0,
+          child: TextFormField(
+            onTap: () async {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      new LocationPickerScreen(_returnPickedLocation)));
+              _eventLocationController.text =
+                  _returnPickedLocation.choosenLocationName;
+            },
+            controller: _eventLocationController,
+            validator: (value) {
+              if (value.isEmpty ||
+                  _returnPickedLocation.choosenLocationCoords.isEmpty) {
+                _locationBoxStyle = boxErrorStyleConstant;
+                return "";
+              } else {
+                _locationBoxStyle = boxStyleConstant;
+                return null;
+              }
+            },
+            keyboardType: TextInputType.text,
+            style: TextStyle(
+              color: univentsWhiteText,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.location_on,
+                  color: univentsWhiteBackground,
+                ),
+                hintText: 'Choose location...',
+                hintStyle: textStyleConstant,
+                errorStyle: TextStyle(height: 0)),
+          ),
+        ),
+      ],
     );
   }
 
@@ -388,7 +521,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        new LocationPickerScreen(_returnPickedLocation)));
+                    new LocationPickerScreen(_returnPickedLocation)));
           },
           padding: EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
@@ -416,34 +549,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          _tagsList = _eventTagsController.text.split(", ");
-          print(_tagsList);
-          print(_attendeeIDs);
-
-          Event event = new Event(
-              _eventNameController.text,
-              _selectedStartDateTime,
-              _selectedEndDateTime,
-              _eventDescriptionController.text,
-              _returnPickedLocation.choosenLocationName,
-              _isPrivate,
-              _attendeeIDs,
-              _tagsList,
-              _returnPickedLocation.choosenLocationCoords[1].toString(),
-              _returnPickedLocation.choosenLocationCoords[0].toString());
-          if (event.eventStartDate == null || event.eventEndDate == null) {
-            show_toast(
-                'Sowohl Start als auch Endzeitpunkt muss ausgewählt sein');
-          } else if (event.eventStartDate.isAfter(event.eventEndDate)) {
-            show_toast('Startdatum muss vor Enddatum liegen!');
-          }
-          if (event.title == null) {
-            show_toast('Event Name darf nicht leer sein');
-          } else if (event.description == null) {
-            show_toast('Eventbeschreibung darf nicht leer sein');
-          } else if (event.location == null) {
-            show_toast('location darf nicht fehlen');
-          } else {
+          if (_formKey.currentState.validate()) {
+            List<String> tags = [];
+            _tagsList.forEach((element) {
+              tags.add(element.tag);
+            });
+            Event event = new Event(
+                _eventNameController.text,
+                _selectedBeginDateTime,
+                _selectedEndDateTime,
+                _eventDescriptionController.text,
+                _returnPickedLocation.choosenLocationName,
+                _isPrivate,
+                _attendeeIDs,
+                tags,
+                _returnPickedLocation.choosenLocationCoords[1].toString(),
+                _returnPickedLocation.choosenLocationCoords[0].toString());
             try {
               createEvent(_eventImage, event);
             } on PlatformException catch (e) {
@@ -456,8 +577,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => NavigationBarUI()),
-              (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
             );
+//            }
           }
         },
         padding: EdgeInsets.all(15.0),
@@ -479,6 +601,60 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  Widget _eventImageBlockWidget() {
+    return Stack(
+      children: <Widget>[
+        _eventImage != null
+            ? Stack(
+          children: <Widget>[
+            SizedBox(
+              height: 200,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+              child: FittedBox(
+                child: _eventImageWidget(),
+                fit: BoxFit.fill,
+                alignment: Alignment.center,
+              ),
+            ),
+            Positioned.fill(
+                child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 15.0,
+                      sigmaY: 0,
+                    ),
+                    child: Container(
+                      color: Colors.black.withOpacity(0),
+                    ))),
+          ],
+        )
+            : Container(),
+        SizedBox(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: 200,
+          child: _eventImage == null
+              ? _eventImagePlaceholder()
+              : _eventImageWidget(),
+        )
+      ],
+    );
+  }
+
+  Widget _eventDateBlockWidget() {
+    return Row(
+      children: <Widget>[
+        _beginDateTimeWidget(),
+        SizedBox(width: 20.0),
+        _endDateTimeWidget(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -493,83 +669,44 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: SingleChildScrollView(
           //fixes pixel overflow error when keyboard is used
           physics: AlwaysScrollableScrollPhysics(),
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  _eventImage != null
-                      ? Stack(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width,
-                              child: FittedBox(
-                                child: _eventImageWidget(),
-                                fit: BoxFit.fill,
-                                alignment: Alignment.center,
-                              ),
-                            ),
-                            Positioned.fill(
-                                child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                      sigmaX: 15.0,
-                                      sigmaY: 0,
-                                    ),
-                                    child: Container(
-                                      color: Colors.black.withOpacity(0),
-                                    ))),
-                          ],
-                        )
-                      : Container(),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-                    child: _eventImage == null
-                        ? _eventImagePlaceholder()
-                        : _eventImageWidget(),
-                  )
-                ],
-              ),
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 40.0,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      _eventNameTextfieldWidget(),
-                      SizedBox(height: 20.0),
-                      new Text(
-                        'Start Date: ' + _selectedStartString,
-                        style: labelStyleConstant,
-                      ),
-                      _selectStartDateTimeButtonWidget(),
-                      SizedBox(height: 20.0),
-                      new Text(
-                        'End Date: ' + _selectedEndString,
-                        style: labelStyleConstant,
-                      ),
-                      _selectEndDateTimeButtonWidget(),
-                      SizedBox(height: 20.0),
-                      _eventlocationPickerButton(context),
-                      SizedBox(height: 20.0),
-                      _eventDescriptionTextfieldWidget(),
-                      SizedBox(height: 20.0),
-                      _eventTagsTextfieldWidget(),
-                      SizedBox(height: 20.0),
-                      new Text(
-                        'Should the event be private?',
-                        //TODO: Add Internationalization
-                        style: labelStyleConstant,
-                      ),
-                      _isPrivateCheckbox(),
-                      _addFriendsButtonWidget(),
-                      _createButtonWidget(),
-                    ],
-                  )),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _eventImageBlockWidget(),
+                Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.0,
+                      vertical: 40.0,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        _eventNameWidget(),
+                        SizedBox(height: 20.0),
+                        _eventDateBlockWidget(),
+                        SizedBox(height: 20.0),
+                        _eventLocationWidget(),
+                        SizedBox(height: 20.0),
+//                        _eventlocationPickerButton(context),
+//                        SizedBox(height: 20.0),
+                        _eventDescriptionWidget(),
+                        SizedBox(height: 20.0),
+                        _tagsWidget(),
+                        SizedBox(height: 20.0),
+                        new Text(
+                          'Should the event be private?',
+                          //TODO: Add Internationalization
+                          style: labelStyleConstant,
+                        ),
+                        _isPrivateCheckbox(),
+                        _addFriendsButtonWidget(),
+                        _createButtonWidget(),
+                      ],
+                    )),
+              ],
+            ),
           ),
         ),
       ),
