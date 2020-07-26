@@ -377,12 +377,12 @@ class _EventInfoState extends State<EventInfo> {
                                                 : null),
                                     SizedBox(width: 4.0),
                                     isEventOpen == true
-                                        ? Text("open",
+                                        ? Text("Öffentlich",
                                             style: TextStyle(
                                                 color: univentsWhiteText,
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 24))
-                                        : Text("closed",
+                                        : Text("Privat",
                                             style: TextStyle(
                                                 color: univentsWhiteText,
                                                 fontWeight: FontWeight.w700,
@@ -414,7 +414,7 @@ class _EventInfoState extends State<EventInfo> {
                                   ],
                                 ),
                                 Text(
-                                  "Attendees",
+                                  "Teilnehmer",
                                   style: TextStyle(
                                       color: univentsWhiteText,
                                       fontWeight: FontWeight.w400,
@@ -458,7 +458,7 @@ class _EventInfoState extends State<EventInfo> {
                                   ],
                                 ),
                                 Text(
-                                  "Startdate",
+                                  "Beginn",
                                   style: TextStyle(
                                       color: univentsWhiteText,
                                       fontWeight: FontWeight.w400,
@@ -480,7 +480,7 @@ class _EventInfoState extends State<EventInfo> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              "Description",
+                              "Beschreibung",
                               style: TextStyle(
                                   color: univentsBlackText,
                                   fontWeight: FontWeight.w700,
@@ -507,7 +507,7 @@ class _EventInfoState extends State<EventInfo> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              "Attendees",
+                              "Teilnehmer",
                               style: TextStyle(
                                   color: univentsBlackText,
                                   fontWeight: FontWeight.w700,
@@ -561,14 +561,14 @@ class _EventInfoState extends State<EventInfo> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
-                                heroTag: 'addAttendee',
+                                heroTag: 'Teilnehmer hinzufügen',
                                 onPressed: () async {
                                   List<dynamic> fixedLengthList =
                                       widget._event.attendeesIds;
                                   List<String> attendeesList = new List();
                                   for (int i = 0;
-                                      i < fixedLengthList.length;
-                                      i++) {
+                                  i < fixedLengthList.length;
+                                  i++) {
                                     attendeesList.add(fixedLengthList[i]);
                                   }
                                   if (attending == true) {
