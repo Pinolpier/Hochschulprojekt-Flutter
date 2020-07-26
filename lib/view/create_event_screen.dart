@@ -36,12 +36,13 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  List<EventTag> _tagsList;
+  ///Key to identify the form
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     _tagsList = [];
-    _attendees = [];
+    _attendeeFriendModels = [];
     super.initState();
   }
 
@@ -50,8 +51,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _tagsList.clear();
     super.dispose();
   }
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// specified event start date
   DateTime _selectedBeginDateTime;
@@ -63,25 +62,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   bool _isPrivate = false;
 
   /// specified tags of the event
+  List<EventTag> _tagsList;
 
   /// specified attendees of the event
-  List<dynamic> _attendees = new List();
+  List<dynamic> _attendeeFriendModels = new List();
 
-  /// used to read the inputted text of the event name
+  /// used to read the inputted text
   TextEditingController _eventNameController = new TextEditingController();
-
   TextEditingController _beginDateController = new TextEditingController();
   TextEditingController _endDateController = new TextEditingController();
-
-  /// used to read the inputted text of the event location
   TextEditingController _eventLocationController = new TextEditingController();
-
-  /// used to read the inputted text of the event description
   TextEditingController _eventDescriptionController =
       new TextEditingController();
-
-  /// used to read the inputted text of the event tags
-  TextEditingController _eventTagsController = new TextEditingController();
 
   /// specified event image
   File _eventImage;
@@ -121,7 +113,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Image.file(_eventImage, height: 150));
   }
 
-  /// This widgets displays a datetime textformfield with a dateTimePicker on tab
+  /// This widgets displays a datetime textformfield with a dateTimePicker on tap
   Widget _beginDateTimeWidget() {
     return Expanded(
       child: Column(
@@ -170,7 +162,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Icons.date_range,
                   color: univentsWhiteBackground,
                 ),
-                hintText: 'Set begin',
+                hintText: 'Auswählen',
                 hintStyle: textStyleConstant,
                 errorStyle: TextStyle(height: 0),
               ),
@@ -181,7 +173,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// This widgets displays a datetime textformfield with a dateTimePicker on tab
+  /// This widgets displays a datetime textformfield with a dateTimePicker on tap
   Widget _endDateTimeWidget() {
     return Expanded(
       child: Column(
@@ -232,7 +224,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Icons.date_range,
                   color: univentsWhiteBackground,
                 ),
-                hintText: 'Set end',
+                hintText: 'Auswählen',
                 hintStyle: textStyleConstant,
                 errorStyle: TextStyle(height: 0),
               ),
@@ -243,7 +235,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// This widget displays a textfield to input the event name
+  /// This widget displays a textformfield to input the event name
   Widget _eventNameWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,7 +276,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Icons.create,
                   color: univentsWhiteBackground,
                 ),
-                hintText: 'Enter the event name',
+                hintText: 'Gib einen Namen ein...',
                 hintStyle: textStyleConstant,
                 errorStyle: TextStyle(height: 0)),
           ),
@@ -299,7 +291,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Event Description',
+          'Event Beschreibung',
           style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
@@ -322,7 +314,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 Icons.comment,
                 color: univentsWhiteBackground,
               ),
-              hintText: 'Enter the event details',
+              hintText: 'Weitere Details...',
               hintStyle: textStyleConstant,
             ),
           ),
@@ -331,7 +323,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// This widget displays a textfield to input the event tags, separated by comma e.g. Tag1, Tag2, Tag3, ...
+  /// This widget displays a textfield to input the event tags
   Widget _tagsWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,7 +351,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 color: univentsWhiteBackground,
               ),
               hintStyle: textStyleConstant,
-              hintText: 'Search Tags',
+              hintText: 'Tags suchen',
             ),
           ),
           findSuggestions: EventTagService.getTagSuggestions,
@@ -379,7 +371,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Icons.add_circle,
                   color: Colors.white,
                 ),
-                label: Text('Add New Tag'),
+                label: Text('Hinzufügen'),
                 labelStyle: TextStyle(
                   color: univentsWhiteText,
                   fontSize: 14.0,
@@ -407,7 +399,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Event location',
+          'Ort',
           style: labelStyleConstant,
         ),
         SizedBox(height: 10.0),
@@ -449,7 +441,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Icons.location_on,
                   color: univentsWhiteBackground,
                 ),
-                hintText: 'Choose location...',
+                hintText: 'Ort wählen...',
                 hintStyle: textStyleConstant,
                 errorStyle: TextStyle(height: 0)),
           ),
@@ -510,14 +502,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 color: Colors.red,
                 onPressed: () {
                   setState(() {
-                    _attendees.removeAt(index);
+                    _attendeeFriendModels.removeAt(index);
                   });
                 },
               ),
             ],
           ),
         ),
-        index < _attendees.length - 1 ? Divider() : SizedBox(),
+        index < _attendeeFriendModels.length - 1 ? Divider() : SizedBox(),
       ],
     );
   }
@@ -534,17 +526,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         SizedBox(
           child: Container(
 //        alignment: Alignment.centerLeft,
-            decoration: _locationBoxStyle,
+            decoration: boxStyleConstant,
             child: ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: _attendees.length,
+              itemCount: _attendeeFriendModels.length,
               itemBuilder: (context, index) {
-                return _invitedFriendsListItemWidget(index, _attendees[index]);
+                return _invitedFriendsListItemWidget(
+                    index, _attendeeFriendModels[index]);
               },
             ),
           ),
-        )
+        ),
+        _addFriendsButtonWidget(),
       ],
     );
   }
@@ -558,7 +552,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         elevation: 5.0,
         onPressed: () async {
           List<String> preSelectedAttendeeIDs = List();
-          _attendees.forEach((element) {
+          _attendeeFriendModels.forEach((element) {
             preSelectedAttendeeIDs.add(element.uid.toString());
           });
           final List<dynamic> result = await Navigator.push(
@@ -568,9 +562,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     FriendslistdialogScreen(null, preSelectedAttendeeIDs),
               ));
           setState(() {
-            _attendees.clear();
+            _attendeeFriendModels.clear();
             for (FriendModel s in result) {
-              _attendees.add(s);
+              _attendeeFriendModels.add(s);
             }
           });
           //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
@@ -582,7 +576,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         color: univentsWhiteText,
         child: Text(
-          'add friends',
+          'Freunde einladen',
           style: TextStyle(
             color: textButtonDarkBlue,
             letterSpacing: 1.5,
@@ -608,6 +602,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             _tagsList.forEach((element) {
               tags.add(element.tag);
             });
+
+            List<String> attendees = [];
+            _attendeeFriendModels.forEach((element) {
+              attendees.add(element.uid);
+            });
+
             Event event = new Event(
                 _eventNameController.text,
                 _selectedBeginDateTime,
@@ -615,7 +615,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 _eventDescriptionController.text,
                 _returnPickedLocation.choosenLocationName,
                 _isPrivate,
-                _attendees,
+                attendees,
                 tags,
                 _returnPickedLocation.choosenLocationCoords[1].toString(),
                 _returnPickedLocation.choosenLocationCoords[0].toString());
@@ -654,6 +654,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  ///This block holds the selected or placerholder image to select one for the event
   Widget _eventImageBlockWidget() {
     return Stack(
       children: <Widget>[
@@ -698,6 +699,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
+  ///This block holds so select start and enddate
   Widget _eventDateBlockWidget() {
     return Row(
       children: <Widget>[
@@ -713,7 +715,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text("Create Your Event"),
+        title: Text("Event erstellen"),
         centerTitle: true,
       ),
       backgroundColor: primaryColor,
@@ -749,7 +751,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         _visibilityWidget(),
                         SizedBox(height: 20.0),
                         _friendsWidget(),
-                        _addFriendsButtonWidget(),
                         _createButtonWidget(),
                       ],
                     )),
