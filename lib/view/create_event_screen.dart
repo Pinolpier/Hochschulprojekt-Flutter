@@ -11,6 +11,7 @@ import 'package:univents/constants/colors.dart';
 import 'package:univents/constants/constants.dart';
 import 'package:univents/model/event.dart';
 import 'package:univents/model/eventTag.dart';
+import 'package:univents/model/frontend/friend_model.dart';
 import 'package:univents/service/date_time_picker_univents.dart';
 import 'package:univents/service/image_picker_univents.dart';
 import 'package:univents/service/log.dart';
@@ -40,7 +41,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   void initState() {
     _tagsList = [];
-    _attendeeIDs = [];
+    _attendees = [];
     super.initState();
   }
 
@@ -64,7 +65,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   /// specified tags of the event
 
   /// specified attendees of the event
-  List<dynamic> _attendeeIDs = new List();
+  List<dynamic> _attendees = new List();
 
   /// used to read the inputted text of the event name
   TextEditingController _eventNameController = new TextEditingController();
@@ -421,7 +422,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                      new LocationPickerScreen(_returnPickedLocation)));
+                          new LocationPickerScreen(_returnPickedLocation)));
               _eventLocationController.text =
                   _returnPickedLocation.choosenLocationName;
             },
@@ -490,7 +491,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   //TODO change look to a better one
-  Widget _invitedFriendsListItemWidget(index, attendeeId) {
+  Widget _invitedFriendsListItemWidget(index, FriendModel attendeeFriendModel) {
     return Column(
       children: <Widget>[
         Padding(
@@ -498,20 +499,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(attendeeId.toString()),
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: attendeeFriendModel.profilepic,
+              ),
+              Text(attendeeFriendModel.name),
               IconButton(
                 icon: Icon(Icons.cancel),
                 color: Colors.red,
                 onPressed: () {
                   setState(() {
-                    _attendeeIDs.removeAt(index);
+                    _attendees.removeAt(index);
                   });
                 },
               ),
             ],
           ),
         ),
-        index < _attendeeIDs.length - 1 ? Divider() : SizedBox(),
+        index < _attendees.length - 1 ? Divider() : SizedBox(),
       ],
     );
   }
@@ -532,10 +538,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: _attendeeIDs.length,
+              itemCount: _attendees.length,
               itemBuilder: (context, index) {
-                return _invitedFriendsListItemWidget(
-                    index, _attendeeIDs[index]);
+                return _invitedFriendsListItemWidget(index, _attendees[index]);
               },
             ),
           ),
@@ -553,19 +558,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         elevation: 5.0,
         onPressed: () async {
           List<String> preSelectedAttendeeIDs = List();
-          _attendeeIDs.forEach((element) {
-            preSelectedAttendeeIDs.add(element.toString());
+          _attendees.forEach((element) {
+            preSelectedAttendeeIDs.add(element.uid.toString());
           });
-          final List<String> result = await Navigator.push(
+          final List<dynamic> result = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) =>
                     FriendslistdialogScreen(null, preSelectedAttendeeIDs),
               ));
           setState(() {
-            _attendeeIDs.clear();
-            for (String s in result) {
-              _attendeeIDs.add(s);
+            _attendees.clear();
+            for (FriendModel s in result) {
+              _attendees.add(s);
             }
           });
           //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
@@ -610,7 +615,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 _eventDescriptionController.text,
                 _returnPickedLocation.choosenLocationName,
                 _isPrivate,
-                _attendeeIDs,
+                _attendees,
                 tags,
                 _returnPickedLocation.choosenLocationCoords[1].toString(),
                 _returnPickedLocation.choosenLocationCoords[0].toString());
