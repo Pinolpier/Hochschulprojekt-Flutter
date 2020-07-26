@@ -17,3 +17,5 @@ final univentsLightGreyBackground = Colors.grey[200];
 final univentsCheckColor = Colors.greenAccent;
 final univentsTagColor = Color(0xFF315A9D);
 final univentsError = Color(0xFF850D12);
+final univentsSelected = univentsCheckColor;
+final univentsNotSelected = univentsGreyBackgorund;

@@ -23,9 +23,13 @@ class FriendslistdialogScreen extends StatefulWidget {
   /// helper bool to distinct between the 2 constructors that get used dependent on where they got called from
   bool create = false;
 
+  List<String> preSelectedAttendeeIDs;
+
   /// this constructor gets called whenever you want to add users to an event and gets called from [eventInfo_screen] or [createEvent_screen]
-  FriendslistdialogScreen(Event event) {
+  FriendslistdialogScreen(Event event, [List<String> preSelectedAttendeeIDs]) {
     this.event = event;
+    this.preSelectedAttendeeIDs =
+        preSelectedAttendeeIDs == null ? List() : preSelectedAttendeeIDs;
   }
 
   /// this constructor gets called whenever you want to add friends to a group in [friendsList_screen]
@@ -35,17 +39,23 @@ class FriendslistdialogScreen extends StatefulWidget {
 
   /// todo: missing documentation
   @override
-  _FriendlistdialogScreenState createState() => create
-      ? _FriendlistdialogScreenState.create()
-      : _FriendlistdialogScreenState(event);
+  _FriendlistdialogScreenState createState() =>
+      create
+          ? _FriendlistdialogScreenState.create()
+          : _FriendlistdialogScreenState(event, preSelectedAttendeeIDs);
 }
 
 /// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
 /// the option to mark several friends from your friends list via LongPress and confirm your choice through a button at the bottom right
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   /// this constructor gets called whenever you want to add users to an event and gets called from [eventInfo_screen] or [createEvent_screen]
-  _FriendlistdialogScreenState(Event event) {
+  _FriendlistdialogScreenState(Event event,
+      [List<String> preSelectedAttendeeIDs]) {
     this.event = event;
+    this.selected =
+    preSelectedAttendeeIDs == null ? List() : preSelectedAttendeeIDs;
+    this.selectedCount =
+    preSelectedAttendeeIDs == null ? 0 : preSelectedAttendeeIDs.length;
   }
 
   /// this constructor gets called whenever you want to add friends to a group in [friendsList_screen]
@@ -67,7 +77,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   int selectedCount = 0;
 
   /// UIDs of all the selected friends to pass to the next screen
-  List<String> selected = List();
+  List<String> selected;
   Map<String, dynamic> friendsInGroup = new Map();
   List<FriendModel> friends = new List();
   Event event;
@@ -102,6 +112,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
     if (friendsMap != null && friendsMap.containsKey('friends')) {
       List<dynamic> friend = friendsMap['friends'];
       try {
+        print("Selected: ");
+        print(selected);
         for (String s in friend) {
           UserProfile up = await getUserProfile(s);
           print(up.toString());
@@ -110,6 +122,7 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
           friends.add(FriendModel(
               uid: s,
               name: up.username,
+              isSelected: selected.contains(s),
               profilepic: profilePicture == null
                   ? Image.asset('assets/blank_profile.png')
                   : profilePicture));
@@ -175,20 +188,17 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                           vertical: 1.0, horizontal: 4.0),
                       child: Card(
                         child: ListTile(
-                          onLongPress: () {
+                          selected: friends[index].isSelected,
+                          onTap: () {
                             setState(() {
                               friends[index].isSelected =
-                                  !friends[index].isSelected;
+                              !friends[index].isSelected;
                               if (selected.contains(friends[index].uid)) {
                                 selected.removeLast();
                               } else {
                                 selected.add(friends[index].uid);
                               }
                             });
-                          },
-                          selected: friends[index].isSelected,
-                          onTap: () {
-                            print(friends[index].name + " was pressed");
                           },
                           title: Text(friends[index].name),
                           trailing: (friends[index].isSelected)

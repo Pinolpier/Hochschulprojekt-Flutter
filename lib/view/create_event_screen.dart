@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:univents/backend/event_service.dart';
 import 'package:univents/constants/colors.dart';
 import 'package:univents/constants/constants.dart';
@@ -39,6 +40,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   void initState() {
     _tagsList = [];
+    _attendeeIDs = [];
     super.initState();
   }
 
@@ -212,7 +214,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               onTap: () async {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 _selectedEndDateTime =
-                await getDateTime(context, _selectedBeginDateTime);
+                    await getDateTime(context, _selectedBeginDateTime);
                 _endDateController.text =
                     dateTimeShortDateFormat.format(_selectedEndDateTime);
               },
@@ -291,7 +293,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   /// This widget displays a textfield to input the event description
-  Widget _eventDescriptionWidget() {
+  Widget _descriptionWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -399,61 +401,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// This button opens the select friends dialog
-  Widget _addFriendsButtonWidget() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () async {
-          final List<String> result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FriendslistdialogScreen(null),
-              ));
-          setState(() {
-            for (String s in result) {
-              _attendeeIDs.add(s);
-            }
-          });
-          //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
-          //Friendslist schließen
-        },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: univentsWhiteText,
-        child: Text(
-          'add friends',
-          style: TextStyle(
-            color: textButtonDarkBlue,
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// This checkbox specifies if the event is private. Unchecked = open, checked = private
-  Widget _isPrivateCheckbox() {
-    return Container(
-      child: Checkbox(
-        value: _isPrivate,
-        onChanged: (value) {
-          setState(() {
-            _isPrivate = value;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _eventLocationWidget() {
+  Widget _locationWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -509,36 +457,137 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  /// this button is used to open a location picker screen.
-  Widget _eventlocationPickerButton(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(vertical: 25.0),
-        width: double.infinity,
-        child: RaisedButton(
-          elevation: 5.0,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                    new LocationPickerScreen(_returnPickedLocation)));
-          },
-          padding: EdgeInsets.all(15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+  Widget _visibilityWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Sichtbarkeit',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.center,
+          height: 60.0,
+          child: ToggleSwitch(
+            minWidth: 150.0,
+            cornerRadius: 20.0,
+            activeBgColor: univentsSelected,
+            activeFgColor: univentsWhiteText,
+            inactiveBgColor: univentsNotSelected,
+            inactiveFgColor: univentsWhiteText,
+            labels: ['Privat', 'Öffentlich'],
+            icons: [Icons.perm_contact_calendar, Icons.public],
+            onToggle: (index) {
+              setState(() {
+                _isPrivate = index == 0;
+              });
+            },
           ),
-          color: univentsWhiteBackground,
-          child: Text(
-            'Choose Location',
-            style: TextStyle(
-              color: textButtonDarkBlue,
-              letterSpacing: 1.5,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'OpenSans',
+        ),
+      ],
+    );
+  }
+
+  //TODO change look to a better one
+  Widget _invitedFriendsListItemWidget(index, attendeeId) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(attendeeId.toString()),
+              IconButton(
+                icon: Icon(Icons.cancel),
+                color: Colors.red,
+                onPressed: () {
+                  setState(() {
+                    _attendeeIDs.removeAt(index);
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        index < _attendeeIDs.length - 1 ? Divider() : SizedBox(),
+      ],
+    );
+  }
+
+  Widget _friendsWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Freunde',
+          style: labelStyleConstant,
+        ),
+        SizedBox(height: 10.0),
+        SizedBox(
+          child: Container(
+//        alignment: Alignment.centerLeft,
+            decoration: _locationBoxStyle,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: _attendeeIDs.length,
+              itemBuilder: (context, index) {
+                return _invitedFriendsListItemWidget(
+                    index, _attendeeIDs[index]);
+              },
             ),
           ),
-        ));
+        )
+      ],
+    );
+  }
+
+  /// This button opens the select friends dialog
+  Widget _addFriendsButtonWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () async {
+          List<String> preSelectedAttendeeIDs = List();
+          _attendeeIDs.forEach((element) {
+            preSelectedAttendeeIDs.add(element.toString());
+          });
+          final List<String> result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    FriendslistdialogScreen(null, preSelectedAttendeeIDs),
+              ));
+          setState(() {
+            _attendeeIDs.clear();
+            for (String s in result) {
+              _attendeeIDs.add(s);
+            }
+          });
+          //ID von alles ausgewähleten Freunde-Objekten in anttendeeIDs speichern (als String ind die Liste)
+          //Friendslist schließen
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: univentsWhiteText,
+        child: Text(
+          'add friends',
+          style: TextStyle(
+            color: textButtonDarkBlue,
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    );
   }
 
   /// This button creates the event with the specified variables and sends it to the backend
@@ -579,7 +628,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               MaterialPageRoute(builder: (context) => NavigationBarUI()),
                   (Route<dynamic> route) => false,
             );
-//            }
           }
         },
         padding: EdgeInsets.all(15.0),
@@ -687,20 +735,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         SizedBox(height: 20.0),
                         _eventDateBlockWidget(),
                         SizedBox(height: 20.0),
-                        _eventLocationWidget(),
+                        _locationWidget(),
                         SizedBox(height: 20.0),
-//                        _eventlocationPickerButton(context),
-//                        SizedBox(height: 20.0),
-                        _eventDescriptionWidget(),
+                        _descriptionWidget(),
                         SizedBox(height: 20.0),
                         _tagsWidget(),
                         SizedBox(height: 20.0),
-                        new Text(
-                          'Should the event be private?',
-                          //TODO: Add Internationalization
-                          style: labelStyleConstant,
-                        ),
-                        _isPrivateCheckbox(),
+                        _visibilityWidget(),
+                        SizedBox(height: 20.0),
+                        _friendsWidget(),
                         _addFriendsButtonWidget(),
                         _createButtonWidget(),
                       ],

@@ -68,6 +68,9 @@ dependencies:
   #The following dependency enables us to use tags fields
   flutter_tagging: ^2.2.0+3
 
+  #The following dependency enables us to switch blocks
+  toggle_switch: "^0.1.5"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
