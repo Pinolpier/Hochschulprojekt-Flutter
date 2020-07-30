@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -216,18 +217,48 @@ class _EventInfoState extends State<EventInfo> {
       ),
       body: Stack(
         children: <Widget>[
-          SizedBox.expand(
-            child: _result == null
-                ? CircularProgressIndicator()
-                : _eventImageFromDatabase() != null
-                    ? _eventImageFromDatabase()
-                    : eventImage == null
-                        ? _eventImagePlaceholder()
-                        : _eventImage(),
-          ),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Stack(children: <Widget>[
+                  eventimagewidget != null
+                      ? Stack(
+                          children: <Widget>[
+                            FittedBox(
+                              child: eventimagewidget,
+                              fit: BoxFit.fill,
+                              alignment: Alignment.center,
+                            ),
+                            Positioned.fill(
+                                child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 5.0,
+                                      sigmaY: 5.0,
+                                    ),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0),
+                                    ))),
+                          ],
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    child: _result == null
+                        ? CircularProgressIndicator()
+                        : _eventImageFromDatabase() != null
+                            ? _eventImageFromDatabase()
+                            : eventImage == null
+                                ? _eventImagePlaceholder()
+                                : _eventImage(),
+                  )
+                ]),
+              ]),
           DraggableScrollableSheet(
-            minChildSize: 0.1,
-            initialChildSize: 0.22,
+            minChildSize: 1 - (200 / MediaQuery.of(context).size.height),
+            initialChildSize: 1 - (200 / MediaQuery.of(context).size.height),
             builder: (context, scrollController) {
               return SingleChildScrollView(
                 controller: scrollController,
@@ -244,20 +275,6 @@ class _EventInfoState extends State<EventInfo> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: _result == null
-                                  ? CircularProgressIndicator()
-                                  : _eventImageFromDatabase() != null
-                                      ? _eventImageFromDatabase()
-                                      : eventImage == null
-                                          ? _eventImagePlaceholder()
-                                          : _eventImage(),
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,12 +377,12 @@ class _EventInfoState extends State<EventInfo> {
                                                 : null),
                                     SizedBox(width: 4.0),
                                     isEventOpen == true
-                                        ? Text("open",
+                                        ? Text("Öffentlich",
                                             style: TextStyle(
                                                 color: univentsWhiteText,
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 24))
-                                        : Text("closed",
+                                        : Text("Privat",
                                             style: TextStyle(
                                                 color: univentsWhiteText,
                                                 fontWeight: FontWeight.w700,
@@ -397,7 +414,7 @@ class _EventInfoState extends State<EventInfo> {
                                   ],
                                 ),
                                 Text(
-                                  "Attendees",
+                                  "Teilnehmer",
                                   style: TextStyle(
                                       color: univentsWhiteText,
                                       fontWeight: FontWeight.w400,
@@ -441,7 +458,7 @@ class _EventInfoState extends State<EventInfo> {
                                   ],
                                 ),
                                 Text(
-                                  "Startdate",
+                                  "Beginn",
                                   style: TextStyle(
                                       color: univentsWhiteText,
                                       fontWeight: FontWeight.w400,
@@ -463,7 +480,7 @@ class _EventInfoState extends State<EventInfo> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              "Description",
+                              "Beschreibung",
                               style: TextStyle(
                                   color: univentsBlackText,
                                   fontWeight: FontWeight.w700,
@@ -490,7 +507,7 @@ class _EventInfoState extends State<EventInfo> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              "Attendees",
+                              "Teilnehmer",
                               style: TextStyle(
                                   color: univentsBlackText,
                                   fontWeight: FontWeight.w700,
@@ -544,14 +561,14 @@ class _EventInfoState extends State<EventInfo> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 5.0),
                               child: FloatingActionButton(
-                                heroTag: 'addAttendee',
+                                heroTag: 'Teilnehmer hinzufügen',
                                 onPressed: () async {
                                   List<dynamic> fixedLengthList =
                                       widget._event.attendeesIds;
                                   List<String> attendeesList = new List();
                                   for (int i = 0;
-                                      i < fixedLengthList.length;
-                                      i++) {
+                                  i < fixedLengthList.length;
+                                  i++) {
                                     attendeesList.add(fixedLengthList[i]);
                                   }
                                   if (attending == true) {
