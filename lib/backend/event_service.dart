@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:geo_firestore/geo_firestore.dart';
 import 'package:univents/backend/storage_service.dart';
 import 'package:univents/model/event.dart';
+import 'package:univents/model/eventTag.dart';
 import 'package:univents/service/log.dart';
 
 import 'auth_service.dart';
@@ -762,3 +763,20 @@ void deleteRadiusFilter() {
 
 /// returns the map that saves the image urls to every event
 Map<String, String> get urlToID => _urlToID;
+
+class EventTagService {
+  /// Mocks fetching language from network API with delay of 500ms.
+  static Future<List<EventTag>> getTagSuggestions(String query) async {
+    //TODO add firebase request to get all tags
+    return <EventTag>[
+      EventTag(tag: 'Rock'),
+      EventTag(tag: 'Pop'),
+      EventTag(tag: 'Hardstyle'),
+      EventTag(tag: 'Techno'),
+      EventTag(tag: 'Schlager'),
+      EventTag(tag: 'Bier'),
+    ]
+        .where((lang) => lang.tag.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+}

@@ -14,5 +14,5 @@ class FriendModel {
   Widget profilepic;
   bool isSelected = false;
 
-  FriendModel({this.uid, this.name, this.profilepic});
+  FriendModel({this.uid, this.name, this.profilepic, this.isSelected});
 }

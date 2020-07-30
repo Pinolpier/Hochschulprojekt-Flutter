@@ -23,9 +23,13 @@ class FriendslistdialogScreen extends StatefulWidget {
   /// helper bool to distinct between the 2 constructors that get used dependent on where they got called from
   bool create = false;
 
+  List<String> preSelectedAttendeeIDs;
+
   /// this constructor gets called whenever you want to add users to an event and gets called from [eventInfo_screen] or [createEvent_screen]
-  FriendslistdialogScreen(Event event) {
+  FriendslistdialogScreen(Event event, [List<String> preSelectedAttendeeIDs]) {
     this.event = event;
+    this.preSelectedAttendeeIDs =
+        preSelectedAttendeeIDs == null ? List() : preSelectedAttendeeIDs;
   }
 
   /// this constructor gets called whenever you want to add friends to a group in [friendsList_screen]
@@ -37,15 +41,19 @@ class FriendslistdialogScreen extends StatefulWidget {
   @override
   _FriendlistdialogScreenState createState() => create
       ? _FriendlistdialogScreenState.create()
-      : _FriendlistdialogScreenState(event);
+      : _FriendlistdialogScreenState(event, preSelectedAttendeeIDs);
 }
 
 /// this class creates a friendslist with a searchbar at the top to filter through the friends (not implemented yet) and a
 /// the option to mark several friends from your friends list via LongPress and confirm your choice through a button at the bottom right
 class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   /// this constructor gets called whenever you want to add users to an event and gets called from [eventInfo_screen] or [createEvent_screen]
-  _FriendlistdialogScreenState(Event event) {
+  _FriendlistdialogScreenState(Event event,
+      [List<String> preSelectedAttendeeIDs]) {
     this.event = event;
+    this.preSelectedAttendeeIDs = preSelectedAttendeeIDs;
+    this.selectedFriends = List();
+    this.selectedCount = 0;
   }
 
   /// this constructor gets called whenever you want to add friends to a group in [friendsList_screen]
@@ -56,9 +64,6 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   /// debouncer makes sure the query in the searchbar doesn't get read out until 500ms of no new user input
   final _debouncer = new Debouncer(500);
 
-  /// helper bool for the [longPress] method
-  bool longPressFlag = false;
-
   /// this bool only gets set to true when the screen was called in the context of adding a user into an event, it gets set to false if it was called in the
   /// context of adding a user to a group of the [friendsList_screen]
   bool comeFromCreateEventScreen = true;
@@ -67,25 +72,15 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   int selectedCount = 0;
 
   /// UIDs of all the selected friends to pass to the next screen
-  List<String> selected = List();
   Map<String, dynamic> friendsInGroup = new Map();
   List<FriendModel> friends = new List();
+  List<FriendModel> selectedFriends;
+  List<String> preSelectedAttendeeIDs;
   Event event;
   String groupname;
 
   /// result of the async data from [initState()]
   var _result;
-
-  /// method for longpress on the respective friend items in listview
-  void longPress() {
-    setState(() {
-      if (friends.isEmpty) {
-        longPressFlag = false;
-      } else {
-        longPressFlag = true;
-      }
-    });
-  }
 
   /// async method that retrieves all needed data from the backend before Widget Build runs and shows the screen to the user
   Future<bool> loadAsyncData() async {
@@ -107,12 +102,20 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
           print(up.toString());
           print(await getProfilePicture(s));
           Widget profilePicture = await getProfilePicture(s);
-          friends.add(FriendModel(
+
+          bool isFriendModelSelected = preSelectedAttendeeIDs.contains(s);
+          FriendModel friendModel = FriendModel(
               uid: s,
               name: up.username,
+              isSelected: isFriendModelSelected,
               profilepic: profilePicture == null
                   ? Image.asset('assets/blank_profile.png')
-                  : profilePicture));
+                  : profilePicture);
+
+          friends.add(friendModel);
+          if (isFriendModelSelected) {
+            selectedFriends.add(friendModel);
+          }
         }
       } on Exception catch (e) {
         show_toast(e.toString());
@@ -175,20 +178,18 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                           vertical: 1.0, horizontal: 4.0),
                       child: Card(
                         child: ListTile(
-                          onLongPress: () {
-                            setState(() {
-                              friends[index].isSelected =
-                                  !friends[index].isSelected;
-                              if (selected.contains(friends[index].uid)) {
-                                selected.removeLast();
-                              } else {
-                                selected.add(friends[index].uid);
-                              }
-                            });
-                          },
                           selected: friends[index].isSelected,
                           onTap: () {
-                            print(friends[index].name + " was pressed");
+                            setState(() {
+                              friends[index].isSelected =
+                              !friends[index].isSelected;
+                              if (selectedFriends
+                                  .contains(friends[index].uid)) {
+                                selectedFriends.removeLast();
+                              } else {
+                                selectedFriends.add(friends[index]);
+                              }
+                            });
                           },
                           title: Text(friends[index].name),
                           trailing: (friends[index].isSelected)
@@ -211,8 +212,8 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
                   comeFromCreateEventScreen == false
                       ? goBackToGroupScreen()
                       : event == null
-                          ? Navigator.pop(context, selected)
-                          : goBackToEventScreen();
+                      ? Navigator.pop(context, selectedFriends)
+                      : goBackToEventScreen();
                 },
                 child: Icon(Icons.check),
                 backgroundColor: primaryColor,
@@ -227,12 +228,12 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   /// this method gets called when all the friends got selected and the user confirms his choice through the button at the bottom right and updates
   /// the data of the matching event with all the new attendees
   void goBackToEventScreen() {
-    for (String a in selected) {
+    for (FriendModel friendModel in selectedFriends) {
       List<String> newAttendees = new List();
       for (String s in event.attendeesIds) {
         newAttendees.add(s);
       }
-      newAttendees.add(a);
+      newAttendees.add(friendModel.uid);
       event.attendeesIds = newAttendees;
     }
     updateData(event);
@@ -243,13 +244,15 @@ class _FriendlistdialogScreenState extends State<FriendslistdialogScreen> {
   /// to put in a group name for the group he just created with all the selected friends and sends him back to the group screen of [friendsList_screen] when done with
   /// the freshly created group shown in the screen now
   void goBackToGroupScreen() {
-    if (groupname != null && groupname.isNotEmpty && selected.isNotEmpty) {
-      friendsInGroup[groupname] = selected;
+    if (groupname != null &&
+        groupname.isNotEmpty &&
+        selectedFriends.isNotEmpty) {
+      friendsInGroup[groupname] = selectedFriends;
       Navigator.pop(context, friendsInGroup);
     } else if (groupname == null || groupname.isEmpty) {
       showErrorDialog(context, "Groupname invalid!",
           "Please enter a valid Group name", true);
-    } else if (selected.isEmpty) {
+    } else if (selectedFriends.isEmpty) {
       showErrorDialog(context, "invalid amount of friends!",
           "Please add at least 1 friend to the group", true);
     }
