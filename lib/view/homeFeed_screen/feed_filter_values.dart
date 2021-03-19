@@ -3,23 +3,20 @@ import 'package:univents/service/app_localizations.dart';
 
 import 'feed_filter.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-
+/// @author mathias darscht
+/// this class translates the filter values of all filters
 class FeedFilterValues {
   /// value to translate
   final FeedFilter _filterValue;
 
-  /// todo: missing documenation of constructor
+  /// constructor initializez [_filterValue]
   const FeedFilterValues(this._filterValue);
 
-  /// todo: missing documentation
   FeedFilter get filterValue => _filterValue;
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// translates the value into the right language
-  /// (BuildContext)[context] for setting the translation
+  ///
+  /// (BuildContext)[context] for setting the translation and returns the translated [_filter]
   String convertToString(BuildContext context) {
     String _filter;
     switch (this._filterValue) {

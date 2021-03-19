@@ -12,7 +12,7 @@ import 'package:univents/service/utils/dateTimePickerUnivents.dart';
 import 'package:univents/service/utils/imagePickerUnivents.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/dialogs/friendList_dialog.dart';
-import 'package:univents/view/homeFeed_screen/navigationBarUI.dart';
+import 'package:univents/view/homeFeed_screen/page_controller.dart';
 
 /// todo: add author
 

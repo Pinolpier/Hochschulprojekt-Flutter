@@ -6,27 +6,24 @@ import 'package:univents/model/event.dart';
 import 'package:univents/service/utils/utils.dart';
 import 'package:univents/view/eventInfo_screen.dart';
 
-/// todo: add author
-/// todo: CONSIDER writing a library-level doc comment
-
+/// @author mathias darscht
+/// this class defines the design of an event in the home feed
 class FeedItemUI extends StatefulWidget {
-  /// todo: add documentation of variable
+  /// date from the feed.dart class that should have been displayed
   final Event _data;
 
-  /// todo: missing documentation of constructor
+  /// constructor initializes [_data]
   FeedItemUI(this._data);
 
-  /// todo: missing documentation
   @override
   State<StatefulWidget> createState() => FeedItemUIState(this._data);
 }
 
-/// todo: missing documentation
 class FeedItemUIState extends State<FeedItemUI> {
-  /// todo: add documentation of variables
+  /// data provided from FeedItemUI
   final Event _data;
 
-  /// todo: missing documentation of constructor
+  /// constructor initializes [_data]
   FeedItemUIState(this._data);
 
   @override
@@ -80,7 +77,7 @@ class FeedItemUIState extends State<FeedItemUI> {
                         width: MediaQuery.of(context).size.width * 1 / 150,
                       ),
                       Text(
-                        ' ' + _getLocation(context),
+                        ' ' + _getLocation(),
                         style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).size.height * 1 / 60),
@@ -122,15 +119,14 @@ class FeedItemUIState extends State<FeedItemUI> {
     );
   }
 
-  /// todo: missing documentation
-  String _getLocation(BuildContext context) {
+  /// this method get's the location from [_data]
+  String _getLocation() {
     return this._data.location;
   }
 
-  /// todo: DO separate the first sentence of a doc comment into its own paragraph.
-  /// todo: DO use prose to explain parameters, return values, and exceptions
   /// loads profile picture
-  /// if no profile picture in the backend, show placeholder
+  ///
+  /// in case of no [_profilePicture] a placholder will be displayed
   Widget _profilePicture() {
     Widget _profilePicture;
     getProfilePicture(this._data.ownerIds[0]).then((value) => setState(() {
@@ -141,7 +137,7 @@ class FeedItemUIState extends State<FeedItemUI> {
         : Image.asset('assets/blank_profile.png');
   }
 
-  /// todo: missing documentation
+  /// navigates to the selected event
   void _navigateToEventScreen() async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => new EventInfo(_data)));
